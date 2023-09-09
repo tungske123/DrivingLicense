@@ -16,3 +16,4 @@
 # DrivingLicense_Group3
 A website aiming to help passing the driving license test 
 
+## Relation Schema: https://drawsql.app/teams/myteam-595/diagrams/driving-license
