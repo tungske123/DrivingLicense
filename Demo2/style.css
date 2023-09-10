@@ -13,7 +13,9 @@
     box-sizing: border-box;
     text-decoration: none;
 }
-
+a {
+    text-decoration: none;
+}
 /*Variables*/
 
 :root {
@@ -75,7 +77,8 @@ header.shadow #search-icon {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 35px;
+
+    /* padding: 20px 35px; */
 }
 
 #menu-icon {
@@ -99,6 +102,11 @@ header.shadow #search-icon {
 .navbar {
     display: flex;
     column-gap: 2rem;
+    flex-direction: row ;
+    align-items: center;
+    margin-bottom: 0px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 .navbar a {
@@ -123,7 +131,8 @@ header.shadow #search-icon {
     font-size: 24px;
     cursor: pointer;
     color: var(--bg-color);
-
+    display: flex;
+    align-items: center;
 }
 
 .search-box {
@@ -345,6 +354,7 @@ header.shadow #search-icon {
     flex-wrap: wrap;
     gap: 2rem;
     margin-top: 2rem;
+    padding-inline: 0px;
 }
 
 .parts-container .box {
@@ -534,10 +544,10 @@ header.shadow #search-icon {
 
 /* Making Responsive */
 @media (max-width: 1080px) {
-    .container {
+    /* .container {
         margin-left: 1rem;
         margin-right: 1rem;
-    }
+    } */
 }
 
 @media (max-width: 991px) {
@@ -568,11 +578,15 @@ header.shadow #search-icon {
     .search-box input {
         padding: 15px;
     }
-
-    .nav {
-        padding: 10px 0;
+    .navbar li a {
+        border-radius: 10px;
     }
-
+    /* .nav {
+        padding: 10px 0;
+    } */
+    .search-bar {
+        width: 100vw;
+    }
     #menu-icon {
         display: initial;
     }
@@ -720,7 +734,9 @@ header.shadow #search-icon {
     opacity: 0;
 
     &:hover {
-        background-color: #2980b9;
+        /* background-color: #2980b9; */
+        background-color: #d90429;
+        color: white;
     }
 }
 
@@ -741,6 +757,15 @@ header.shadow #search-icon {
 .dropdown_menu-1 {
     animation: growDown 300ms ease-in-out forwards;
     transform-origin: top center;
+}
+
+/*fix box*/
+.box {
+    background-color: rgb(246, 246, 246);
+    transition: 0.25s ease-in-out;
+}
+.box:hover {
+    transform: scale(1.04);
 }
 
 /*load animations*/
