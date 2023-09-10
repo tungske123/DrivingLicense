@@ -115,11 +115,15 @@ header.shadow #search-icon {
     border-bottom: 3px solid var(--main-color);
 }
 
+.discover-button {
+    border-radius: 10px;
+}
+
 #search-icon {
     font-size: 24px;
     cursor: pointer;
     color: var(--bg-color);
-    
+
 }
 
 .search-box {
@@ -262,7 +266,9 @@ header.shadow #search-icon {
     margin-top: 2rem;
 
 }
-
+.info-container a {
+    color: black;
+}
 .info-container .box {
     flex: 1 1 17rem;
     position: relative;
@@ -518,6 +524,7 @@ header.shadow #search-icon {
     text-align: center;
     color: var(--bg-color);
     background: var(--text-color);
+    cursor: pointer;
 }
 
 .copyright p:hover {
@@ -653,6 +660,17 @@ header.shadow #search-icon {
     }
 }
 
+@media (min-width: 768px) {
+    .nav {
+        margin-inline: 200px;
+    }
+}
+@media (max-width: 768px) {
+    .home {
+        background-size: contain;
+    }
+
+}
 @keyframes growDown {
     0% {
         transform: scaleY(0)
