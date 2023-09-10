@@ -119,6 +119,7 @@ header.shadow #search-icon {
     font-size: 24px;
     cursor: pointer;
     color: var(--bg-color);
+    
 }
 
 .search-box {
@@ -279,7 +280,7 @@ header.shadow #search-icon {
 
 .info-container .box img:hover {
     transform: scale(1.1);
-    transition: 0.5s;
+    transition: 0.25s ease-in-out;
 
 }
 
