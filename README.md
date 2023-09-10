@@ -1,7 +1,5 @@
 # How to use Github
 
-Full git commands: `https://github.com/joshnh/Git-Commands`
-
 - git add `file` -> git add index.html
 - git add .-> push all codes to stage changes
 - git commit -m 'message' -> git commit -m 'Add index.html and style.css'
@@ -24,9 +22,11 @@ Navigate tới ổ đĩa mình muốn sau đó dùng lệnh sau:
 
 Rồi chuyển sang nhánh main: `git checkout main`
 
-Bước 2: pull code từ nhánh main: `git pull`
+Bước 2: pull code từ nhánh main: `git pull`. 
 
-Bước 3: Tạo branch theo tên mình muốn: `git branch -b <tên nhánh>`
+Nếu pull không được, dùng lệnh: `git reset --hard fixhomepage` sau đó dùng `git pull` như bình thường
+
+Bước 3: Tạo branch theo tên mình muốn: `git branch <tên nhánh>`
 
 Bước 4: git add . -> `git commit -m '(Message update cái gì)'`
 
