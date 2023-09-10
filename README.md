@@ -24,7 +24,7 @@ Rồi chuyển sang nhánh main: `git checkout main`
 
 Bước 2: pull code từ nhánh main: `git pull`
 
-Bước 3: Tạo branch theo tên mình muốn: `git branch -b <tên nhánh>`
+Bước 3: Tạo branch theo tên mình muốn: `git branch <tên nhánh>`
 
 Bước 4: git add . -> `git commit -m '(Message update cái gì)'`
 
