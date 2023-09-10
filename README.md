@@ -1,5 +1,7 @@
 # How to use Github
 
+Full git commands: `https://github.com/joshnh/Git-Commands`
+
 - git add `file` -> git add index.html
 - git add .-> push all codes to stage changes
 - git commit -m 'message' -> git commit -m 'Add index.html and style.css'
