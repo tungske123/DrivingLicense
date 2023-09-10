@@ -22,7 +22,9 @@ Navigate tới ổ đĩa mình muốn sau đó dùng lệnh sau:
 
 Rồi chuyển sang nhánh main: `git checkout main`
 
-Bước 2: pull code từ nhánh main: `git pull`
+Bước 2: pull code từ nhánh main: `git pull`. 
+
+Nếu pull không được, dùng lệnh: `git reset --hard fixhomepage` sau đó dùng `git pull` như bình thường
 
 Bước 3: Tạo branch theo tên mình muốn: `git branch <tên nhánh>`
 
