@@ -422,6 +422,7 @@ header.shadow #search-icon {
 .blog-container .box {
     flex: 1 1 13rem;
     padding: 20px;
+    border-radius: 10px;
 }
 
 .blog-container .box:hover {
