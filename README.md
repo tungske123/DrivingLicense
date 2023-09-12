@@ -34,7 +34,7 @@ Bước 5: Push code lên: `git push`
 
 Bước 6: Lên github tạo pull request chờ merge code
 
-# DrivingLicense_Group3
+# Welcome to DrivingLicense_Group3
 A website aiming to help passing the driving license test 
 
 ## Relational Schema: 
