@@ -71,7 +71,7 @@
     <!--Form Sign up-->
     <section class="form-c" id="container">
         <div class="form-container sign-up-container">
-            <form action="">
+            <form action="#">
                 <h1>Sign Up </h1>
                 <!--Icon social-->
                 <div class="social-container">
@@ -89,7 +89,7 @@
                 <input type="text" name="username" id="username" placeholder="Enter your Username" />
                 <input type="email" placeholder="Enter your Email/Gmail" />
                 <input type="password" placeholder="Enter your password" />
-                <button>Sign Up</button>
+                <button class="primary" onclick="window.dialog.showModal();">Sign Up</button>
             </form>
         </div>
         <div class="form-container sign-in-container">
@@ -110,7 +110,7 @@
                 <!-- <span>Or If you have an account, please Login </span> -->
                 <input type="text" placeholder="Username">
                 <input type="password" placeholder="Password" />
-                <button>Sign In</button>
+                <button class="primary" onclick="window.dialog.showModal();">Sign In</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -129,6 +129,14 @@
                     <button class="ghost mt-5" id="SignUp">Sign Up</button>
                 </div>
             </div>
+        </div>
+        <div class="pop-up">
+            <dialog id="dialog">
+                <h2>Hello.</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi omnis nihil nostrum impedit sequi eum,
+                    odit ipsa amet, atque ut labore et quia qui repellat aperiam consequuntur tempore corporis numquam?</p>
+                <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
+            </dialog>
         </div>
     </section>
 
