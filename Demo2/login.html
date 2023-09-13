@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
     <!--style css-->
-    <link rel="stylesheet" href="CSS/LoginPage.css">
+    <link rel="stylesheet" href="css/LoginPage.css">
+    <link rel="stylesheet" href="css/styleHome.css">
     <!--Browser icon-->
     <link rel="icon" type="image/jpg" href="img/favicon_1.ico" />
 </head>
@@ -39,7 +40,7 @@
             <a href="#" class="logo">Learn<span>2</span>Drive</a>
             <!--Navbar List-->
             <ul class="navbar">
-                <li> <a href="index.html">Home</a></li>
+                <li> <a href="#">Home</a></li>
                 <li> <a href="#">Giới thiệu </a></li>
                 <li class="dropdown-toggle">
                     <a class="navbar-link" href="#" id="dropdown">Đào tạo lái xe</a>
@@ -52,7 +53,7 @@
                 </li>
                 <li> <a href="#">Tài liệu</a></li>
                 <li> <a href="#">Liên hệ</a></li>
-                <li> <a href="#">Đăng Nhập</a></li>
+                <li> <a href="indext2.html">Đăng Nhập</a></li>
             </ul>
             <!--search Icon-->
             <i class='bx bx-search' id="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -70,7 +71,7 @@
     <!--Form Sign up-->
     <section class="form-c" id="container">
         <div class="form-container sign-up-container">
-            <form action="#">
+            <form action="">
                 <h1>Sign Up </h1>
                 <!--Icon social-->
                 <div class="social-container">
@@ -85,7 +86,7 @@
                     </a>
                 </div>
                 <span>Tạo tài khoản</span>
-                <input type="text" placeholder="Enter your Username" />
+                <input type="text" name="username" id="username" placeholder="Enter your Username" />
                 <input type="email" placeholder="Enter your Email/Gmail" />
                 <input type="password" placeholder="Enter your password" />
                 <button>Sign Up</button>
@@ -93,7 +94,7 @@
         </div>
         <div class="form-container sign-in-container">
             <form action="#">
-                <h1>Login</h1>
+                <h1>Đăng nhập</h1>
                 <!--Icon social-->
                 <div class="social-container">
                     <a href="" class="social-icon bg1">
@@ -106,28 +107,26 @@
                         <i class="fa fa-google"></i>
                     </a>
                 </div>
-                <span>Or If you have an account, please Login </span>
-                <input type="text" placeholder="Enter your Username" />
-                <input type="password" placeholder="Enter your password" />
+                <!-- <span>Or If you have an account, please Login </span> -->
+                <input type="text" placeholder="Username">
+                <input type="password" placeholder="Password" />
                 <button>Sign In</button>
             </form>
         </div>
         <div class="overlay-container">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem tempora facere repudiandae
-                        mollitia quo quis a recusandae odio totam accusamus sint rem dolore repellat modi blanditiis,
-                        consectetur, quam reiciendis velit.</p>
+                    <h1>Tạo tài khoản ngay</h1>
+                    <p>Hoặc nếu bạn có tài khoản thì hãy</p>
                     <button class="ghost" id="SignIn">Sign In</button>
                 </div>
-                
+
                 <div class="overlay-panel overlay-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem tempora facere repudiandae
+                    <h1>Welcome to L2D</h1>
+                    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem tempora facere repudiandae
                         mollitia quo quis a recusandae odio totam accusamus sint rem dolore repellat modi blanditiis,
-                        consectetur, quam reiciendis velit.</p>
-				    <button class="ghost" id="SignUp">Sign Up</button>
+                        consectetur, quam reiciendis velit.</p> -->
+                    <button class="ghost mt-5" id="SignUp">Sign Up</button>
                 </div>
             </div>
         </div>
@@ -175,9 +174,9 @@
     <div class="copyright">
         <p>&#169; Đoán xem MA ĐỜ VÁC CƠ All Right Reserved</p>
     </div>
-    <script src="JS/LoginAnimation.js"></script>
-    <script src="JS/main.js"></script>
-    <script src="JS/LoadAnimations.js"></script>
+    <script src="js/LoginAnimation.js"></script>
+    <script src="js/Home.js"></script>
+    <script src="js/LoadAnimations.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
