@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
+    <!--style css-->
+    <link rel="stylesheet" href="/css/styleLogin.css">
+</head>
+
+<body>
+    @{
+        ViewData["Title"] = "Login Page";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <!--Form Sign up-->
+    <section class="form-c hidden-load" id="container">
+        <div class="form-container sign-up-container hidden-load">
+            <form action="/Login/signup" method="post">
+                <h1>Sign Up</h1>
+                <!--Icon social-->
+                <div class="social-container hidden-load">
+                    <a href="" class="social-icon bg1">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="" class="social-icon bg2">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="" class="social-icon bg3">
+                        <i class="fa fa-google"></i>
+                    </a>
+                </div>
+                <span>Tạo tài khoản</span>
+                <input type="text" name="username" id="username" placeholder="Enter your Username" />
+                <input type="password" name="password" placeholder="Enter your password" />
+                <input type="email" name="email" placeholder="Enter your Email/Gmail" />
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container hidden-load">
+            @if (!string.IsNullOrEmpty(@ViewBag.Message))
+            {
+                <h2 class="alert alert-danger" style="color: red;">@ViewBag.Message</h2>
+            }
+            <form action="/Login/login" method="post" class="hidden-load"> 
+                <h1>Đăng nhập</h1>
+                <!--Icon social-->
+                <div class="social-container hidden-load">
+                    <a href="" class="social-icon bg1">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="" class="social-icon bg2">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a asp-controller="Login" asp-action="GoogleLogin" class="social-icon bg3">
+                        <i class="fa fa-google"></i>
+                    </a>
+                </div>
+                <!-- <span>Or If you have an account, please Login </span> -->
+                <input type="text" placeholder="Username" name="username">
+                <input type="password" placeholder="Password" name="password" />
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+        <div class="overlay-container hidden-load">
+            <div class="overlay hidden-load">
+                <div class="overlay-panel overlay-left hidden-load">
+                    <h1>Tạo tài khoản ngay</h1>
+                    <p>Hoặc nếu bạn có tài khoản thì hãy</p>
+                    <button class="ghost" id="SignIn">Sign In</button>
+                </div>
+
+                <div class="overlay-panel overlay-right hidden-load">
+                    <h1>Welcome to L2D</h1>
+                    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem tempora facere repudiandae
+                        mollitia quo quis a recusandae odio totam accusamus sint rem dolore repellat modi blanditiis,
+                        consectetur, quam reiciendis velit.</p> -->
+                    <button class="ghost mt-5" id="SignUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/js/LoginAnimation.js"></script>
+</body>
+
+</html>
