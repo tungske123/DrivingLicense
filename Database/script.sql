@@ -38,7 +38,6 @@ create table Quiz (
    LicenseID nvarchar(10) not null,
    [Name] nvarchar(100),
    [Description] nvarchar(max),
-   QuizImage nvarchar(max),
 
    -- Keys
    primary key (QuizID),
@@ -49,8 +48,8 @@ create table Question(
    --Fields
    QuestionID nvarchar(100) not null,
    QuizID nvarchar(100) not null,
-   QuestionText nvarchar(max)
-
+   QuestionText nvarchar(max),
+   QuestionImage nvarchar(max),
    -- Keys
    primary key (QuestionID),
    foreign key (QuizID) references Quiz(QuizID)
