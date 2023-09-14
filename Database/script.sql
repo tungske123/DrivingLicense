@@ -7,19 +7,21 @@ use DrivingLicense;
 create table Users (
 
    --Fields
-   UserID nvarchar(15) not null,
+   UserID uniqueidentifier default newid(),
    Avatar nvarchar(max),
+   CCCD nvarchar(15),
+   Email nvarchar(100),
    Username nvarchar(100),
+   [Password] nvarchar(100),
    FullName nvarchar(100),
    BirthDate date,
    Nationality nvarchar(100),
+   PhoneNumber nvarchar(20),
    [Address] nvarchar(100),
-   [Role] nvarchar(20)
-
+   [Role] nvarchar(20),
    --Keys
    primary key (UserID)
 );
-
 
 create table Quiz (
    -- Fields
@@ -70,3 +72,4 @@ create table Attempt(
   foreign key (UserID) references Users(UserID)
 );
 
+----------------------------------------------------------------------------------------------------------------------
