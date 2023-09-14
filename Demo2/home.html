@@ -1,35 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo</title>
-    <!--Link To Css-->
-    <link rel="stylesheet" href="style.css">
-    <!--Box Icons-->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!--box hidden-load Icons-->
+    <!-- <link href='https://unpkg.com/box hidden-loadicons@2.1.4/css/box hidden-loadicons.min.css' rel='stylesheet'> -->
+    <!--bootstrap css file-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
+    <!--custom css files-->
+    <link rel="stylesheet" href="css/styleHome.css">
     <!--Browser Icons-->
-    <link rel="icon" type="image/jpg" href="favicon_1.ico" />
+    <link rel="icon" type="image/jpg" href="img/favicon_1.ico" />
 </head>
 
 <body>
     <!--Navbar-->
     <header>
         <!--Nav Container-->
-        <div class="nav container">
+        <div class="nav container hidden-load">
             <!--Menu Icon-->
-            <i class='bx bx-menu' id="menu-icon"></i>
+            <i class='bx bx-menu' id="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                  </svg>
+            </i>
             <!--Logo-->
             <a href="#" class="logo">Learn<span>2</span>Drive</a>
             <!--Navbar List-->
             <ul class="navbar">
-                <li> <a href="#" class="active">Home</a></li>
+                <li> <a href="#">Home</a></li>
                 <li> <a href="#">Giới thiệu </a></li>
                 <li class="dropdown-toggle">
                     <a class="navbar-link" href="#" id="dropdown">Đào tạo lái xe</a>
-                    <ul class="dropdown_menu dropdown_menu--animated dropdown_menu-1">
+                    <ul class="dropdown_menu dropdown_menu--animated dropdown_menu-1 dropdown-menu">
                         <li class="dropdown-item" href="#">Page 1</li>
                         <li class="dropdown-item" href="#">Page 2</li>
                         <li class="dropdown-item" href="#">Page 3</li>
@@ -37,75 +47,79 @@
                     </ul>
                 </li>
                 <li> <a href="#">Tài liệu</a></li>
-                <li> <a href="#">Tin tức</a></li>
                 <li> <a href="#">Liên hệ</a></li>
+                <li> <a href="indext2.html">Đăng Nhập</a></li>
             </ul>
             <!--search Icon-->
-            <i class='bx bx-search' id="search-icon"></i>
-            <!--search Box-->
-            <div class="search-box container">
-                <input type="search" name="" id="" placeholder="Search here...">
-            </div>
+            <i class='bx bx-search' id="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg></i>
+            <!--search box hidden-load-->
+            <form class="search-box hidden-load container" action="">
+                <input type="search" name="keyword" placeholder="Search here..." class="search-bar">
+            </form>
         </div>
     </header>
     <!--Home section-->
-    <section class="home" id="home">
-        <div class="home-text">
+    <section class="home hidden-load" id="home">
+        <div class="home-text hidden-load">
             <h1>We have Everthing <br> your <span>car</span> Need</h1>
-            <p>Chúc mừng bạn đến Trung tâm dạy lái xe uy tín số 1 tại MẼO</p>
+            <p style="width: 28vw;">Chúc mừng bạn đến Trung tâm dạy lái xe uy tín số 1 tại MẼO</p>
             <!--home Button-->
-            <a href="#" class="btn">Discover Now</a>
+            <a href="#" class="btn hidden-load discover-button">Discover Now</a>
         </div>
-
     </section>
     <!--cars section-->
     <section class="info" id="cars">
-        <div class="heading">
+        <div class="heading hidden-load">
             <span>Khoá học</span>
             <h2>Các khoá học lái xe</h2>
         </div>
         <!--Cars container-->
         <div class="info-container container">
-            <!--Box 1-->
-            <div class="box">
+            <!--box hidden-load 1-->
+            <div class="box hidden-load">
                 <img src="img/A1.jpg" alt="">
                 <a href="">
                     <h2>Hạng A1</h2>
                 </a>
             </div>
 
-            <div class="box">
+            <div class="box hidden-load">
                 <img src="img/A2.webp" alt="">
-                
-                <h2>Hạng A2</h2>
+                <a href="">
+                    <h2>Hạng A2</h2>
+                </a>
             </div>
-            <!--Box 2-->
-            <div class="box">
+            <!--box hidden-load 2-->
+            <div class="box hidden-load">
                 <img src="img/sosan.jpeg" alt="">
-                <a href="indext2.html">
+                <a href="">
                     <h2>Hạng B1 số tự động</h2>
                 </a>
 
             </div>
 
-            <!--Box 7-->
-            <div class="box">
+            <!--box hidden-load 7-->
+            <div class="box hidden-load">
                 <img src="img/car5.jpg" alt="">
                 <a href="">
                     <h2>Hạng B2</h2>
                 </a>
             </div>
 
-            <!--Box 3-->
-            <div class="box">
+            <!--box hidden-load 3-->
+            <div class="box hidden-load">
                 <img src="img/C.jpg" alt="">
                 <a href="">
                     <h2>Hạng C</h2>
                 </a>
             </div>
 
-            <!--Box 4-->
-            <div class="box">
+            <!--box hidden-load 4-->
+            <div class="box hidden-load">
                 <img src="img/D.jpg">
                 <a href="">
                     <h2>Hạng D-E</h2>
@@ -117,11 +131,11 @@
 
     <!--About-->
     <section>
-        <section class="about container" id="about">
-            <div class="about-img">
+        <section class="about container hidden-load" id="about">
+            <div class="about-img hidden-load">
                 <img src="img/about.png" alt="">
             </div>
-            <div class="about-text">
+            <div class="about-text hidden-load">
                 <span>About Us</span>
                 <h2>Khoá học chất lượng với <br> Giá Rẻ</h2>
                 <p>Học Thử Trải Nghiệm trước khi Đăng kí</p>
@@ -132,18 +146,18 @@
         </section>
     </section>
     <!--parts section-->
-    <section class="parts" id="parts">
+    <section class="parts hidden-load" id="parts">
         <div class="heading">
             <span>What We Offer</span>
             <h2>L2D</h2>
-            <p>Chúng Tôi luôn mang đến khoa học lái xe tốt nhất </p>
+            <p>Chúng Tôi luôn mang đến khóa học lái xe tốt nhất </p>
         </div>
         <!--parts container-->
-        <div class="parts-container container">
-            <!--Box 1-->
+        <div class="parts-container container hidden-load">
+            <!--box hidden-load 1-->
 
-            <div class="box">
-                <div class="icon-box-img" style="width: 48px;">
+            <div class="box hidden-load">
+                <div class="icon-box hidden-load-img" style="width: 48px;">
                     <img src="img/thanh-toan-da-dang.png" alt="">
                 </div>
                 <div class="content">
@@ -152,10 +166,10 @@
                 </div>
             </div>
 
-            <!--Box 2-->
+            <!--box hidden-load 2-->
 
-            <div class="box">
-                <div class="icon-box-img" style="width: 48px;">
+            <div class="box hidden-load">
+                <div class="icon-box hidden-load-img" style="width: 48px;">
                     <img src="img/thanh-toan-da-dang.png" alt="">
                 </div>
                 <div class="content">
@@ -164,10 +178,10 @@
                 </div>
             </div>
 
-            <!--Box 3-->
+            <!--box hidden-load 3-->
 
-            <div class="box">
-                <div class="icon-box-img" style="width: 48px;">
+            <div class="box hidden-load">
+                <div class="icon-box hidden-load-img" style="width: 48px;">
                     <img src="img/thanh-toan-da-dang.png" alt="">
                 </div>
                 <div class="content">
@@ -176,10 +190,10 @@
                 </div>
             </div>
 
-            <!--Box 4-->
+            <!--box hidden-load 4-->
 
-            <div class="box">
-                <div class="icon-box-img" style="width: 48px;">
+            <div class="box hidden-load">
+                <div class="icon-box hidden-load-img" style="width: 48px;">
                     <img src="img/thanh-toan-da-dang.png" alt="">
                 </div>
                 <div class="content">
@@ -188,10 +202,10 @@
                 </div>
             </div>
 
-            <!--Box 5-->
+            <!--box hidden-load 5-->
 
-            <div class="box">
-                <div class="icon-box-img" style="width: 48px;">
+            <div class="box hidden-load">
+                <div class="icon-box hidden-load-img" style="width: 48px;">
                     <img src="img/thanh-toan-da-dang.png" alt="">
                 </div>
                 <div class="content">
@@ -200,10 +214,10 @@
                 </div>
             </div>
 
-            <!--Box 6-->
+            <!--box hidden-load 6-->
 
-            <div class="box">
-                <div class="icon-box-img" style="width: 48px;">
+            <div class="box hidden-load">
+                <div class="icon-box hidden-load-img" style="width: 48px;">
                     <img src="img/thanh-toan-da-dang.png" alt="">
                 </div>
                 <div class="content">
@@ -223,8 +237,8 @@
         </div>
         <!--Blog Container-->
         <div class="blog-container container">
-            <!--Box 1-->
-            <div class="box">
+            <!--box hidden-load 1-->
+            <div class="box hidden-load">
                 <img src="img/car1.jpg" alt="">
                 <span>August 21 2022</span>
                 <h3>How To Get Perfect Car At Low Price</h3>
@@ -233,8 +247,8 @@
                 <a href="#" class="blog-btn">Read More<i class='bx bx-right-arrow-alt'></i> </a>
             </div>
 
-            <!--Box 2-->
-            <div class="box">
+            <!--box hidden-load 2-->
+            <div class="box hidden-load">
                 <img src="img/car8.jpg" alt="">
                 <span>August 21 2022</span>
                 <h3>How To Get Perfect Car At Low Price</h3>
@@ -243,8 +257,8 @@
                 <a href="#" class="blog-btn">Read More<i class='bx bx-right-arrow-alt'></i> </a>
             </div>
 
-            <!--Box 3-->
-            <div class="box">
+            <!--box hidden-load 3-->
+            <div class="box hidden-load">
                 <img src="img/car3.jpg" alt="">
                 <span>August 21 2022</span>
                 <h3>How To Get Perfect Car At Low Price</h3>
@@ -255,9 +269,9 @@
         </div>
     </section>
     <!--footer-->
-    <section class="footer">
+    <section class="footer hidden-load container-fluid">
         <div class="footer-container container">
-            <div class="footer-box">
+            <div class="footer-box hidden-load">
                 <a href="#" class="logo">Learn<span>2</span>Drive</a>
                 <div class="social">
                     <a href="#"><i class='bx bxl-facebook'></i></a>
@@ -266,29 +280,29 @@
                     <a href="#"><i class='bx bxl-youtube'></i></a>
                 </div>
             </div>
-            <div class="footer-box">
+            <div class="footer-box hidden-load">
                 <h3>Page</h3>
                 <a href="#">Home</a>
                 <a href="#">Giới thiệu</a>
-                <a href="#">Đàotạo lái xe</a>
+                <a href="#">Đào tạo lái xe</a>
                 <a href="#">Tài liệu</a>
                 <a href="#">Tin tức</a>
                 <a href="#">Liên hệ</a>
             </div>
 
-            <div class="footer-box">
+            <div class="footer-box hidden-load">
                 <h3>Legal</h3>
                 <a href="#">Privacy</a>
                 <a href="#">Refund Policy</a>
                 <a href="#">Cookies Policy</a>
             </div>
 
-            <div class="footer-box">
+            <div class="footer-box hidden-load">
                 <h3>Contact</h3>
-                <p>United States</p>
-                <p>Canada</p>
-                <p> Jaban</p>
-                <p>Germany</p>
+                <a href="">United States</a>
+                <a href="">Canada</a>
+                <a href=""> Jaban</a>
+                <a href="">Germany</a>
             </div>
         </div>
     </section>
@@ -299,8 +313,11 @@
     </div>
 
     <!--Link To JS-->
-    <script src="main.js"></script>
-
+    <script src="js/Home.js"></script>
+    <script src="js/LoadAnimations.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
