@@ -23,15 +23,25 @@ create table Users (
    primary key (UserID)
 );
 
+create table License (
+   -- Fields
+   LicenseID nvarchar(10) not null,
+   LicenseName nvarchar(100),
+
+   -- Keys
+   primary key (LicenseID)
+);
+
 create table Quiz (
    -- Fields
    QuizID nvarchar(100) not null,
    [Name] nvarchar(100),
    [Description] nvarchar(max),
-   LicenseType nvarchar(100)
+   LicenseID nvarchar(10) not null
 
    -- Keys
    primary key (QuizID)
+   foreign key (LicenseID) references dbo.License(LicenseID)
 );
 
 create table Question(
@@ -62,7 +72,7 @@ create table Attempt(
 
   -- Fields
   QuizID nvarchar(100) not null,
-  UserID nvarchar(15) not null,
+  UserID uniqueidentifier default newid(),
   Grade decimal,
   AttemptDate date
 
