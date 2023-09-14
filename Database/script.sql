@@ -35,12 +35,13 @@ create table License (
 create table Quiz (
    -- Fields
    QuizID nvarchar(100) not null,
+   LicenseID nvarchar(10) not null,
    [Name] nvarchar(100),
    [Description] nvarchar(max),
-   LicenseID nvarchar(10) not null
+   QuizImage nvarchar(max),
 
    -- Keys
-   primary key (QuizID)
+   primary key (QuizID),
    foreign key (LicenseID) references dbo.License(LicenseID)
 );
 
@@ -61,10 +62,11 @@ create table Answer(
    AnswerID nvarchar(100) not null,
    QuestionID nvarchar(100) not null,
    isCorrect bit,
-   AnswerText nvarchar(max)
+   AnswerText nvarchar(max),
+   AnswerImage nvarchar(max),
 
    --Keys
-   primary key (AnswerID)
+   primary key (AnswerID),
    foreign key (QuestionID) references Question(QuestionID)
 );
 
