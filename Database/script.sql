@@ -155,3 +155,37 @@ create table Attempt
    foreign key (QuizID) references Quiz(QuizID),
    foreign key (UserID) references Users(UserID)
 );
+
+/*Procedures / Functions / Triggers */
+go
+create or alter function fn_GetAcountID (@username nvarchar(100), @password nvarchar(100))
+returns nvarchar(50)
+as
+begin
+   declare @AccountID as nvarchar(50);
+   select @AccountID = convert(nvarchar(50), AccountID)
+   from dbo.Account
+   where Username = @username and Password = @password;
+   return @AccountID;
+end;
+go
+create or alter procedure proc_signUpAccount @username nvarchar(100), @password nvarchar(100), @email nvarchar(100), @role nvarchar(50)
+as
+begin
+   insert into dbo.Account (Username, Password, Role)
+   values(@username, @password, @role);
+   declare @AccountID as nvarchar(50);
+   set @AccountID = dbo.fn_GetAcountID(@username, @password);
+
+   if (@role = 'user') 
+   begin
+      insert into dbo.Users(AccountID,Email)
+	  values(@AccountID, @email);
+   end
+   else if (@role = 'teacher') 
+   begin
+      insert into dbo.Teacher(AccountID, Email)
+	  values(@AccountID,@email);
+   end
+end;
+go
