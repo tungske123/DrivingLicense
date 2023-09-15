@@ -39,9 +39,10 @@ A website aiming to help passing the driving license test
 
 ## Relational Schema: 
 https://drawsql.app/teams/myteam-595/diagrams/driving-license
-## ERD: 
-https://erdplus.com/edit-diagram/2d5665bb-504b-43ce-bb69-0ef402888471
 
 ## SITEMAP
 ![sitemap(draw io)](https://github.com/MinhTranTuan3112/DrivingLicense_Group3/assets/122954291/90dd3cee-4c46-4e7a-a629-468b8f0c1e5b)
+
+## MAIN DOC
+https://docs.google.com/document/d/17rN3RfpedECqFs-48bpDP-GuRyBAgX3BRP4fYzznmAk/edit?fbclid=IwAR29NU8fzNkKA8CTSTdXbBFFmvYGxvfT2vvffCJ3bDRjkZ8MEtdIJUGGU2g&pli=1
 
