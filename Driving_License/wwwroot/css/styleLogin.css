@@ -94,7 +94,7 @@ input {
 	overflow: hidden;
 	width: 768px;
 	max-width: 100%;
-	min-height: 480px;
+	min-height: 600px;
     margin-block: 200px;
     display: inline-block;
     position: relative;
