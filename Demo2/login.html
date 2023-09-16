@@ -11,6 +11,8 @@
     <!-- <link href='https://unpkg.com/box hidden-loadicons@2.1.4/css/box hidden-loadicons.min.css' rel='stylesheet'> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!--Boostrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!--font css files-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +22,9 @@
     <link rel="stylesheet" href="css/LoginPage.css">
     <link rel="stylesheet" href="css/styleHome.css">
     <!--Browser icon-->
+
     <link rel="icon" type="image/jpg" href="img/favicon_1.ico" />
+
 </head>
 
 <body>
@@ -40,8 +44,8 @@
             <a href="#" class="logo">Learn<span>2</span>Drive</a>
             <!--Navbar List-->
             <ul class="navbar">
-                <li> <a href="#">Home</a></li>
-                <li> <a href="#">Giới thiệu </a></li>
+                <li> <a href="home.html">Home</a></li>
+                <li> <a href="AboutUs.html">Giới thiệu </a></li>
                 <li class="dropdown-toggle">
                     <a class="navbar-link" href="#" id="dropdown">Đào tạo lái xe</a>
                     <ul class="dropdown_menu dropdown_menu--animated dropdown_menu-1 dropdown-menu">
@@ -71,7 +75,7 @@
     <!--Form Sign up-->
     <section class="form-c" id="container">
         <div class="form-container sign-up-container">
-            <form action="#">
+            <form action="#" class="was-validated">
                 <h1>Sign Up </h1>
                 <!--Icon social-->
                 <div class="social-container">
@@ -86,9 +90,22 @@
                     </a>
                 </div>
                 <span>Tạo tài khoản</span>
-                <input type="text" name="username" id="username" placeholder="Enter your Username" />
-                <input type="email" placeholder="Enter your Email/Gmail" />
-                <input type="password" placeholder="Enter your password" />
+                <div class="username">
+                    <input type="text" name="username" id="username" placeholder="Enter your Username"
+                        class="form-control" required />
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="email">
+                    <input type="email" placeholder="Enter your Email/Gmail" class="form-control" required />
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="password">
+                    <input type="password" placeholder="Enter your password" class="form-control" required />
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback"></div>
+                </div>
                 <button class="primary" onclick="window.dialog.showModal();">Sign Up</button>
             </form>
         </div>
@@ -134,7 +151,8 @@
             <dialog id="dialog">
                 <h2>Hello.</h2>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi omnis nihil nostrum impedit sequi eum,
-                    odit ipsa amet, atque ut labore et quia qui repellat aperiam consequuntur tempore corporis numquam?</p>
+                    odit ipsa amet, atque ut labore et quia qui repellat aperiam consequuntur tempore corporis numquam?
+                </p>
                 <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
             </dialog>
         </div>
@@ -185,6 +203,7 @@
     <script src="js/LoginAnimation.js"></script>
     <script src="js/Home.js"></script>
     <script src="js/LoadAnimations.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
