@@ -32,9 +32,10 @@ create table Vehicle
 (
    VehicleID uniqueidentifier default newid(),
    Name nvarchar(100),
+   Image nvarchar(max),
    Brand nvarchar(100),
    Type nvarchar(100),
-   Years date,
+   Year int,
    ContactNumber nvarchar(20),
    Address nvarchar(100),
    RentPrice decimal,
