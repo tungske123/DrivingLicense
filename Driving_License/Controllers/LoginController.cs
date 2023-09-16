@@ -1,7 +1,6 @@
 using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Driving_License.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +11,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Driving_License.Utils;
 using System.Data;
+using Driving_License.Models.Users;
+using Driving_License.Models.Account;
 
 namespace Driving_License.Controllers
 {
@@ -24,7 +25,7 @@ namespace Driving_License.Controllers
             {
                 ViewBag.Message = Message;
             }
-            ViewBag.icon_link = "";
+            ViewBag.icon_link = "https://cdn-icons-png.flaticon.com/128/1000/1000997.png";
             return View("~/Views/Login.cshtml");
         }
         [HttpPost]
@@ -37,13 +38,11 @@ namespace Driving_License.Controllers
                 TempData["Message"] = "Please fill all informations in the fields";
                 return RedirectToAction("Index", "Login");
             }
-            var userDAO = await UsersDAO.AsyncInstance();
-            var user = await userDAO.login(username, password);
-            if (user is not null) //Login success
+            var account = await AccountDAO.Instance.login(username, password);
+            if (account is not null) //Login success
             {
                 //Create session then redirect to home page
-                //var serializedUser = JsonSerializer.Serialize(user);
-                HttpContext.Session.SetString("usersession", user.UserID.ToString());
+                HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
                 await HttpContext.Session.CommitAsync();
                 return RedirectToAction("Index", "Home");
             }
@@ -68,9 +67,15 @@ namespace Driving_License.Controllers
         private async Task handleUserEmail(string email)
         {
             var userDAO = await UsersDAO.AsyncInstance();
-            string query = "insert into dbo.Users(Email)" +
-                "\nvalues(@Email)";
-            await userDAO.AddNewUser(query, DBUtils.CreateParameter("@Email", 100, email, DbType.String));
+            var username = email.Split('@')[0];
+            string query = "insert into dbo.Users(Username, Email)" +
+                "\nvalues(@Username, @Email)";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                DBUtils.CreateParameter("@Username", 100, username, DbType.String),
+                DBUtils.CreateParameter("@Email", 100, email, DbType.String)
+            };
+            await userDAO.AddNewUser(query, parameters);
         }
         [AllowAnonymous]
         public async Task<IActionResult> GoogleLoginCallback(string returnUrl = null, string remoteError = null)
@@ -104,16 +109,12 @@ namespace Driving_License.Controllers
 
         public async Task<IActionResult> signup(string username, string password, string email)
         {
-            var userDAO = await UsersDAO.AsyncInstance();
-            string query = "insert into dbo.Users(Username,Password,Email)" +
-                "\nvalues(@username, @password, @email)";
-            List<SqlParameter> parameters = new List<SqlParameter>()
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email))
             {
-                DBUtils.CreateParameter("@username", 100, username, DbType.String),
-                DBUtils.CreateParameter("@password", 100, password, DbType.String),
-                DBUtils.CreateParameter("@email", 100, email, DbType.String)
-            };
-            await userDAO.AddNewUser(query, parameters.ToArray());
+                TempData["Message"] = "Please fill all missing fields";
+                return RedirectToAction("Index", "Login");
+            }
+            await AccountDAO.Instance.SignUp(username, password, email);
             return RedirectToAction("Index", "Login");
         }
     }

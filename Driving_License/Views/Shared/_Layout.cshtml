@@ -21,9 +21,15 @@
 </head>
 
 <body>
-    @using Driving_License.Users;
+    @using Driving_License.Models.Account;
+    @using System.Text.Json;
     @{
-        var user = ViewBag.user as UsersDTO;
+        AccountDTO account = null;
+        if (!string.IsNullOrEmpty(Context.Session.GetString("usersession")))
+        {
+            var usersession = Context.Session.GetString("usersession");
+            account = JsonSerializer.Deserialize<AccountDTO>(usersession);
+        }
     }
     <header>
         <!--Nav Container-->
@@ -40,7 +46,7 @@
             <a href="" class="logo">Learn<span>2</span>Drive</a>
             <!--Navbar List-->
             <ul class="navbar">
-                <li> <a href="/Home">Home</a></li>
+                <li> <a href="/Home" class="home-link">Home</a></li>
                 <li> <a href="">Giới thiệu </a></li>
                 <li class="dropdown-toggle">
                     <a class="navbar-link" href="#" id="dropdown">Đào tạo lái xe</a>
@@ -53,13 +59,13 @@
                 </li>
                 <li> <a href="#">Tài liệu</a></li>
                 <li> <a href="#">Liên hệ</a></li>
-                @if (@user is not null)
+                @if (@account is not null)
                 {
-                    <li><a href="">@user.Username</a></li>
+                    <li><a href="">@account.Username</a></li>
                 }
                 else
                 {
-                    <li> <a href="/Login">Đăng Nhập</a></li>
+                    <li> <a href="/Login" class="login-link">Đăng Nhập</a></li>
                 }
             </ul>
             <!--search Icon-->

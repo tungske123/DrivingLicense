@@ -1,6 +1,6 @@
 using System;
 
-namespace Driving_License.Users
+namespace Driving_License.Models.Users
 {
     public class UsersDTO
     {

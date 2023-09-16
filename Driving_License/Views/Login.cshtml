@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <!--font css files-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
     <!--style css-->
     <link rel="stylesheet" href="/css/styleLogin.css">
+    <title>Login Page</title>
 </head>
 
 <body>
@@ -45,12 +45,12 @@
             </form>
         </div>
         <div class="form-container sign-in-container hidden-load">
-            @if (!string.IsNullOrEmpty(@ViewBag.Message))
-            {
-                <h2 class="alert alert-danger" style="color: red;">@ViewBag.Message</h2>
-            }
-            <form action="/Login/login" method="post" class="hidden-load"> 
+            <form action="/Login/login" method="post" class="hidden-load">
                 <h1>Đăng nhập</h1>
+                @if (!string.IsNullOrEmpty(@ViewBag.Message))
+                {
+                    <p class="alert alert-danger" style="color: red;">@ViewBag.Message</p>
+                }
                 <!--Icon social-->
                 <div class="social-container hidden-load">
                     <a href="" class="social-icon bg1">
@@ -89,6 +89,9 @@
     </section>
 
     <script src="/js/LoginAnimation.js"></script>
+    <script>
+        document.querySelector('.login-link').classList.add('active');
+    </script>
 </body>
 
 </html>

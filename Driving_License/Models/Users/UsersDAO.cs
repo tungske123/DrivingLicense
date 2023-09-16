@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace Driving_License.Users
+namespace Driving_License.Models.Users
 {
     public class UsersDAO
     {
@@ -103,14 +103,14 @@ namespace Driving_License.Users
                 {
                     return new UsersDTO()
                     {
-                        UserID = (Guid)(reader["UserID"]),
+                        UserID = (Guid)reader["UserID"],
                         Avatar = reader["Avatar"] as string,
                         CCCD = reader["CCCD"] as string,
                         Email = reader["Email"] as string,
                         Username = reader["Username"] as string,
                         Password = reader["Password"] as string,
                         FullName = reader["FullName"] as string,
-                        BirthDate = (reader["BirthDate"] == DBNull.Value) ? string.Empty : reader["BirthDate"].ToString(),
+                        BirthDate = reader["BirthDate"] == DBNull.Value ? string.Empty : reader["BirthDate"].ToString(),
                         Nationality = reader["Nationality"] as string,
                         PhoneNumber = reader["PhoneNumber"] as string,
                         Address = reader["Address"] as string,
@@ -148,14 +148,14 @@ namespace Driving_License.Users
                 {
                     return new UsersDTO()
                     {
-                        UserID = (Guid)(reader["UserID"]),
+                        UserID = (Guid)reader["UserID"],
                         Avatar = reader["Avatar"] as string,
                         CCCD = reader["CCCD"] as string,
                         Email = reader["Email"] as string,
                         Username = reader["Username"] as string,
                         Password = reader["Password"] as string,
                         FullName = reader["FullName"] as string,
-                        BirthDate = (reader["BirthDate"] == DBNull.Value) ? string.Empty : reader["BirthDate"].ToString(),
+                        BirthDate = reader["BirthDate"] == DBNull.Value ? string.Empty : reader["BirthDate"].ToString(),
                         PhoneNumber = reader["PhoneNumber"] as string,
                         Address = reader["Address"] as string,
                         Role = reader["Role"] as string
@@ -196,14 +196,14 @@ namespace Driving_License.Users
                 {
                     return new UsersDTO()
                     {
-                        UserID = (Guid)(reader["UserID"]),
+                        UserID = (Guid)reader["UserID"],
                         Avatar = reader["Avatar"] as string,
                         CCCD = reader["CCCD"] as string,
                         Email = reader["Email"] as string,
                         Username = reader["Username"] as string,
                         Password = reader["Password"] as string,
                         FullName = reader["FullName"] as string,
-                        BirthDate = (reader["BirthDate"] == DBNull.Value) ? string.Empty : reader["BirthDate"].ToString(),
+                        BirthDate = reader["BirthDate"] == DBNull.Value ? string.Empty : reader["BirthDate"].ToString(),
                         Nationality = reader["Nationality"] as string,
                         PhoneNumber = reader["PhoneNumber"] as string,
                         Address = reader["Address"] as string,
@@ -231,7 +231,7 @@ namespace Driving_License.Users
             {
                 await connection.OpenAsync();
                 using var command = new SqlCommand(commandText, connection);
-                command.CommandType = System.Data.CommandType.Text;
+                command.CommandType = CommandType.Text;
                 if (parameters is not null && parameters.Count() > 0)
                 {
                     foreach (var param in parameters)
