@@ -91,14 +91,14 @@
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="text" name="password" id="password" placeholder="Enter your password"
+                    <input type="password" name="password" id="password" placeholder="Enter your password"
                            required>
                     <div class="invalid-feedback">
                         Enter your password
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="repass" placeholder="Enter your password again" required>
+                    <input type="password" name="repass" id="repass" placeholder="Enter your password again" required>
                     <div class="invalid-feedback">
                         Reconfirm your password
                     </div>
@@ -115,6 +115,9 @@
         <div class="form-container sign-in-container">
             <form action="/Login/login" method="post" novalidate>
                 <h1>Đăng nhập</h1>
+                <p style="color:red">@TempData["Message"]</p>
+                <p style="color:red">@TempData["Message1"]</p>
+                <p style="color:green">@TempData["Message2"]</p>
                 <!--Icon social-->
                 <div class="social-container">
                     <a href="" class="social-icon bg1">
