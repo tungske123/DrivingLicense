@@ -40,17 +40,26 @@ namespace Driving_License.Controllers
                 TempData["Message"] = "Please fill all informations in the fields";
                 return RedirectToAction("Index", "Login");
             }
-            password = await Fakepassword(password);
-            var account = await AccountDAO.Instance.login(username, password);
+            var account = await AccountDAO.Instance.login(username,await Fakepassword(password));
+            var accountsystem = await AccountDAO.Instance.login(username, password);
             if (account is not null) //Login success
             {
                 //Create session then redirect to home page
                 HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
                 await HttpContext.Session.CommitAsync();
                 return RedirectToAction("Index", "Home");
+            }else if(accountsystem is not null)
+            {
+                HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(accountsystem));
+                await HttpContext.Session.CommitAsync();
+                return RedirectToAction("Index", "Home");
             }
-            TempData["Message"] = "Wrong username or password";
-            return RedirectToAction("Index", "Login");
+            else
+            {
+                TempData["Message"] = "Wrong username or password";
+                return RedirectToAction("Index", "Login");
+            }
+            
         }
 
         [AllowAnonymous]
@@ -115,10 +124,10 @@ namespace Driving_License.Controllers
             var password = form["password"];
             var repass = form["repass"];
             var email = form["email"];
-            var account = AccountDAO.Instance.CheckAccountExist(username);
+            var account = await AccountDAO.Instance.CheckAccountExist(username);
             if (!password.Equals(repass))
             {
-                TempData["Message"] = "repasword does not match ";
+                TempData["Message"] = "repasword doesn't match";
                 return RedirectToAction("Index", "Login");
             }
             else if(account is not null)
