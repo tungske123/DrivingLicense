@@ -135,7 +135,10 @@ namespace Driving_License.Controllers
 
         public async Task<IActionResult> logout()
         {
-            HttpContext.Session.Clear();
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("usersession"))) {
+                HttpContext.Session.Remove("usersession");
+            }
+            await HttpContext.Session.CommitAsync();
             return RedirectToAction("Index", "Home");
         }
 
