@@ -109,8 +109,13 @@ namespace Driving_License.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> signup(string username, string password, string repass, string email)
+        [HttpPost]
+        public async Task<IActionResult> signup(IFormCollection form)
         {
+            string username = form["username"];
+            string password = form["password"];
+            string repass = form["repass"];
+            string email = form["email"];
             var account = await AccountDAO.Instance.CheckAccountExist(username);
             if (!password.Equals(repass))
             {
