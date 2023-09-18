@@ -13,6 +13,8 @@ using Driving_License.Utils;
 using System.Data;
 using Driving_License.Models.Users;
 using Driving_License.Models.Account;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Driving_License.Controllers
 {
@@ -38,6 +40,7 @@ namespace Driving_License.Controllers
                 TempData["Message"] = "Please fill all informations in the fields";
                 return RedirectToAction("Index", "Login");
             }
+            password = await Fakepassword(password);
             var account = await AccountDAO.Instance.login(username, password);
             if (account is not null) //Login success
             {
@@ -85,7 +88,6 @@ namespace Driving_License.Controllers
                 TempData["Message"] = "Login with Google Error";
                 return RedirectToAction("Index", "Login");
             }
-
             //get user information from google
             var info = await HttpContext.AuthenticateAsync();
             if (info is null)
@@ -107,15 +109,46 @@ namespace Driving_License.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> signup(string username, string password, string email)
+        public async Task<IActionResult> signup(IFormCollection form)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email))
+            var username = Request.Form["username"];
+            var password = form["password"];
+            var repass = form["repass"];
+            var email = form["email"];
+            var account = AccountDAO.Instance.CheckAccountExist(username);
+            if (!password.Equals(repass))
             {
-                TempData["Message"] = "Please fill all missing fields";
+                TempData["Message"] = "repasword does not match ";
                 return RedirectToAction("Index", "Login");
             }
+            else if(account is not null)
+            { 
+                TempData["Message1"] = "Username already exist !";
+                return RedirectToAction("Index", "Login");
+            }
+            password = await Fakepassword(password);
             await AccountDAO.Instance.SignUp(username, password, email);
+            TempData["Message2"] = "Sign Up Success !";
             return RedirectToAction("Index", "Login");
+        }
+
+        public async Task<IActionResult> logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<string> Fakepassword(string password)
+        {
+            using var md5 = MD5.Create();
+            byte[] fromData = Encoding.UTF8.GetBytes(password);
+            byte[] targetData = await Task.Run(() => md5.ComputeHash(fromData));
+            string byte25string = null;
+            for (int i = 0; i < targetData.Length; i++)
+            {
+                byte25string += targetData[i].ToString("x2");
+            }
+            return byte25string;
         }
     }
 }

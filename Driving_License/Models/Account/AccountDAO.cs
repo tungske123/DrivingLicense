@@ -73,5 +73,38 @@ namespace Driving_License.Models.Account
                 await connection.CloseAsync();
             }
         }
+
+        public async Task<AccountDTO> CheckAccountExist(string username)
+        {
+            using var connection = new SqlConnection(DBUtils.getConnectionString());
+            string query = "select * from dbo.Account" +
+                "\nwhere Username = @username";
+            try
+            {
+                await connection.OpenAsync();
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@username", username);
+                using var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    return new AccountDTO()
+                    {
+                        AccountID = (Guid)(reader["AccountID"]),
+                        Username = reader["Username"] as string,
+                        Password = reader["Password"] as string,
+                        Role = reader["Role"] as string
+                    };
+                }
+            }
+            catch (SqlException ex)
+            {
+                await Console.Out.WriteLineAsync("Login error: " + ex.Message);
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
+            return null;
+        }
     }
 }
