@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -19,52 +19,6 @@
         ViewData["Title"] = "Login Page";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
-
-    <!--Navbar-->
-    <header>
-        <!--Nav Container-->
-        <div class="nav container hidden-load">
-            <!--Menu Icon-->
-            <i class='bx bx-menu' id="menu-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list"
-                     viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                          d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
-                </svg>
-            </i>
-            <!--Logo-->
-            <a href="#" class="logo">Learn<span>2</span>Drive</a>
-            <!--Navbar List-->
-            <ul class="navbar">
-                <li> <a href="#">Home</a></li>
-                <li> <a href="#">Giới thiệu </a></li>
-                <li class="dropdown-toggle">
-                    <a class="navbar-link" href="#" id="dropdown">Đào tạo lái xe</a>
-                    <ul class="dropdown_menu dropdown_menu--animated dropdown_menu-1 dropdown-menu">
-                        <li class="dropdown-item" href="#">Page 1</li>
-                        <li class="dropdown-item" href="#">Page 2</li>
-                        <li class="dropdown-item" href="#">Page 3</li>
-                        <li class="dropdown-item" href="#">Page 4</li>
-                    </ul>
-                </li>
-                <li> <a href="#">Tài liệu</a></li>
-                <li> <a href="#">Liên hệ</a></li>
-                <li> <a href="indext2.html">Đăng Nhập</a></li>
-            </ul>
-            <!--search Icon-->
-            <i class='bx bx-search' id="search-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                </svg>
-            </i>
-            <!--search box hidden-load-->
-            <form class="search-box hidden-load container" action="">
-                <input type="search" name="keyword" placeholder="Search here..." class="search-bar">
-            </form>
-        </div>
-    </header>
-
     <!--Form Sign up-->
     <section class="form-c sign-up-form" id="container">
         <div class="form-container sign-up-container">
@@ -174,9 +128,20 @@
             </dialog>
         </div>
     </section>
-
-    <!--Section Footer-->
-    <section class="footer hidden-load container-fluid">
+    <script>
+        var forms = document.getElementsByTagName('form');
+        for (var i = 0; i < forms.length; ++i) {
+            var form = forms[i];
+            form.addEventListener('submit', function (event) {
+                if (!this.checkValidity()) {
+                    event.preventDefault(); // Prevent form submission
+                }
+                this.classList.add('was-validated');
+            });
+        }
+        document.querySelector('.login-link').classList.add('active');
+    </script>
+    <div class="footer hidden-load container-fluid">
         <div class="footer-container container">
             <div class="footer-box hidden-load">
                 <a href="#" class="logo">Learn<span>2</span>Drive</a>
@@ -189,7 +154,7 @@
             </div>
             <div class="footer-box hidden-load">
                 <h3>Page</h3>
-                <a href="#">Home</a>
+                <a href="/Home">Home</a>
                 <a href="#">Giới thiệu</a>
                 <a href="#">Đào tạo lái xe</a>
                 <a href="#">Tài liệu</a>
@@ -212,24 +177,7 @@
                 <a href="">Germany</a>
             </div>
         </div>
-    </section>
-    <!--Copyright-->
-    <div class="copyright">
-        <p>&#169; Đoán xem MA ĐỜ VÁC CƠ All Right Reserved</p>
     </div>
-    <script>
-        var forms = document.getElementsByTagName('form');
-        for (var i = 0; i < forms.length; ++i) {
-            var form = forms[i];
-            form.addEventListener('submit', function (event) {
-                if (!this.checkValidity()) {
-                    event.preventDefault(); // Prevent form submission
-                }
-                this.classList.add('was-validated');
-            });
-        }
-        document.querySelector('.login-link').classList.add('active');
-    </script>
     <script src="js/LoginAnimation.js"></script>
     <script src="js/Home.js"></script>
     <script src="js/LoadAnimations.js"></script>
@@ -238,4 +186,4 @@
             crossorigin="anonymous"></script>
 
 </body>
-
+</html>
