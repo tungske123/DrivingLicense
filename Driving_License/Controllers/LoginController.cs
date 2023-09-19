@@ -40,17 +40,26 @@ namespace Driving_License.Controllers
                 TempData["Message"] = "Please fill all informations in the fields";
                 return RedirectToAction("Index", "Login");
             }
-            password = await Fakepassword(password);
-            var account = await AccountDAO.Instance.login(username, password);
+            var account = await AccountDAO.Instance.login(username,await Fakepassword(password));
+            var accountsystem = await AccountDAO.Instance.login(username, password);
             if (account is not null) //Login success
             {
                 //Create session then redirect to home page
                 HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
                 await HttpContext.Session.CommitAsync();
                 return RedirectToAction("Index", "Home");
+            }else if(accountsystem is not null)
+            {
+                HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(accountsystem));
+                await HttpContext.Session.CommitAsync();
+                return RedirectToAction("Index", "Home");
             }
-            TempData["Message"] = "Wrong username or password";
-            return RedirectToAction("Index", "Login");
+            else
+            {
+                TempData["Message"] = "Wrong username or password";
+                return RedirectToAction("Index", "Login");
+            }
+            
         }
 
         [AllowAnonymous]
@@ -109,6 +118,7 @@ namespace Driving_License.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
         public async Task<IActionResult> signup(IFormCollection form)
         {
             var username = Request.Form["username"];
@@ -119,10 +129,10 @@ namespace Driving_License.Controllers
             
             if (!password.Equals(repass))
             {
-                TempData["Message"] = "repasword does not match ";
+                TempData["Message"] = "repasword doesn't match";
                 return RedirectToAction("Index", "Login");
             }
-            else if(account is not null)
+            if(account is not null)
             { 
                 TempData["Message1"] = "Username already exist !";
                 return RedirectToAction("Index", "Login");
@@ -135,7 +145,10 @@ namespace Driving_License.Controllers
 
         public async Task<IActionResult> logout()
         {
-            HttpContext.Session.Clear();
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("usersession"))) {
+                HttpContext.Session.Remove("usersession");
+            }
+            await HttpContext.Session.CommitAsync();
             return RedirectToAction("Index", "Home");
         }
 
