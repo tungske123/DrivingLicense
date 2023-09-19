@@ -125,7 +125,7 @@ namespace Driving_License.Controllers
             var password = form["password"];
             var repass = form["repass"];
             var email = form["email"];
-            var account = AccountDAO.Instance.CheckAccountExist(username);
+            var account = await AccountDAO.Instance.CheckAccountExist(username);
             if (!password.Equals(repass))
             {
                 TempData["Message"] = "repasword doesn't match";
