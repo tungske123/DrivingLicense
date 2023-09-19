@@ -22,15 +22,13 @@ create table Account
 );
 create table License
 (
-   LicenseID nvarchar(10),
+   LicenseID nvarchar(10) primary key,
    LicenseName nvarchar(100),
-
-   primary key (LicenseID)
 );
 
 create table Vehicle
 (
-   VehicleID uniqueidentifier default newid(),
+   VehicleID uniqueidentifier default newid() primary key,
    [Name] nvarchar(100),
    [Image] nvarchar(max),
    Brand nvarchar(100),
@@ -40,14 +38,12 @@ create table Vehicle
    [Address] nvarchar(100),
    RentPrice decimal,
    [Status] bit,
-
-   primary key (VehicleID)
 );
 
 create table Users
 (
-   UserID uniqueidentifier default newid(),
-   AccountID uniqueidentifier default newid() unique,
+   UserID uniqueidentifier default newid() primary key,
+   AccountID uniqueidentifier default newid(),
    Avatar nvarchar(max),
    CCCD nvarchar(15),
    Email nvarchar(100),
@@ -56,15 +52,13 @@ create table Users
    Nationality nvarchar(100),
    PhoneNumber nvarchar(20),
    [Address] nvarchar(100),
-
-   primary key (UserID),
    foreign key (AccountID) references dbo.Account(AccountID)
 );
 
 
 create table Rent
 (
-   RentID uniqueidentifier default newid(),
+   RentID uniqueidentifier default newid() primary key,
    VehicleID uniqueidentifier default newid(),
    UserID uniqueidentifier default newid(),
    StartTime time,
@@ -72,27 +66,25 @@ create table Rent
    TotalRentPrice decimal,
    status nvarchar(100),
 
-   primary key (RentID, VehicleID, UserID),
    foreign key (VehicleID) references dbo.Vehicle(VehicleID),
    foreign key (UserID) references dbo.Users(UserID)
 );
 
 create table Teacher
 (
-   TeacherID uniqueidentifier default newid(),
-   AccountID uniqueidentifier default newid() unique,
+   TeacherID uniqueidentifier default newid() primary key,
+   AccountID uniqueidentifier default newid(),
    FullName nvarchar(100),
    Information nvarchar(max),
    ContactNumber nvarchar(20),
    Email nvarchar(100),
 
-   primary key (TeacherID),
    foreign key (AccountID) references dbo.Account(AccountID)
 );
 
 create table Schedule
 (
-   ScheduleID uniqueidentifier default newid(),
+   ScheduleID uniqueidentifier default newid() primary key,
    TeacherID uniqueidentifier default newid(),
    UserID uniqueidentifier default newid(),
    LicenseID nvarchar(10),
@@ -103,7 +95,7 @@ create table Schedule
    Address nvarchar(100),
    status nvarchar(50),
 
-   primary key (ScheduleID),
+
    foreign key (TeacherID) references dbo.Teacher(TeacherID),
    foreign key (UserID) references dbo.Users(UserID),
    foreign key (LicenseID) references dbo.License(LicenseID),
@@ -111,48 +103,46 @@ create table Schedule
 
 create table Quiz
 (
-   QuizID nvarchar(10) not null,
+   QuizID nvarchar(10) not null primary key,
    LicenseID nvarchar(10) unique,
    [Name] nvarchar(100),
    [Description] nvarchar(max),
 
-   primary key (QuizID),
+
    foreign key (LicenseID) references dbo.License(LicenseID)
 );
 
 create table Question
 (
-   QuestionID nvarchar(100) not null,
+   QuestionID nvarchar(100) not null primary key,
    QuizID nvarchar(10) not null,
    QuestionText nvarchar(max),
    QuestionImage nvarchar(max),
    isCritical bit,
 
-   primary key (QuestionID),
    foreign key (QuizID) references Quiz(QuizID)
 );
 
 create table Answer
 (
-   AnswerID nvarchar(100) not null,
+   AnswerID nvarchar(100) not null primary key,
    QuestionID nvarchar(100) not null,
    isCorrect bit,
    AnswerText nvarchar(max),
    AnswerImage nvarchar(max),
 
-   primary key (AnswerID),
+
    foreign key (QuestionID) references Question(QuestionID)
 );
 
 create table Attempt
 (
-	AttemptID nvarchar(100) not null,
+	AttemptID nvarchar(100) not null primary key,
 	QuizID nvarchar(10) not null,
 	UserID uniqueidentifier default newid(),
 	Grade decimal,
 	AttemptDate date,
 
-   primary key (QuizID, UserID, AttemptID),
    foreign key (QuizID) references Quiz(QuizID),
    foreign key (UserID) references Users(UserID)
 );
