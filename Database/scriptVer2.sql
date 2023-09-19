@@ -178,7 +178,7 @@ create or alter procedure proc_signUpAccount @username nvarchar(100), @password 
 as
 begin
    insert into dbo.Account (Username, [Password], [Role])
-   values(@username, @password, N'Người dùng');
+   values(@username, @password, 'user');
    declare @AccountID as nvarchar(50);
    set @AccountID = dbo.fn_GetAcountID(@username, @password);
    insert into dbo.Users(AccountID,Email)
