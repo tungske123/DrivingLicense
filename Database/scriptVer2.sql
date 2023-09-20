@@ -13,12 +13,10 @@ use DrivingLicense;
 
 create table Account
 (
-   AccountID uniqueidentifier default newid(),
+   AccountID uniqueidentifier default newid() primary key,
    Username nvarchar(100),
    [Password] nvarchar(100),
    [Role] nvarchar(50),
-
-   primary key (AccountID)
 );
 create table License
 (
@@ -103,7 +101,7 @@ create table Schedule
 
 create table Quiz
 (
-   QuizID nvarchar(10) not null primary key,
+   QuizID int identity(1,1) primary key,
    LicenseID nvarchar(10),
    [Name] nvarchar(100),
    [Description] nvarchar(max),
@@ -114,9 +112,9 @@ create table Quiz
 
 create table Question
 (
-   QuestionID nvarchar(100) not null primary key,
+   QuestionID int identity (1,1) primary key,
    LicenseID nvarchar(10),
-   QuizID nvarchar(10) not null,
+   QuizID int null,
    QuestionText nvarchar(max),
    QuestionImage nvarchar(max),
    isCritical bit,
@@ -127,8 +125,8 @@ create table Question
 
 create table Answer
 (
-   AnswerID nvarchar(100) not null primary key,
-   QuestionID nvarchar(100) not null,
+   AnswerID int identity(1,1) primary key,
+   QuestionID int not null,
    isCorrect bit,
    AnswerText nvarchar(max),
    AnswerImage nvarchar(max),
@@ -140,7 +138,7 @@ create table Answer
 create table Attempt (
     AttemptID uniqueidentifier default newid() primary key,
 	UserID uniqueidentifier default newid(),
-	QuizID nvarchar(10) not null,
+	QuizID int not null,
 	AttemptDate date,
 
 	foreign key (UserID) references dbo.Users(UserID),
@@ -149,8 +147,8 @@ create table Attempt (
 create table AttemptDetail (
    AttemptDetailID uniqueidentifier default newid() primary key,
    AttemptID uniqueidentifier,
-   QuestionID nvarchar(100) not null,
-   SelectedAnswerID nvarchar(100) null,
+   QuestionID int not null,
+   SelectedAnswerID int null,
    IsCorrect bit,
 
    foreign key (AttemptID) references dbo.Attempt(AttemptID),
@@ -160,7 +158,7 @@ create table AttemptDetail (
 );
 go
 
------------------------------------[ Procedures / Functions / Triggers ]-------------------------------
+-----------------------------------[ Procedures / Functions / Triggers / Views ]-------------------------------------
 
 create or alter function fn_GetAcountID (@username nvarchar(100), @password nvarchar(100))
 returns nvarchar(50)
@@ -177,15 +175,28 @@ go
 create or alter procedure proc_signUpAccount @username nvarchar(100), @password nvarchar(100), @email nvarchar(100)
 as
 begin
-   insert into dbo.Account (Username, [Password], [Role])
-   values(@username, @password, 'user');
    declare @AccountID as nvarchar(50);
-   set @AccountID = dbo.fn_GetAcountID(@username, @password);
+
+   -- Declare temporary table
+   declare @InsertedIDs table (AccountID nvarchar(50));
+   insert into dbo.Account (Username, [Password], [Role])
+   output inserted.AccountID into @InsertedIDs(AccountID)
+   values(@username, @password, 'user');
+
+   -- Get accountID from temp table
+   select @AccountID = AccountID from @InsertedIDs;
    insert into dbo.Users(AccountID,Email)
    values(@AccountID, @email);
 end;
 go
-
+create or alter view vw_getAllAccountEmails
+as
+select 'user' as 'Role', AccountID, Email
+from dbo.Users
+union all
+select 'teacher' as 'Role', AccountID, Email
+from dbo.Teacher;
+go
 /*------------------------------------------
 create or alter procedure proc_changeRole @accountID nvarchar(50), @fullname nvarchar(100), @email nvarchar(100), @roleNew nvarchar(50)
 as
@@ -236,6 +247,7 @@ insert into Account(Username, [Password], [Role]) values
 
 -- When insert user:
 exec dbo.proc_signUpAccount @username = 'user123', @password = '123', @email = 'user123@example.com';
+exec dbo.proc_signUpAccount @username = 'john123', @password = '12345', @email = 'john123@example.com';
 
 --=================
 insert into License(LicenseID, LicenseName) values
@@ -284,7 +296,8 @@ insert into Vehicle([Name], [Image], Brand, [Type], Years, ContactNumber, [Addre
 ('Xe 13' , '' , 'Vinfast' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '000000000000' , N'TP.HCM' , 200000 , 1);
 
 --=================
-
+insert into dbo.Quiz(LicenseID,[Name],[Description])
+values('A1',N'Đề thi lý thuyết bằng lái A1 (Đề số 1)', '');
 
 
 
