@@ -35,7 +35,11 @@ namespace Driving_License.Controllers
         {
             return View();
         }
-
+        public IActionResult Intro()
+        {
+            ViewBag.icon_link = "https://cdn-icons-png.flaticon.com/512/3930/3930246.png";
+            return View("~/Views/AboutUs.cshtml");
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
