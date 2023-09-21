@@ -114,7 +114,6 @@ create table Question
 (
    QuestionID int identity (1,1) primary key,
    LicenseID nvarchar(10),
-   QuizID int null,
    QuestionText nvarchar(max),
    QuestionImage nvarchar(max),
    isCritical bit,
