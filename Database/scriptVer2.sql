@@ -123,21 +123,24 @@ create table Question
    foreign key (QuizID) references Quiz(QuizID)
 );
 
+create table Have(
+   QuizID int not null,
+   QuestionID int not null,
+
+   primary key (QuizID, QuestionID),
+   foreign key (QuizID) references dbo.Quiz(QuizID),
+   foreign key (QuestionID) references dbo.Question(QuestionID)
+);
+
 create table Answer
 (
    AnswerID int identity(1,1) primary key,
+   QuestionID int not null,
    isCorrect bit,
    AnswerText nvarchar(max),
    AnswerImage nvarchar(max),
-);
 
-create table Have (
-   QuestionID int not null,
-   AnswerID int not null,
-
-   primary key (QuestionID, AnswerID),
-   foreign key (QuestionID) references dbo.Question(QuestionID),
-   foreign key (AnswerID) references dbo.Answer(AnswerID),
+   foreign key (QuestionID) references Question(QuestionID)
 );
 
 create table Attempt (
