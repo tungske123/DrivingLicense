@@ -119,7 +119,6 @@ create table Question
    isCritical bit,
 
    foreign key (LicenseID) references License(LicenseID),
-   foreign key (QuizID) references Quiz(QuizID)
 );
 
 create table Have(
