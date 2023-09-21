@@ -146,6 +146,7 @@ create table Attempt (
 	UserID uniqueidentifier default newid(),
 	QuizID int not null,
 	AttemptDate date,
+	Grade decimal,
 
 	foreign key (UserID) references dbo.Users(UserID),
 	foreign key (QuizID) references dbo.Quiz(QuizID)
