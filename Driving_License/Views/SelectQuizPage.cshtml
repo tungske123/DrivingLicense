@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--custom css file-->
+    <link rel="stylesheet" href="~/css/styleSelectQuizPage.css">
+    <link rel="stylesheet" href="~/css/stylePagination.css">
+    <!--icon file-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4832/4832401.png">
+    <title>L2D - Thi lý thuyết thử</title>
+</head>
+
+<body>
+    @using Driving_License.Models;
+    @{
+        ViewData["Title"] = "L2D - Thi lý thuyết thử";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        var quizList = ViewBag.quizList as List<Quiz>;
+    }
+    <div class="container-fluid" style="margin-top: 100px;">
+        <h1 class="text-center hidden-load">Thi lý thuyết thử</h1>
+        <section class="filter-section hidden-load">
+            <form action="" id="filterForm">
+                <div class="input-group mb-3 hidden-load">
+                    <select class="form-select" name="licenseid" id="license_option">
+                        <option selected value="none">Chọn hạng bằng lái</option>
+                        <option value="A1">A1</option>
+                        <option value="B1">B1</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3 hidden-load">
+                    <select class="form-select" name="done" id="done">
+                        <option selected value="none">Trạng thái</option>
+                        <option value="done">Đã làm </option>
+                        <option value="notdone">Chưa làm</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-outline-success submit-button">Tìm kiếm</button>
+            </form>
+        </section>
+    </div>
+    <div class="container">
+        <section class="quiz-section mt-3">
+            @if (quizList is not null && quizList.Count() > 0)
+            {
+                @foreach (var quiz in quizList)
+                {
+                    <div class="card hidden-load">
+                        <div class="card-body">
+                            <h5 class="card-title">@quiz.Name</h5>
+                            <h6 class="card-subtitle mb-2" style="color: green;font-weight: bold;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-check-circle mb-1" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                </svg> Đã làm
+                            </h6>
+                            <button type="button" class="btn btn-primary">Bằng @quiz.LicenseId</button>
+                            <button type="button" class="btn btn-outline-primary">Làm lại</button>
+                        </div>
+                    </div>
+                }
+                @if (@quizList.Count() < 3)
+                {
+                    @for (int i = 1;i <= 4 - quizList.Count();++i)
+                    {
+                        <div class="card hidden-load">
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <h6 class="card-subtitle mb-2" style="color: green;font-weight: bold;">
+                                </h6>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            @* <div class="card hidden-load">
+            <div class="card-body">
+            <h5 class="card-title">Đề số 2</h5>
+            <h6 class="card-subtitle mb-2" style="color: red;font-weight: bold;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-x-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+            </svg> Chưa làm
+            </h6>
+            <button type="button" class="btn btn-primary">Bằng B1</button>
+            <button type="button" class="btn btn-outline-primary">Làm</button>
+            </div>
+            </div>
+            <div class="card hidden-load">
+            <div class="card-body">
+            <h5 class="card-title">Đề số 3</h5>
+            <h6 class="card-subtitle mb-2" style="color: red;font-weight: bold;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-x-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+            </svg> Chưa làm
+            </h6>
+            <button type="button" class="btn btn-primary">Bằng A1</button>
+            <button type="button" class="btn btn-outline-primary">Làm</button>
+            </div>
+            </div>
+            <div class="card hidden-load">
+            <div class="card-body">
+            <h5 class="card-title">Đề số 4</h5>
+            <h6 class="card-subtitle mb-2" style="color: red;font-weight: bold;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-x-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+            </svg> Chưa làm
+            </h6>
+            <button type="button" class="btn btn-primary">Bằng A1</button>
+            <button type="button" class="btn btn-outline-primary">Làm</button>
+            </div>
+            </div> *@
+        </section>
+    </div>
+    <div class="pagination hidden-load">
+        @{
+            int pageCnt = 1;
+        }
+        <button class="pagination__arrow">
+            <span class="pagination__arrow-half"></span>
+            <span class="pagination__arrow-half"></span>
+        </button>
+        <div class="page_item">
+            <div class="pagination__number">1</div>
+            <div class="page-circle"></div>
+        </div>
+        <div class="page_item">
+            <div class="pagination__number">2</div>
+            <div class="page-circle"></div>
+        </div>
+        <div class="page_item">
+            <div class="pagination__number">3</div>
+            <div class="page-circle"></div>
+        </div>
+        <div class="page_item">
+            <div class="pagination__number">4</div>
+            <div class="page-circle"></div>
+        </div>
+        <button class="pagination__arrow pagination__arrow--right">
+            <span class="pagination__arrow-half"></span>
+            <span class="pagination__arrow-half"></span>
+        </button>
+    </div>
+    <script>
+        // const liceneSelect = document.getElementById('license_option');
+        // const filterForm = document.querySelector('#filterForm');
+        // liceneSelect.addEventListener('change', function () {
+        //     if (liceneSelect.value !== 'none') {
+        //         filterForm.submit();
+        //     }
+        // });
+        //for circle on page button
+        var pageItemList = document.querySelectorAll('.page_item');
+        pageItemList.forEach(function (pageItem) {
+            pageItem.addEventListener('mouseover', function () {
+                var page_circle = this.querySelector('.page-circle');
+                var pageNumber = this.querySelector('.pagination__number');
+                pageNumber.style = 'color: white';
+                page_circle.style.display = 'unset';
+            });
+            pageItem.addEventListener('mouseout', function () {
+                var page_circle = this.querySelector('.page-circle');
+                var pageNumber = this.querySelector('.pagination__number');
+                pageNumber.style = 'color: black';
+                page_circle.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>

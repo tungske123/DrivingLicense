@@ -1,4 +1,4 @@
-﻿namespace Driving_License.Models.Account
+﻿namespace Driving_License.Models.Accounts
 {
     public class AccountDTO
     {

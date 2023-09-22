@@ -1,9 +1,19 @@
+using Driving_License.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
-var configuration = builder.Configuration;
+var configuration = builder.Configuration.AddJsonFile("appsettings.json").Build();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Add connection to EntityFrameworkCore
+
+builder.Services.AddDbContext<DrivingLicenseContext>(options =>
+{
+    options.UseSqlServer(configuration.GetConnectionString("DrivingLicenseDB"));
+});
 
 //Add sesssion
 builder.Services.AddSession(options =>

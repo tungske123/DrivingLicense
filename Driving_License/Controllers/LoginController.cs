@@ -12,14 +12,20 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Driving_License.Utils;
 using System.Data;
 using Driving_License.Models.Users;
-using Driving_License.Models.Account;
+using Driving_License.Models;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Driving_License.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly DrivingLicenseContext _context;
+        public LoginController(DrivingLicenseContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
             var Message = TempData["Message"] as string;
@@ -40,15 +46,19 @@ namespace Driving_License.Controllers
                 TempData["Message"] = "Please fill all informations in the fields";
                 return RedirectToAction("Index", "Login");
             }
-            var account = await AccountDAO.Instance.login(username,await Fakepassword(password));
-            var accountsystem = await AccountDAO.Instance.login(username, password);
+            var fakePassword = await Fakepassword(password);
+            var account = await _context.Accounts
+                .FirstOrDefaultAsync(acc => acc.Username.Equals(username) && acc.Password.Equals(fakePassword));
+            var accountsystem = await _context.Accounts
+                .FirstOrDefaultAsync(acc => acc.Username.Equals(username) && acc.Password.Equals(password));
             if (account is not null) //Login success
             {
                 //Create session then redirect to home page
                 HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
                 await HttpContext.Session.CommitAsync();
                 return RedirectToAction("Index", "Home");
-            }else if(accountsystem is not null)
+            }
+            else if (accountsystem is not null)
             {
                 HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(accountsystem));
                 await HttpContext.Session.CommitAsync();
@@ -59,93 +69,94 @@ namespace Driving_License.Controllers
                 TempData["Message"] = "Wrong username or password";
                 return RedirectToAction("Index", "Login");
             }
-            
+
         }
 
-        [AllowAnonymous]
-        public IActionResult GoogleLogin(string returnUrl = null)
-        {
-            //Request a redirect to google
-            var redirectUrl = Url.Action(nameof(GoogleLoginCallback), "Login", new
-            {
-                returnUrl
-            });
-            var properties = new AuthenticationProperties
-            {
-                RedirectUri = redirectUrl
-            };
-            return Challenge(properties, "Google");
-        }
-        private async Task handleUserEmail(string email)
-        {
-            var userDAO = await UsersDAO.AsyncInstance();
-            var username = email.Split('@')[0];
-            string query = "insert into dbo.Users(Username, Email)" +
-                "\nvalues(@Username, @Email)";
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                DBUtils.CreateParameter("@Username", 100, username, DbType.String),
-                DBUtils.CreateParameter("@Email", 100, email, DbType.String)
-            };
-            await userDAO.AddNewUser(query, parameters);
-        }
-        [AllowAnonymous]
-        public async Task<IActionResult> GoogleLoginCallback(string returnUrl = null, string remoteError = null)
-        {
-            if (remoteError is not null)
-            {
-                TempData["Message"] = "Login with Google Error";
-                return RedirectToAction("Index", "Login");
-            }
-            //get user information from google
-            var info = await HttpContext.AuthenticateAsync();
-            if (info is null)
-            {
-                TempData["Message"] = "No login info";
-                return RedirectToAction("Index", "Login");
-            }
-            var emailClaim = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var userDAO = await UsersDAO.AsyncInstance();
-            if (await userDAO.loadFromUserEmail(emailClaim) is null)
-            {
-                await handleUserEmail(emailClaim);
-            }
-            var user = await userDAO.loadFromUserEmail(emailClaim);
-            if (user is not null)
-            {
-                HttpContext.Session.SetString("usersession", user.UserID.ToString());
-            }
-            return RedirectToAction("Index", "Home");
-        }
+        //[AllowAnonymous]
+        //public IActionResult GoogleLogin(string returnUrl = null)
+        //{
+        //    //Request a redirect to google
+        //    var redirectUrl = Url.Action(nameof(GoogleLoginCallback), "Login", new
+        //    {
+        //        returnUrl
+        //    });
+        //    var properties = new AuthenticationProperties
+        //    {
+        //        RedirectUri = redirectUrl
+        //    };
+        //    return Challenge(properties, "Google");
+        //}
+        //private async Task handleUserEmail(string email)
+        //{
+        //    var userDAO = await UsersDAO.AsyncInstance();
+        //    var username = email.Split('@')[0];
+        //    string query = "insert into dbo.Users(Username, Email)" +
+        //        "\nvalues(@Username, @Email)";
+        //    SqlParameter[] parameters = new SqlParameter[]
+        //    {
+        //        DBUtils.CreateParameter("@Username", 100, username, DbType.String),
+        //        DBUtils.CreateParameter("@Email", 100, email, DbType.String)
+        //    };
+        //    await userDAO.AddNewUser(query, parameters);
+        //}
+        //[AllowAnonymous]
+        //public async Task<IActionResult> GoogleLoginCallback(string returnUrl = null, string remoteError = null)
+        //{
+        //    if (remoteError is not null)
+        //    {
+        //        TempData["Message"] = "Login with Google Error";
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //    //get user information from google
+        //    var info = await HttpContext.AuthenticateAsync();
+        //    if (info is null)
+        //    {
+        //        TempData["Message"] = "No login info";
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //    var emailClaim = info.Principal.FindFirstValue(ClaimTypes.Email);
+        //    var userDAO = await UsersDAO.AsyncInstance();
+        //    if (await userDAO.loadFromUserEmail(emailClaim) is null)
+        //    {
+        //        await handleUserEmail(emailClaim);
+        //    }
+        //    var user = await userDAO.loadFromUserEmail(emailClaim);
+        //    if (user is not null)
+        //    {
+        //        HttpContext.Session.SetString("usersession", user.UserID.ToString());
+        //    }
+        //    return RedirectToAction("Index", "Home");
+        //}
 
         [HttpPost]
         public async Task<IActionResult> signup(IFormCollection form)
         {
-            var username = Request.Form["username"];
-            var password = form["password"];
-            var repass = form["repass"];
-            var email = form["email"];
-            AccountDTO account = await AccountDAO.Instance.CheckAccountExist(username);
-            
+            string username = form["username"];
+            string password = form["password"];
+            string repass = form["repass"];
+            string email = form["email"];
+            var account = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Username.Equals(username));
             if (!password.Equals(repass))
             {
                 TempData["Message"] = "repasword doesn't match";
                 return RedirectToAction("Index", "Login");
             }
-            if(account is not null)
-            { 
-                TempData["Message1"] = "Username already exist !";
+            if (account is not null)
+            {
+                TempData["Message"] = "Username already exist !";
                 return RedirectToAction("Index", "Login");
             }
             password = await Fakepassword(password);
-            await AccountDAO.Instance.SignUp(username, password, email);
-            TempData["Message2"] = "Sign Up Success !";
+            //await AccountDAO.Instance.SignUp(username, password, email);
+            var result = await _context.Database.ExecuteSqlRawAsync("EXEC dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", username, password, email);
+            TempData["Message"] = "Sign Up Success !";
             return RedirectToAction("Index", "Login");
         }
 
         public async Task<IActionResult> logout()
         {
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("usersession"))) {
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("usersession")))
+            {
                 HttpContext.Session.Remove("usersession");
             }
             await HttpContext.Session.CommitAsync();

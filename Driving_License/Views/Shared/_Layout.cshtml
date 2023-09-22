@@ -21,14 +21,15 @@
 </head>
 
 <body>
-    @using Driving_License.Models.Account;
+    @using Driving_License.Models.Accounts;
+    @using Driving_License.Models;
     @using System.Text.Json;
     @{
-        AccountDTO account = null;
+        Account account = null;
         if (!string.IsNullOrEmpty(Context.Session.GetString("usersession")))
         {
             var usersession = Context.Session.GetString("usersession");
-            account = JsonSerializer.Deserialize<AccountDTO>(usersession);
+            account = JsonSerializer.Deserialize<Account>(usersession);
         }
     }
     <header>
