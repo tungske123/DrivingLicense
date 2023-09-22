@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model Driving_License.ViewModels.PageResult<Quiz>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,21 +18,32 @@
     @{
         ViewData["Title"] = "L2D - Thi lý thuyết thử";
         Layout = "~/Views/Shared/_Layout.cshtml";
-        var quizList = ViewBag.quizList as List<Quiz>;
+        var quizList = Model.Items as List<Quiz>;
+        var licenseid = ViewBag.licenseid as string;
     }
     <div class="container-fluid" style="margin-top: 100px;">
         <h1 class="text-center hidden-load">Thi lý thuyết thử</h1>
         <section class="filter-section hidden-load">
-            <form action="" id="filterForm">
+            <form action="/Quiz" id="filterForm">
                 <div class="input-group mb-3 hidden-load">
                     <select class="form-select" name="licenseid" id="license_option">
                         <option selected value="none">Chọn hạng bằng lái</option>
                         <option value="A1">A1</option>
+                        <option value="A2">A2</option>
+                        <option value="A3">A3</option>
+                        <option value="A4">A4</option>
                         <option value="B1">B1</option>
+                        <option value="B2">B2</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="FB2">FB2</option>
+                        <option value="FC">FC</option>
+                        <option value="FD">FD</option>
+                        <option value="FE">FE</option>
                     </select>
                 </div>
                 <div class="input-group mb-3 hidden-load">
-                    <select class="form-select" name="done" id="done">
+                    <select class="form-select" name="status" id="done">
                         <option selected value="none">Trạng thái</option>
                         <option value="done">Đã làm </option>
                         <option value="notdone">Chưa làm</option>
@@ -64,102 +76,49 @@
                 }
                 @if (@quizList.Count() < 3)
                 {
-                    @for (int i = 1;i <= 4 - quizList.Count();++i)
+                    @for (int i = 1; i <= 4 - quizList.Count(); ++i)
                     {
-                        <div class="card hidden-load">
+                        <div class="card" style="border: none;">
                             <div class="card-body">
                                 <h5 class="card-title"></h5>
-                                <h6 class="card-subtitle mb-2" style="color: green;font-weight: bold;">
+                                <h6 class="card-subtitle mb-2">
                                 </h6>
                             </div>
                         </div>
                     }
                 }
             }
-            @* <div class="card hidden-load">
-            <div class="card-body">
-            <h5 class="card-title">Đề số 2</h5>
-            <h6 class="card-subtitle mb-2" style="color: red;font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-x-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-            </svg> Chưa làm
-            </h6>
-            <button type="button" class="btn btn-primary">Bằng B1</button>
-            <button type="button" class="btn btn-outline-primary">Làm</button>
-            </div>
-            </div>
-            <div class="card hidden-load">
-            <div class="card-body">
-            <h5 class="card-title">Đề số 3</h5>
-            <h6 class="card-subtitle mb-2" style="color: red;font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-x-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-            </svg> Chưa làm
-            </h6>
-            <button type="button" class="btn btn-primary">Bằng A1</button>
-            <button type="button" class="btn btn-outline-primary">Làm</button>
-            </div>
-            </div>
-            <div class="card hidden-load">
-            <div class="card-body">
-            <h5 class="card-title">Đề số 4</h5>
-            <h6 class="card-subtitle mb-2" style="color: red;font-weight: bold;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-x-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-            </svg> Chưa làm
-            </h6>
-            <button type="button" class="btn btn-primary">Bằng A1</button>
-            <button type="button" class="btn btn-outline-primary">Làm</button>
-            </div>
-            </div> *@
+            else
+            {
+                <h2 class="text-center">Không có kết quả</h2>
+            }
         </section>
     </div>
     <div class="pagination hidden-load">
-        @{
-            int pageCnt = 1;
-        }
-        <button class="pagination__arrow">
+        <button class="pagination__arrow" onclick="goToPrevPage();">
             <span class="pagination__arrow-half"></span>
             <span class="pagination__arrow-half"></span>
         </button>
-        <div class="page_item">
-            <div class="pagination__number">1</div>
-            <div class="page-circle"></div>
-        </div>
-        <div class="page_item">
-            <div class="pagination__number">2</div>
-            <div class="page-circle"></div>
-        </div>
-        <div class="page_item">
-            <div class="pagination__number">3</div>
-            <div class="page-circle"></div>
-        </div>
-        <div class="page_item">
-            <div class="pagination__number">4</div>
-            <div class="page-circle"></div>
-        </div>
-        <button class="pagination__arrow pagination__arrow--right">
+        @for (int i = 1; i <= Model.TotalPages; ++i)
+        {
+            <div class="page_item" cnt="@i" onclick="goToPage(this);">
+                <div class="pagination__number">@i</div>
+                <div class="page-circle"></div>
+            </div>
+        }
+        <button class="pagination__arrow pagination__arrow--right" onclick="goToNextPage();">
             <span class="pagination__arrow-half"></span>
             <span class="pagination__arrow-half"></span>
         </button>
     </div>
     <script>
-        // const liceneSelect = document.getElementById('license_option');
-        // const filterForm = document.querySelector('#filterForm');
-        // liceneSelect.addEventListener('change', function () {
-        //     if (liceneSelect.value !== 'none') {
-        //         filterForm.submit();
-        //     }
-        // });
+        var currentPage = @Model.PageNumber;
+        var totalPage = @Model.TotalPages;
+        var LicenseID = `@licenseid`;
         //for circle on page button
         var pageItemList = document.querySelectorAll('.page_item');
         pageItemList.forEach(function (pageItem) {
+            var pageCnt = parseInt(pageItem.getAttribute("cnt"));
             pageItem.addEventListener('mouseover', function () {
                 var page_circle = this.querySelector('.page-circle');
                 var pageNumber = this.querySelector('.pagination__number');
@@ -169,10 +128,50 @@
             pageItem.addEventListener('mouseout', function () {
                 var page_circle = this.querySelector('.page-circle');
                 var pageNumber = this.querySelector('.pagination__number');
-                pageNumber.style = 'color: black';
-                page_circle.style.display = 'none';
+                if (pageCnt !== currentPage) {
+                    pageNumber.style = 'color: black';
+                    page_circle.style.display = 'none';
+                }
             });
         });
+        pageItemList.forEach(function (pageItem) {
+            var pageCnt = parseInt(pageItem.getAttribute('cnt'));
+            var pageNumber = pageItem.querySelector('.pagination__number');
+            if (pageCnt === currentPage) {
+                var page_circle = pageItem.querySelector('.page-circle');
+                pageNumber.style = 'color: white';
+                page_circle.style.display = 'unset';
+            }
+        });
+
+        //paging functions
+        function goToPage(pageItem) {
+            var pageCnt = parseInt(pageItem.getAttribute("cnt"));
+            window.location = '/Quiz?licenseid=' + LicenseID + '&page=' + pageCnt;
+        }
+        function goToNextPage() {
+            currentPage++;
+            if (currentPage > totalPage) {
+                currentPage = 1;
+            }
+            window.location = '/Quiz?licenseid=' + LicenseID + '&page=' + currentPage;
+        }
+        function goToPrevPage() {
+            currentPage--;
+            if (currentPage < 1) {
+                currentPage = totalPage;
+            }
+            window.location = '/Quiz?licenseid=' + LicenseID + '&page=' + currentPage;
+        }
+
+        //For checking select options value
+        const licenseSelect = document.getElementById('license_option');
+        for (const option of licenseSelect) {
+            if (option.value === LicenseID) {
+                option.selected = true;
+                break;
+            }
+        }
     </script>
 </body>
 

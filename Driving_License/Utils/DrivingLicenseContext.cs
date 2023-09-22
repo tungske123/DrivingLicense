@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Driving_License.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Driving_License.Models;
+namespace Driving_License.Utils;
 
 public partial class DrivingLicenseContext : DbContext
 {

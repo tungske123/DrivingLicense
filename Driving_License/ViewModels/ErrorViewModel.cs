@@ -1,4 +1,4 @@
-namespace Driving_License.Models
+namespace Driving_License.ViewModels
 {
     public class ErrorViewModel
     {

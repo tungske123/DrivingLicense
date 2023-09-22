@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Driving_License.Utils;
 using System.Data;
 using Driving_License.Models.Users;
-using Driving_License.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
