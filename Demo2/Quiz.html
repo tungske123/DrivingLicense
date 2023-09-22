@@ -21,36 +21,35 @@
 
 <body>
     <div class="container-fluid">
-        
         <div class="row">
-            <aside class="question-section shadow-lg p-3 mb-5 bg-body-tertiary rounded col-md-8">
-                <section class="title" style="font-size: xx-large;">
+            <aside class="question-section hidden-load shadow-lg p-3 mb-5 bg-body-tertiary rounded col-md-8">
+                <section class="title hidden-load" style="font-size: xx-large;">
                     <span class="quiz-name">Thi thử - Lý thuyết bằng lái A1</span>
-                    <span class="time-bar">Thời gian còn lại: <span class="time">19:30</span></span>
+                    <span class="time-bar">Thời gian còn lại: <span class="time" id="time">19:30</span></span>
                 </section>
                 <section class="warning" style="color: red;">
                     Bài thi sẽ kết thúc khi hết thời gian làm bài hoặc khi bạn nhấn "Nộp bài"
                 </section>
-                <h4 class="info mt-3">Số câu đã làm: <span class="question-num badge text-bg-success">2 câu</span></h4>
-                <section class="quiz-buttons mt-3">
+                <h4 class="info mt-3 hidden-load">Số câu đã làm: <span class="question-num badge text-bg-success">2 câu</span></h4>
+                <section class="quiz-buttons mt-3 hidden-load">
                     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">Xem câu hỏi</button>
-                    <button class="btn btn-danger">Nộp bài</button>
+                    <button class="btn btn-danger submit-button">Nộp bài</button>
                 </section>
-                <section class="question-content mt-4">
+                <section class="question-content mt-4 hidden-load">
                     <h5 class="question-description">Câu hỏi 2: Phần của đường bộ được sử dụng cho các phương tiện giao thông qua lại là gì? (Chọn 1)</h5>
                     <div class="question-image"><img src="https://cdnimg.vietnamplus.vn/uploaded/qrndqxjwp/2020_10_20/honda_blade.jpg" class="img-fluid" alt=""></div>
                     <div class="question-answers" style="font-size: large;">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="A1">
+                            <input type="radio" class="form-check-input" name="answer" id="A1">
                             <label for="A1" class="form-check-label">Phần mặt đường và lề đường</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="A2">
+                            <input type="radio" class="form-check-input" name="answer" id="A2">
                             <label for="A2" class="form-check-label">Phần đường xe chạy</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="A3">
+                            <input type="radio" class="form-check-input" name="answer" id="A3">
                             <label for="A3" class="form-check-label">Phần đường xe cơ giới</label>
                         </div>
                     </div>
@@ -84,15 +83,11 @@
                 <button class="btn btn-outline-primary">Câu 23</button>
                 <button class="btn btn-outline-primary">Câu 24</button>
                 <button class="btn btn-outline-primary">Câu 25</button>
-
             </aside>
         </div>
     </div>
 
-
-    <script>
-
-    </script>
+    <script src="JS/QuizFunctions.js"></script>
     <script src="js/LoadAnimations.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
