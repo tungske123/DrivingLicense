@@ -1,4 +1,12 @@
 ﻿@model Driving_License.ViewModels.PageResult<Quiz>
+@using Driving_License.Models;
+@{
+    ViewData["Title"] = "L2D - Thi lý thuyết thử";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var quizList = Model.Items as List<Quiz>;
+    var licenseid = ViewBag.licenseid as string;
+    var status = ViewBag.status as string;
+}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,18 +18,16 @@
     <link rel="stylesheet" href="~/css/stylePagination.css">
     <!--icon file-->
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4832/4832401.png">
+    <script>
+        var currentPage = @Model.PageNumber;
+        var totalPage = @Model.TotalPages;
+        var LicenseID = `@licenseid`;
+        var status = `@status`;
+    </script>
     <title>L2D - Thi lý thuyết thử</title>
 </head>
 
 <body>
-    @using Driving_License.Models;
-    @{
-        ViewData["Title"] = "L2D - Thi lý thuyết thử";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-        var quizList = Model.Items as List<Quiz>;
-        var licenseid = ViewBag.licenseid as string;
-        var status = ViewBag.status as string;
-    }
     <div class="container-fluid" style="margin-top: 100px;">
         <h1 class="text-center hidden-load">Thi lý thuyết thử</h1>
         <section class="filter-section hidden-load">
@@ -63,28 +69,7 @@
                     <div class="card hidden-load quiz-card" qid="@quiz.QuizId">
                         <div class="card-body">
                             <h5 class="card-title">@quiz.Name</h5>
-                            @if (@status.Equals("done"))
-                            {
-                                <h6 class="card-subtitle mb-2" style="color: green;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-check-circle mb-1" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                        <path
-                                            d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
-                                    </svg> Đã làm
-                                </h6>
-                            }
-                            else if (@status.Equals("notdone"))
-                            {
-                                <h6 class="card-subtitle mb-2" style="color: red;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-x-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                        <path
-                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                    </svg> Chưa làm
-                                </h6>
-                            }
+                            <h6 class="card-subtitle mb-2 status"></h6>
                             <button type="button" class="btn btn-primary">Bằng @quiz.LicenseId</button>
                             <button type="button" class="btn btn-outline-primary">Làm lại</button>
                         </div>
@@ -106,7 +91,7 @@
             }
             else
             {
-                <h2 class="text-center">Không có kết quả</h2>
+                <h2 class="text-center hidden-load">Không có kết quả</h2>
             }
         </section>
     </div>
@@ -127,76 +112,7 @@
             <span class="pagination__arrow-half"></span>
         </button>
     </div>
-    <script>
-        var currentPage = @Model.PageNumber;
-        var totalPage = @Model.TotalPages;
-        var LicenseID = `@licenseid`;
-        var status = `@status`;
-        //for circle on page button
-        var pageItemList = document.querySelectorAll('.page_item');
-        pageItemList.forEach(function (pageItem) {
-            var pageCnt = parseInt(pageItem.getAttribute("cnt"));
-            pageItem.addEventListener('mouseover', function () {
-                var page_circle = this.querySelector('.page-circle');
-                var pageNumber = this.querySelector('.pagination__number');
-                pageNumber.style = 'color: white';
-                page_circle.style.display = 'unset';
-            });
-            pageItem.addEventListener('mouseout', function () {
-                var page_circle = this.querySelector('.page-circle');
-                var pageNumber = this.querySelector('.pagination__number');
-                if (pageCnt !== currentPage) {
-                    pageNumber.style = 'color: black';
-                    page_circle.style.display = 'none';
-                }
-            });
-        });
-        pageItemList.forEach(function (pageItem) {
-            var pageCnt = parseInt(pageItem.getAttribute('cnt'));
-            var pageNumber = pageItem.querySelector('.pagination__number');
-            if (pageCnt === currentPage) {
-                var page_circle = pageItem.querySelector('.page-circle');
-                pageNumber.style = 'color: white';
-                page_circle.style.display = 'unset';
-            }
-        });
-
-        //paging functions
-        function goToPage(pageItem) {
-            var pageCnt = parseInt(pageItem.getAttribute("cnt"));
-            window.location = '/Quiz?licenseid=' + LicenseID + '&status=' + status + '&page=' + pageCnt;
-        }
-        function goToNextPage() {
-            currentPage++;
-            if (currentPage > totalPage) {
-                currentPage = 1;
-            }
-            window.location = '/Quiz?licenseid=' + LicenseID + '&status=' + status + '&page=' + currentPage;
-        }
-        function goToPrevPage() {
-            currentPage--;
-            if (currentPage < 1) {
-                currentPage = totalPage;
-            }
-            window.location = '/Quiz?licenseid=' + LicenseID + '&status=' + status + '&page=' + currentPage;
-        }
-
-        //For checking select options value
-        const licenseSelect = document.getElementById('license_option');
-        for (const option of licenseSelect) {
-            if (option.value === LicenseID) {
-                option.selected = true;
-                break;
-            }
-        }
-        const statusSelect = document.getElementById('status_option');
-        for (const option of statusSelect) {
-            if (option.value === status) {
-                option.selected = true;
-                break;
-            }
-        }
-    </script>
+    <script src="~/js/SelectQuizPageFunctions.js"></script>
 </body>
 
 </html>

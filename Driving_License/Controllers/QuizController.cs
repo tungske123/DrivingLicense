@@ -90,5 +90,14 @@ namespace Driving_License.Controllers
             ViewBag.status = (isValidStatus) ? status : string.Empty;
             return View("~/Views/SelectQuizPage.cshtml", pageResult);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> APIQuizStatus() {
+            string UserID = await getUserIDFromSession();
+            List<int> UserQuizList = await _context.Attempts.Where(attempt => attempt.UserId.ToString().Equals(UserID))
+                                                            .Select(attempt => attempt.QuizId)
+                                                            .ToListAsync();
+            return Json(UserQuizList);
+        }
     }
 }
