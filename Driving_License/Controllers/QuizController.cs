@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Driving_License.ViewModels;
 using System.Text.Json;
-using System.ComponentModel;
 using Driving_License.Utils;
+//using System.ComponentModel;
 
 namespace Driving_License.Controllers
 {
@@ -26,7 +26,7 @@ namespace Driving_License.Controllers
             int skipNums = (page - 1) * pageSize;
             if (totalCount < pageSize)
             {
-                takingNums = totalCount;    
+                takingNums = totalCount;
             }
             List<T> items = await query.Skip(skipNums)
                                        .Take(takingNums)
@@ -48,7 +48,7 @@ namespace Driving_License.Controllers
             {
                 AccountID = JsonSerializer.Deserialize<Account>(usersession).AccountId.ToString();
             }
-            var user = await _context.Users.FirstOrDefaultAsync(user => user.AccountId.Equals(AccountID));
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.AccountId.ToString().Equals(AccountID));
             return (user is not null) ? user.UserId.ToString() : string.Empty;
         }
         public async Task<IActionResult> Index(string licenseid, string status, int page = 1, int pageSize = 4)
@@ -61,14 +61,33 @@ namespace Driving_License.Controllers
             {
                 query = query.Where(quiz => quiz.LicenseId.Equals(licenseid.ToUpper()));
             }
-            if (!string.IsNullOrEmpty(status) && !status.Equals("none"))
+            bool isValidStatus = !string.IsNullOrEmpty(status) && !status.Equals("none");
+            if (isValidStatus)
             {
-                //string UserID = await getUserIDFromSession();
-                //Ignore the status 
+                string UserID = await getUserIDFromSession();
+                if (status.Equals("done"))
+                {
+                    var quizIdsAttempted = await _context.Attempts
+                        .Where(attempt => attempt.UserId.ToString().Equals(UserID))
+                        .Select(attempt => attempt.QuizId)
+                        .ToListAsync();
+
+                    query = query.Where(quiz => quizIdsAttempted.Contains(quiz.QuizId));
+                }
+                else
+                {
+                    var quizIdsNotAttempted = await _context.Attempts
+                        .Where(attempt => attempt.UserId.ToString().Equals(UserID))
+                        .Select(attempt => attempt.QuizId)
+                        .ToListAsync();
+
+                    query = query.Where(quiz => !quizIdsNotAttempted.Contains(quiz.QuizId));
+                }
             }
             query = query.OrderBy(quiz => quiz.Name);
             PageResult<Quiz> pageResult = await GetPagedDataAsync(query, page, pageSize);
             ViewBag.licenseid = (isValidLicenseID) ? licenseid : string.Empty;
+            ViewBag.status = (isValidStatus) ? status : string.Empty;
             return View("~/Views/SelectQuizPage.cshtml", pageResult);
         }
     }

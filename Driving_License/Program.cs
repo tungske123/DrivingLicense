@@ -1,10 +1,10 @@
 using Driving_License.Utils;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
+//using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
-var configuration = builder.Configuration.AddJsonFile("appsettings.json").Build();
+var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

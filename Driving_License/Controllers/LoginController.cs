@@ -1,20 +1,20 @@
-using System.Net.NetworkInformation;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Authentication.Google;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Driving_License.Utils;
 using System.Data;
-using Driving_License.Models.Users;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+//using System.Net.NetworkInformation;
+//using System.Threading.Tasks;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.Data.SqlClient;
+//using Microsoft.AspNetCore.Authentication.Google;
+//using System.Security.Claims;
+//using Microsoft.AspNetCore.Authentication.Cookies;
+//using Driving_License.Models.Users;
 
 namespace Driving_License.Controllers
 {

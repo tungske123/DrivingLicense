@@ -29,9 +29,13 @@
     transition: 0.25s ease-in-out;
 }
 
-    .card:hover {
-        transform: scale(1.02);
-    }
+.card:hover {
+    transform: scale(1.02);
+}
+
+.card-subtitle {
+    font-weight: bold;
+}
 
 .page-active {
     background-color: slateblue;
@@ -44,6 +48,7 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
 /*load animations*/
 .hidden-load {
     opacity: 0;
