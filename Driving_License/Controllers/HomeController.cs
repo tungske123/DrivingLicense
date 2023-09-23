@@ -27,9 +27,13 @@ namespace Driving_License.Controllers
         {
             {"A1", "https://cdn-icons-png.flaticon.com/512/3721/3721619.png"},
             {"B1", "https://cdn-icons-png.flaticon.com/512/2554/2554896.png"},
-            {"B2", "https://photo-cms-giaoduc.epicdn.me/w700/Uploaded/2023/xujji/2012_05_16/Marussia%20B1-B2-sieu-xe-lamborghini-ferrari%20(2).jpg"}
+            {"C", "https://cdn-icons-png.flaticon.com/512/2554/2554978.png" }
         };
-            var icon_link = licenseIcons[licenseid.ToUpper()];
+            string icon_link = string.Empty;
+            if (licenseIcons.TryGetValue(licenseid.ToUpper(), out icon_link))
+            {
+                icon_link = licenseIcons[licenseid.ToUpper()];
+            }
             ViewBag.icon_link = icon_link;
             return View(@$"~/Views/LicensePage/{licenseid.ToUpper()}.cshtml");
         }
