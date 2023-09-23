@@ -74,7 +74,7 @@ namespace Driving_License.Controllers
 
                     query = query.Where(quiz => quizIdsAttempted.Contains(quiz.QuizId));
                 }
-                else
+                else if (status.Equals("notdone"))
                 {
                     var quizIdsNotAttempted = await _context.Attempts
                         .Where(attempt => attempt.UserId.ToString().Equals(UserID))
