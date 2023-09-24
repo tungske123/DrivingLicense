@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = Model.quiz.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool hasImage = !string.IsNullOrEmpty(@Model.question.QuestionImage) && !@Model.question.QuestionImage.Equals("none");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +38,17 @@
                 </section>
                 <section class="question-content mt-4 hidden-load">
                     <h5 class="question-description">@Model.question.QuestionText</h5>
-                    <div class="question-image"><img src="@Model.question.QuestionImage" class="img-fluid" alt=""></div>
+                    <div class="question-image">
+                        @if (hasImage)
+                        {
+                            <img src="@Model.question.QuestionImage" class="img-fluid" alt="">
+                        }
+                        else
+                        {
+                            <img src="https://i.pinimg.com/originals/ae/8a/c2/ae8ac2fa217d23aadcc913989fcc34a2.png"
+                                class="img-fluid" alt="">
+                        }
+                    </div>
                     <div class="question-answers" style="font-size: large;">
                         @foreach (var answer in @Model.question.Answers)
                         {

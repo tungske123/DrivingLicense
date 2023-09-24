@@ -53,37 +53,37 @@ namespace Driving_License.Controllers
         }
         public async Task<IActionResult> Index(string licenseid, string status, int page = 1, int pageSize = 4)
         {
+            bool isValidLicenseID = !string.IsNullOrEmpty(licenseid) && !licenseid.Equals("none");
+            bool isValidStatus = !string.IsNullOrEmpty(status) && !status.Equals("none");
+            if (!isValidLicenseID || !isValidStatus)
+            {
+                return NotFound();
+            }
             //Get all data from quiz table
             IQueryable<Quiz> query = _context.Quizzes.AsQueryable();
             //Apply filtering
-            bool isValidLicenseID = !string.IsNullOrEmpty(licenseid) && !licenseid.Equals("none");
-            if (isValidLicenseID)
-            {
-                query = query.Where(quiz => quiz.LicenseId.Equals(licenseid.ToUpper()));
-            }
-            bool isValidStatus = !string.IsNullOrEmpty(status) && !status.Equals("none");
-            if (isValidStatus)
-            {
-                string UserID = await getUserIDFromSession();
-                if (status.Equals("done"))
-                {
-                    var quizIdsAttempted = await _context.Attempts
-                        .Where(attempt => attempt.UserId.ToString().Equals(UserID))
-                        .Select(attempt => attempt.QuizId)
-                        .ToListAsync();
+            query = query.Where(quiz => quiz.LicenseId.Equals(licenseid.ToUpper()));
 
-                    query = query.Where(quiz => quizIdsAttempted.Contains(quiz.QuizId));
-                }
-                else if (status.Equals("notdone"))
-                {
-                    var quizIdsNotAttempted = await _context.Attempts
-                        .Where(attempt => attempt.UserId.ToString().Equals(UserID))
-                        .Select(attempt => attempt.QuizId)
-                        .ToListAsync();
+            string UserID = await getUserIDFromSession();
+            if (status.Equals("done"))
+            {
+                var quizIdsAttempted = await _context.Attempts
+                    .Where(attempt => attempt.UserId.ToString().Equals(UserID))
+                    .Select(attempt => attempt.QuizId)
+                    .ToListAsync();
 
-                    query = query.Where(quiz => !quizIdsNotAttempted.Contains(quiz.QuizId));
-                }
+                query = query.Where(quiz => quizIdsAttempted.Contains(quiz.QuizId));
             }
+            else if (status.Equals("notdone"))
+            {
+                var quizIdsNotAttempted = await _context.Attempts
+                    .Where(attempt => attempt.UserId.ToString().Equals(UserID))
+                    .Select(attempt => attempt.QuizId)
+                    .ToListAsync();
+
+                query = query.Where(quiz => !quizIdsNotAttempted.Contains(quiz.QuizId));
+            }
+            
             query = query.OrderBy(quiz => quiz.Name);
             PageResult<Quiz> pageResult = await GetPagedDataAsync(query, page, pageSize);
             ViewBag.licenseid = (isValidLicenseID) ? licenseid : string.Empty;
@@ -92,7 +92,8 @@ namespace Driving_License.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> APIQuizStatus() {
+        public async Task<IActionResult> APIQuizStatus()
+        {
             string UserID = await getUserIDFromSession();
             List<int> UserQuizList = await _context.Attempts.Where(attempt => attempt.UserId.ToString().Equals(UserID))
                                                             .Select(attempt => attempt.QuizId)
@@ -100,12 +101,14 @@ namespace Driving_License.Controllers
             return Json(UserQuizList);
         }
 
-        public async Task<IActionResult> startQuiz(int quizid) {
+        public async Task<IActionResult> startQuiz(int quizid)
+        {
             var quiz = await _context.Quizzes
                                             .Include(quiz => quiz.Questions)
                                             .ThenInclude(question => question.Answers)
                                             .FirstOrDefaultAsync(quiz => quiz.QuizId == quizid);
-            if (quiz is null) {
+            if (quiz is null)
+            {
                 return NotFound();
             }
             var firstQuestion = quiz.Questions.FirstOrDefault();
@@ -116,7 +119,8 @@ namespace Driving_License.Controllers
                 var quizSessionList = new List<Quiz>();
                 HttpContext.Session.SetString("quizsession", JsonSerializer.Serialize(quizSessionList));
             }
-            return View("~/Views/Quiz.cshtml", new QuizViewModels{
+            return View("~/Views/Quiz.cshtml", new QuizViewModels
+            {
                 quiz = quiz,
                 question = firstQuestion
             });
