@@ -99,5 +99,27 @@ namespace Driving_License.Controllers
                                                             .ToListAsync();
             return Json(UserQuizList);
         }
+
+        public async Task<IActionResult> startQuiz(int quizid) {
+            var quiz = await _context.Quizzes
+                                            .Include(quiz => quiz.Questions)
+                                            .ThenInclude(question => question.Answers)
+                                            .FirstOrDefaultAsync(quiz => quiz.QuizId == quizid);
+            if (quiz is null) {
+                return NotFound();
+            }
+            var firstQuestion = quiz.Questions.FirstOrDefault();
+            //Intialize session
+            var quizSession = HttpContext.Session.GetString("quizsession");
+            if (string.IsNullOrEmpty(quizSession))
+            {
+                var quizSessionList = new List<Quiz>();
+                HttpContext.Session.SetString("quizsession", JsonSerializer.Serialize(quizSessionList));
+            }
+            return View("~/Views/Quiz.cshtml", new QuizViewModels{
+                quiz = quiz,
+                question = firstQuestion
+            });
+        }
     }
 }

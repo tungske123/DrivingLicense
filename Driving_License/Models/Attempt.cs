@@ -13,6 +13,8 @@ public partial class Attempt
 
     public DateTime? AttemptDate { get; set; }
 
+    public decimal? Grade { get; set; }
+
     public virtual ICollection<AttemptDetail> AttemptDetails { get; set; } = new List<AttemptDetail>();
 
     public virtual Quiz Quiz { get; set; }
