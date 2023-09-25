@@ -4,8 +4,9 @@ namespace Driving_License.ViewModels
 {
     public class QuizViewModels
     {
-        public Quiz quiz {get; set;}
-        public Question question {get; set;}
-        
+        public Quiz CurrentQuiz {get; set;}
+        public Question CurrentQuestion {get; set;}
+        public List<Question> AnsweredQuestions {get; set;}
+        public int currentQuestionNo {get; set;}
     }
 }

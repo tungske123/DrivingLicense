@@ -1,9 +1,9 @@
 @model Driving_License.ViewModels.QuizViewModels;
 @using Driving_License.Models;
 @{
-    ViewData["Title"] = Model.quiz.Name;
+    ViewData["Title"] = Model.CurrentQuiz.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    bool hasImage = !string.IsNullOrEmpty(@Model.question.QuestionImage) && !@Model.question.QuestionImage.Equals("none");
+    bool hasImage = !string.IsNullOrEmpty(@Model.CurrentQuestion.QuestionImage) && !@Model.CurrentQuestion.QuestionImage.Equals("none");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +23,7 @@
         <div class="row">
             <aside class="question-section hidden-load shadow-lg p-3 mb-5 bg-body-tertiary rounded col-md-8">
                 <section class="title hidden-load" style="font-size: xx-large;">
-                    <span class="quiz-name">@Model.quiz.Name</span>
+                    <span class="quiz-name">@Model.CurrentQuiz.Name</span>
                     <span class="time-bar">Thời gian còn lại: <span class="time" id="time">20:00</span></span>
                 </section>
                 <section class="warning" style="color: red;">
@@ -37,11 +37,11 @@
                     <button class="btn btn-danger submit-button">Nộp bài</button>
                 </section>
                 <section class="question-content mt-4 hidden-load">
-                    <h5 class="question-description">@Model.question.QuestionText</h5>
+                    <h5 class="question-description">@Model.CurrentQuestion.QuestionText</h5>
                     <div class="question-image">
                         @if (hasImage)
                         {
-                            <img src="@Model.question.QuestionImage" class="img-fluid" alt="">
+                            <img src="@Model.CurrentQuestion.QuestionImage" class="img-fluid" alt="">
                         }
                         else
                         {
@@ -50,7 +50,7 @@
                         }
                     </div>
                     <div class="question-answers" style="font-size: large;">
-                        @foreach (var answer in @Model.question.Answers)
+                        @foreach (var answer in @Model.CurrentQuestion.Answers)
                         {
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="answer" id="@answer.AnswerId">
@@ -63,7 +63,7 @@
             <aside class="quiz-select-section col-md-4 offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
                 aria-labelledby="offcanvasRightLabel">
                 <!--question is done: change class name from btn-outline-primary to btn-success-->
-                @for (int i = 1; i <= @Model.quiz.Questions.Count(); ++i)
+                @for (int i = 1; i <= @Model.CurrentQuiz.Questions.Count(); ++i)
                 {
                     <button class="btn btn-outline-primary question_button" cnt="@i">Câu @i</button>
                 }

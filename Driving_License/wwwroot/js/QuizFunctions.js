@@ -43,3 +43,24 @@ document.querySelector('.submit-button').addEventListener('click', function(){
 if (savedTimeLeft) {
     startTimer();
 }
+
+
+//For saving quiz
+async function SaveQuestion() {
+    try {
+        const response = await fetch('/Quiz/SaveQuestion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },  
+            body: JSON.stringify()
+        });
+        if (!response.ok) {
+            throw new Error('Network response is not Ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log('Error: ' + error);
+    }
+}
