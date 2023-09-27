@@ -71,7 +71,7 @@
                             <h5 class="card-title">@quiz.Name</h5>
                             <h6 class="card-subtitle mb-2 status"></h6>
                             <button type="button" class="btn btn-primary">Bằng @quiz.LicenseId</button>
-                            <button type="button" class="btn btn-outline-primary">Làm lại</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="location.href='/Quiz/StartQuiz?quizid=@quiz.QuizId';">Làm</button>
                         </div>
                     </div>
                 }

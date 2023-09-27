@@ -178,7 +178,8 @@ namespace Driving_License.Controllers
 
             var AttemptSessionID = HttpContext.Session.GetString("quizsession");
             var ChosenAnswer = await _context.Answers.FirstOrDefaultAsync(ans => ans.AnswerId == data.AnswerId);
-            var attemptDetail = await _context.AttemptDetails.FirstOrDefaultAsync(att => att.QuestionId == data.CurrentQuestionID);
+            var attemptDetail = await _context.AttemptDetails.FirstOrDefaultAsync(att =>
+    att.QuestionId == data.CurrentQuestionID && att.AttemptId == Guid.Parse(AttemptSessionID));
             if (attemptDetail is null) //not answered
             {
                 await _context.AttemptDetails.AddAsync(new AttemptDetail
@@ -197,31 +198,6 @@ namespace Driving_License.Controllers
             await _context.SaveChangesAsync();
             return Ok("Quiz Data saved successfully"); //200
         }
-
-        //public async Task CallSaveQuestionToSession(QuizRequestData data)
-        //{
-        //    try
-        //    {
-        //        using var client = new HttpClient();
-        //        client.BaseAddress = new Uri("http://localhost:7002");
-        //        var json = JsonSerializer.Serialize(data);
-        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        //        var response = await client.PostAsync("/Quiz/SaveQuestionToSession", content);
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            System.Console.WriteLine("Quiz data sent succesfully");
-        //        }
-        //        else
-        //        {
-        //            System.Console.WriteLine("Quiz data sent failed");
-        //        }
-        //    }
-        //    catch (HttpRequestException ex)
-        //    {
-        //        System.Console.WriteLine("Call save quesstion to session error: " + ex.Message);
-        //    }
-        //}
 
         public async Task<IActionResult> LoadQuestion(int questionid)
         {
@@ -248,14 +224,14 @@ namespace Driving_License.Controllers
             return View("~/Views/Quiz.cshtml", viewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> FinishQuiz()
-        {
+        // [HttpPost]
+        // public async Task<IActionResult> FinishQuiz()
+        // {
 
-            HttpContext.Session.Remove("quizsession");
+        //     HttpContext.Session.Remove("quizsession");
 
-            //Calculate the result and forward to the homepage
-            return Ok();
-        }
+        //     //Calculate the result and forward to the homepage
+        //     return Ok();
+        // }
     }
 }

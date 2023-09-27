@@ -2,7 +2,7 @@
 
 //Load answer if possible
 
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function () {
     const formCheckList = document.getElementsByClassName('answer-input');
     for (const formCheck of formCheckList) {
         var AnsId = parseInt(formCheck.getAttribute("id"));
@@ -19,13 +19,19 @@ document.querySelector('.submit-button').addEventListener('click', async functio
     submitQuiz();
 });
 
-window.addEventListener('beforeunload', function (event) {
-   SaveQuestion();
+let changesNeedToBeSaved = false;
+
+window.addEventListener('beforeunload', function (e) {
+    if (changesNeedToBeSaved) {
+        e.preventDefault(); // Cancel the default behavior (showing the confirmation dialog)   
+        e.returnValue = '';
+    }
 });
 
 const questionButtons = document.getElementsByClassName('question_button');
 for (const quesButton of questionButtons) {
     quesButton.addEventListener('click', async function () {
+        changesNeedToBeSaved = true;
         await changeQuestion(this);
     });
 }
@@ -71,6 +77,7 @@ async function changeQuestion(questionButton) {
             console.log('error: ' + error);
         }
     });
+    changesNeedToBeSaved = false;
     window.location = '/Quiz/LoadQuestion?questionid=' + questionid;
 }
 
@@ -126,5 +133,6 @@ async function SaveQuestion() {
             console.log('error: ' + error);
         }
     });
+    changesNeedToBeSaved = false;
 }
 
