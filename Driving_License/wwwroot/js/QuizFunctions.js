@@ -19,9 +19,9 @@ document.querySelector('.submit-button').addEventListener('click', async functio
     submitQuiz();
 });
 
-//window.addEventListener('beforeunload', function (event) {
-//    SaveQuestion();
-//});
+window.addEventListener('beforeunload', function (event) {
+   SaveQuestion();
+});
 
 const questionButtons = document.getElementsByClassName('question_button');
 for (const quesButton of questionButtons) {

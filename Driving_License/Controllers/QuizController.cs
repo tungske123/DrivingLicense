@@ -124,6 +124,12 @@ namespace Driving_License.Controllers
         [LoginFilter]
         public async Task<IActionResult> StartQuiz(int quizid)
         {
+            var attempSessionID = HttpContext.Session.GetString("quizsession");
+            //Clean session if exist
+            if (!string.IsNullOrEmpty(attempSessionID))
+            {
+                HttpContext.Session.Remove("quizsession");
+            }
             var UserIDString = await getUserIDFromSession();
             var attemptSession = new Attempt()
             {

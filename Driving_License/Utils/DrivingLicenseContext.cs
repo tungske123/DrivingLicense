@@ -41,13 +41,13 @@ public partial class DrivingLicenseContext : DbContext
 
     public virtual DbSet<VwGetAllAccountEmail> VwGetAllAccountEmails { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-{
-    if (!optionsBuilder.IsConfigured)
-    {
-        optionsBuilder.UseSqlServer(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("DrivingLicenseDB"));
-    }
-}
+//     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+// {
+//     if (!optionsBuilder.IsConfigured)
+//     {
+//         optionsBuilder.UseSqlServer(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("DrivingLicenseDB"));
+//     }
+// }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
