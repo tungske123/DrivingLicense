@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Driving_License.ViewModels;
 using System.Text.Json;
 using Driving_License.Utils;
+using System.Text;
+using System.Text.Json.Serialization;
+using Driving_License.Filters;
 //using System.ComponentModel;
 
 namespace Driving_License.Controllers
@@ -103,55 +106,149 @@ namespace Driving_License.Controllers
             return Json(UserQuizList);
         }
 
-        public async Task<IActionResult> startQuiz(int quizid)
+        public async Task<Attempt> GetAttemptFromSession()
         {
+            var attemptIdString = HttpContext.Session.GetString("quizsession");
+            Attempt attemptSession = null;
+            if (Guid.TryParse(attemptIdString, out var attemptId))
+            {
+                attemptSession = await _context.Attempts
+                    .Include(att => att.AttemptDetails)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(att => att.AttemptId == attemptId);
+
+            }
+            return attemptSession;
+        }
+
+        [LoginFilter]
+        public async Task<IActionResult> StartQuiz(int quizid)
+        {
+            var UserIDString = await getUserIDFromSession();
+            var attemptSession = new Attempt()
+            {
+                AttemptId = Guid.NewGuid(),
+                UserId = Guid.Parse(UserIDString),
+                QuizId = quizid,
+                AttemptDate = DateTime.Now,
+                AttemptDetails = new List<AttemptDetail>()
+            };
+            await _context.Attempts.AddAsync(attemptSession);
+            await _context.SaveChangesAsync();
+
+            var insertedAtttempt = await _context.Attempts
+                                                .Include(att => att.AttemptDetails)
+                                                .AsSplitQuery()
+                                                .FirstOrDefaultAsync(att => att.AttemptId.Equals(attemptSession.AttemptId));
+
+            var quiz = await _context.Quizzes.Include(quiz => quiz.Questions)
+                                             .ThenInclude(question => question.Answers)
+                                             .AsSplitQuery()
+                                             .FirstOrDefaultAsync(quiz => quiz.QuizId == quizid);
+
+            var viewModel = new QuizViewModels()
+            {
+                CurrentQuiz = quiz,
+                CurrentQuestion = quiz.Questions.FirstOrDefault(),
+                AnsweredQuestionCount = 0
+            };
+
+
+            //Initialize quizsession
+            HttpContext.Session.SetString("quizsession", insertedAtttempt.AttemptId.ToString());
+            //Ensure session is saved
+            await HttpContext.Session.CommitAsync();
+            return View("~/Views/Quiz.cshtml", viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveQuestionToSession([FromBody] QuizRequestData data)
+        {
+            if (data is null)
+            {
+                return BadRequest("Invalid quiz data");
+            }
+
+
+            var AttemptSessionID = HttpContext.Session.GetString("quizsession");
+            var ChosenAnswer = await _context.Answers.FirstOrDefaultAsync(ans => ans.AnswerId == data.AnswerId);
+            var attemptDetail = await _context.AttemptDetails.FirstOrDefaultAsync(att => att.QuestionId == data.CurrentQuestionID);
+            if (attemptDetail is null) //not answered
+            {
+                await _context.AttemptDetails.AddAsync(new AttemptDetail
+                {
+                    AttemptId = Guid.Parse(AttemptSessionID),
+                    QuestionId = data.CurrentQuestionID,
+                    SelectedAnswerId = data.AnswerId,
+                    IsCorrect = ChosenAnswer.IsCorrect
+                });
+            }
+            else
+            {
+                attemptDetail.SelectedAnswerId = data.AnswerId;
+                _context.AttemptDetails.Update(attemptDetail);
+            }
+            await _context.SaveChangesAsync();
+            return Ok("Quiz Data saved successfully"); //200
+        }
+
+        //public async Task CallSaveQuestionToSession(QuizRequestData data)
+        //{
+        //    try
+        //    {
+        //        using var client = new HttpClient();
+        //        client.BaseAddress = new Uri("http://localhost:7002");
+        //        var json = JsonSerializer.Serialize(data);
+        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //        var response = await client.PostAsync("/Quiz/SaveQuestionToSession", content);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            System.Console.WriteLine("Quiz data sent succesfully");
+        //        }
+        //        else
+        //        {
+        //            System.Console.WriteLine("Quiz data sent failed");
+        //        }
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        System.Console.WriteLine("Call save quesstion to session error: " + ex.Message);
+        //    }
+        //}
+
+        public async Task<IActionResult> LoadQuestion(int questionid)
+        {
+            var attemptSession = await GetAttemptFromSession();
+
             var quiz = await _context.Quizzes
                                             .Include(quiz => quiz.Questions)
                                             .ThenInclude(question => question.Answers)
-                                            .FirstOrDefaultAsync(quiz => quiz.QuizId == quizid);
-            if (quiz is null)
+                                            .AsSplitQuery()
+                                            .FirstOrDefaultAsync(q => q.QuizId == attemptSession.QuizId);
+
+            var question = quiz.Questions.FirstOrDefault(q => q.QuestionId == questionid);
+            var viewModel = new QuizViewModels()
             {
-                return NotFound();
-            }
-            var firstQuestion = quiz.Questions.FirstOrDefault();
-            //Intialize session
-            var quizSessionString = HttpContext.Session.GetString("quizsession");
-            QuizViewModels quizViewModels = new QuizViewModels(){
                 CurrentQuiz = quiz,
-                CurrentQuestion = firstQuestion,
-                AnsweredQuestions = new List<Question>(),
-                currentQuestionNo = 1                
+                CurrentQuestion = question,
+                AnsweredQuestionCount = await _context.AttemptDetails.CountAsync(att => att.AttemptId.Equals(attemptSession.AttemptId))
             };
-            if (string.IsNullOrEmpty(quizSessionString))
+            var attemptDetails = await _context.AttemptDetails.FirstOrDefaultAsync(att => att.QuestionId == questionid);
+            if (attemptDetails is not null)
             {
-                //Quiz
-                //List of questions (include answers)
-                //UserID 
-                HttpContext.Session.SetString("quizsession", JsonSerializer.Serialize(quizViewModels));
+                viewModel.AnswerIDString = attemptDetails.SelectedAnswerId.ToString();
             }
-            //Make sure sesssion is saved
-            await HttpContext.Session.CommitAsync();
-            return View("~/Views/Quiz.cshtml", quizViewModels);
+            return View("~/Views/Quiz.cshtml", viewModel);
         }
 
-        public async Task<IActionResult> ChangeQuestion(int questionid)
-        {
-            var question = await _context.Questions.FirstOrDefaultAsync(question => question.QuestionId == questionid);
-            if (question is null)
-            {
-                return NotFound();
-            }
-
-            return Ok();
-        }
-
-        //Receive:
-        //Question
-        //ChosenAnswer
         [HttpPost]
-        public async Task<IActionResult> SaveQuestionToSession([FromBody] int QuestionNo,[FromBody] Question question, [FromBody] Answer answer)
+        public async Task<IActionResult> FinishQuiz()
         {
 
+            HttpContext.Session.Remove("quizsession");
+
+            //Calculate the result and forward to the homepage
             return Ok();
         }
     }

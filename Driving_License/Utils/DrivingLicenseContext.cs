@@ -15,7 +15,6 @@ public partial class DrivingLicenseContext : DbContext
         : base(options)
     {
     }
-
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Answer> Answers { get; set; }
