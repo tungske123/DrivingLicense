@@ -1,5 +1,20 @@
+* {
+    /* font-family: 'Poppins', sans-serif; */
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+h3, a {
+    text-decoration: none;
+}
+h3 {
+    padding-top: 6px;
+}
 :root {
-    --color-primary: #7380ec;
+    /* --color-primary: #7380ec; */
+    --color-primary: #d90429;
     --color-primary2: #d90429;
     --color-danger: #ff7782;
     --color-success: #41f1b6;
@@ -154,7 +169,7 @@ aside {
 aside .top {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 1.4rem;
 }
 
@@ -210,7 +225,8 @@ aside .sidebar-menu a:last-child {
 aside .sidebar-menu a.active {
     background: var(--color-light);
     color: var(--color-primary2);
-    margin-left: 0;
+    margin-left: 0; 
+    border-radius: 7px;
 }
 
 aside .sidebar-menu a.active::before {
@@ -371,12 +387,15 @@ main .recent-order-list h2 {
 main .recent-order-list table {
     background: var(--color-white);
     width: 100%;
-    border-radius: var(--card-border-radius);
+    /* border-radius: var(--card-border-radius); */
+    border-radius: 10px;
     padding: var(--card-padding);
     text-align: center;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
+    font-size: 13px;
 }
+
 
 main .recent-order-list table:hover {
     box-shadow: none;
@@ -522,7 +541,7 @@ main .recent-order-list a {
     background: var(--color-success);
 }
 
-.right-section .sales-analytics-section .add-object {
+/* .right-section .sales-analytics-section .add-object {
     background-color: transparent;
     border: 2px dashed var(--color-primary);
     color: var(--color-primary);
@@ -539,7 +558,7 @@ main .recent-order-list a {
 
 .right-section .sales-analytics-section .add-object div h3 {
     font-weight: 600;
-}
+} */
 
 /* ============================MEDIA t mệt rồi ============================*/
 
