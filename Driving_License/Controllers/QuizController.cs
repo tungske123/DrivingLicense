@@ -224,14 +224,16 @@ namespace Driving_License.Controllers
             return View("~/Views/Quiz.cshtml", viewModel);
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> FinishQuiz()
-        // {
 
-        //     HttpContext.Session.Remove("quizsession");
 
-        //     //Calculate the result and forward to the homepage
-        //     return Ok();
-        // }
+        public async Task<IActionResult> FinishQuiz()
+        {
+
+            HttpContext.Session.Remove("quizsession");
+            //Calculate the result and forward to the result page
+            
+            await HttpContext.Session.CommitAsync();
+            return Ok();
+        }
     }
 }
