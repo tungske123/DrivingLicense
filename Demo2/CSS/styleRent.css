@@ -2510,3 +2510,37 @@ img {
     font-weight: 800;
     color: #242420;
 }
+@media (max-width: 768px) {
+    .date-time-form {
+        flex-direction: column;
+    }
+    .content-detail,.cover-car-container {
+        margin-left: 10px;
+    }
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .info-car-basic {
+        padding-left: 10px;
+    }
+    .rent-box {
+        width: 100vw;
+        display: block;
+    }
+    .rent-box > * {
+        margin-right: 10px;
+    }
+    .detail-car .detail-container .content-detail {
+        display: block;
+        width: 100vw;
+        margin-left: 0;
+    }
+    p.main {
+        padding-right: 5px;
+    }
+    .cost :is(span) {
+        padding-right: 5px; 
+    }
+}
