@@ -32,4 +32,6 @@ public partial class User
     public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+    
+    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 }
