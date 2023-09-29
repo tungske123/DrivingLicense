@@ -1,5 +1,6 @@
 use DrivingLicense;
 -----------------------------------[ CREATE ACCOUNT USER ]-------------------------------
+go
 create or alter function fn_GetAccountID (@username nvarchar(100), @password nvarchar(100))
 returns nvarchar(50)
 as
@@ -179,3 +180,60 @@ begin
 	end
 end;
 */
+go
+CREATE OR ALTER     procedure [dbo].[proc_CalculateQuizResult] @AttemptID uniqueidentifier
+as
+declare @CorrectQuestionCnt as int;
+declare @IncorrectQuestionCnt as int;
+declare @TotalQuestionCnt as int;
+declare @QuizID as int;
+declare @Result as decimal(18, 2);
+declare @RemainingQuestion as int;
+declare @AttemptDate as date;
+set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
+set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
+set @CorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 1);
+set @IncorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 0);
+set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
+set @Result = cast(@CorrectQuestionCnt as decimal(18, 2)) / cast(@TotalQuestionCnt as decimal(18, 2)) * 100.0;
+set @RemainingQuestion = @TotalQuestionCnt - @CorrectQuestionCnt - @IncorrectQuestionCnt;
+select (select [Name] from dbo.Quiz where QuizID = @QuizID) as 'QuizName', 
+(select LicenseID from dbo.Quiz where QuizID = @QuizID) as 'License',
+@AttemptDate as 'AttemptDate',
+@TotalQuestionCnt as 'TotalQuestion',
+@CorrectQuestionCnt as 'CorrectQuestion', @IncorrectQuestionCnt as 'IncorrectQuestion', 
+@RemainingQuestion as 'RemainingQuestion',
+@Result as 'Result'
+from dbo.AttemptDetail att
+where att.AttemptID = @AttemptID
+group by att.AttemptID;
+update dbo.Attempt
+set Grade = cast(@Result as decimal(18, 2))
+where AttemptID = @AttemptID;
+go
+
+GO
+CREATE OR ALTER     PROCEDURE [dbo].[proc_GetQuizAttempStats] @AttemptID uniqueidentifier
+AS
+BEGIN
+    
+SELECT
+    q.QuestionText,
+    (SELECT AnswerText FROM dbo.Answer WHERE AnswerID = att.SelectedAnswerID) AS 'UserAnswer',
+    (SELECT a.AnswerText FROM dbo.Answer a WHERE a.QuestionID = q.QuestionID AND a.isCorrect = 1) AS 'CorrectAnswer',
+    CASE
+        WHEN att.SelectedAnswerID IS NULL THEN NULL
+        ELSE att.IsCorrect
+    END AS 'IsCorrect'
+FROM
+    dbo.Question q
+LEFT JOIN
+    dbo.AttemptDetail att ON q.QuestionID = att.QuestionID
+WHERE
+    q.QuestionID IN (
+        SELECT QuestionID
+        FROM dbo.Have
+        WHERE QuizID = (SELECT QuizID FROM dbo.Attempt WHERE AttemptID = @AttemptID)
+    );
+END
+GO
