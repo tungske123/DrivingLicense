@@ -1,0 +1,67 @@
+* {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/* .result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    /* min-width: 350px; */
+}
+
+table tr th,
+table tr td {
+    padding: 5px;
+}
+
+/* top-left border-radius */
+table tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+}
+
+/* top-right border-radius */
+table tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+}
+
+/* bottom-left border-radius */
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
+}
+
+/*load animations*/
+.hidden-load {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(-10vw);
+    transition: all 1s;
+}
+
+.show-load {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+}
+
+.current-playlist-name {
+    font-weight: bold;
+}
+
+@media(prefers-reduced-motion) {
+    .hidden-load {
+        transition: none;
+    }
+}

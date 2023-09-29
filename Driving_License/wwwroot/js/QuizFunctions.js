@@ -1,7 +1,14 @@
 //Events
+const formCheckList = document.getElementsByClassName('answer-input');
+for (const formCheck of formCheckList) {
+    formCheck.addEventListener('change', function(){
+        addToSessionList(currentQuestionID);
+    });
+}
 
 //Load answer if possible
 
+let changesNeedToBeSaved = false;
 document.addEventListener('DOMContentLoaded', function () {
     const formCheckList = document.getElementsByClassName('answer-input');
     for (const formCheck of formCheckList) {
@@ -11,6 +18,11 @@ document.addEventListener('DOMContentLoaded', function () {
             break;
         }
     }
+    startTimer();
+    if (!isSessionInitialized()) {
+        InitializeSessionList();
+    }
+    changeQuestionButtonsColor();
 });
 
 document.querySelector('.submit-button').addEventListener('click', async function () {
@@ -19,7 +31,6 @@ document.querySelector('.submit-button').addEventListener('click', async functio
     submitQuiz();
 });
 
-let changesNeedToBeSaved = false;
 
 window.addEventListener('beforeunload', function (e) {
     if (changesNeedToBeSaved) {
@@ -30,6 +41,7 @@ window.addEventListener('beforeunload', function (e) {
 
 const questionButtons = document.getElementsByClassName('question_button');
 for (const quesButton of questionButtons) {
+    const questionid = parseInt(quesButton.getAttribute('quesid'));
     quesButton.addEventListener('click', async function () {
         changesNeedToBeSaved = true;
         await changeQuestion(this);
@@ -37,6 +49,43 @@ for (const quesButton of questionButtons) {
 }
 
 //Methods
+function InitializeSessionList(){
+    sessionStorage.setItem('sessionlist', JSON.stringify([]));
+}
+function isSessionInitialized() {
+    const sessionData = sessionStorage.getItem('sessionlist');
+    return (sessionData !== null && sessionData !== undefined);
+}
+function getSessionList() {
+    return JSON.parse(sessionStorage.getItem('sessionlist')) || [];
+}
+function addToSessionList(value) {
+    let sessionList = JSON.parse(sessionStorage.getItem('sessionlist')) || [];
+    sessionList.push(value);
+    sessionStorage.setItem('sessionlist', JSON.stringify(sessionList));
+}
+function changeQuestionButtonsColor() {
+    const sessionList = getSessionList();
+    const questionButtonList = document.getElementsByClassName('question_button');
+    for (const questionButton of questionButtonList) {
+        const questionid = parseInt(questionButton.getAttribute('quesid'));
+        if (sessionList.indexOf(questionid) !== -1) {
+            questionButton.classList.remove('btn-outline-primary');
+            questionButton.classList.add('btn-success');
+        }
+    }
+}
+function checkUserAnswered() {
+    let check = false;
+    const formCheckList = document.getElementsByClassName('answer-input');
+    for (const formCheck of formCheckList) {
+        if (formCheck.checked) {
+            check = true;
+            break;
+        }
+    }
+    return check;
+}
 function getAnswerID() {
     const formCheckList = document.getElementsByClassName('answer-input');
     let result = null;
@@ -85,7 +134,7 @@ async function changeQuestion(questionButton) {
 let timer;
 
 const savedTimeLeft = sessionStorage.getItem("quizTimer");
-let timeLeft = savedTimeLeft ? parseInt(savedTimeLeft) : 60;
+let timeLeft = savedTimeLeft ? parseInt(savedTimeLeft) : 1200;
 
 function saveTimerState() {
     sessionStorage.setItem("quizTimer", timeLeft.toString());
@@ -96,6 +145,10 @@ function formatTime(seconds) {
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
 }
 function startTimer() {
+    // Clear the interval if it's already running
+    if (timer) {
+        clearInterval(timer);
+    }
     timer = setInterval(() => {
         const timeElement = document.getElementById("time");
         timeElement.textContent = formatTime(timeLeft);
@@ -111,7 +164,7 @@ function submitQuiz() {
     window.location = '/Quiz/FinishQuiz';
 }
 
-// startTimer();
+
 if (savedTimeLeft) {
     startTimer();
 }

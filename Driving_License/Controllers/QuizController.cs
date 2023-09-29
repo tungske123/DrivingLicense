@@ -7,6 +7,7 @@ using Driving_License.Utils;
 using System.Text;
 using System.Text.Json.Serialization;
 using Driving_License.Filters;
+using Driving_License.Repositories;
 //using System.ComponentModel;
 
 namespace Driving_License.Controllers
@@ -174,8 +175,6 @@ namespace Driving_License.Controllers
             {
                 return BadRequest("Invalid quiz data");
             }
-
-
             var AttemptSessionID = HttpContext.Session.GetString("quizsession");
             var ChosenAnswer = await _context.Answers.FirstOrDefaultAsync(ans => ans.AnswerId == data.AnswerId);
             var attemptDetail = await _context.AttemptDetails.FirstOrDefaultAsync(att =>
@@ -216,7 +215,7 @@ namespace Driving_License.Controllers
                 CurrentQuestion = question,
                 AnsweredQuestionCount = await _context.AttemptDetails.CountAsync(att => att.AttemptId.Equals(attemptSession.AttemptId))
             };
-            var attemptDetails = await _context.AttemptDetails.FirstOrDefaultAsync(att => att.QuestionId == questionid);
+            var attemptDetails = await _context.AttemptDetails.FirstOrDefaultAsync(att => att.QuestionId == questionid && att.AttemptId.Equals(attemptSession.AttemptId));
             if (attemptDetails is not null)
             {
                 viewModel.AnswerIDString = attemptDetails.SelectedAnswerId.ToString();
@@ -225,15 +224,21 @@ namespace Driving_License.Controllers
         }
 
 
-
         public async Task<IActionResult> FinishQuiz()
         {
-
-            HttpContext.Session.Remove("quizsession");
+            ViewBag.icon_link = "https://cdn-icons-png.flaticon.com/512/4832/4832401.png";
+            var AttemptSessionID = HttpContext.Session.GetString("quizsession");
+            var AttemptSession = await _context.Attempts.FirstOrDefaultAsync(att => att.AttemptId.ToString().Equals(AttemptSessionID));
+            int QuizID = AttemptSession.QuizId;
+            ViewBag.QuizID = QuizID;
             //Calculate the result and forward to the result page
-            
+            var quizResultModel = await QuizRepository.Instance.CalculateQuizResult(Guid.Parse(AttemptSessionID));
+            var QuizQuestionDataDB = await QuizRepository.Instance.GetQuizAttemptStats(Guid.Parse(AttemptSessionID));
+            quizResultModel.QuestionDataList.AddRange(QuizQuestionDataDB);
+            //Delete quiz session
+            HttpContext.Session.Remove("quizsession");
             await HttpContext.Session.CommitAsync();
-            return Ok();
+            return View("~/Views/QuizResult.cshtml", quizResultModel);
         }
     }
 }
