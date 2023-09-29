@@ -2,6 +2,7 @@ const sideMenu = document.querySelector("aside");
 const menuBTN = document.querySelector("#menu-btn");
 const closeBTN = document.querySelector("#close-btn");
 const themeToggler = document.querySelector(".theme-toggler");
+const changeActive = document.querySelector("#sidebar-menu");
 
 menuBTN.addEventListener("click", () => {
     sideMenu.style.display = "block";
@@ -32,3 +33,5 @@ function changeBSTheme() {
         htmlTag.setAttribute('data-bs-theme', 'light');
     }
 }
+
+
