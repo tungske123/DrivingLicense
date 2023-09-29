@@ -4,8 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=<div class=" modal-content" role="document">
+    <!--bootstrap css file-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!--font css file-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300&display=swap" rel="stylesheet">
+    <!--custom css file-->
+    <link rel="stylesheet" href="CSS/styleRent.css">
     <title>RentDetail</title>
-    <link rel="stylesheet" href="styleRent.css">
 </head>
 
 <body>
@@ -103,8 +111,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sidebar-detail">
-                        <div class="rent-box" id="cardetail" style="position: relative;">
+                    <div class="sidebar-detail mt-3">
+                        <div class="rent-box shadow-lg p-3 mb-5 bg-body-tertiary rounded" id="cardetail"
+                            style="position: relative;">
                             <div class="price">
                                 <h4>950K/Giờ</h4>
                             </div>
@@ -126,8 +135,10 @@
                                 </div>
                             </div>
                             <label for="party">Enter a date and time for your booking:</label>
-                            <input id="party" type="datetime-local" name="partydate" value="2023-09-01T08:30" />
-                            <input id="party" type="datetime-local" name="partydate" value="2023-09-01T08:30" />
+                            <input id="party" type="datetime-local" class="form-control mb-2 mt-1" name="partydate"
+                                value="2023-09-01T08:30" />
+                            <input id="party" type="datetime-local" class="form-control mb-2" name="partydate"
+                                value="2023-09-01T08:30" />
                             <div class="dropdown-form ">
                                 <label>Địa điểm giao nhận xe</label>
                                 <div class="wrap-form has-arrow"><span class="value"> Hồ Chí Minh</span></div>
@@ -138,7 +149,7 @@
                                 <div class="line-page"></div>
                                 <div class="price-item total">
                                     <p>Tổng cộng</p>
-                                    <p class="cost"><span>950 000đ/ Giờ</span></p>
+                                    <p class="cost"><span>950 000 VNĐ/ Giờ</span></p>
                                 </div>
                             </div>
                             <a class="btn btn-primary btn--m width-100">
@@ -181,7 +192,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="content-detail">
+                    <div class="content-detail shadow-lg p-3 mb-5 bg-body-tertiary rounded">
                         <div class="line-page"></div>
                         <div class="info-car-desc" id="outsfeatures">
                             <h6>Đặc điểm</h6>
@@ -201,7 +212,7 @@
                                 <div class="outstanding-features__item">
                                     <div class="title">
                                         <p class="sub">Giá</p>
-                                        <p class="main">950.000/Giờ</p>
+                                        <p class="main">950.000 VNĐ/Giờ</p>
                                     </div>
                                 </div>
                             </div>
@@ -215,6 +226,11 @@
                     </div>
                 </div>
             </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                crossorigin="anonymous"></script>
+        </div>
+    </div>
 </body>
 
 </html>
