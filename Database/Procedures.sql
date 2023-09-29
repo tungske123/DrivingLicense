@@ -213,27 +213,29 @@ where AttemptID = @AttemptID;
 go
 
 GO
-CREATE OR ALTER     PROCEDURE [dbo].[proc_GetQuizAttempStats] @AttemptID uniqueidentifier
+CREATE OR ALTER   PROCEDURE [dbo].[proc_GetQuizAttempStats] @AttemptID uniqueidentifier
 AS
 BEGIN
-    
-SELECT
-    q.QuestionText,
-    (SELECT AnswerText FROM dbo.Answer WHERE AnswerID = att.SelectedAnswerID) AS 'UserAnswer',
-    (SELECT a.AnswerText FROM dbo.Answer a WHERE a.QuestionID = q.QuestionID AND a.isCorrect = 1) AS 'CorrectAnswer',
-    CASE
-        WHEN att.SelectedAnswerID IS NULL THEN NULL
-        ELSE att.IsCorrect
-    END AS 'IsCorrect'
-FROM
-    dbo.Question q
-LEFT JOIN
-    dbo.AttemptDetail att ON q.QuestionID = att.QuestionID
-WHERE
-    q.QuestionID IN (
-        SELECT QuestionID
-        FROM dbo.Have
-        WHERE QuizID = (SELECT QuizID FROM dbo.Attempt WHERE AttemptID = @AttemptID)
-    );
+    SELECT
+        q.QuestionText,
+        CASE
+            WHEN att.SelectedAnswerID IS NOT NULL THEN (SELECT AnswerText FROM dbo.Answer WHERE AnswerID = att.SelectedAnswerID)
+            ELSE NULL -- UserAnswer is NULL for questions without user answers
+        END AS 'UserAnswer',
+        (SELECT a.AnswerText FROM dbo.Answer a WHERE a.QuestionID = q.QuestionID AND a.isCorrect = 1) AS 'CorrectAnswer',
+        CASE
+            WHEN att.SelectedAnswerID IS NULL THEN 0 -- Set IsCorrect to 0 for questions without user answers
+            ELSE att.IsCorrect
+        END AS 'IsCorrect'
+    FROM
+        dbo.Question q
+    LEFT JOIN
+        dbo.AttemptDetail att ON q.QuestionID = att.QuestionID AND att.AttemptID = @AttemptID
+    WHERE
+        q.QuestionID IN (
+            SELECT QuestionID
+            FROM dbo.Have
+            WHERE QuizID = (SELECT QuizID FROM dbo.Attempt WHERE AttemptID = @AttemptID)
+        );
 END
 GO
