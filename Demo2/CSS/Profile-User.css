@@ -161,7 +161,6 @@ header.shadow #search-icon {
 
 }
 
-
 @media (max-width: 1080px) {
     /* .container {
         margin-left: 1rem;
@@ -518,4 +517,34 @@ header.shadow #search-icon {
 
 .copyright p:hover {
     color: var(--main-color);
+}
+
+.save_button {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+/*load animations*/
+.hidden-load {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(-10vw);
+    transition: all 1s;
+}
+
+.show-load {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+}
+
+.current-playlist-name {
+    font-weight: bold;
+}
+
+@media(prefers-reduced-motion) {
+    .hidden-load {
+        transition: none;
+    }
 }
