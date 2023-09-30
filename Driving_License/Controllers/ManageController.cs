@@ -6,15 +6,11 @@ namespace Driving_License.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View("~/Views/Home/Admin.cshtml");
         }
         public IActionResult Quiz()
         {
             return View("~/Views/Manage/Quizzes.cshtml");
-        }
-        public IActionResult Contact()
-        {
-            return View("~/Views/Manage/Feedbacks.cshtml");
         }
     }
 }
