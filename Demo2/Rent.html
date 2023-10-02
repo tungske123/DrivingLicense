@@ -5,12 +5,15 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learn2Drive - Rent car</title>
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <!--font css file-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Open+Sans&display=swap"rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300&display=swap" rel="stylesheet">
+  <!--bootstrap css file-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="css/Rentpage.css">
+  <title>Learn2Drive - Thuê Xe</title>
 </head>
 
 <body>
@@ -20,43 +23,42 @@
         <div class="container">
 
           <div class="hero-content">
-            <h2 class="h1 hero-title">Learn<span class="danger">2</span>Drive</h2>
-            <p class="hero-text">
-              Xe không có thắng – chạy thẳng vào hòm.
-            </p>
+            <div class="title-text">
+              <h2 class="h1 hero-title">Learn<span class="danger">2</span>Drive</h2>
+              <p class="hero-text">
+                Xe không có thắng - chạy thẳng vào hòm.
+              </p>
+            </div>
           </div>
           <div class="hero-banner"></div>
-          <form action="" class="hero-form">
-            <div class="input-wrapper">
-              <label for="input-1" class="input-label">Name</label>
-
-              <input type="text" name="car-model" id="input-1" class="input-field"
-                placeholder="Bạn đang tìm xe gì?">
-            </div>
-
-            <div class="input-wrapper">
-              <label for="input-2" class="input-label">Type</label>
-              <select name="type" id="type" class="form-select">
-                <option value="">4 chỗ</option>
-                <option value="">Xe máy</option>
-                <option value="">Bán tải</option>
-              </select>
-            </div>
-
-            <div class="input-wrapper">
-              <label for="input-3" class="input-label">Brand</label>
-
-              <select name="brand" id="brand" class="form-select">
-                <option value="">Huyndai</option>
-                <option value="">Toyota</option>
-                <option value="">BMW</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn">Tìm kiếm</button>
-          </form>
         </div>
       </section>
+      <form action="" class="hero-form">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" name="keyword" id="keyword" placeholder="">
+          <label for="keyword" class="form-label">Tìm kiếm ở đây</label>
+        </div>
+        <div class="input-wrapper">
+          <label for="type" class="input-label">Kiểu xe</label>
+          <select name="type" id="type" class="form-select">  
+            <option value="">4 chỗ</option>
+            <option value="">Xe máy</option>
+            <option value="">Bán tải</option>
+          </select>
+        </div>
+
+        <div class="input-wrapper">
+          <label for="input-3" class="input-label">Hãng xe</label>
+
+          <select name="brand" id="brand" class="form-select">
+            <option value="">Huyndai</option>
+            <option value="">Toyota</option>
+            <option value="">BMW</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn">Tìm kiếm</button>
+      </form>
       <!-- 
         - #RENT CAR
       -->
@@ -65,15 +67,16 @@
         <div class="container">
 
           <div class="title-wrapper">
-            <h2 class="h2 section-title">Car List</h2>
+            <h2 class="h2 section-title" style="display: block;margin: 0 auto;">Danh sách xe</h2>
           </div>
           <ul class="rent-car-list">
             <li>
               <div class="rent-car-card">
 
                 <figure class="card-banner">
-                  <img src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image" alt="Toyota RAV4 2021" loading="lazy" width="440" height="300"
-                    class="w-100">
+                  <img
+                    src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image"
+                    alt="Toyota RAV4 2021" loading="lazy" width="440" height="300" class="w-100">
                 </figure>
 
                 <div class="card-content">
@@ -95,7 +98,10 @@
                     </li>
 
                     <li class="card-list-item">
-                      <ion-icon name="business-outline"></ion-icon>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <style>svg{fill:#d94029}</style>
+                        <path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                      </svg>
 
                       <span class="card-item-text">Toyota</span>
                     </li>
@@ -117,7 +123,7 @@
                   <div class="card-price-wrapper">
 
                     <p class="card-price">
-                      <strong>$440.000</strong> / Giờ
+                      <strong>440.000 VNĐ</strong> / Giờ
                     </p>
 
                     <button class="btn">Thuê ngay</button>
@@ -133,8 +139,9 @@
               <div class="rent-car-card">
 
                 <figure class="card-banner">
-                  <img src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image" alt="Toyota RAV4 2021" loading="lazy" width="440" height="300"
-                    class="w-100">
+                  <img
+                    src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image"
+                    alt="Toyota RAV4 2021" loading="lazy" width="440" height="300" class="w-100">
                 </figure>
 
                 <div class="card-content">
@@ -156,7 +163,10 @@
                     </li>
 
                     <li class="card-list-item">
-                      <ion-icon name="business-outline"></ion-icon>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <style>svg{fill:#d94029}</style>
+                        <path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                      </svg>
 
                       <span class="card-item-text">Toyota</span>
                     </li>
@@ -178,7 +188,7 @@
                   <div class="card-price-wrapper">
 
                     <p class="card-price">
-                      <strong>$440.000</strong> / Giờ
+                      <strong>440.000 VNĐ</strong> / Giờ
                     </p>
 
                     <button class="btn">Thuê ngay</button>
@@ -194,8 +204,9 @@
               <div class="rent-car-card">
 
                 <figure class="card-banner">
-                  <img src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image" alt="Toyota RAV4 2021" loading="lazy" width="440" height="300"
-                    class="w-100">
+                  <img
+                    src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image"
+                    alt="Toyota RAV4 2021" loading="lazy" width="440" height="300" class="w-100">
                 </figure>
 
                 <div class="card-content">
@@ -217,7 +228,10 @@
                     </li>
 
                     <li class="card-list-item">
-                      <ion-icon name="business-outline"></ion-icon>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <style>svg{fill:#d94029}</style>
+                        <path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                      </svg>
 
                       <span class="card-item-text">Toyota</span>
                     </li>
@@ -239,7 +253,7 @@
                   <div class="card-price-wrapper">
 
                     <p class="card-price">
-                      <strong>$440.000</strong> / Giờ
+                      <strong>440.000 VNĐ</strong> / Giờ
                     </p>
 
                     <button class="btn">Thuê ngay</button>
@@ -255,8 +269,9 @@
               <div class="rent-car-card">
 
                 <figure class="card-banner">
-                  <img src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image" alt="Toyota RAV4 2021" loading="lazy" width="440" height="300"
-                    class="w-100">
+                  <img
+                    src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image"
+                    alt="Toyota RAV4 2021" loading="lazy" width="440" height="300" class="w-100">
                 </figure>
 
                 <div class="card-content">
@@ -278,7 +293,10 @@
                     </li>
 
                     <li class="card-list-item">
-                      <ion-icon name="business-outline"></ion-icon>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <style>svg{fill:#d94029}</style>
+                        <path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                      </svg>
 
                       <span class="card-item-text">Toyota</span>
                     </li>
@@ -300,7 +318,7 @@
                   <div class="card-price-wrapper">
 
                     <p class="card-price">
-                      <strong>$440.000</strong> / Giờ
+                      <strong>440.000 VNĐ</strong> / Giờ
                     </p>
 
                     <button class="btn">Thuê ngay</button>
@@ -316,8 +334,9 @@
               <div class="rent-car-card">
 
                 <figure class="card-banner">
-                  <img src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image" alt="Toyota RAV4 2021" loading="lazy" width="440" height="300"
-                    class="w-100">
+                  <img
+                    src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image"
+                    alt="Toyota RAV4 2021" loading="lazy" width="440" height="300" class="w-100">
                 </figure>
 
                 <div class="card-content">
@@ -339,7 +358,10 @@
                     </li>
 
                     <li class="card-list-item">
-                      <ion-icon name="business-outline"></ion-icon>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <style>svg{fill:#d94029}</style>
+                        <path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                      </svg>
 
                       <span class="card-item-text">Toyota</span>
                     </li>
@@ -361,7 +383,7 @@
                   <div class="card-price-wrapper">
 
                     <p class="card-price">
-                      <strong>$440.000</strong> / Giờ
+                      <strong>440.000 VNĐ</strong> / Giờ
                     </p>
 
                     <button class="btn">Thuê ngay</button>
@@ -377,8 +399,9 @@
               <div class="rent-car-card">
 
                 <figure class="card-banner">
-                  <img src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image" alt="Toyota RAV4 2021" loading="lazy" width="440" height="300"
-                    class="w-100">
+                  <img
+                    src="https://i2-vnexpress.vnecdn.net/2021/09/18/Honda-Civic-1.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=Ja75NqSFEOnKbBn4yqr2sA&t=image"
+                    alt="Toyota RAV4 2021" loading="lazy" width="440" height="300" class="w-100">
                 </figure>
 
                 <div class="card-content">
@@ -400,7 +423,10 @@
                     </li>
 
                     <li class="card-list-item">
-                      <ion-icon name="business-outline"></ion-icon>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <style>svg{fill:#d94029}</style>
+                        <path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                      </svg>
 
                       <span class="card-item-text">Toyota</span>
                     </li>
@@ -422,7 +448,7 @@
                   <div class="card-price-wrapper">
 
                     <p class="card-price">
-                      <strong>$440.000</strong> / Giờ
+                      <strong>440.000 VNĐ</strong> / Giờ
                     </p>
 
                     <button class="btn">Thuê ngay</button>
@@ -434,7 +460,7 @@
               </div>
             </li>
 
-            
+
           </ul>
 
         </div>
@@ -443,7 +469,9 @@
     </article>
   </main>
 
-  <script src="./assets/js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 
   <!-- 
     - ionicon link
