@@ -61,11 +61,10 @@
                 <input type="search" name="keyword" placeholder="Search here..." class="search-bar">
             </form>
         </div>
-    </header>
-
+    </header>  
     <section class="profile-user-section container-xl px-4 mt-4 hidden-load">
-        <form action="/User/EditInfo" class="needs-validation hidden-load info-form" method="post" enctype="multipart/form-data"
-            novalidate>
+        <form action="/User/EditInfo" class="needs-validation hidden-load info-form" method="post"
+            enctype="multipart/form-data" novalidate>
             <div class="row">
                 <div class="col-xl-4 hidden-load">
                     <div class="card mb-4 mb-xl-0">
@@ -73,13 +72,12 @@
                             <h4>Profile Picture</h4>
                         </div>
                         <div class="card-body text-center">
-                            <img class="img-account-profile rounded-circle mb-2" src="img/anoymous-avater.jpg"
-                                alt="avatar">
+                            <img class="img-account-profile rounded-circle mb-2"
+                                src="@((hasImage ? imagePath : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"))" alt="avatar">
                             <div class="card-body-content text-muted mb-4">
                                 JPG or PNG (less than 5MB)
                             </div>
-                            <input type="file" name="Avatar" value="@user.Address" accept="jpg/png/jpeg/webp">
-                            <button class="btn btn-primary" type="button">Save</button>
+                            <input type="file" name="Avatar" oninput="changeAvatar(this);" accept="jpg/png/jpeg/webp" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -92,33 +90,24 @@
                         <div class="card-body hidden-load">
                             <!--FullName-->
                             <div class="form-floating mb-3 has-validation">
-                                <input type="text" class="form-control" placeholder="Username" id="username"
-                                    name="username" required>
-                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" placeholder="Username" id="Username"
+                                    name="Username" required>
+                                <label for="Username" class="form-label">Username</label>
                                 <div class="invalid-feedback">
                                     Hãy nhập username của bạn
                                 </div>
                             </div>
                             <!--Name-->
-                            <div class="row gx-2 mb-3">
-                                <!--ENTER HỌ-->
-                                <div class="col-md-6 form-floating mb-3">
-                                    <input class="form-control" id="firstname" type="text" name="lastname"
-                                        placeholder="Enter FirstName">
-                                    <label class="form-label" for="firstname">Họ</label>
-                                </div>
-                                <!--ENTER TÊN-->
-                                <div class="col-md-6 form-floating">
-                                    <input class="form-control" id="lastname" name="lastname" type="text"
-                                        placeholder="Enter LastName">
-                                    <label class="form-label" for="lastname">Tên</label>
-                                </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="FullName" type="text" name="FullName" 
+                                    placeholder="Enter Fullname">
+                                <label class="form-label" for="FullName">Họ và tên</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="address" name="address" type="text"
+                                <input class="form-control" id="Address" name="Address" type="text"
                                     placeholder="Enter Address">
-                                <label for="address" class="form-label">
+                                <label for="Address" class="form-label">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="mb-1 bi bi-geo-alt" viewBox="0 0 16 16">
                                         <path
@@ -128,8 +117,9 @@
                             </div>
 
                             <div class="form-floating mb-3 has-validation">
-                                <input class="form-control" id="email" type="email" placeholder="name@example.com" required>
-                                <label for="email" class="form-label">
+                                <input class="form-control" id="Email" name="Email" type="email" placeholder="name@example.com"
+                                    required>
+                                <label for="Email" class="form-label">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="mb-1 bi bi-envelope-at" viewBox="0 0 16 16">
                                         <path
@@ -158,9 +148,9 @@
                             <div class="row gx-2 mb-3">
                                 <!--ENTER Number-->
                                 <div class="form-floating col-6 mb-3">
-                                    <input class="form-control" id="phone" name="phone" type="tel"
-                                        placeholder="Enter Number" pattern="/(|0[3|5|7|8|9])+([0-9]{8})\b/g" >                                      
-                                    <label class="form-label" for="phone">
+                                    <input class="form-control" id="PhoneNumber" name="PhoneNumber" type="tel"
+                                        placeholder="Enter Number" pattern="/(|0[3|5|7|8|9])+([0-9]{8})\b/g">
+                                    <label class="form-label" for="PhoneNumber">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                             fill="currentColor" class="mb-1 bi bi-telephone" viewBox="0 0 16 16">
                                             <path
@@ -172,9 +162,9 @@
                                 </div>
                                 <!--ENTER TÊN-->
                                 <div class="form-floating col-6">
-                                    <input class="form-control" id="birthdate" name="birthdate" type="date"
+                                    <input class="form-control" id="BirthDate" name="BirthDate" type="date"
                                         placeholder="Enter Birthdate">
-                                    <label class="form-label" for="birthdate">
+                                    <label class="form-label" for="BirthDate">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
                                             fill="currentColor" class="mb-1 bi bi-calendar-event" viewBox="0 0 16 16">
                                             <path
@@ -184,15 +174,67 @@
                                         </svg> Ngày/tháng/năm sinh</label>
                                 </div>
                             </div>
-
                             <button class="btn btn-outline-success save_button" type="submit">Save</button>
                         </div>
                     </div>
                 </div>
             </div>
-            </forn>
-    </section>
-    
+        </form>
+        <h3 class="title text-center hidden-load">Lịch sử thi thử</h3>
+        <table class="table table-hover bg-light-subtle text-center table-responsive ">
+            <thead>
+                <tr>
+                    <th>Tên bộ đề</th>
+                    <th>Loại bằng thi</th>
+                    <th>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="mb-1 bi bi-calendar2-check" viewBox="0 0 16 16">
+                            <path
+                                d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                            <path
+                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                            <path
+                                d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                        </svg> Ngày làm
+                    </th>
+                    <th>Tổng số câu</th>
+                    <th>
+                        <svg style="color: green;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="mb-1 bi bi-check-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path
+                                d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                        </svg> Số câu đúng
+                    </th>
+                    <th>
+                        <svg style="color: red;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="mb-1 bi bi-x-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg> Số câu sai
+                    </th>
+                    <th>Số câu chưa làm</th>
+                    <th>Tỉ lệ đúng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Đề số 1</td>
+                    <td>A1</td>
+                    <td>28/09/2023</td>
+                    <td>25</td>
+                    <td>20</td>
+                    <td>5</td>
+                    <td>0</td>
+                    <td>80%</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>  
+    <h3 class="title text-center hidden-load">Lịch sử thuê xe</h3>
+
+
     <!--footer-->
     <section class="footer hidden-load container-fluid">
         <div class="footer-container container">

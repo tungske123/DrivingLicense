@@ -28,8 +28,10 @@ function changeBSTheme() {
     var htmlTag = document.getElementsByTagName('html')[0];
     var theme = htmlTag.getAttribute('data-bs-theme');
     if (theme === 'light') {
+        
         htmlTag.setAttribute('data-bs-theme', 'dark');
     } else {
+
         htmlTag.setAttribute('data-bs-theme', 'light');
     }
 }
