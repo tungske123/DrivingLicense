@@ -1,0 +1,73 @@
+﻿@model Driving_License.Models.Quiz
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--bootstrap css file-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
+
+    <!--custom css file-->
+    <link rel="stylesheet" href="~/css/styleQuizResult.css">
+    <!--icon-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4832/4832401.png">
+    <title>Update Quiz</title>
+</head>
+<body>
+    <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+        <h1 class="title" style="text-align: center;display: block;">Sửa đổi thông tin</h1>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-controller="Quiz" asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="QuizId" />
+                    <div class="form-group">
+                        <label asp-for="LicenseId" class="control-label">Hạng bằng lái</label>
+                        <select asp-for="LicenseId" class="form-control" asp-items="ViewBag.LicenseId"></select>
+                        <span asp-validation-for="LicenseId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Tên bộ đề</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label">Thông tin thêm</label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="buttons" style="display: flex;justify-content: space-between;">
+                        <input type="submit" value="Lưu thay đổi" class="btn btn-outline-success" style=" display: block;width: 50%;" />
+                        <a href="/Manage/QuizDetail?quizid=@Model.QuizId" class="btn btn-outline-danger" style=" display: block;width: 50%;">Hủy thay đổi</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <a href="/Manage/QuizList" class="btn btn-outline-primary mb-3" style=" display: block;width: 50%;">Về danh sách</a>
+        </div>
+    </div>
+
+    <script src="~/js/LoadAnimations.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</body>
+</html>

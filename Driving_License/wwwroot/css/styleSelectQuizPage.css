@@ -1,4 +1,4 @@
-﻿* {
+* {
     /* font-family: 'Poppins', sans-serif; */
     font-family: 'Be Vietnam Pro', sans-serif;
     margin: 0;
@@ -9,14 +9,12 @@
     box-sizing: border-box;
     text-decoration: none;
 }
-
 .submit-button {
     display: inline-block;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
 }
-
 .quiz-section {
     padding-inline: 1vw;
     display: grid;
@@ -24,31 +22,22 @@
     grid-row-gap: 2vh;
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
 }
-
 .card {
-    transition: 0.25s ease-in-out;
+   transition: 0.25s ease-in-out;
 }
-
 .card:hover {
     transform: scale(1.02);
 }
-
-.card-subtitle {
-    font-weight: bold;
-}
-
 .page-active {
     background-color: slateblue;
     color: white;
 }
-
 @media (max-width: 768px) {
     .quiz-section {
         grid-template-columns: repeat(2, 1fr);
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
 /*load animations*/
 .hidden-load {
     opacity: 0;

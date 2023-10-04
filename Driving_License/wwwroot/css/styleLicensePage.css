@@ -1,36 +1,30 @@
-﻿* {
+* {
     font-family: 'Be VietNam Pro', sans-serif;
 }
-
 .row {
     padding-block: 20px;
 }
-
 .title:first-of-type {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 p.lead {
     font-weight: bold;
 }
-
 p, .text-content {
     text-align: justify;
 }
-
 .buttons {
     display: flex;
     row-gap: 20px;
     flex-direction: column;
     align-items: center;
 }
-
-    .buttons :is(button) {
-        display: inline-block;
-        width: 50%;
-    }
+.buttons :is(button) {
+    display: inline-block;
+    width: 50%;
+}
 
 @media (max-width: 768px) {
     .buttons {
@@ -38,3 +32,26 @@ p, .text-content {
     }
 }
 
+/*load animations*/
+.hidden-load {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(-10vw);
+    transition: all 0.75s;
+}
+
+.show-load {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+}
+
+.current-playlist-name {
+    font-weight: bold;
+}
+
+@media(prefers-reduced-motion) {
+    .hidden-load {
+        transition: none;
+    }
+}

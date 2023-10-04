@@ -8,6 +8,11 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Driving_License.Filters;
 using Driving_License.Repositories;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using System.Data.Common;
+using System.Data;
+using Microsoft.IdentityModel.Tokens;
 //using System.ComponentModel;
 
 namespace Driving_License.Controllers
@@ -239,6 +244,138 @@ namespace Driving_License.Controllers
             HttpContext.Session.Remove("quizsession");
             await HttpContext.Session.CommitAsync();
             return View("~/Views/QuizResult.cshtml", quizResultModel);
+        }
+
+        //-----------------------------------[ FOR ADMIN ]-----------------------------------------
+        [HttpPost]
+        public async Task<IActionResult> Create(string quizName, string LicenseId, string Description, int quantity)
+        {
+            var existName = _context.Quizzes.Any(e => e.Name.Equals(quizName));
+            if (quizName.IsNullOrEmpty())
+            {
+                quizName = "Chưa đặt tên";
+            } else if (Description.IsNullOrEmpty())
+            {
+                Description = "Không có thông tin gì được để lại!";
+            }
+            if (existName)
+            {
+                quizName += "(Trùng tên)";
+                Description = "Đề này có tên trùng với đề khác";
+            }
+            //int cho phép giá trị null để có thể check điều kiện
+            if (quantity < 25)
+            {
+                return Problem("The quantity field is required and must bigger than 25.");
+            }
+            else
+            {
+                using (DbCommand command = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = "proc_CreateQuiz";
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add(new SqlParameter("@Name", SqlDbType.NVarChar) { Value = quizName });
+                    command.Parameters.Add(new SqlParameter("@LicenseID", SqlDbType.NVarChar) { Value = LicenseId });
+                    command.Parameters.Add(new SqlParameter("@Describe", SqlDbType.NVarChar) { Value = Description });
+                    command.Parameters.Add(new SqlParameter("@quantity", SqlDbType.Int) { Value = quantity });
+
+                    _context.Database.OpenConnection();
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    finally
+                    {
+                        _context.Database.CloseConnection();
+                    }
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction("QuizList", "Manage");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int quizid)
+        {
+            var quiz = await _context.Quizzes.FindAsync(quizid);
+            if (quiz == null)
+            {
+                return NotFound();
+            }
+            ViewData["LicenseId"] = new SelectList(_context.Licenses, "LicenseId", "LicenseId", quiz.LicenseId);
+            return View("~/Views/Manage/Quiz/Update.cshtml",quiz);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int quizid, Quiz quiz)
+        {
+            if (quizid != quiz.QuizId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(quiz);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!QuizExists(quiz.QuizId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("QuizList", "Manage");
+            }
+            ViewData["LicenseId"] = new SelectList(_context.Licenses, "LicenseId", "LicenseId", quiz.LicenseId);
+            return View("~/Views/Manage/Quizzes.cshtml");
+        }
+
+        public async Task<IActionResult> Delete(int quizid)
+        {
+            if (_context.Quizzes == null)
+            {
+                return Problem("Entity set 'DrivingLicenseContext.Quizzes'  is null.");
+            }
+            var quiz = await _context.Quizzes.FindAsync(quizid);
+            if (quiz != null)
+            {
+                using (DbCommand command = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = "proc_DeleteQuiz";
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add(new SqlParameter("@quizID", SqlDbType.Int) { Value = quizid });
+
+                    _context.Database.OpenConnection();
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    finally
+                    {
+                        _context.Database.CloseConnection();
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("QuizList", "Manage");
+        }
+
+        private bool QuizExists(int id)
+        {
+            return _context.Quizzes.Any(e => e.QuizId == id);
         }
     }
 }

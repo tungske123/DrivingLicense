@@ -31,60 +31,55 @@ go
 create or alter procedure proc_CreateQuiz (
 	@Name nvarchar(100),
 	@LicenseID nvarchar(10),
+	@Describe nvarchar(max),
 	@quantity int
 )
 as
 begin
 	--INSERT ANOTHER QUIZ
-	insert into Quiz(LicenseID, [Name]) values (@LicenseID, @Name);
+	insert into Quiz(LicenseID, [Name], [Description]) values (@LicenseID, @Name, @Describe);
 	declare @QuizID int;
 	set @QuizID = (select QuizID from Quiz where LicenseID = @LicenseID and [Name] = @Name);
 
-	--GENERATE N NUMBER RANDOMLY FROM QUESTION
-	declare @Rolled_table table (RolledID int);
-	declare @CriticalNum int = 0;
+	--DECLARE TEMP TABLE FOR SUBQUERY
+	declare @NonCritical_table table (RolledID int);
+	declare @Critical_table table (RolledID int);
+	declare @combined_table table (questionid int);
 
-	while(@CriticalNum < 2 or @CriticalNum > 4)
-	begin
-		--RESET OLD ROLL RESULT
-		delete from @Rolled_table;
+	--INSERT NEW ROLL RESULT SUITABLE CONDITION
+	insert into @NonCritical_table
+	select top(@quantity-4) QuestionID from Question where (LicenseID = @LicenseID and isCritical=0) order by newid();
 
-		--INSERT NEW ROLL RESULT
-		insert into @Rolled_table
-		select top(@quantity) QuestionID from Question where (LicenseID = @LicenseID) order by newid();
+	insert into @Critical_table
+	select top(4) QuestionID from Question where (LicenseID=@LicenseID and isCritical=1) order by newid();
 
-		--SET VAR COUNT TO CHECK CONDITION
-		set @CriticalNum = (select count(isCritical) from  Question right join @Rolled_table on QuestionID = RolledID where isCritical=1);
-	end;
-	
+	--COMBINE ROLLED QUESTION
+	INSERT INTO @Combined_table
+	select * from @noncritical_table
+	union all
+	select * from @Critical_table;
 
-	--COUNT HOW MANY SELECTED
-	declare @amount_Rolled int;
-	set @amount_Rolled = (select count(*) from @Rolled_table);
+	--INSERT RESULT
+	insert into Have (QuizID, QuestionID)
+	select @QuizID, QuestionID FROM @Combined_table;
 
-	--LOOP n... TIME BASE ON @amount_Rolled
-	declare @index int = 1;
-	while(@index <= @amount_Rolled)
-	begin
-		--GET random_ID = FIRST INDEX OF RANDOMED TABLE
-		declare @randomID int;
-		set @randomID = (select top(1) RolledID FROM @Rolled_table);
-
-		--INSERT QUESTION TO QUIZ BY @random_ID
-        insert into Have (QuizID, QuestionID) values (@QuizID , @randomID);
-
-		--REMOVE ID GOT FROM FIRST INDEX OF RANDOMED TABLE
-        delete from @Rolled_table where RolledID = @randomID;
-
-		--DECREASE THE LOOP TIME
-		set @index = @index+1;
-	end;
+	--RESET ROLLED RANDOM
+	delete from @combined_table;
 end;
 go
 
+--exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1','', 25;
 
---exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1', 25;
-
+-----------------------------------[ Delete Quiz ]-------------------------------
+create or alter procedure proc_DeleteQuiz(
+@quizID int
+)
+as 
+begin
+	delete from Have where QuizID = @quizID;
+	delete from Quiz where QuizID = @quizID;
+end;
+go
 /*
 -----------------------------------[ COUNT CORRECT ANSWER ]-------------------------------
 create or alter function fn_CountCorrect (

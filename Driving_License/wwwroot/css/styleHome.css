@@ -169,7 +169,7 @@ header.shadow #search-icon {
     min-height: 640px;
     display: flex;
     align-items: center;
-    background-image: url(/Driving_License/Background-home.png);
+    background-image: url(/Demo2/img/Background-home.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center left;
@@ -194,15 +194,16 @@ header.shadow #search-icon {
     margin: 0.5rem 0 1.2rem;
 }
 
-.btn:not(.btn-primary,.btn-outline-primary,.btn-outline-success,.btn-danger,.btn-outline-danger,.btn-success) {
+.btn {
     padding: 10px 22px;
     background: var(--main-color);
     color: var(--bg-color);
     font-weight: 400;
 }
 
-.btn:not(.btn-primary,.btn-outline-primary,.btn-outline-success,.btn-danger,.btn-outline-danger,.btn-success):hover {
+.btn:hover {
     background: #fd052f;
+
 }
 
 .btn2 {

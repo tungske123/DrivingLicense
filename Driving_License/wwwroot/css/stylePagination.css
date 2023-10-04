@@ -1,4 +1,4 @@
-﻿/*for pagination*/
+/*for pagination*/
 button.pagination__arrow {
     border: none;
     background: transparent;
@@ -12,7 +12,7 @@ button.pagination__arrow {
     width: 4vw;
     aspect-ratio: 1/1;
     display: flex;
-    justify-content: center;
+    justify-content: center;    
     align-items: center;
 }
 
@@ -115,20 +115,19 @@ button.pagination__arrow {
     transition: transform 0.1s ease-in-out, opacity 0.2s ease-in-out;
 }
 
-    .pagination__arrow-half:first-child {
-        transform: translateY(0.5px) rotate(-45deg);
-    }
+.pagination__arrow-half:first-child {
+    transform: translateY(0.5px) rotate(-45deg);
+}
 
-    .pagination__arrow-half:last-child {
-        transform: translateY(-0.5px) rotate(45deg);
-    }
+.pagination__arrow-half:last-child {
+    transform: translateY(-0.5px) rotate(45deg);
+}
 
 @media (max-width: 768px) {
     .pagination {
-        display: flex;
-        column-gap: 1.5vw;
+       display: flex;
+       column-gap: 1.5vw;
     }
-
     .page_item {
         padding-inline: 10px;
     }
