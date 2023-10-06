@@ -59,8 +59,8 @@ create table Rent
    RentID uniqueidentifier default newid() primary key,
    VehicleID uniqueidentifier default newid(),
    UserID uniqueidentifier default newid(),
-   StartTime time,
-   EndTime time,
+   StartDate datetime,
+   EndDate datetime,
    TotalRentPrice decimal,
    status nvarchar(100),
 
