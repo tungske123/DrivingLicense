@@ -11,6 +11,8 @@ create database DrivingLicense;
 go
 use DrivingLicense;
 
+
+
 create table Account
 (
    AccountID uniqueidentifier default newid() primary key,
@@ -51,6 +53,18 @@ create table Users
    PhoneNumber nvarchar(20),
    [Address] nvarchar(100),
    foreign key (AccountID) references dbo.Account(AccountID)
+);
+
+create table Records
+(
+	UserID uniqueidentifier default newid(),
+	LicenseID nvarchar(10),
+	TestDate DATETIME,
+	TestResult nvarchar(50),
+	Physical_Condition nvarchar(100),
+	foreign key (UserID) references dbo.Users(UserID),
+	foreign key (LicenseID) references dbo.License(LicenseID),
+	PRIMARY KEY (UserID, LicenseID)
 );
 
 
