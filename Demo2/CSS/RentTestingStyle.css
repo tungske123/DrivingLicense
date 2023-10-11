@@ -866,7 +866,7 @@ header.shadow #search-icon {
             height: 500px;
 
             .head_title {
-                font-size: 48px;
+                font-size: 40px;
                 line-height: 46px;
                 font-weight: 800;
                 color: var(--color-dark);
