@@ -63,8 +63,8 @@
         </div>
     </header>  
     <section class="profile-user-section container-xl px-4 mt-4 hidden-load">
-        <form action="/User/EditInfo" class="needs-validation hidden-load info-form" method="post"
-            enctype="multipart/form-data" novalidate>
+        <form action="" class="needs-validation hidden-load info-form" method="post"
+            enctype="multipart/form-data" id="userForm" novalidate>
             <div class="row">
                 <div class="col-xl-4 hidden-load">
                     <div class="card mb-4 mb-xl-0">
@@ -181,7 +181,7 @@
             </div>
         </form>
         <h3 class="title text-center hidden-load mt-5">Lịch sử thi thử</h3>
-        <table class="table table-hover bg-light-subtle text-center table-responsive hidden-load">
+        <table class="table table-hover bg-light-subtle text-center table-responsive hidden-load" id="quizResultTable">
             <thead>
                 <tr>
                     <th>Tên bộ đề</th>
@@ -219,7 +219,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <!-- <tr>
                     <td>Đề số 1</td>
                     <td>A1</td>
                     <td>28/09/2023</td>
@@ -228,7 +228,7 @@
                     <td>5</td>
                     <td>0</td>
                     <td>80%</td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
         <h3 class="title text-center hidden-load mt-5">Lịch sử thuê xe</h3>
