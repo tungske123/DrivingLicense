@@ -71,13 +71,15 @@
             <div class="home_page_content">
                 <div class="content_title">
                     <!-- Easy way <br> to rent a <span class="span">dream car</span>
-                    at an affordable <span class="span">price</span> -->
+                        at an affordable <span class="span">price</span> -->
                     Thuê xe tập lái dễ dàng với <br>
                     <p style="color: black;">Learn<span class="span">2</span>Drive</p>
                 </div>
                 <div class="content_subtitle">
                     Chúng tôi luôn cố gắng đem đến đa dạng các mẫu mã, dòng xe với chất lượng tốt
                     và giá cả phải chăng để phục vụ người học
+                    <br>
+                    <button class="btn btn-outline-danger mt-3" onclick="location.href='#car';">Khám phá</button>
                 </div>
                 <!--Download Icon-->
                 <!--Bây có thể xoá-->
@@ -93,8 +95,7 @@
 
         <!--FORM-->
 
-        <form action="" class="form_container">
-            <!--PICK UP-->
+        <!-- <form action="" class="form_container">
             <div class="input-group">
                 <input placeholder="Chọn ngày nhận xe" type="text" name="" id=""
                     class="item-input-group form-control-sm">
@@ -103,7 +104,6 @@
                     <input placeholder="Drop off time" type="time" name="" id="" class="item-input-group form-control">
                 </div>
             </div>
-            <!--Drop off-->
             <div class="input-group">
                 <input placeholder="Chọn ngày trả xe" type="text" name="" id=""
                     class="item-input-group form-control-sm">
@@ -116,7 +116,7 @@
             <button type="button" class="form-button">
                 Tìm kiếm
             </button>
-        </form>
+        </form> -->
     </section>
     <!--END HOMEPAGE SECTION-->
 
@@ -218,25 +218,25 @@
                 </div>
                 <div class="superiority_box">
                     <div class="item">
-                        <div class="icon">
+                        <div class="icon text-success">
                             <i class="fa-solid fa-square-check "></i>
                             Xe 4 chỗ
                         </div>
                     </div>
                     <div class="item">
-                        <div class="icon">
+                        <div class="icon text-success">
                             <i class="fa-solid fa-square-check "></i>
                             Đi êm
                         </div>
                     </div>
                     <div class="item">
-                        <div class="icon">
+                        <div class="icon text-success">
                             <i class="fa-solid fa-square-check "></i>
                             Tiết kiệm xăng
                         </div>
                     </div>
                     <div class="item">
-                        <div class="icon">
+                        <div class="icon text-success">
                             <i class="fa-solid fa-square-check "></i>
                             Dễ thao tác
                         </div>
@@ -377,104 +377,199 @@
         </div>
 
         <div class="car_container">
-            <div class="filter_car_bar">
-                <div class="head_title">
-                    Find Car
-                    <div class="icon">
-                        <i class="fa-solid fa-bullseye"></i>
+            <div class="row">
+                <div class="filter_car_bar col-md-4">
+                    <div class="head_title">
+                        Find Car
+                        <div class="icon">
+                            <i class="fa-solid fa-filter"></i>
+                        </div>
+                    </div>
+                    <div class="car_category_container">
+                        <div class="car_category">
+                            <div class="top_box">
+                                <div class="head_title">
+                                    Car type
+                                </div>
+                                <div class="show_button"></div>
+                            </div>
+                            <div class="category_content">
+                                <div class="category_car">
+                                    <input type="checkbox" name="coupe">
+                                    <label for="coupe" class="label_name">coupe</label>
+                                    <div class="category_count">(10)</div>
+                                </div>
+                                <div class="category_car">
+                                    <input type="checkbox" name="sedan">
+                                    <label for="sedan" class="label_name">Sedan</label>
+                                    <div class="category_count">(10)</div>
+                                </div>
+                                <div class="category_car">
+                                    <input type="checkbox" name="Honda">
+                                    <label for="Honda" class="label_name">Honda</label>
+                                    <div class="category_count">(10)</div>
+                                </div>
+                                <div class="category_car">
+                                    <input type="checkbox" name="Yamaha">
+                                    <label for="Yamaha" class="label_name">Yamaha</label>
+                                    <div class="category_count">(10)</div>
+                                </div>
+                                <div class="category_car">
+                                    <input type="checkbox" name="Optimus_Prime">
+                                    <label for="Optimus_Prime" class="label_name">Optimus Prime</label>
+                                    <div class="category_count">(1)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="car_category">
+                            <div class="top_box">
+                                <div class="head_title">
+                                    Capcity
+                                </div>
+                                <div class="show_button"></div>
+                            </div>
+                            <div class="category_content">
+                                <div class="category_car">
+                                    <input type="checkbox" name="2 - 5">
+                                    <label for="2 - 5" class="label_name">2 - 5</label>
+                                    <div class="category_count">(10)</div>
+                                </div>
+                                <div class="category_car">
+                                    <input type="checkbox" name="6 or more">
+                                    <label for="6 or more" class="label_name">6 or more</label>
+                                    <div class="category_count">(10)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="car_category">
+                            <div class="top_box">
+                                <div class="head_title">
+                                    Engine
+                                </div>
+                                <div class="show_button"></div>
+                            </div>
+                            <div class="category_content">
+                                <div class="category_car">
+                                    <input type="checkbox" name="auto">
+                                    <label for="auto" class="label_name">auto</label>
+                                    <div class="category_count">(544)</div>
+                                </div>
+                                <div class="category_car">
+                                    <input type="checkbox" name="matic">
+                                    <label for="matic" class="label_name">matic</label>
+                                    <div class="category_count">(10)</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="car_category_container">
-                    <div class="car_category">
-                        <div class="top_box">
-                            <div class="head_title">
-                                Car type
+                <div class="rent-card-section col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Toyota VIOS</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">950.000 VNĐ/ Giờ</h6>
+                            <div class="card-img">
+                                <img src="/Demo2/img/car5.jpg" class="img-fluid" alt="">
                             </div>
-                            <div class="show_button"></div>
                         </div>
-
-                        <div class="category_content">
-
-                            <div class="category_car">
-                                <input type="checkbox" name="coupe">
-                                <label for="coupe" class="label_name">coupe</label>
-                                <div class="category_count">(10)</div>
+                        <div class="card-description">
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-car"></i> Loại Xe</p>
+                                <p class="">4 chỗ</p>
                             </div>
-
-                            <div class="category_car">
-                                <input type="checkbox" name="sedan">
-                                <label for="sedan" class="label_name">Sedan</label>
-                                <div class="category_count">(10)</div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-copyright"></i> Thương Hiệu</p>
+                                <p class="">Honda</p>
                             </div>
-
-                            <div class="category_car">
-                                <input type="checkbox" name="Honda">
-                                <label for="Honda" class="label_name">Honda</label>
-                                <div class="category_count">(10)</div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá</p>
+                                <p class="">950.000 VNĐ/Giờ</p>
                             </div>
-
-                            <div class="category_car">
-                                <input type="checkbox" name="Yamaha">
-                                <label for="Yamaha" class="label_name">Yamaha</label>
-                                <div class="category_count">(10)</div>
-                            </div>
-
-                            <div class="category_car">
-                                <input type="checkbox" name="Optimus_Prime">
-                                <label for="Optimus_Prime" class="label_name">Optimus Prime</label>
-                                <div class="category_count">(1)</div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-id-card"></i> Bằng lái</p>
+                                <button class="btn btn-danger" style="display: block;width: 100%;">B1</button>
                             </div>
                         </div>
                     </div>
-
-                    <div class="car_category">
-                        <div class="top_box">
-                            <div class="head_title">
-                                Capcity
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Toyota VIOS</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">950.000 VNĐ/ Giờ</h6>
+                            <div class="card-img">
+                                <img src="/Demo2/img/car5.jpg" class="img-fluid" alt="">
                             </div>
-                            <div class="show_button"></div>
                         </div>
-
-                        <div class="category_content">
-
-                            <div class="category_car">
-                                <input type="checkbox" name="2 - 5">
-                                <label for="2 - 5" class="label_name">2 - 5</label>
-                                <div class="category_count">(10)</div>
+                        <div class="card-description">
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-car"></i> Loại Xe</p>
+                                <p class="">4 chỗ</p>
                             </div>
-
-                            <div class="category_car">
-                                <input type="checkbox" name="6 or more">
-                                <label for="6 or more" class="label_name">6 or more</label>
-                                <div class="category_count">(10)</div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-copyright"></i> Thương Hiệu</p>
+                                <p class="">Honda</p>
                             </div>
-
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá</p>
+                                <p class="">950.000 VNĐ/Giờ</p>
+                            </div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-id-card"></i> Bằng lái</p>
+                                <button class="btn btn-danger" style="display: block;width: 100%;">B1</button>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="car_category">
-                        <div class="top_box">
-                            <div class="head_title">
-                                Engine
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Toyota VIOS</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">950.000 VNĐ/ Giờ</h6>
+                            <div class="card-img">
+                                <img src="/Demo2/img/car5.jpg" class="img-fluid" alt="">
                             </div>
-                            <div class="show_button"></div>
                         </div>
-
-                        <div class="category_content">
-
-                            <div class="category_car">
-                                <input type="checkbox" name="auto">
-                                <label for="auto" class="label_name">auto</label>
-                                <div class="category_count">(544)</div>
+                        <div class="card-description">
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-car"></i> Loại Xe</p>
+                                <p class="">4 chỗ</p>
                             </div>
-
-                            <div class="category_car">
-                                <input type="checkbox" name="matic">
-                                <label for="matic" class="label_name">matic</label>
-                                <div class="category_count">(10)</div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-copyright"></i> Thương Hiệu</p>
+                                <p class="">Honda</p>
                             </div>
-
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá</p>
+                                <p class="">950.000 VNĐ/Giờ</p>
+                            </div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-id-card"></i> Bằng lái</p>
+                                <button class="btn btn-danger" style="display: block;width: 100%;">B1</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Toyota VIOS</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">950.000 VNĐ/ Giờ</h6>
+                            <div class="card-img">
+                                <img src="/Demo2/img/car5.jpg" class="img-fluid" alt="">
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-car"></i> Loại Xe</p>
+                                <p class="">4 chỗ</p>
+                            </div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-copyright"></i> Thương Hiệu</p>
+                                <p class="">Honda</p>
+                            </div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá</p>
+                                <p class="">950.000 VNĐ/Giờ</p>
+                            </div>
+                            <div class="card-item">
+                                <p class="" style="color: red;"><i class="fa-regular fa-id-card"></i> Bằng lái</p>
+                                <button class="btn btn-danger" style="display: block;width: 100%;">B1</button>
+                            </div>
                         </div>
                     </div>
                 </div>

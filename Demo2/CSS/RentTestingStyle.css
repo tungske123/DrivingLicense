@@ -893,7 +893,7 @@ header.shadow #search-icon {
                     margin: 10px 0;
 
                     .icon {
-                        color: #3DA9FC;
+                        /* color: #3DA9FC; */
                         margin-right: 10px;
                     }
 
@@ -1180,7 +1180,7 @@ header.shadow #search-icon {
                         .category_car {
                             display: flex;
                             align-items: center;
-        
+
                             .label_name {
                                 font-size: 16px;
                                 color: #094067;
@@ -1204,9 +1204,7 @@ header.shadow #search-icon {
 
                             .show_button {
 
-                                &::after {
-                                    
-                                }
+                                &::after {}
                             }
                         }
                     }
@@ -1264,4 +1262,39 @@ header.shadow #search-icon {
 
 .category_car input {
     cursor: pointer;
+}
+
+/*By Minh lmao*/
+.rent-card-section {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    column-gap: 20px;
+}
+
+.rent-card-section {
+    .card {
+        .card-title {
+            font-weight: bold;
+            color: var(--main-color);
+        }
+        .card-subtitle {
+            font-weight: bold;
+            font-size: large;
+        }
+        .card-body {
+            padding-inline: 10px;
+        }
+        .card-img :is(img) {
+            border-radius: 10px;
+        }
+        .card-description {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 1fr);
+            padding-inline: 5px;
+        }
+    }
+}
+.filter_car_bar {
+    margin-right: 0;
 }
