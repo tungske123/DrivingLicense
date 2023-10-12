@@ -213,3 +213,9 @@
         background-color: #dfdad7;
     }
 }
+.blur-background {
+    filter: blur(3px);
+}
+.modal-open {
+    overflow: hidden;
+}

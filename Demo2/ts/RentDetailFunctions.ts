@@ -4,18 +4,23 @@ const modalTitle = document.querySelector('.modal-title') as HTMLSpanElement;
 const startDateElement = document.querySelector('.start-date') as HTMLInputElement;
 const endDateElement = document.querySelector('.end-date') as HTMLInputElement;
 const pricePerHour: number = 40000;
+var rentBody = document.querySelector('.rent-body') as HTMLDivElement;
 var openedModal: boolean = false;
 
 //Functions
 function openModal() {
     if (!openedModal) {
         modal.classList.add('show');
+        rentBody.classList.add('blur-background');
+        document.body.classList.add('modal-open');
         openedModal = true;
     }
 }
 function closeModal() {
     if (openedModal) {
         modal.classList.remove('show');
+        rentBody.classList.remove('blur-background');
+        document.body.classList.remove('modal-open');
         openedModal = false;
     }
 }

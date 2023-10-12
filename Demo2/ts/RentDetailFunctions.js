@@ -3,18 +3,23 @@ var modal = document.querySelector('.modal');
 var modalTitle = document.querySelector('.modal-title');
 var startDateElement = document.querySelector('.start-date');
 var endDateElement = document.querySelector('.end-date');
-var pricePerHour = 40000; //Change the price based on the server
+var pricePerHour = 40000;
+var rentBody = document.querySelector('.rent-body');
 var openedModal = false;
 //Functions
 function openModal() {
     if (!openedModal) {
         modal.classList.add('show');
+        rentBody.classList.add('blur-background');
+        document.body.classList.add('modal-open');
         openedModal = true;
     }
 }
 function closeModal() {
     if (openedModal) {
         modal.classList.remove('show');
+        rentBody.classList.remove('blur-background');
+        document.body.classList.remove('modal-open');
         openedModal = false;
     }
 }

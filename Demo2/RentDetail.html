@@ -18,6 +18,8 @@
     <!--custom css file-->
     <link rel="stylesheet" href="CSS/styleRent.css">
     <link rel="stylesheet" href="CSS/styleModal.css">
+    <!--icon file-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4763/4763167.png">
     <title>RentDetail</title>
 </head>
 
@@ -28,7 +30,7 @@
                 <h6 class="modal-container-title">
                     <i class="fa-regular fa-circle-question"></i> <span class="modal-title">Xác nhận thuê xe</span>
                 </h6>
-                <button class="icon-button">
+                <button class="icon-button btn btn-outline-danger" onclick="closeModal();">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                         <path fill="none" d="M0 0h24v24H0z" />
                         <path fill="currentColor" d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
@@ -82,18 +84,18 @@
                     </div>
                 </div>
             </div>
-            <div class="m-container">
-                <div class="detail-container">
-                    <div class="content-detail">
-                        <div class="info-car-basic">
-                            <div class="group-name">
-                                <h3>Honda City</h3>
-                                <div class="group-action d-flex-center-btw">
-                                    <div class="back d-flex-center"></div>
-                                </div>
-                            </div>
+            <div class="content-detail">
+                <div class="info-car-basic">
+                    <div class="group-name">
+                        <h3>Honda City</h3>
+                        <div class="group-action d-flex-center-btw">
+                            <div class="back d-flex-center"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="m-container">
+                <div class="detail-container">
                     <div class="sidebar-detail mt-3">
                         <div class="rent-box shadow-lg p-3 mb-5 bg-body-tertiary rounded" id="cardetail"
                             style="position: relative;">

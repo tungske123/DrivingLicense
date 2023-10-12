@@ -113,14 +113,6 @@ form {
     --swiper-theme-color: #007aff;
 }
 
-/* Scrollbar */
-.swiper-scrollbar {
-    border-radius: 10px;
-    position: relative;
-    -ms-touch-action: none;
-    background: rgba(0, 0, 0, 0.1);
-}
-
 
 :root {
     --animate-duration: 1s;
@@ -134,8 +126,6 @@ form {
 ================================================== */
 html {
     font-size: responsive;
-    min-font-size: 7px;
-    max-font-sze: 10px;
     scroll-behavior: smooth;
 }
 
@@ -2217,18 +2207,25 @@ img {
     .cost :is(span) {
         padding-right: 5px; 
     }
-    .group-name h3 {
-        text-align: center;
-        margin: 0 auto;
+}
+@media (min-width: 768px) {
+    .group-name :is(h3) {
+        margin-left: 8%;
     }
-}
-.rent-box {
-    margin-top: 67px;
-}
-.info-text {
-    padding: 10px;
-    border-radius: 5px;
-}
-.price-container {
-    margin-bottom: 62px;
+    .rent-box {
+        margin-top: 67px;
+    }
+    .info-text {
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .price-container {
+        margin-bottom: 45px;
+    }
+    .sidebar-detail, .rent-box {
+        margin-top: 0;
+    }
+    .content-detail {
+        margin-top: 18px;
+    }
 }
