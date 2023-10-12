@@ -570,7 +570,7 @@ header.shadow #search-icon {
 
 
 
-    .form-container {
+    .form_container {
         position: absolute;
         bottom: 250px;
         left: 190px;
@@ -961,4 +961,307 @@ header.shadow #search-icon {
     width: 110%;
     height: 100%;
     object-fit: contain;
+}
+
+/*===================================CAR PAGE Section======================================= */
+.car_page_section {
+    height: 100%;
+    position: relative;
+
+    .find_car_bar {
+        width: 100%;
+        height: 250px;
+        padding: 20px;
+        margin-bottom: 40px;
+        background: #FFFFFE;
+        box-shadow: var(--box-shadow);
+        border-radius: 20px;
+        border: 2px solid #FFD580;
+        display: flex;
+        flex-direction: row;
+
+        .left_container {
+            min-width: 450px;
+            height: 210px;
+            display: grid;
+            justify-content: space-between;
+            margin-right: 20px;
+
+            .text_title {
+
+                .head_title {
+                    font-size: 40px;
+                    color: black;
+                    font-weight: 900;
+                }
+
+                .head_sub_title {
+                    margin-top: 20px;
+                    font-size: 16px;
+                    line-height: 20px;
+                    color: var(--color-dark);
+
+                }
+            }
+
+            .bottom_box {
+                width: 400px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .left_box {
+                    width: 200px;
+                    display: flex;
+
+                    .circle_profile {
+                        width: 40px;
+                        height: 40px;
+                        font-size: 18px;
+                        color: red;
+                        font-weight: 700;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        border: 3px solid #D8EEFE;
+                        background: #FFFFFE;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+
+                .separator {
+                    width: 3px;
+                    height: 50px;
+                    background: #D8EEFE;
+                    border-radius: 5px;
+                }
+
+                .right_box {
+
+                    .star_box {
+
+                        .icon {
+                            color: yellow;
+                        }
+                    }
+
+                    .right_box_text {
+                        text-transform: capitalize;
+                        font-size: 16px;
+                        color: var(--color-dark);
+                        opacity: .8;
+                    }
+                }
+            }
+        }
+
+        .right_container {
+            width: 100%;
+            height: 210px;
+            padding: 20px;
+            background: #FFFFFE;
+            border-radius: 10px;
+            border: 2px solid #FFD580;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .top_box_label {
+                font-size: 18px;
+                font-weight: 700;
+                color: red;
+                text-transform: capitalize;
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+
+                .icon {
+                    margin-right: 10px;
+                    font-size: 16px;
+                }
+            }
+
+            .form_container {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 48%;
+                height: 170px;
+
+                .top_box_form {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .bottom_box_form {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+
+                    .box {
+                        width: 48%;
+                    }
+                }
+            }
+        }
+    }
+
+    .car_container {
+        display: flex;
+
+        .filter_car_bar {
+            width: 300px;
+            height: 100%;
+            padding: 20px;
+            margin-right: 40px;
+            box-shadow: var(--box-shadow);
+            background: #FFFFFE;
+            border-radius: 20px;
+            border: 2px solid #FFD580;
+
+            .head_title {
+                font-size: 20px;
+                font-weight: 900;
+                color: red;
+                text-transform: capitalize;
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+
+                .icon {
+                    color: #EF4565;
+                    margin-left: 5px;
+                }
+            }
+
+            .car_category_container {
+
+                .car_category {
+                    /*height: 18px; */
+
+                    &:not(:first-child) {
+                        margin-top: 15px;
+                    }
+
+                    .top_box {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 5px;
+
+                        .head_title {
+                            font-size: 16px;
+                            line-height: 16px;
+                            margin: 0;
+                            color: var(--color-dark);
+                            font-weight: 700;
+                            align-items: inherit;
+                        }
+
+                        .show_button {
+                            &::before {
+                                content: "\2b";
+                                font-weight: 900;
+                                display: inline-block;
+                                font-style: normal;
+                                text-rendering: auto;
+                                -webkit-font-smoothing: antialiased;
+                                font-size: 20px;
+                                line-height: 20px;
+                                color: black;
+                            }
+                        }
+                    }
+
+                    .category_content {
+
+                        .category_car {
+                            display: flex;
+                            align-items: center;
+        
+                            .label_name {
+                                font-size: 16px;
+                                color: #094067;
+                                text-transform: capitalize;
+                                margin: 0px 5px;
+                            }
+
+                            .category_count {
+                                font-size: 14px;
+                                line-height: 14px;
+                                color: var(--color-dark);
+                                font-weight: 700;
+                            }
+                        }
+                    }
+
+                    &.show {
+                        height: 100%;
+
+                        .top_box {
+
+                            .show_button {
+
+                                &::after {
+                                    
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+.circle_profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.circle_profile:nth-child(2) {
+    transform: translateX(-30%);
+}
+
+.circle_profile:nth-child(3) {
+    transform: translateX(-60%);
+}
+
+.circle_profile:nth-child(4) {
+    transform: translateX(-90%);
+}
+
+.circle_profile:nth-child(5) {
+    transform: translateX(-120%);
+}
+
+.right_container input {
+    height: 40px;
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    transition: all 300ms ease;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-dark);
+    text-transform: capitalize;
+
+    &:valid {
+        border: 2px solid lightcoral;
+    }
+
+    &:hover,
+    &:focus {
+        border: 2px solid orangered;
+    }
+}
+
+.category_car input {
+    cursor: pointer;
 }
