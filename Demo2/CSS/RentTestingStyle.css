@@ -1139,7 +1139,8 @@ header.shadow #search-icon {
             .car_category_container {
 
                 .car_category {
-                    /*height: 18px; */
+                    height: 25px;
+                    overflow: hidden;
 
                     &:not(:first-child) {
                         margin-top: 15px;
@@ -1149,7 +1150,7 @@ header.shadow #search-icon {
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        margin-bottom: 5px;
+                        margin-bottom: 1px;
 
                         .head_title {
                             font-size: 16px;
@@ -1161,7 +1162,9 @@ header.shadow #search-icon {
                         }
 
                         .show_button {
+
                             &::before {
+                                font-family: "Font Awesome 5 Free";
                                 content: "\2b";
                                 font-weight: 900;
                                 display: inline-block;
@@ -1204,13 +1207,163 @@ header.shadow #search-icon {
 
                             .show_button {
 
-                                &::after {}
+                                &::before {
+                                    font-family: "Font Awesome 5 Free";
+                                    content: "\f068";
+                                    font-weight: 900;
+                                    display: inline-block;
+                                    font-style: normal;
+                                    text-rendering: auto;
+                                    -webkit-font-smoothing: antialiased;
+                                    font-size: 20px;
+                                    line-height: 20px;
+                                    color: black;
+                                }
                             }
                         }
                     }
 
                 }
+
+
             }
+        }
+
+        .car_item_box {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            justify-items: center;
+            gap: 25px;
+
+            .car_item {
+                width: 250px;
+                height: 300px;
+                padding: 10px;
+                border-radius: 10px;
+                background: #FFFFFE;
+                box-shadow: var(--box-shadow);
+                position: relative;
+                border: 1px solid #FFFFFE;
+                transition: all 200ms ease 200ms;
+
+                .car_item_name {
+                    font-size: 22px;
+                    line-height: 20px;
+                    text-transform: capitalize;
+                    font-weight: 800;
+                    color: red;
+                }
+
+                .car_body_category {
+                    font-size: 16px;
+                    line-height: 18px;
+                    color: lightcoral;
+                    opacity: 0.8;
+                    position: relative;
+                }
+
+                .price {
+                    display: flex;
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: var(--color-dark);
+                    position: relative;
+                }
+
+                .car_image {
+                    width: 230px;
+                    height: 150px;
+                    margin-bottom: 20px;
+                }
+
+                .car_bottom_content {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .car_feature {
+                        padding: 10px;
+                        width: 230px;
+                        position: absolute;
+                        display: flex;
+                        opacity: 1;
+                        justify-content: space-between;
+                        transition: all 200ms ease 200ms;
+
+                        .feature_item {
+                            position: relative;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            text-align: center;
+                            text-transform: capitalize;
+
+                            .icon {
+                                font-size: 20px;
+                                color: #094067;
+                                margin-bottom: 10px;
+                            }
+
+                            .info {
+                                color: var(--color-dark);
+                                font-weight: 700;
+                            }
+                        }
+                    }
+
+                    .rent_button {
+                        /*display: none;*/
+                        position: absolute;
+                        width: 230px;
+                        height: 50px;
+                        font-size: 20px;
+                        font-weight: 700;
+                        background: orangered;
+                        ;
+                        text-transform: capitalize;
+                        justify-content: center;
+                        align-items: center;
+                        color: #FFFFFE;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        display: flex;
+                        opacity: 0;
+                        transition: all 200ms ease 200ms;
+
+                        .icon {
+                            position: absolute;
+                            right: 20px;
+                            font-size: 16px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 5px;
+                        }
+                    }
+                }
+
+                &:hover {
+                    border: 1px solid orangered;
+
+                    .car_bottom_content {
+
+                        .car_feature {
+                            opacity: 0;
+                        }
+
+                        .rent_button {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+
+
         }
     }
 }
@@ -1264,8 +1417,52 @@ header.shadow #search-icon {
     cursor: pointer;
 }
 
+.car_item_box .price p {
+    font-size: 32px;
+    line-height: 32px;
+    color: #094067;
+}
+
+.car_item_box .price p span {
+    position: absolute;
+    bottom: 0;
+    left: 45px;
+
+}
+
+.car_image img {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
+.pagination>li>a {
+    background: white;
+    color: black;
+    border: 1px solid;
+}
+
+/* (2) Change disabled buttons*/
+.pagination>.disabled>a,
+.pagination>.disabled>a:hover,
+.pagination>.disabled>a:focus {
+    background-color: #E0FFFF;
+    border-color: #F0F8FF;
+    color: #000000;
+}
+
+/* (3) Change active or hover button color*/
+.pagination>.active>a,
+.pagination>.active>a:hover,
+.pagination>.active>a:focus,
+.pagination>li>a:hover,
+.pagination>li>a:focus {
+    background-color: red;
+    border: 2px solid black;
+    color: white;
+}
 /*By Minh lmao*/
-.rent-card-section {
+/*.rent-card-section {
     display: grid;
     grid-template-columns: repeat(4, 25%);
     column-gap: 20px;
@@ -1297,4 +1494,4 @@ header.shadow #search-icon {
 }
 .filter_car_bar {
     margin-right: 0;
-}
+} */
