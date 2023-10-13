@@ -50,7 +50,7 @@
                 <li> <a href="#">Tài liệu</a></li>
                 <li> <a href="#">Liên hệ</a></li>
                 <li> <a href="RenTest2,0.html" class="active">Thuê xe</a></li>
-                <li> <a href="login.html" >Đăng Nhập</a></li>
+                <li> <a href="login.html">Đăng Nhập</a></li>
             </ul>
             <!--search Icon-->
             <i class='bx bx-search' id="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -140,9 +140,6 @@
                     <div class="head_title">
                         Tìm kiếm xe
                     </div>
-                    <div class="sub_head_title">
-                        Lorem ipsum dolor
-                    </div>
                 </div>
 
                 <!--2-->
@@ -153,9 +150,6 @@
                     <div class="head_title">
                         Đặt thuê xe
                     </div>
-                    <div class="sub_head_title">
-                        Lorem ipsum dolor
-                    </div>
                 </div>
 
                 <!--3-->
@@ -165,9 +159,6 @@
                     </div>
                     <div class="head_title">
                         Chọn thời gian
-                    </div>
-                    <div class="sub_head_title">
-                        Lorem ipsum dolor
                     </div>
                 </div>
 
@@ -180,9 +171,6 @@
                     <div class="head_title">
                         Kiểm tra thông tin
                     </div>
-                    <div class="sub_head_title">
-                        Lorem ipsum dolor
-                    </div>
                 </div>
 
                 <!--5-->
@@ -192,9 +180,6 @@
                     </div>
                     <div class="head_title">
                         Hoàn tất đơn
-                    </div>
-                    <div class="sub_head_title">
-                        Lorem ipsum dolor
                     </div>
                 </div>
             </div>
@@ -260,7 +245,7 @@
     <!--CAR PAGE SECTION-->
     <section class="car_page_section section" id="car">
         <div class="find_car_bar">
-            <div class="left_container">
+            <div class="left_container hidden-load">
 
                 <div class="text_title">
                     <div class="head_title">
@@ -311,15 +296,15 @@
                 </div>
             </div>
 
-            <div class="right_container">
-                <form action="" class="form_container">
+            <div class="right_container hidden-load">
+                <form action="" class="form_container" style="width: 100%;">
                     <div class="top_box_form">
                         <label for="pick-up-address" class="top_box_label">
-                            <div class="icon"><i class="fa-solid fa-map-pin"></i>
-                                Pick up address
+                            <div class="icon"><i class="fa-solid fa-magnifying-glass"></i>
+                                Tìm kiếm
                             </div>
                         </label>
-                        <input type="text" name="pick-up-address">
+                        <input type="text" name="pick-up-address" placeholder="Nhập từ khóa ở đây">
                     </div>
 
                     <div class="bottom_box_form">
@@ -329,55 +314,21 @@
                                     Pick up date
                                 </div>
                             </label>
-                            <input type="date" name="pick-up-date">
+                            <input type="datetime-local" name="pick-up-date">
                         </div>
-
-                        <div class="box">
-                            <label for="pick-up-time" class="top_box_label">
-                                <div class="icon">
-                                    <i class="fa-solid fa-clock"></i>
-                                    Pick up time
-                                </div>
-                            </label>
-                            <input type="time" name="pick-up-time">
-                        </div>
-                    </div>
-                </form>
-
-                <form action="" class="form_container">
-                    <div class="top_box_form">
-                        <label for="drop-off-address" class="top_box_label">
-                            <div class="icon"><i class="fa-solid fa-map-pin"></i>
-                                Drop off address
-                            </div>
-                        </label>
-                        <input type="text" name="pick-up-address">
-                    </div>
-
-                    <div class="bottom_box_form">
                         <div class="box">
                             <label for="drop-off-date" class="top_box_label">
                                 <div class="icon"><i class="fa-solid fa-calendar"></i>
                                     Drop off date
                                 </div>
                             </label>
-                            <input type="date" name="drop-off-date">
-                        </div>
-
-                        <div class="box">
-                            <label for="drop-off-time" class="top_box_label">
-                                <div class="icon"><i class="fa-solid fa-clock"></i>
-                                    Drop off time
-                                </div>
-                            </label>
-                            <input type="time" name="drop-off-time">
+                            <input type="datetime-local" name="drop-off-date">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-
-        <div class="car_container">
+        <div class="car_container hidden-load">
             <div class="filter_car_bar">
                 <div class="head_title">
                     Find Car
@@ -465,7 +416,7 @@
             </div>
 
             <div class="car_item_box" id="car_item">
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Yamaha
                     </div>
@@ -495,13 +446,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Yamaha
                     </div>
@@ -531,13 +482,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Yamaha
                     </div>
@@ -567,13 +518,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Yamaha
                     </div>
@@ -603,13 +554,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Yamaha
                     </div>
@@ -639,13 +590,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Toyota
                     </div>
@@ -675,13 +626,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Toyota
                     </div>
@@ -711,13 +662,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Toyota
                     </div>
@@ -747,12 +698,12 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Toyota
                     </div>
@@ -782,13 +733,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Honda ABC
                     </div>
@@ -818,13 +769,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Honda ABC
                     </div>
@@ -854,13 +805,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Honda ABC
                     </div>
@@ -890,13 +841,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Honda ABC
                     </div>
@@ -926,13 +877,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Honda ABC
                     </div>
@@ -962,13 +913,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Honda ABC
                     </div>
@@ -998,13 +949,13 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="car_item">
+                <div class="car_item hidden-load">
                     <div class="car_item_name">
                         Honda ABC
                     </div>
@@ -1034,7 +985,7 @@
                         </div>
 
                         <div class="rent_button">
-                            rent now!
+                            Thuê ngay
                             <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
                         </div>
                     </div>
