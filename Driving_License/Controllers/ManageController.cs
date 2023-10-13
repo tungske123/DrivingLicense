@@ -22,11 +22,24 @@ namespace Driving_License.Controllers
         }
 
         //action: QuizList
-        public async Task<IActionResult> QuizList()
+        public async Task<IActionResult> QuizList(int page = 1, int pagesize=5)
         {
-            List<Quiz> QuizList = await _context.Quizzes.ToListAsync();
-            ViewBag.QuizList = QuizList;
-            return View("~/Views/Manage/Quizzes.cshtml");
+            page = page < 1 ? 1 : page;
+            var QuizList = await _context.Quizzes.ToListAsync();
+            var pagedQuizzes = QuizList.ToPagedList(page,pagesize);//(Start at, how mane)
+            return View("~/Views/Manage/Quizzes.cshtml",pagedQuizzes);
+        }
+        public async Task<IActionResult> SearchQuiz(string name,int page=1, int pagesize = 5)
+        {
+            ViewBag.searched = name;
+            if (string.IsNullOrEmpty(name))
+            {
+                return RedirectToAction("QuizList");
+            }
+            var QuizList = await _context.Quizzes.Where(q=>q.Name.Contains(name)).ToListAsync();
+            var pagedQuizzes = QuizList.ToPagedList(page, pagesize);//(Start at, how mane)
+            
+            return View("~/Views/Manage/Quizzes.cshtml", pagedQuizzes);
         }
 
         //action: CreateQuiz
@@ -57,5 +70,13 @@ namespace Driving_License.Controllers
             return View("~/Views/Manage/Quiz/ViewDetail.cshtml", quiz);
         }
 
+        public async Task<IActionResult> UserList(int page = 1)
+        {
+            int pagesize = 5;
+            page = page < 1 ? 1 : page;
+            var UserList = await _context.Users.ToListAsync();
+            var pagedUsers = UserList.ToPagedList(page, pagesize);//(Start at, how mane)
+            return View("~/Views/Manage/Users.cshtml", pagedUsers);
+        }
     }
 }

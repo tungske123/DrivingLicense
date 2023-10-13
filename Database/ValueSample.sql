@@ -11321,6 +11321,7 @@ insert into Answer(QuestionID, isCorrect, AnswerImage, AnswerText) values
 ('2600' , 0 , 'none' , N'Vượt về phía bên trái để đi tiếp.');
 go
 
+use master;
 
 --Tạo bộ đề của loại bằng nào với random câu hỏi trong loại bằng đó. Hàm này dành cho staff
 /*

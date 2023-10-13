@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 
 <head>
@@ -39,25 +42,27 @@
             <!--Sidebar-->
             <div class="sidebar-menu" id="sidebar-menu">
                 <!--First-->
-                <a href="" class="active" class="sidebar-menu-item">
+                <a href="/Manage" class="sidebar-menu-item active">
                     <span class="material-symbols-outlined">
                         grid_view
                     </span>
-                    <h3 class="lead">Dashboard</h3>
+                    <h3 class="lead">Trang Chủ</h3>
                 </a>
                 <!--First-->
-                <a href="UserList.html" class="sidebar-menu-item">
+                <a href="/Manage/UserList" class="sidebar-menu-item">
                     <span class="material-symbols-outlined">
                         person
                     </span>
-                    <h3 class="lead">Users</h3>
+                    <h3 class="lead">Các Người Dùng</h3>
                 </a>
                 <!--First-->
-                <a href="Manage/QuizList" class="sidebar-menu-item">
+                <a href="/Manage/QuizList" class="sidebar-menu-item">
                     <span class="material-symbols-outlined">
-                        receipt_long
+                        <span class="material-symbols-outlined">
+                            quiz
+                        </span>
                     </span>
-                    <h3 class="lead">Quizzes</h3>
+                    <h3 class="lead">Các Bộ Đề</h3>
                 </a>
                 <!--First-->
                 <a href="" class="sidebar-menu-item">

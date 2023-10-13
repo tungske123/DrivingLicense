@@ -349,23 +349,21 @@ namespace Driving_License.Controllers
             var quiz = await _context.Quizzes.FindAsync(quizid);
             if (quiz != null)
             {
-                using (DbCommand command = _context.Database.GetDbConnection().CreateCommand())
+                using DbCommand command = _context.Database.GetDbConnection().CreateCommand();
+                command.CommandText = "proc_DeleteQuiz";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@quizID", SqlDbType.Int) { Value = quizid });
+
+                _context.Database.OpenConnection();
+
+                try
                 {
-                    command.CommandText = "proc_DeleteQuiz";
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.Add(new SqlParameter("@quizID", SqlDbType.Int) { Value = quizid });
-
-                    _context.Database.OpenConnection();
-
-                    try
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    finally
-                    {
-                        _context.Database.CloseConnection();
-                    }
+                    command.ExecuteNonQuery();
+                }
+                finally
+                {
+                    _context.Database.CloseConnection();
                 }
             }
 
