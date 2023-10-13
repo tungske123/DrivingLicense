@@ -346,31 +346,44 @@
 
                 <form action="" class="form_container">
                     <div class="top_box_form">
-                        <label for="drop-off-address" class="top_box_label">
-                            <div class="icon"><i class="fa-solid fa-map-pin"></i>
-                                Drop off address
+                        <label for="slider-input" class="top_box_label">
+                            <div class="icon">
+                                <i class="fas fa-search">
+
+                                </i>
+                                Money range
                             </div>
                         </label>
-                        <input type="text" name="pick-up-address">
+                        <div class="slider">
+                            <div class="progress"></div>
+                          </div>
+                          <div class="range-input">
+                            <input type="range" min="0" max="10000" value="300" class="min-range" />
+                            <input type="range" min="0" max="10000" value="3500" class="max-range" />
+                          </div>
                     </div>
 
                     <div class="bottom_box_form">
                         <div class="box">
                             <label for="drop-off-date" class="top_box_label">
                                 <div class="icon"><i class="fa-solid fa-calendar"></i>
-                                    Drop off date
+                                    min
                                 </div>
                             </label>
-                            <input type="date" name="drop-off-date">
+                            <div class="price_input">
+                                <input type="number" value="300" class="min-input" />
+                            </div>
                         </div>
 
                         <div class="box">
                             <label for="drop-off-time" class="top_box_label">
                                 <div class="icon"><i class="fa-solid fa-clock"></i>
-                                    Drop off time
+                                    max
                                 </div>
                             </label>
-                            <input type="time" name="drop-off-time">
+                            <div class="price_input">
+                                <input type="number" value="3500" class="max-input" />
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -457,6 +470,32 @@
                             <div class="category_car">
                                 <input type="checkbox" name="matic">
                                 <label for="matic" class="label_name">matic</label>
+                                <div class="category_count">(10)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="car_category">
+                        <div class="top_box">
+                            <div class="head_title">
+                                Certificate
+                            </div>
+                            <div class="show_button"></div>
+                        </div>
+                        <div class="category_content">
+                            <div class="category_car">
+                                <input type="checkbox" name="A2">
+                                <label for="A!" class="label_name">A1</label>
+                                <div class="category_count">(10)</div>
+                            </div>
+                            <div class="category_car">
+                                <input type="checkbox" name="A2">
+                                <label for="A2" class="label_name">A2</label>
+                                <div class="category_count">(10)</div>
+                            </div>
+                            <div class="category_car">
+                                <input type="checkbox" name="A3">
+                                <label for="A3" class="label_name">A3</label>
                                 <div class="category_count">(10)</div>
                             </div>
                         </div>
