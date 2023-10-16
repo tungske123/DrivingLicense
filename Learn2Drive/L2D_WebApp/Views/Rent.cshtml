@@ -1,0 +1,344 @@
+@model L2D_DataAccess.ViewModels.RentViewModel;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "L2D - Thuê xe";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--custom css files-->
+    <link rel="stylesheet" href="~/css/styleRent.css">
+    <!--Browser Icons-->
+    <link rel="icon" type="image/jpg" href="img/favicon_1.ico" />
+    <title>RentPage</title>
+</head>
+
+<body>
+    <!--HomePage Section-->
+    <section class="home_page_section section" id="home_page">
+        <div class="container">
+            <!--CONTENT-->
+            <div class="home_page_content hidden-load">
+                <div class="content_title hidden-load">
+                    Thuê xe tập lái dễ dàng với <br>
+                    <p style="color: black;">Learn<span class="span">2</span>Drive</p>
+                </div>
+                <div class="content_subtitle hidden-load">
+                    Chúng tôi luôn cố gắng đem đến đa dạng các mẫu mã, dòng xe với chất lượng tốt
+                    và giá cả phải chăng để phục vụ người học
+                    <br>
+                    <button class="btn btn-outline-danger mt-3" onclick="location.href='#car';">Khám phá</button>
+                </div>
+                <!--Download Icon-->
+                <!--Bây có thể xoá-->
+
+            </div>
+            <div class="home_page_content">
+                <div class="content_image-box">
+                    <img src="img/Assets/Image/Image-1.png" alt="">
+                </div>
+            </div>
+        </div>
+        <!--================END CONTENT============================-->
+    </section>
+    <!--END HOMEPAGE SECTION-->
+    <!--HOW IT WORKS SECTION-->
+    <section class="how_it_works section" id="work">
+
+        <div class="head_title">
+            Thuê xe một cách dễ dàng
+        </div>
+
+        <div class="container">
+            <div class="box_item">
+                <!--1-->
+                <div class="item">
+                    <div class="icon">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <div class="head_title">
+                        Tìm kiếm xe
+                    </div>
+                </div>
+
+                <!--2-->
+                <div class="item">
+                    <div class="icon">
+                        <i class="fa-solid fa-car"></i>
+                    </div>
+                    <div class="head_title">
+                        Đặt thuê xe
+                    </div>
+                </div>
+
+                <!--3-->
+                <div class="item">
+                    <div class="icon">
+                        <i class="fa-solid fa-calendar"></i>
+                    </div>
+                    <div class="head_title">
+                        Chọn thời gian
+                    </div>
+                </div>
+
+
+                <!--4-->
+                <div class="item">
+                    <div class="icon">
+                        <i class="fa-regular fa-square-check"></i>
+                    </div>
+                    <div class="head_title">
+                        Kiểm tra thông tin
+                    </div>
+                </div>
+
+                <!--5-->
+                <div class="item">
+                    <div class="icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="head_title">
+                        Hoàn tất đơn
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--END HOW IT WORKS SECTION-->
+    <!--SUGGESTION PAGE SECTION-->
+    <section class="suggest_page_section section hide-section" id="suggest">
+        <div class="container">
+            <div class="box">
+                <div class="head_title">
+                    Xe được thuê nhiều nhất
+                </div>
+                <div class="head_sub_title">
+                </div>
+                <div class="car_name topone-vehicle-name">
+                    TOYOTA Vios
+                </div>
+                <div class="superiority_box">
+                    <div class="item">
+                        <div class="icon text-success">
+                            <i class="fa-solid fa-square-check "></i>
+                            Xe 4 chỗ
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="icon text-success">
+                            <i class="fa-solid fa-square-check "></i>
+                            Đi êm
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="icon text-success">
+                            <i class="fa-solid fa-square-check "></i>
+                            Tiết kiệm xăng
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="icon text-success">
+                            <i class="fa-solid fa-square-check "></i>
+                            Dễ thao tác
+                        </div>
+                    </div>
+                    <div class="item">
+                        <button class="btn_search btn btn-outline-danger topone-rent-btn">Thuê ngay</button>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <!-- <div class="background"></div> -->
+                <div class="image_box">
+                    <img src="img/A1.jpg" class="img-fluid rounded-3 topone-vehicle-img" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--END SUGGESTION PAGE-->
+    <!--CAR PAGE SECTION-->
+    <section class="car_page_section section" id="car">
+        <div class="find_car_bar">
+            <div class="left_container hidden-load">
+
+                <div class="text_title">
+                    <div class="head_title">
+                        Tìm xe
+                    </div>
+                    <div class="head_sub_title">
+                        Lorem ipsum dolor sit amet consectetur adipisicing
+                    </div>
+                </div>
+
+                <div class="bottom_box">
+                    <div class="left_box">
+                        <div class="circle_profile">
+                            <img src="img/Assets/Image/Image-5.jpg" alt="">
+                        </div>
+                        <div class="circle_profile">
+                            <img src="img/Assets/Image/Image-5.jpg" alt="">
+                        </div>
+                        <div class="circle_profile">
+                            <img src="img/Assets/Image/Image-5.jpg" alt="">
+                        </div>
+                        <div class="circle_profile">
+                            <img src="img/Assets/Image/Image-5.jpg" alt="">
+                        </div>
+                        <div class="circle_profile">
+                            1k+
+                        </div>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <div class="right_box">
+                        <div class="star_box">
+                            <div class="icon">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                            </div>
+                        </div>
+                        <div class="right_box_text">
+                            <p>
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right_container hidden-load">
+                <form action="" class="form_container" id="searchForm">
+                    <div class="top_box_form">
+                        <label for="keyword" class="top_box_label">
+                            <div class="icon">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                Tìm theo tên
+                            </div>
+                        </label>
+                        <input type="text" name="keyword" id="keyword" placeholder="Nhập từ khóa ở đây">
+                    </div>
+                    <button class="btn btn-outline-danger" type="submit">Tìm</button>
+                </form>
+
+                <form action="" class="form_container">
+                    <div class="top_box_form">
+                        <label for="slider-input" class="top_box_label">
+                            <div class="icon">
+                                <i class="fas fa-search">
+
+                                </i>
+                                Tìm theo giá tiền
+                            </div>
+                        </label>
+                        <div class="slider">
+                            <div class="progress" style="display: none;"></div>
+                        </div>
+                        <div class="range-input">
+                            <input type="range" min="0" step="500" id="startPrice" value="0" max="1000000" class="min-range" />
+                            <input type="range" min="0" step="500" id="maxPrice" value="1000000" max="1000000" class="max-range" />
+                        </div>
+                    </div>
+
+                    <div class="bottom_box_form">
+                        <div class="box">
+                            <label for="drop-off-date" class="top_box_label">
+                                <div class="icon">
+                                    <i class="fa-solid fa-money-bill"></i>
+                                    min
+                                </div>
+                            </label>
+                            <div class="price_input" style="display: flex;">
+                                <input type="text" class="min-input" value="0" /> &nbsp;
+                                <span style="display: flex;align-items: center;">VNĐ</span>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <label for="drop-off-time" class="top_box_label">
+                                <div class="icon">
+                                    <i class="fa-solid fa-money-bill"></i>
+                                    max
+                                </div>
+                            </label>
+                            <div class="price_input" style="display: flex;">
+                                <input type="text" class="max-input" value="1.000.000" /> &nbsp;
+                                <span style="display: flex;align-items: center;">VNĐ</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="car_container hidden-load">
+            <div class="filter_car_bar">
+                <div class="head_title">
+                    Bộ lọc
+                    <div class="icon">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                </div>
+                <div class="car_category_container">
+                    <div class="car_category">
+                        <div class="top_box">
+                            <div class="head_title">
+                                Hãng xe
+                            </div>
+                            <div class="show_button"></div>
+                        </div>
+                        <div class="category_content">
+                            @if (Model.BrandList is not null && Model.BrandList.Count > 0)
+                            {
+                                @foreach (var brand in Model.BrandList)
+                                {
+                                    <div class="category_car">
+                                        <input type="checkbox" name="coupe" value="@brand" class="form-check-input brand-check">
+                                        <label for="coupe" class="label_name form-check-label">@brand</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="car_category">
+                        <div class="top_box">
+                            <div class="head_title">
+                                Loại xe
+                            </div>
+                            <div class="show_button"></div>
+                        </div>
+                        <div class="category_content">
+                            @if (Model.TypeList is not null && Model.TypeList.Count > 0)
+                            {
+                                @foreach(var type in Model.TypeList)
+                                {
+                                    <div class="category_car">
+                                        <input type="checkbox" class="form-check-input category-check" value="@type" name="category">
+                                        <label for="2 - 5" class="label_name form-check-label">@type</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="car_item_box" id="car_item"></section>
+        </div>
+    </section>
+    <section class="pagination-container">
+        <nav>
+            <ul class="pagination"></ul>
+        </nav>
+    </section>
+    <script src="~/js/Rent.js"></script>
+</body>
+
+</html>

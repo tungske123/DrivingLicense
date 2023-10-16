@@ -1,0 +1,56 @@
+﻿@using L2D_DataAccess.Models;
+@{
+    var user = ViewBag.user as User;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="js/bootstrap/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="js/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="js/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="icon" type="image/jpg" href="img/favicon_1.ico" />
+    <link rel="stylesheet" href="/css/styleLogin.css"/>
+</head>
+<body>
+    <div style="margin-top:100px">
+        @if(user.Avatar != null)
+        {
+            <img src="/img/Avatar/@user.Avatar" style="width:250px;height:auto" />
+        }
+        else
+        {
+            <img src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg" style="width:250px;height:auto"/>
+        }
+        <form action="/User/EditInfo" method="post" enctype="multipart/form-data">
+            <label for="FullName">Full Name:</label>
+            <input type="text" name="FullName" value="@user.FullName">
+
+            <label for="BirthDate">Birth Date:</label>
+            <input type="date" name="BirthDate" value="@user.BirthDate.ToString("yyyy-MM-dd")">
+
+            <label for="Email">Email:</label>
+            <input type="email" name="Email" value="@user.Email">
+
+            <label for="Nationality">Nationality:</label>
+            <input type="text" name="Nationality" value="@user.Nationality">
+
+            <label for="PhoneNumber">Phone Number:</label>
+            <input type="number" name="PhoneNumber" value="@user.PhoneNumber">
+
+            <label for="Address">Address:</label>
+            <input type="text" name="Address" value="@user.Address">
+
+            <label for="Avatar">Avatar:</label>
+            <input type="file" name="Avatar" value="@user.Address" accept="jpg/png/jpeg/webp">
+            <button>Save</button>
+        </form>
+
+    </div>
+</body>
+</html>>

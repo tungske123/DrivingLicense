@@ -1,0 +1,140 @@
+@model L2D_DataAccess.ViewModels.QuizViewModels;
+@using L2D_DataAccess.Models;
+@{
+    ViewData["Title"] = Model.CurrentQuiz.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool hasImage = !string.IsNullOrEmpty(@Model.CurrentQuestion.QuestionImage) &&
+    !@Model.CurrentQuestion.QuestionImage.Equals("none");
+    var currentAnswerID = (string.IsNullOrEmpty(@Model.AnswerIDString)) ? -1 : int.Parse(@Model.AnswerIDString);
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--custom css file-->
+    <link rel="stylesheet" href="~/css/styleQuizPage.css">
+    <!--icon-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4832/4832401.png">
+    <script>
+        function CreateQuizData() {
+            const QuizData = {
+                QuestionID: @Model.CurrentQuestion.QuestionId,
+                CurrentQuestionID: @Model.CurrentQuestion.QuestionId,
+                AnswerId: getAnswerID()
+            };
+            return QuizData;
+        }
+        var currentQuestionID = @Model.CurrentQuestion.QuestionId;
+        var currentAnswerID = @currentAnswerID;
+        console.log('Current answerid: ' + currentAnswerID);
+    </script>
+    <script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Quiz</title>
+</head>
+
+<body>
+    <div class="container-fluid" style="margin-top: 100px;">
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold;">Xác nhận nộp
+                            bài?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger modal-button" btnaction="cancel"
+                            data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-success modal-button" btnaction="submit"
+                            data-bs-dismiss="modal">Nộp</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="quiz-container">
+            <aside class="question-section hidden-load shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                <div class="title hidden-load" style="font-size: xx-large;">
+                    <span class="quiz-name">@Model.CurrentQuiz.Name</span>
+                    <span class="time-bar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="mb-2 bi bi-alarm"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z" />
+                            <path
+                                d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z" />
+                        </svg> <span class="time" id="time"></span></span>
+                </div>
+                <div class="warning" style="color: red;">
+                    Bài thi sẽ kết thúc khi hết thời gian làm bài hoặc khi bạn nhấn "Nộp bài"
+                </div>
+                <h4 class="info mt-3 hidden-load">Số câu đã làm: <span
+                        class="question-num badge text-bg-success">@Model.AnsweredQuestionCount câu</span></h4>
+                <div class="quiz-buttons mt-3 hidden-load">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Xem câu hỏi</button>
+                    <button class="btn btn-danger submit-button" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">Nộp bài</button>
+                </div>
+                <div class="question-content mt-4 hidden-load">
+                    <h5 class="question-description">@Model.CurrentQuestion.QuestionText</h5>
+                    <div class="question-image">
+                        @if (hasImage)
+                        {
+                            <img src="@Model.CurrentQuestion.QuestionImage" class="img-fluid" alt="">
+                        }
+                        else
+                        {
+                            <img src="https://i.pinimg.com/originals/ae/8a/c2/ae8ac2fa217d23aadcc913989fcc34a2.png"
+                                class="img-fluid" alt="">
+                        }
+                    </div>
+                    <div class="question-answers" style="font-size: large;">
+                        @foreach (var answer in @Model.CurrentQuestion.Answers)
+                        {
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input answer-input" name="answer"
+                                    id="@answer.AnswerId">
+                                <label for="@answer.AnswerId" class="form-check-label">@answer.AnswerText</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </aside>
+            <div class="quiz-select-section">
+                <!--question is done: change class name from btn-outline-primary to btn-success-->
+                @for (int i = 1; i <= @Model.CurrentQuiz.Questions.Count(); ++i)
+                {
+                    <button class="btn btn-outline-primary question_button"
+                        quesid="@Model.CurrentQuiz.Questions.ElementAt(@i - 1).QuestionId" cnt="@i">Câu @i</button>
+                }
+            </div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('resize', function () {
+            var quizSelectSection = document.querySelector('.quiz-select-section');
+            var windowWidth = window.innerWidth;
+            //Desktop
+            if (windowWidth > 768) {
+                quizSelectSection.classList.remove('offcanvas');
+                quizSelectSection.removeAttribute("id");
+                quizSelectSection.removeAttribute("aria-labelledby");
+                quizSelectSection.removeAttribute('tabindex');
+                quizSelectSection.classList.add('desktop');
+            } else { //Mobile
+                quizSelectSection.classList.remove('desktop')
+                quizSelectSection.classList.add('offcanvas');
+                quizSelectSection.setAttribute('id', "offcanvasRight");
+                quizSelectSection.setAttribute('aria-labelledby', "offcanvasRightLabel");
+                quizSelectSection.setAttribute('tabindex', "-1");
+            }
+        });
+    </script>
+    <script src="~/js/QuizFunctions.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--bootstrap css file-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
+    <!--custom css file-->
+    <link rel="stylesheet" href="/css/styleHome.css">
+    @if (!string.IsNullOrEmpty(@ViewBag.icon_link))
+    {
+        <link rel="icon" href="@ViewBag.icon_link">
+    }
+    else
+    {
+        <link rel="icon" href="/img/favicon_1.ico">
+    }
+    <title>@ViewData["Title"]</title>
+</head>
+
+<body>
+    @using L2D_DataAccess.Models;
+    @using System.Text.Json;
+    @{
+        Account account = null;
+        if (!string.IsNullOrEmpty(Context.Session.GetString("usersession")))
+        {
+            var usersession = Context.Session.GetString("usersession");
+            account = JsonSerializer.Deserialize<Account>(usersession);
+        }
+    }
+    <header>
+        <!--Nav Container-->
+        <div class="nav container hidden-load">
+            <!--Menu Icon-->
+            <i class='bx bx-menu' id="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                </svg>
+            </i>
+            <!--Logo-->
+            <a href="" class="logo">Learn<span>2</span>Drive</a>
+            <!--Navbar List-->
+            <ul class="navbar">
+                <li> <a href="/Home" class="home-link">Home</a></li>
+                <li> <a href="/Home/Intro" class="intro_link">Giới thiệu </a></li>
+                <li class="dropdown-toggle">
+                    <a class="navbar-link license_list" href="#" id="dropdown">Đào tạo lái xe</a>
+                    <ul class="dropdown_menu dropdown_menu--animated dropdown_menu-1 dropdown-menu">
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A1';">Bằng A1</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A2';">Bằng A2</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A3';">Bằng A3</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A4';">Bằng A4</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=B1';">Bằng B1</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=B2';">Bằng B2</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=C';">Bằng C</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=D-E';">Bằng D-E</li>
+                    </ul>
+                </li>
+                <li> <a href="#">Tài liệu</a></li>
+                <li> <a href="#">Liên hệ</a></li>
+                @if (@account is not null)
+                {
+                    <li><a href="/User">@account.Username</a></li>
+                    <li><a href="/Login/logout">Đăng Xuất</a></li>
+                }
+                else
+                {
+                    <li> <a href="/Login" class="login-link">Đăng Nhập</a></li>
+                }
+            </ul>
+            <!--search Icon-->
+            <i class='bx bx-search' id="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg>
+            </i>
+            <!--search box hidden-load-->
+            <form class="search-box hidden-load container" action="">
+                <input type="search" name="keyword" placeholder="Search here..." class="search-bar">
+            </form>
+        </div>
+    </header>
+
+
+    @RenderBody();
+
+
+    <div class="footer hidden-load container-fluid">
+        <div class="footer-container container">
+            <div class="footer-box hidden-load">
+                <a href="#" class="logo">Learn<span>2</span>Drive</a>
+                <div class="social">
+                    <a href="#"><i class='bx bxl-facebook'></i></a>
+                    <a href="#"><i class='bx bxl-twitter'></i></a>
+                    <a href="#"><i class='bx bxl-instagram'></i></a>
+                    <a href="#"><i class='bx bxl-youtube'></i></a>
+                </div>
+            </div>
+            <div class="footer-box hidden-load">
+                <h3>Page</h3>
+                <a href="/Home">Home</a>
+                <a href="#">Giới thiệu</a>
+                <a href="#">Đào tạo lái xe</a>
+                <a href="#">Tài liệu</a>
+                <a href="#">Tin tức</a>
+                <a href="#">Liên hệ</a>
+            </div>
+
+            <div class="footer-box hidden-load">
+                <h3>Legal</h3>
+                <a href="#">Privacy</a>
+                <a href="#">Refund Policy</a>
+                <a href="#">Cookies Policy</a>
+            </div>
+
+            <div class="footer-box hidden-load">
+                <h3>Contact</h3>
+                <a href="">United States</a>
+                <a href="">Canada</a>
+                <a href=""> Jaban</a>
+                <a href="">Germany</a>
+            </div>
+        </div>
+    </div>
+    <script src="/js/HomeFunctions.js"></script>
+    <script src="/js/LoadAnimations.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

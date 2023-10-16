@@ -1,0 +1,126 @@
+* {
+    /* font-family: 'Poppins', sans-serif; */
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+/*=================================PROFILE USER SECTION============================== */
+.img-account-profile {
+    height: 10rem;
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}
+
+.card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    border: 1px solid black;
+}
+
+.card .card-header {
+    font-weight: 500;
+}
+
+.card-header:first-child {
+    border-radius: 0.35rem 0.35rem 0 0;
+}
+
+.card-header {
+    padding: 1rem 1.35rem;
+    margin-bottom: 0;
+    background-color: rgba(33, 40, 50, 0.03);
+    border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+}
+
+.card-body img {
+    width: 50%;
+    height: 50%;
+}
+
+.card-body-content {
+    font-style: italic;
+
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c5ccd6;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+
+
+.save_button {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    /* min-width: 350px; */
+}
+
+table tr th,
+table tr td {
+    padding: 5px;
+}
+
+/* top-left border-radius */
+table tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+}
+
+/* top-right border-radius */
+table tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+}
+
+/* bottom-left border-radius */
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
+}   
+/*load animations*/
+.hidden-load {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(-10vw);
+    transition: all 1s;
+}
+
+.show-load {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+}
+
+.current-playlist-name {
+    font-weight: bold;
+}
+
+@media(prefers-reduced-motion) {
+    .hidden-load {
+        transition: none;
+    }
+}
