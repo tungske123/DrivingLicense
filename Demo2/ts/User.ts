@@ -99,6 +99,7 @@ function loadQuizAttemptData(resultList: QuizAttemptData[]) {
 }
 
 let userObject: User;
+//Functions
 function processUserData(data){
     let user = new User(
         data.userID,

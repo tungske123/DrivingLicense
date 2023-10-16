@@ -190,7 +190,7 @@
 
 
     <!--SUGGESTION PAGE SECTION-->
-    <section class="suggest_page_section section" id="suggest">
+    <section class="suggest_page_section section hide-section" id="suggest">
         <div class="container">
             <div class="box">
                 <div class="head_title">
@@ -199,7 +199,7 @@
                 <div class="head_sub_title">
 
                 </div>
-                <div class="car_name">
+                <div class="car_name topone-vehicle-name">
                     TOYOTA Vios
                 </div>
                 <div class="superiority_box">
@@ -233,9 +233,9 @@
                 </div>
             </div>
             <div class="box">
-                <div class="background"></div>
+                <!-- <div class="background"></div> -->
                 <div class="image_box">
-                    <img src="img/Assets/Image/Image-3.png" alt="">
+                    <img src="img/A1.jpg" class="img-fluid rounded-3 topone-vehicle-img" alt="">
                 </div>
             </div>
         </div>
@@ -249,7 +249,7 @@
 
                 <div class="text_title">
                     <div class="head_title">
-                        Book car in easy steps
+                        Tìm xe
                     </div>
                     <div class="head_sub_title">
                         Lorem ipsum dolor sit amet consectetur adipisicing
@@ -289,7 +289,7 @@
                         </div>
                         <div class="right_box_text">
                             <p>
-                                trust by some people
+
                             </p>
                         </div>
                     </div>
@@ -297,17 +297,17 @@
             </div>
 
             <div class="right_container hidden-load">
-                <form action="" class="form_container">
+                <form action="" class="form_container" id="searchForm">
                     <div class="top_box_form">
-                        <label for="pick-up-address" class="top_box_label">
+                        <label for="keyword" class="top_box_label">
                             <div class="icon"><i class="fa-solid fa-magnifying-glass"></i>
-                                Tìm kiếm
+                                Tìm theo tên
                             </div>
                         </label>
-                        <input type="text" name="pick-up-address" placeholder="Nhập từ khóa ở đây">
+                        <input type="text" name="keyword" id="keyword" placeholder="Nhập từ khóa ở đây">
                     </div>
 
-                    <div class="bottom_box_form">
+                    <!-- <div class="bottom_box_form">
                         <div class="box">
                             <label for="pick-up-date" class="top_box_label">
                                 <div class="icon"><i class="fa-solid fa-calendar"></i>
@@ -326,7 +326,8 @@
                             </label>
                             <input type="time" name="pick-up-time">
                         </div>
-                    </div>
+                    </div> -->
+                    <button class="btn btn-outline-danger" type="submit">Tìm</button>
                 </form>
 
                 <form action="" class="form_container">
@@ -336,38 +337,40 @@
                                 <i class="fas fa-search">
 
                                 </i>
-                                Money range
+                                Tìm theo giá tiền
                             </div>
                         </label>
                         <div class="slider">
-                            <div class="progress"></div>
-                          </div>
-                          <div class="range-input">
-                            <input type="range" min="0" max="10000" value="300" class="min-range" />
-                            <input type="range" min="0" max="10000" value="3500" class="max-range" />
-                          </div>
+                            <div class="progress" style="display: none;"></div>
+                        </div>
+                        <div class="range-input">
+                            <input type="range" min="0" step="500" id="startPrice" value="0" max="1000000" class="min-range" />
+                            <input type="range" min="0" step="500" id="maxPrice" value="1000000" max="1000000" class="max-range" />
+                        </div>
                     </div>
 
                     <div class="bottom_box_form">
                         <div class="box">
                             <label for="drop-off-date" class="top_box_label">
-                                <div class="icon"><i class="fa-solid fa-calendar"></i>
+                                <div class="icon"><i class="fa-solid fa-money-bill"></i>
                                     min
                                 </div>
                             </label>
-                            <div class="price_input">
-                                <input type="number" value="300" class="min-input" />
+                            <div class="price_input" style="display: flex;">
+                                <input type="text" class="min-input" value="0" /> &nbsp;
+                                <span style="display: flex;align-items: center;">VNĐ</span>
                             </div>
                         </div>
 
                         <div class="box">
                             <label for="drop-off-time" class="top_box_label">
-                                <div class="icon"><i class="fa-solid fa-clock"></i>
+                                <div class="icon"><i class="fa-solid fa-money-bill"></i>
                                     max
                                 </div>
                             </label>
-                            <div class="price_input">
-                                <input type="number" value="3500" class="max-input" />
+                            <div class="price_input" style="display: flex;">
+                                <input type="text" class="max-input" value="1.000.000" /> &nbsp;
+                                <span style="display: flex;align-items: center;">VNĐ</span>
                             </div>
                         </div>
                     </div>
@@ -377,7 +380,7 @@
         <div class="car_container hidden-load">
             <div class="filter_car_bar">
                 <div class="head_title">
-                    Find Car
+                    Bộ lọc
                     <div class="icon">
                         <i class="fa-solid fa-filter"></i>
                     </div>
@@ -386,711 +389,113 @@
                     <div class="car_category">
                         <div class="top_box">
                             <div class="head_title">
-                                Car type
+                                Hãng xe
                             </div>
                             <div class="show_button"></div>
                         </div>
                         <div class="category_content">
                             <div class="category_car">
-                                <input type="checkbox" name="coupe">
-                                <label for="coupe" class="label_name">coupe</label>
-                                <div class="category_count">(10)</div>
+                                <input type="checkbox" name="coupe" value="Honda" class="form-check-input brand-check">
+                                <label for="coupe" class="label_name form-check-label">Honda</label>
                             </div>
                             <div class="category_car">
-                                <input type="checkbox" name="sedan">
-                                <label for="sedan" class="label_name">Sedan</label>
-                                <div class="category_count">(10)</div>
+                                <input type="checkbox" name="sedan" value="Yamaha" class="form-check-input brand-check">
+                                <label for="sedan" class="label_name">Yamaha</label>
                             </div>
                             <div class="category_car">
-                                <input type="checkbox" name="Honda">
-                                <label for="Honda" class="label_name">Honda</label>
-                                <div class="category_count">(10)</div>
+                                <input type="checkbox" name="Honda" value="BMW" class="form-check-input brand-check">
+                                <label for="Honda" class="label_name">BMW</label>
                             </div>
                             <div class="category_car">
-                                <input type="checkbox" name="Yamaha">
-                                <label for="Yamaha" class="label_name">Yamaha</label>
-                                <div class="category_count">(10)</div>
+                                <input type="checkbox" name="Yamaha" value="Mercedes" class="form-check-input brand-check">
+                                <label for="Yamaha" class="label_name">Mercedes</label>
                             </div>
                             <div class="category_car">
-                                <input type="checkbox" name="Optimus_Prime">
-                                <label for="Optimus_Prime" class="label_name">Optimus Prime</label>
-                                <div class="category_count">(1)</div>
+                                <input type="checkbox" name="Optimus_Prime" value="Ford" class="form-check-input brand-check">
+                                <label for="Optimus_Prime" class="label_name">Ford</label>
+                                <div class="category_count"></div>
                             </div>
                         </div>
                     </div>
                     <div class="car_category">
                         <div class="top_box">
                             <div class="head_title">
-                                Capcity
+                                Loại xe
                             </div>
                             <div class="show_button"></div>
                         </div>
                         <div class="category_content">
                             <div class="category_car">
-                                <input type="checkbox" name="2 - 5">
-                                <label for="2 - 5" class="label_name">2 - 5</label>
-                                <div class="category_count">(10)</div>
+                                <input type="checkbox" class="form-check-input category-check" value="Xe số 125cc" name="category">
+                                <label for="2 - 5" class="label_name form-check-label">Xe số 125cc</label>
                             </div>
                             <div class="category_car">
-                                <input type="checkbox" name="6 or more">
-                                <label for="6 or more" class="label_name">6 or more</label>
-                                <div class="category_count">(10)</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="car_category">
-                        <div class="top_box">
-                            <div class="head_title">
-                                Engine
-                            </div>
-                            <div class="show_button"></div>
-                        </div>
-                        <div class="category_content">
-                            <div class="category_car">
-                                <input type="checkbox" name="auto">
-                                <label for="auto" class="label_name">auto</label>
-                                <div class="category_count">(544)</div>
+                                <input type="checkbox" class="form-check-input category-check" value="Xe côn 300cc" name="category2">
+                                <label for="6 or more" class="label_name form-check-label">Xe côn 300cc</label>
                             </div>
                             <div class="category_car">
-                                <input type="checkbox" name="matic">
-                                <label for="matic" class="label_name">matic</label>
-                                <div class="category_count">(10)</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="car_category">
-                        <div class="top_box">
-                            <div class="head_title">
-                                Certificate
-                            </div>
-                            <div class="show_button"></div>
-                        </div>
-                        <div class="category_content">
-                            <div class="category_car">
-                                <input type="checkbox" name="A2">
-                                <label for="A!" class="label_name">A1</label>
-                                <div class="category_count">(10)</div>
-                            </div>
-                            <div class="category_car">
-                                <input type="checkbox" name="A2">
-                                <label for="A2" class="label_name">A2</label>
-                                <div class="category_count">(10)</div>
-                            </div>
-                            <div class="category_car">
-                                <input type="checkbox" name="A3">
-                                <label for="A3" class="label_name">A3</label>
-                                <div class="category_count">(10)</div>
+                                <input type="checkbox" class="form-check-input category-check" value="Xe ô tô 4 chỗ, số tự động" name="category2">
+                                <label for="6 or more" class="label_name form-check-label">Xe ô tô 4 chỗ, số tự động</label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="car_item_box" id="car_item">
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Yamaha
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
+            <section class="car_item_box" id="car_item">
+                <!-- <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
                 </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Yamaha
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        Đ <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
                 </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Yamaha
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        Đ <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
                 </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Yamaha
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        Đ <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
                 </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Yamaha
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
                 </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Toyota
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
                 </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Toyota
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
                 </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Toyota
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Toyota
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Honda ABC
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        Đ <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Honda ABC
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        Đ <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Honda ABC
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        Đ <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Honda ABC
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Honda ABC
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Honda ABC
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="car_item hidden-load">
-                    <div class="car_item_name">
-                        Honda ABC
-                    </div>
-                    <div class="car_body_category">
-                        Honda
-                    </div>
-                    <div class="price">
-                        <p>500,000Đ</p> <span>/day</span>
-                    </div>
-                    <div class="car_image">
-                        <img src="img/Assets/Image/Car Image/Image (1).png" alt="">
-                    </div>
-                    <div class="car_bottom_content">
-                        <div class="car_feature">
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>auto</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-chair"></i></div>
-                                <div class="info"><span>2 seats</span></div>
-                            </div>
-                            <div class="feature_item">
-                                <div class="icon"><i class="fa-solid fa-gears"></i></div>
-                                <div class="info"><span>30 MPG</span></div>
-                            </div>
-                        </div>
-
-                        <div class="rent_button">
-                            Thuê ngay
-                            <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class='pagination-container'>
-                    <nav>
-                        <ul class="pagination">
-
-                            <li class="page-item" data-page="prev">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">
-                                        &laquo;</span>
-                                </a>
-                            </li>
-
-                            <!--	Here the JS Function Will Add the Rows -->
-                            <li class="page-item" data-page="next" id="prev">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">
-                                        &raquo;
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch"></i>
+                </div> -->
+            </section>
         </div>
     </section>
+    <section class='pagination-container'>
+        <nav>
+            <ul class="pagination">
+                <!-- <li class="page-item" data-page="prev">
+                    <div class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">
+                            &laquo;</span>
+                    </div>
+                </li>
+                <li class="page-item active" data-page="1"><div class="page-link">1</div></li>
+                <li class="page-item" data-page="2"><div class="page-link">2</div></li>
+                <li class="page-item" data-page="next" id="prev">
+                    <div class="page-link" aria-label="Next">
+                        <span aria-hidden="true">
+                            &raquo;
+                        </span>
+                    </div>
+                </li> -->
+            </ul>
+        </nav>
+    </section>
+
     <script src="JS/LoadAnimations.js"></script>
     <script src="JS/Home.js"></script>
     <script src="JS/RenTest.js"></script>
+    <script src="/Demo2/ts/Rent.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>

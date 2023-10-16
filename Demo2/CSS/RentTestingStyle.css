@@ -956,12 +956,12 @@ header.shadow #search-icon {
         }
     }
 }
-
+/* 
 .image_box img {
     width: 110%;
     height: 100%;
     object-fit: contain;
-}
+} */
 
 /*===================================CAR PAGE Section======================================= */
 .car_page_section {
@@ -1249,7 +1249,7 @@ header.shadow #search-icon {
                 transition: all 0.25s ease-in-out;
 
                 .car_item_name {
-                    font-size: 22px;
+                    font-size: 18px;
                     line-height: 20px;
                     text-transform: capitalize;
                     font-weight: 800;
@@ -1362,8 +1362,6 @@ header.shadow #search-icon {
                     }
                 }
             }
-
-
         }
     }
 }
@@ -1403,7 +1401,7 @@ header.shadow #search-icon {
     font-size: 16px;
     font-weight: 600;
     color: var(--color-dark);
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
 
     &:valid {
         border: 2px solid lightcoral;
@@ -1421,11 +1419,13 @@ header.shadow #search-icon {
 }
 
 .car_item_box .price p {
-    font-size: 32px;
+    font-size: 20px;
     line-height: 32px;
     color: #094067;
 }
-
+.car_item_box .price :is(span) {
+    margin-top: 5px;
+}
 .car_item_box .price p span {
     position: absolute;
     bottom: 0;
@@ -1439,27 +1439,27 @@ header.shadow #search-icon {
     width: 100%;
 }
 
-.pagination>li>a {
+.pagination>li>div {
     background: white;
     color: black;
     border: 1px solid;
 }
 
 /* (2) Change disabled buttons*/
-.pagination>.disabled>a,
-.pagination>.disabled>a:hover,
-.pagination>.disabled>a:focus {
+.pagination>.disabled>div,
+.pagination>.disabled>div:hover,
+.pagination>.disabled>div:focus {
     background-color: #E0FFFF;
     border-color: #F0F8FF;
     color: #000000;
 }
 
 /* (3) Change active or hover button color*/
-.pagination>.active>a,
-.pagination>.active>a:hover,
-.pagination>.active>a:focus,
-.pagination>li>a:hover,
-.pagination>li>a:focus {
+.pagination>.active>div,
+.pagination>.active>div:hover,
+.pagination>.active>div:focus,
+.pagination>li>div:hover,
+.pagination>li>div:focus {
     background-color: red;
     border: 2px solid black;
     color: white;
@@ -1511,8 +1511,14 @@ header.shadow #search-icon {
     height: 5px;
     border: none;
 }
-
+/*By Minh lmao*/
 /*load animations*/
+.pagination-container {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
 .hidden-load {
     opacity: 0;
     filter: blur(5px);
@@ -1535,7 +1541,42 @@ header.shadow #search-icon {
         transition: none;
     }
 }
-/*By Minh lmao*/
+.loader {
+    font-size: 5rem;
+    color: var(--main-color);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.loader {
+    aspect-ratio: 1/1;
+    animation: spin 2s linear infinite;
+    width: fit-content;
+    height: fit-content;
+}
+.loader :is(i) {
+    width: 100%;
+    height: 100%;
+}
+.page-link {
+    cursor: pointer;
+}
+.filter_car_bar {
+    padding-left: 10px;
+}
+.hide-section {
+    display: none;
+}
+.show-section {
+    display: unset;
+}
 /*.rent-card-section {
     display: grid;
     grid-template-columns: repeat(4, 25%);
