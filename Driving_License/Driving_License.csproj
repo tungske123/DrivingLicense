@@ -28,6 +28,6 @@
 	</None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Manage\Users\" />
+    <Folder Include="wwwroot\img\user\" />
   </ItemGroup>
 </Project>

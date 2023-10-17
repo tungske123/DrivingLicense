@@ -1,4 +1,4 @@
-﻿@model Driving_License.Models.Quiz
+﻿@model Quiz
 @{
     Layout = null;
     ViewData["Title"] = "Edit";
@@ -59,20 +59,18 @@
                     <h3 class="lead">Các Người Dùng</h3>
                 </a>
                 <!--First-->
-                <a href="/Manage/QuizList" class="active">
+                <a href="/Manage/QuizList" class="sidebar-menu-item active">
                     <span class="material-symbols-outlined">
-                        <span class="material-symbols-outlined">
-                            quiz
-                        </span>
+                        receipt_long
                     </span>
                     <h3 class="lead">Các Bộ Đề</h3>
                 </a>
                 <!--First-->
                 <a href="" class="sidebar-menu-item">
                     <span class="material-symbols-outlined">
-                        receipt_long
+                        quiz
                     </span>
-                    <h3 class="lead">Orders</h3>
+                    <h3 class="lead">Ngân Hàng Câu Hỏi</h3>
                 </a>
                 <!--First-->
                 <a href="">
@@ -135,7 +133,7 @@
                 <hr />
                 <div class="row">
 
-                    <form asp-controller="Quiz" asp-action="Edit">
+                    <form asp-controller="Quiz" asp-action="Edit" id="quiz-form" onsubmit="submitForm();">
                         <div class="form-group">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <input type="hidden" asp-for="QuizId" />
@@ -161,20 +159,91 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
 
+                        <h2 style="text-align: center; font-weight: bold;">Các Câu Hỏi Của Đề</h2>
+                        <br />
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Câu số</th>
+                                    <th style="text-align: left">Câu hỏi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (Model.Questions.Count == 0)
+                                    {
+                                        <tr>
+                                            <td>0</td>
+                                            <td style="text-align: left">Lỗi! Chưa có câu hỏi liên kết  với quiz</td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                    int n = 1, i = 0;
+                                    foreach (var item in Model.Questions)
+                                    {
+                                        <tr id="quest-@item.QuestionId">
+                                            <td>
+                                                Câu @n
+                                                <input type="hidden" asp-for="@item.QuestionId" name="Question[@i].QuestionId" />
+                                            </td>
+                                            <td style="text-align:left;max-width:370px">
+                                                @item.QuestionText
+                                            </td>
+                                            <td class="primary">
+                                                <a class="btn btn-outline-danger" onclick="doSelected('@item.QuestionId')" style="max-width:70px">
+                                                    Xóa
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        n++; i++;
+                                    }
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <a class="btn btn-outline-primary">
+                                                Thêm câu hỏi +
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
                         <div class="form-group mt-5" style="display: flex;justify-content: space-between;">
                             <input type="submit" value="Lưu thay đổi" class="btn btn-outline-success mb-3" style="width: 30%;" />
                             <a href="/Manage/QuizDetail?quizid=@Model.QuizId" class="btn btn-outline-danger mb-3" style="margin:0;width: 30%;">Hủy thay đổi</a>
                             <a href="/Manage/QuizList" class="btn btn-outline-primary mb-3" style="margin:0;width: 30%;">Về danh sách</a>
                         </div>
                     </form>
-
+                    <hr />
                 </div>
             </div>
         </main>
     </section>
 
+    <script src="~/js/ManageQuiz.js"></script>
+    <p>
+        $(document).ready(function () {
+        $('#myForm').on('submit', function (e) {
+        e.preventDefault();
+
+        var formData = $(this).serializeArray();
+        formData.push({ name: 'selectedQuestion', value: selectedQuestion });
+
+        $.ajax({
+        url: '/Quiz/Edit',
+        type: 'POST',
+        data: formData,
+        traditional: true,
+        success: function (result) {
+        // Xử lý kết quả trả về
+        }
+        });
+        });
+        });
+    </p>
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
     <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
-    <script src="JS/pagingtesting.js"></script>
 </body>
 </html>

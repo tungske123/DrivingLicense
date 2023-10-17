@@ -7,7 +7,7 @@ public partial class User
 {
     public Guid UserId { get; set; }
 
-    public Guid? AccountId { get; set; }
+    public Guid AccountId { get; set; }
 
     public string Avatar { get; set; }
 

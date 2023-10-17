@@ -1,6 +1,4 @@
-﻿@model IPagedList<Question>;
-@using X.PagedList.Mvc.Core;
-@using X.PagedList;
+﻿@model User
 @{
     Layout = null;
     ViewData["Title"] = "Details";
@@ -25,8 +23,8 @@
     <!--STYLE CSS-->
     <link rel="stylesheet" href="~/css/styleManageQuizUser.css">
     <!--Browser Icon-->
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4832/4832401.png">
-    <title>Quiz Detail</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4919/4919646.png">
+    <title>User Detail</title>
 </head>
 
 <body>
@@ -54,14 +52,14 @@
                     <h3 class="lead">Trang Chủ</h3>
                 </a>
                 <!--First-->
-                <a href="/Manage/UserList">
+                <a href="/Manage/UserList" class="sidebar-menu-item active">
                     <span class="material-symbols-outlined">
                         person
                     </span>
                     <h3 class="lead">Các Người Dùng</h3>
                 </a>
                 <!--First-->
-                <a href="/Manage/QuizList" class="sidebar-menu-item active">
+                <a href="/Manage/QuizList" class="sidebar-menu-item">
                     <span class="material-symbols-outlined">
                         receipt_long
                     </span>
@@ -131,118 +129,87 @@
 
         <main>
             <div class="recent-order-list mt-3">
-                <h1 class="title" style="text-align: center;font-weight: bold;">Thông Tin Chi Tiết</h1>
-                <hr />
-                <div class="row">
-                    <dl class="row" style="font-size:15px">
-                        <dt class="col-sm-2">
-                            Tên bộ đề
-                        </dt>
-                        <dd class="col-sm-10">
-                            @quiz.Name
-                        </dd>
-
-                        <dt class="col-sm-2">
-                            Hạng bằng lái
-                        </dt>
-                        <dd class="col-sm-10">
-                            @quiz.LicenseId
-                        </dd>
-
-                        <dt class="col-sm-2">
-                            Thông tin thêm
-                        </dt>
-                        <dd class="col-sm-10">
-                            @quiz.Description
-                        </dd>
-                    </dl>
-                </div>
-
-                <h2 style="text-align: center; font-weight: bold;">Các Câu Hỏi Của Đề</h2>
-                <br />
+                <h1 class="title" style="text-align: center;font-weight: bold;">Thông Tin Cơ Bản</h1>
                 <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Câu số</th>
-                            <th style="text-align: left">Câu hỏi</th>
-                            <th></th>
-                        </tr>
-                    </thead>
                     <tbody>
-                        @{
-                            if (Model.Count == 0)
-                            {
-                                <tr>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td style="text-align: left">Lỗi chưa có liên kết câu hỏi với quiz</td>
-                                    <td></td>
-                                </tr>
-                            }
-                            int n = ((Model.PageNumber - 1) * Model.PageSize) + 1;
-                            foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td></td>
-                                    <td>Câu @n</td>
-                                    <td style="text-align: left;max-width:370px">@item.QuestionText</td>
-                                    <td></td>
-                                </tr>
-                                n++;
-                            }
-                        }
+                        <tr>
+                            <td><strong>Ảnh Hồ Sơ</strong></td>
+                            <td><img src="~/img/user/user.png" class="mt-3 mb-3" style="max-height:100px; max-width:100px; border-radius:100%" />
+                        </tr>
+                        <tr>
+                            <td><strong>Họ và tên</strong></td>
+                            <td>@Model.FullName</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày sinh</strong></td>
+                            <td>@Model.BirthDate</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số CCCD</strong></td>
+                            <td>@Model.Cccd</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số điện thoại</strong></td>
+                            <td>@Model.PhoneNumber</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Địa chỉ Email</strong></td>
+                            <td>@Model.Email</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Địa chỉ liên lạc</strong></td>
+                            <td>@Model.Address</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quốc tịch</strong></td>
+                            <td>@Model.Nationality</td>
+                        </tr>
                     </tbody>
                 </table>
+                <br />
+                <br />
+                <div><h1 class="title" style="text-align: center;font-weight: bold;">Thông Tin Tài Khoản</h1></div>
 
-                <div class="pagination-container">
-                    <nav>
-                        <ul class="pagination">
-                            @if (Model.HasPreviousPage)
-                            {
-                                <li class="page-item" data-page="prev">
-                                    <a class="page-link" href="@Url.Action("QuizDetail", new { quizid= quiz.QuizId, page = Model.PageNumber - 1 })" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                    </a>
-                                </li>
-                            }
-
-                            @for (var i = 1; i <= Model.PageCount; i++)
-                            {
-                                if (i == Model.PageNumber)
-                                {
-                                    <li class="page-item active"><a class="page-link" href="@Url.Action("QuizDetail", new { quizid= quiz.QuizId, page = i })">@i</a></li>
-                                }
-                                else
-                                {
-                                    <li class="page-item"><a class="page-link" href="@Url.Action("QuizDetail", new { quizid= quiz.QuizId, page = i })">@i</a></li>
-                                }
-                            }
-
-                            @if (Model.HasNextPage)
-                            {
-                                <!--	Here the JS Function Will Add the Rows -->
-                                <li class="page-item" data-page="next" id="prev">
-                                    <a class="page-link" href="@Url.Action("QuizDetail", new { quizid= quiz.QuizId, page = Model.PageNumber + 1 })" aria-label="Next">
-                                        <span aria-hidden="true" class="sr-only">»</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
+                <div style="width: 100%;border-collapse: collapse;border-radius: 10px;overflow: hidden;background-color: white;">
+                    <div class="info-container">
+                        <div><strong>Tài khoản</strong></div>
+                        <div>@Model.Account.Username</div>
+                    </div>
+                    <div class="info-container">
+                        <div><strong>Mật khẩu</strong></div>
+                        <div>@Model.Account.Password</div>
+                    </div>
+                    <div class="info-container">
+                        <div><strong>Loại tài khoản</strong></div>
+                        <div>@Model.Account.Role</div>
+                    </div>
                 </div>
-
+                <style>
+                    .info-container {
+                        display: flex;
+                        justify-content:space-between;
+                        align-items: center;
+                        width: 100%;
+                        background-color: white;
+                        border-radius: 10px;
+                        padding: 10px;
+                    }
+                    .info-container div {
+                        display:flex;
+                        font-size: 15px;
+                    }
+                </style>
                 <hr />
                 <div class="form-group mt-1" style="display: flex;justify-content: space-between;">
-                    <a href="/Quiz/Edit?quizid=@quiz.QuizId" class="btn btn-outline-primary mb-3" style="margin:0;width: 30%;">Sửa đổi</a>
-                    <button onclick="doDelete(`@quiz.QuizId`);" class="btn btn-outline-danger mb-3" style="margin:0;width: 30%;">Xóa</button>
-                    <a href="/Manage/QuizList" class="btn btn-outline-primary mb-3" style="margin:0;width: 30%;">Về danh sách</a>
+                    <a href="/User/Edit?userid=@Model.UserId" class="btn btn-outline-primary mb-3" style="margin:0;width: 30%;">Sửa đổi</a>
+                    <button onclick="doDelete('@Model.UserId');" class="btn btn-outline-danger mb-3" style="margin:0;width: 30%;">Xóa</button>
+                    <a href="/Manage/UserList" class="btn btn-outline-primary mb-3" style="margin:0;width: 30%;">Về danh sách</a>
                 </div>
             </div>
         </main>
     </section>
 
-    <script src="~/js/ManageQuiz.js"></script>
+    <script src="~/js/ManageUser.js"></script>
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
     <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
 </body>

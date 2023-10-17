@@ -58,20 +58,18 @@
                     <h3 class="lead">Các Người Dùng</h3>
                 </a>
                 <!--First-->
-                <a href="/Manage/QuizList" class="active">
+                <a href="/Manage/QuizList" class="sidebar-menu-item active">
                     <span class="material-symbols-outlined">
-                        <span class="material-symbols-outlined">
-                            quiz
-                        </span>
+                        receipt_long
                     </span>
                     <h3 class="lead">Các Bộ Đề</h3>
                 </a>
                 <!--First-->
                 <a href="" class="sidebar-menu-item">
                     <span class="material-symbols-outlined">
-                        receipt_long
+                        quiz
                     </span>
-                    <h3 class="lead">Orders</h3>
+                    <h3 class="lead">Ngân Hàng Câu Hỏi</h3>
                 </a>
                 <!--First-->
                 <a href="">
@@ -133,7 +131,7 @@
             <form action="/Manage/SearchQuiz" method="get">
                 <div class="input-group mt-5">
                     <div class="input-group-text search-input" style="display:flex">Tìm Kiếm</div>
-                    <input type="text" class="form-control" name="name" placeholder="Nhập từ khóa..." value="@ViewBag.searched" />
+                    <input type="text" class="form-control" name="name" placeholder="Nhập từ khóa..." value="@ViewBag.searchedQuiz" />
                     <button type="submit" class="btn btn-outline-primary search-input">
                         <span class="material-symbols-outlined">
                             search
@@ -143,8 +141,8 @@
             </form>
             <br />
             <div class="buttons" style="display: flex;justify-content: space-between;">
-                <a asp-action="" class="btn btn-outline-primary mb-3">Về Trang Chủ</a>
-                <a asp-action="CreateQuiz" class="btn btn-outline-primary mb-3">Tạo đề mới</a>
+                <a href="/Manage" class="btn btn-outline-primary mb-3">Về Trang Chủ</a>
+                <a href="/Manage/CreateQuiz" class="btn btn-outline-primary mb-3">Tạo đề mới</a>
             </div>
 
             <!--   <div class="form-group">  -->
@@ -182,14 +180,14 @@
                                 <td>@item.Name</td>
                                 <td>@item.LicenseId</td>
                                 <td style="max-width:250px">@item.Description</td>
-                                <td class="primary">
-                                    <a href="/Manage/QuizDetail?quizid=@item.QuizId">
+                                <td class="primary" style="max-width:60px">
+                                    <a href="/Manage/QuizDetail?quizId=@item.QuizId" class="btn btn-outline-primary mb-3" style="margin-left:5px;margin-right:5px; max-width:80px">
                                         Chi Tiết
                                     </a>
                                 </td>
-                                <td class="primary">
-                                    <a onclick="doDelete(`@item.QuizId`)" style="cursor:pointer;">
-                                        <p class="primary">Xóa</p>
+                                <td class="primary" style="max-width:40px">
+                                    <a onclick="doDelete(`@item.QuizId`)" class="btn btn-outline-danger mb-3" style="margin-left:5px;margin-right:10px;max-width:60px">
+                                        Xóa
                                     </a>
                                 </td>
                             </tr>
@@ -238,7 +236,7 @@
         </main>
     </section>
 
-    <script src="~/js/DeleteQuiz.js"></script>
+    <script src="~/js/ManageQuiz.js"></script>
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
     <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
     <script src="JS/pagingtesting.js"></script>

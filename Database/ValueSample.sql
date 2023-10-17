@@ -1,4 +1,17 @@
 -----------------------------------------[ INSERT VALUES ]-----------------------------------------------------
+/*[QUICK FIND] - Press: Ctrl + G
+Account_____17
+User________26
+License_____33
+Vehicle_____60
+Quiz________87, 11364
+Question____108
+Have________2750
+Answer______2767
+
+
+*/
+
 use DrivingLicense;
 go
 insert into Account(Username, [Password], [Role]) values
@@ -10,7 +23,21 @@ insert into Account(Username, [Password], [Role]) values
 
 --=================
 --Insert new user account:
-exec dbo.proc_signUpAccount @username = 'user123', @password = '123', @email = 'user123@example.com';
+exec dbo.proc_signUpAccount @username = 'user123', @password = '123', @email = 'user123@example.com', @name=N'Người dùng A';
+exec dbo.proc_signUpAccount @username = 'ok123', @password = '123', @email = 'ok123@ok.com' , @name=N'Người dùng B';
+exec dbo.proc_signUpAccount @username = 'hoangph', @password = 'se172789', @email = 'hoangphse172789@fpt.edu.vn' , @name=N'Phạm Huy Hoàng';
+exec dbo.proc_signUpAccount @username = 'fptu', @password = '123', @email = 'fpt@fe.edu.vn', @name=N'FPT University';
+exec dbo.proc_signUpAccount @username = 'fuihoan123', @password = '123', @email = 'fuihoan@japanese.com', @name= N'フイ　ホアン';
+exec dbo.proc_signUpAccount @username = 'ngocanh', @password = '456', @email = 'ngocanh@vietnam.com', @name=N'Nguyễn Ngọc Anh';
+exec dbo.proc_signUpAccount @username = 'tommy', @password = '789', @email = 'tommy@usa.com', @name=N'Tommy Lee';
+exec dbo.proc_signUpAccount @username = 'liuxin', @password = '1234', @email = 'liuxin@china.com', @name=N'刘欣';
+exec dbo.proc_signUpAccount @username = 'kimchi', @password = '5678', @email = 'kimchi@korea.com', @name=N'김치';
+exec dbo.proc_signUpAccount @username = 'sakura', @password = '9012', @email = 'sakura@japan.com', @name=N'さくら';
+exec dbo.proc_signUpAccount @username = 'maria', @password = '3456', @email = 'maria@spain.com', @name=N'María García';
+exec dbo.proc_signUpAccount @username = 'hans', @password = '7890', @email = 'hans@germany.com', @name=N'Hans Müller';
+exec dbo.proc_signUpAccount @username = 'pierre', @password = '12345', @email = 'pierre@france.com', @name=N'Pierre Dupont';
+exec dbo.proc_signUpAccount @username = 'luca', @password = '67890', @email = 'luca@italy.com', @name=N'Luca Rossi';
+exec dbo.proc_signUpAccount @username = 'david', @password = '13579', @email = 'david@uk.com', @name=N'David Smith';
 
 --=================
 insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],ExamContent,Tips) values
@@ -2725,6 +2752,25 @@ insert into Question(LicenseID, isCritical, QuestionImage, QuestionText) values
 ('FE' , 0  , '198.png' , N'Xe nào dừng đúng theo quy tắc giao thông?'),
 ('FE' , 0  , '199.png' , N'Xe của bạn đang di chuyển gần đến khu vực giao cắt với đường sắt, khi rào chắn đang dịch chuyển, bạn điều khiển xe như thế nào là đúng quy tắc giao thông?'),
 ('FE' , 0  , '200.png' , N'Trong tình huống dưới đây, xa đầu kéo kéo rơ moóc (xe container) đang rẽ phải, xe con màu xanh và xe máy phía sau xe container đi như thế nào để đảm bảo an toàn?');
+go
+
+/*=================
+select * from Have
+*/
+insert into Have(QuizID,QuestionID) values
+(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(1,22),(1,23),(1,24),(1,25),
+(2,26),(2,27),(2,28),(2,29),(2,30),(2,31),(2,32),(2,33),(2,34),(2,35),(2,36),(2,37),(2,38),(2,39),(2,40),(2,41),(2,42),(2,43),(2,44),(2,45),(2,46),(2,47),(2,48),(2,49),(2,50),
+(3,51),(3,52),(3,53),(3,54),(3,55),(3,56),(3,57),(3,58),(3,59),(3,60),(3,61),(3,62),(3,63),(3,64),(3,65),(3,66),(3,67),(3,68),(3,69),(3,70),(3,71),(3,72),(3,73),(3,74),(3,75),
+(4,76),(4,77),(4,78),(4,79),(4,80),(4,81),(4,82),(4,83),(4,84),(4,85),(4,86),(4,87),(4,88),(4,89),(4,90),(4,91),(4,92),(4,93),(4,94),(4,95),(4,96),(4,97),(4,98),(4,99),(4,100),
+(5,101),(5,102),(5,103),(5,104),(5,105),(5,106),(5,107),(5,108),(5,109),(5,110),(5,111),(5,112),(5,113),(5,114),(5,115),(5,116),(5,117),(5,118),(5,119),(5,120),(5,121),(5,122),(5,123),(5,124),(5,125),
+(6,126),(6,127),(6,128),(6,129),(6,130),(6,131),(6,132),(6,133),(6,134),(6,135),(6,136),(6,137),(6,138),(6,139),(6,140),(6,141),(6,142),(6,143),(6,144),(6,145),(6,146),(6,147),(6,148),(6,149),(6,150),
+(7,151),(7,152),(7,153),(7,154),(7,155),(7,156),(7,157),(7,158),(7,159),(7,160),(7,161),(7,162),(7,163),(7,164),(7,165),(7,166),(7,167),(7,168),(7,169),(7,170),(7,171),(7,172),(7,173),(7,174),(7,175),
+(8,176),(8,177),(8,178),(8,179),(8,180),(8,181),(8,182),(8,183),(8,184),(8,185),(8,186),(8,187),(8,188),(8,189),(8,190),(8,191),(8,192),(8,193),(8,194),(8,195),(8,196),(8,197),(8,198),(8,199),(8,200),
+(9,201),(9,202),(9,203),(9,204),(9,205),(9,206),(9,207),(9,208),(9,209),(9,210),(9,211),(9,212),(9,213),(9,214),(9,215),(9,216),(9,217),(9,218),(9,219),(9,220),(9,221),(9,222),(9,223),(9,224),(9,225),
+(10,226),(10,227),(10,228),(10,229),(10,230),(10,231),(10,232),(10,233),(10,234),(10,235),(10,236),(10,237),(10,238),(10,239),(10,240),(10,241),(10,242),(10,243),(10,244),(10,245),(10,246),(10,247),(10,248),(10,249),(10,250),
+(11,251),(11,252),(11,253),(11,254),(11,255),(11,256),(11,257),(11,258),(11,259),(11,260),(11,261),(11,262),(11,263),(11,264),(11,265),(11,266),(11,267),(11,268),(11,269),(11,270),(11,271),(11,272),(11,273),(11,274),(11,275),
+(12,276),(12,277),(12,278),(12,279),(12,280),(12,281),(12,282),(12,283),(12,284),(12,285),(12,286),(12,287),(12,288),(12,289),(12,290),(12,291),(12,292),(12,293),(12,294),(12,295),(12,296),(12,297),(12,298),(12,299),(12,300),
+(13,301),(13,302),(13,303),(13,304),(13,305),(13,306),(13,307),(13,308),(13,309),(13,310),(13,311),(13,312),(13,313),(13,314),(13,315),(13,316),(13,317),(13,318),(13,319),(13,320),(13,321),(13,322),(13,323),(13,324),(13,325);
 go
 
 --=================
@@ -11328,7 +11374,7 @@ use master;
 >>>proc_CreateQuiz (Tên bộ đề, LicenseID, số lượng câu muốn bốc ra). Ví dụ bên dưới
 exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1', N'Mô tả', 25;
 */
-go
+
 
 
 

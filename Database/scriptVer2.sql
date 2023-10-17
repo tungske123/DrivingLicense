@@ -1,10 +1,8 @@
 ﻿use master;
 go
-if exists (select name
-from sys.databases
-where name = 'DrivingLicense')
+if exists (select name from sys.databases where name = 'DrivingLicense')
 begin
-   drop database DrivingLicense;
+	drop database DrivingLicense;
 end;
 go
 create database DrivingLicense;
@@ -170,3 +168,12 @@ create table AttemptDetail (
 
 );
 go
+
+--RESET Auto Answer ID:
+dbcc checkident ('Answer', reseed, 1);
+
+--RESET Auto Question ID:
+dbcc checkident ('Question', reseed, 1);
+
+--RESET Auto Quiz ID:
+dbcc checkident ('Quiz', reseed, 1);

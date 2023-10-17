@@ -1,7 +1,7 @@
 use DrivingLicense;
 go
 -----------------------------------[ CREATE ACCOUNT USER ]-------------------------------
-create or alter procedure proc_signUpAccount @username nvarchar(100), @password nvarchar(100), @email nvarchar(100)
+create or alter procedure proc_signUpAccount @username nvarchar(100), @password nvarchar(100), @email nvarchar(100),@name nvarchar(100)
 as
 begin
    declare @AccountID as nvarchar(50);
@@ -14,10 +14,11 @@ begin
 
    -- Get accountID from temp table
    select @AccountID = AccountID from @InsertedIDs;
-   insert into dbo.Users(AccountID,Email)
-   values(@AccountID, @email);
+   insert into dbo.Users(AccountID,FullName,Email)
+   values(@AccountID, @name, @email);
 end;
 go
+
 create or alter view vw_getAllAccountEmails
 as
 select 'user' as 'Role', AccountID, Email
@@ -39,7 +40,7 @@ begin
 	--INSERT ANOTHER QUIZ
 	insert into Quiz(LicenseID, [Name], [Description]) values (@LicenseID, @Name, @Describe);
 	declare @QuizID int;
-	set @QuizID = (select QuizID from Quiz where LicenseID = @LicenseID and [Name] = @Name);
+	set @QuizID = SCOPE_IDENTITY();
 
 	--DECLARE TEMP TABLE FOR SUBQUERY
 	declare @NonCritical_table table (RolledID int);
@@ -68,18 +69,155 @@ begin
 end;
 go
 
---exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1','', 25;
+--exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1','Mô tả', 25;
+
+-----------------------------------[ Roll Question Of Quiz]-------------------------------
+create or alter procedure proc_RollQuestion (
+	@QuizID int,
+	@OldQuestionID int
+)
+as
+begin
+	--DECLARE TEMP TABLE FOR SUBQUERY
+	declare @Question_table table (QuestionID int);
+
+	--GET ALL QUESTION NOT IN QUIZ
+	insert into @Question_table
+	select QuestionID from Question 
+	where QuestionID not in (select QuestionID from Have where QuizID = @QuizID);
+
+
+	--GET NEW RANDOM QUESTION
+	declare @NewQuestionID int;
+	select top 1 @NewQuestionID = QuestionID from @Question_table order by newid();
+
+	--UPDATE QUESTION IN QUIZ
+	update Have set QuestionID = @NewQuestionID where QuizID = @QuizID and QuestionID = @OldQuestionID;
+end;
+go
+
+--exec proc_ChangeQuestion 1, 2; (QuizID, QuestionID) in database
+
+--==================================================================================
+--==================================================================================
+-----------------------------------[ DELETE SCHEDULE]-------------------------------
+create or alter procedure proc_DeleteSchedule(
+	@ScheduleID uniqueidentifier,
+	@UserID uniqueidentifier,
+	@TeacherID uniqueidentifier,
+	@LicenseID nvarchar(10)
+)
+as
+begin
+	delete from Schedule where ScheduleID = @ScheduleID;
+	delete from Schedule where UserID = @UserID;
+    delete from Schedule where TeacherID = @TeacherID;
+	delete from Schedule where LicenseID = @LicenseID;
+end;
+go
+
+-----------------------------------[ DELETE HAVE]-------------------------------
+create or alter procedure proc_DeleteHave(
+	@QuizID int,
+	@QuestionID int
+)
+as
+begin
+	delete from Have where QuizID = @QuizID;
+	delete from Have where QuestionID = @QuestionID;
+end;
+go
+
+-----------------------------------[ DELETE RENT]-------------------------------
+create or alter procedure proc_DeleteRent(
+	@RentID uniqueidentifier,
+   @VehicleID uniqueidentifier,
+   @UserID uniqueidentifier
+)
+as
+begin
+	delete from Rent where RentID = @RentID;
+	delete from Rent where VehicleID = @VehicleID;
+	delete from Rent where UserID = @UserID;
+end;
+go
+
+-----------------------------------[ DELETE ATTEMPT DETAIL ]-------------------------------
+create or alter procedure proc_DeleteAttemptdDetail(
+	@AttemptDetailID uniqueidentifier,
+	@AttemptID uniqueidentifier,
+	@QuestionID int
+)
+as
+begin
+	delete from AttemptDetail where AttemptDetailID = @AttemptDetailID;
+	delete from AttemptDetail where AttemptID = @AttemptID;
+	delete from AttemptDetail where QuestionID = @QuestionID;
+end;
+go
+
+-----------------------------------[ DELETE ATTEMPT ]-------------------------------
+create or alter procedure proc_DeleteAttempt(
+	@AttemptID uniqueidentifier,
+	@UserID uniqueidentifier,
+	@QuizID int
+)
+as
+begin
+	if @UserID is not null
+	begin
+		declare @AttmpDetail table (AttmpId uniqueidentifier);
+
+		insert into @AttmpDetail (AttmpId)
+		select AttemptID from Attempt where UserID = @UserID;
+
+		delete from AttemptDetail where AttemptID in (select AttmpId from @AttmpDetail);
+	end
+
+	delete from Attempt where AttemptID = @AttemptID;
+	delete from Attempt where UserID = @UserID;
+    delete from Attempt where QuizID = @QuizID;
+end;
+go
 
 -----------------------------------[ Delete Quiz ]-------------------------------
 create or alter procedure proc_DeleteQuiz(
-@quizID int
+	@quizID int,
+	@LicenseID nvarchar(10)
 )
 as 
 begin
-	delete from Have where QuizID = @quizID;
+	delete from Quiz where LicenseID= @LicenseID;
 	delete from Quiz where QuizID = @quizID;
 end;
 go
+
+-----------------------------------[ Delete Quiz Question]-------------------------------
+create or alter procedure proc_DeleteQuizQuest(
+	@quizID int,
+	@questID int
+)
+as 
+begin
+	delete from Have where QuizID = @quizID and QuestionID = @questID;
+end;
+go
+
+-----------------------------------[ DELETE USER ]-------------------------------
+create or alter procedure proc_DeleteUser(
+	@AccountID uniqueidentifier,
+	@UserID uniqueidentifier
+)
+as 
+begin
+	exec proc_DeleteSchedule null,@UserID,null,null;
+	exec proc_DeleteRent null,null,@UserID;
+	exec proc_DeleteAttempt null,@UserID,null;
+	delete from Users where UserID = @UserID;
+	delete from Account where AccountID = @AccountID;
+end;
+go
+
 /*
 -----------------------------------[ COUNT CORRECT ANSWER ]-------------------------------
 create or alter function fn_CountCorrect (

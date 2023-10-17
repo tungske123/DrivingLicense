@@ -1,0 +1,38 @@
+﻿@using Driving_License.Models;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "L2D - Thông tin của (User)";
+    var user = ViewBag.user as User;
+    bool hasImage = (user is not null && !string.IsNullOrEmpty(user.Avatar));
+    string imagePath = (hasImage) ? $"/img/Avatar/{user.Avatar}" : null;
+    bool hasBirthDate = (user is not null && user.BirthDate.HasValue);
+    string FormattedBirthDate = (hasBirthDate) ? string.Format("{0:yyyy-MM-dd}", user.BirthDate) : null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--custom css files-->
+    <link rel="stylesheet" href="~/css/styleUserProfile.css">
+    <!--Browser Icons-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1177/1177568.png">
+    <!--change the name of user based on the usersession-->
+    <title>L2D - Thông tin của (User)</title>
+</head>
+
+<body>
+    @if (hasImage)
+    {
+        <img src="@imagePath"></img>
+    }
+    else
+    {
+        
+    }
+
+
+</body>
+
+</html>

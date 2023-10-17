@@ -13,6 +13,8 @@ using Microsoft.Data.SqlClient;
 using System.Data.Common;
 using System.Data;
 using Microsoft.IdentityModel.Tokens;
+using System.Drawing.Printing;
+using X.PagedList;
 //using System.ComponentModel;
 
 namespace Driving_License.Controllers
@@ -254,7 +256,8 @@ namespace Driving_License.Controllers
             if (quizName.IsNullOrEmpty())
             {
                 quizName = "Chưa đặt tên";
-            } else if (Description.IsNullOrEmpty())
+            }
+            else if (Description.IsNullOrEmpty())
             {
                 Description = "Không có thông tin gì được để lại!";
             }
@@ -295,28 +298,81 @@ namespace Driving_License.Controllers
                 return RedirectToAction("QuizList", "Manage");
             }
         }
-
+        //==========================================================================================================
         [HttpGet]
         public async Task<IActionResult> Edit(int quizid)
         {
-            var quiz = await _context.Quizzes.FindAsync(quizid);
+            var quiz = await _context.Quizzes
+                .Include(quiz => quiz.Questions)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(m => m.QuizId == quizid);
             if (quiz == null)
             {
                 return NotFound();
             }
             ViewData["LicenseId"] = new SelectList(_context.Licenses, "LicenseId", "LicenseId", quiz.LicenseId);
-            return View("~/Views/Manage/Quiz/Update.cshtml",quiz);
+            return View("~/Views/Manage/Quiz/Update.cshtml", quiz);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int quizid, Quiz quiz)
+        public async Task<IActionResult> Edit([FromBody] Quiz edited_Quiz)
         {
-            if (quizid != quiz.QuizId)
+            //Compare edited_quiz with old_quiz
+            if (edited_Quiz != null)
             {
-                return NotFound();
-            }
+                var old_Quiz = await _context.Quizzes
+                    .Include(q => q.Questions)
+                    .FirstOrDefaultAsync(q => q.QuizId == edited_Quiz.QuizId);
 
-            if (ModelState.IsValid)
+                if (old_Quiz != null)
+                {
+                    if (old_Quiz.Name != edited_Quiz.Name)
+                    {
+                        old_Quiz.Name = edited_Quiz.Name;
+                    }
+                    if (old_Quiz.LicenseId != edited_Quiz.LicenseId)
+                    {
+                        old_Quiz.LicenseId = edited_Quiz.LicenseId;
+                    }
+                    if (old_Quiz.Description != edited_Quiz.Description)
+                    {
+                        old_Quiz.Description = edited_Quiz.Description;
+                    }
+
+                    //Compare quiz question
+                    if (edited_Quiz.Questions != null && edited_Quiz.Questions.Count > 0)
+                    {
+                        foreach (var edited_Question in edited_Quiz.Questions)
+                        {
+                            var old_Question = old_Quiz.Questions.FirstOrDefault(q => q.QuestionId == edited_Question.QuestionId);
+                            if (old_Question != null)
+                            {
+                                // Update existing question
+                                if (old_Question.QuestionText != edited_Question.QuestionText)
+                                {
+                                    old_Question.QuestionText = edited_Question.QuestionText;
+                                }
+                            }
+                            else
+                            {
+                                // Add new question if old don't have
+                                old_Quiz.Questions.Add(edited_Question);
+                            }
+                        }
+
+                        //Get all question in old_quiz don't have in edited_Quiz
+                        var deletedQuestions = old_Quiz.Questions.Where(oq => !edited_Quiz.Questions.Any(eq => eq.QuestionId == oq.QuestionId)).ToList();
+                        foreach (var deletedQuestion in deletedQuestions)
+                        {
+                            old_Quiz.Questions.Remove(deletedQuestion);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            //------------------------------
+            /*if (ModelState.IsValid)
             {
                 try
                 {
@@ -336,10 +392,10 @@ namespace Driving_License.Controllers
                 }
                 return RedirectToAction("QuizList", "Manage");
             }
-            ViewData["LicenseId"] = new SelectList(_context.Licenses, "LicenseId", "LicenseId", quiz.LicenseId);
-            return View("~/Views/Manage/Quizzes.cshtml");
+            ViewData["LicenseId"] = new SelectList(_context.Licenses, "LicenseId", "LicenseId", quiz.LicenseId);*/
+            return RedirectToAction("QuizDetail", "Manage", new { quizId = edited_Quiz.QuizId });
         }
-
+        //==========================================================================================================
         public async Task<IActionResult> Delete(int quizid)
         {
             if (_context.Quizzes == null)
@@ -349,11 +405,53 @@ namespace Driving_License.Controllers
             var quiz = await _context.Quizzes.FindAsync(quizid);
             if (quiz != null)
             {
+                //Delete constrain of Quiz
+                using DbCommand command_Foreign = _context.Database.GetDbConnection().CreateCommand();
+                command_Foreign.CommandText = "proc_DeleteHave";
+                command_Foreign.CommandType = CommandType.StoredProcedure;
+
+                command_Foreign.Parameters.Add(new SqlParameter("@QuizID", SqlDbType.Int) { Value = quiz.QuizId });
+                command_Foreign.Parameters.Add(new SqlParameter("@QuestionID", SqlDbType.Int) { Value =  DBNull.Value}); 
+
+                using DbCommand command_Primary = _context.Database.GetDbConnection().CreateCommand();
+                command_Primary.CommandText = "proc_DeleteQuiz";
+                command_Primary.CommandType = CommandType.StoredProcedure;
+
+                command_Primary.Parameters.Add(new SqlParameter("@quizID", SqlDbType.Int) { Value = quiz.QuizId });
+                command_Primary.Parameters.Add(new SqlParameter("@LicenseID", SqlDbType.Int) { Value = DBNull.Value });
+
+                _context.Database.OpenConnection();
+
+                try
+                {
+                    command_Foreign.ExecuteNonQuery();
+                    command_Primary.ExecuteNonQuery();
+                }
+                finally
+                {
+                    _context.Database.CloseConnection();
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("QuizList", "Manage");
+        }
+
+        public async Task<IActionResult> DeleteQuizQuest(int quizid, int questid)
+        {
+            if (_context.Quizzes == null)
+            {
+                return Problem("Entity set 'DrivingLicenseContext.Questions'  is null.");
+            }
+            var quiz = await _context.Quizzes.FindAsync(quizid);
+            if (quiz != null)
+            {
                 using DbCommand command = _context.Database.GetDbConnection().CreateCommand();
-                command.CommandText = "proc_DeleteQuiz";
+                command.CommandText = "proc_DeleteQuizQuest";
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@quizID", SqlDbType.Int) { Value = quizid });
+                command.Parameters.Add(new SqlParameter("@questID", SqlDbType.Int) { Value = questid });
 
                 _context.Database.OpenConnection();
 
@@ -368,7 +466,7 @@ namespace Driving_License.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("QuizList", "Manage");
+            return RedirectToAction("QuizDetail", "Manage", new { QuizId = quizid });
         }
 
         private bool QuizExists(int id)

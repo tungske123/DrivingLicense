@@ -1,4 +1,4 @@
-let timer;
+﻿let timer;
 
 const savedTimeLeft = sessionStorage.getItem("quizTimer");
 let timeLeft = savedTimeLeft ? parseInt(savedTimeLeft) : 60;
