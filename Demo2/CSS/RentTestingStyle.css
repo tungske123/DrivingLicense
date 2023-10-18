@@ -1234,7 +1234,7 @@ header.shadow #search-icon {
             height: 100%;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            justify-items: center;
+            justify-items: start;
             gap: 25px;
 
             .car_item {
