@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Driving_License.Controllers
 {
+    [ApiController]
+    [Route("api-controller-manage")]
     public class ManageController : Controller
     {
         private readonly DrivingLicenseContext _context;
@@ -17,21 +19,27 @@ namespace Driving_License.Controllers
         {
             _context = context;
         }
+
+        
         public IActionResult Index()
         {
-            return View("~/Views/Home/Manage.cshtml");
+            return NoContent();
         }
         //============================[ QUIZ ]=================================
         //action: QuizList
+        [HttpGet]
+        [Route("quizlist")]
         public async Task<IActionResult> QuizList(int page = 1, int pagesize = 5)
         {
             page = page < 1 ? 1 : page;
             var QuizList = await _context.Quizzes.ToListAsync();
             var pagedQuizzes = QuizList.ToPagedList(page, pagesize);//(Start at, how mane)
-            return View("~/Views/Manage/Quizzes.cshtml", pagedQuizzes);
+            return Ok(QuizList);
         }
 
         //action: SearchQuiz(keyword) ---------------------------------------
+        [HttpGet]
+        [Route("search")]
         public async Task<IActionResult> SearchQuiz(string name, int page = 1, int pagesize = 5)
         {
             ViewBag.searchedQuiz = name;
@@ -72,13 +80,15 @@ namespace Driving_License.Controllers
 
         //============================[ USER ]=================================
         //action: UserList
+        [HttpGet]
+        [Route("userlist")]
         public async Task<IActionResult> UserList(int page = 1, int pagesize = 5)
         {
             page = page < 1 ? 1 : page;
 
             var UserList = await _context.Users.ToListAsync();
             var pagedUsers = UserList.ToPagedList(page, pagesize);//(Start at, how mane)
-            return View("~/Views/Manage/Users.cshtml", pagedUsers);
+            return Ok(UserList);
         }
 
         //action: CreateUser ---------------------------------------

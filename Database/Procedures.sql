@@ -174,6 +174,16 @@ begin
 		delete from AttemptDetail where AttemptID in (select AttmpId from @AttmpDetail);
 	end
 
+	if @QuizID is not null
+	begin
+		declare @AttemDetail table (AttemId uniqueidentifier);
+
+		insert into @AttemDetail (AttemId)
+		select AttemptID from Attempt where QuizID = @QuizID;
+
+		delete from AttemptDetail where AttemptID in (select AttemId from @AttemDetail);
+	end
+
 	delete from Attempt where AttemptID = @AttemptID;
 	delete from Attempt where UserID = @UserID;
     delete from Attempt where QuizID = @QuizID;
@@ -187,6 +197,9 @@ create or alter procedure proc_DeleteQuiz(
 )
 as 
 begin
+	exec proc_DeleteAttempt null,null,@quizID;
+	exec proc_DeleteHave @quizID,null;
+
 	delete from Quiz where LicenseID= @LicenseID;
 	delete from Quiz where QuizID = @quizID;
 end;
@@ -213,6 +226,7 @@ begin
 	exec proc_DeleteSchedule null,@UserID,null,null;
 	exec proc_DeleteRent null,null,@UserID;
 	exec proc_DeleteAttempt null,@UserID,null;
+
 	delete from Users where UserID = @UserID;
 	delete from Account where AccountID = @AccountID;
 end;

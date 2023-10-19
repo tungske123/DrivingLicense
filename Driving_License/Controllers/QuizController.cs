@@ -5,7 +5,6 @@ using Driving_License.ViewModels;
 using System.Text.Json;
 using Driving_License.Utils;
 using System.Text;
-using System.Text.Json.Serialization;
 using Driving_License.Filters;
 using Driving_License.Repositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,12 +12,14 @@ using Microsoft.Data.SqlClient;
 using System.Data.Common;
 using System.Data;
 using Microsoft.IdentityModel.Tokens;
-using System.Drawing.Printing;
 using X.PagedList;
+
 //using System.ComponentModel;
 
 namespace Driving_License.Controllers
 {
+    [Route("api-controller-quiz")]
+    [ApiController]
     public class QuizController : Controller
     {
         private readonly DrivingLicenseContext _context;
@@ -249,25 +250,41 @@ namespace Driving_License.Controllers
         }
 
         //-----------------------------------[ FOR ADMIN ]-----------------------------------------
-        [HttpPost]
-        public async Task<IActionResult> Create(string quizName, string LicenseId, string Description, int quantity)
+        [HttpGet]
+        [Route("getQuiz/{quizid}")]
+        public async Task<ActionResult> GetQuiz(int quizid)
         {
-            var existName = _context.Quizzes.Any(e => e.Name.Equals(quizName));
-            if (quizName.IsNullOrEmpty())
+            var quiz = await _context.Quizzes/*
+                .Include(quiz => quiz.Questions)
+                .AsSplitQuery()*/
+                .FirstOrDefaultAsync(q => q.QuizId == quizid);
+            if (quiz == null)
             {
-                quizName = "Chưa đặt tên";
+                return Problem("The id is not match any Quizzes in database");
             }
-            else if (Description.IsNullOrEmpty())
+            return Ok(quiz);
+        }
+        //==========================================================================================================
+        [HttpPost]
+        [Route("create")]
+        public async Task<ActionResult> Create([FromBody] QuizCreation quizCreation /*Quiz quiz, int questQuantity*/)
+        {
+            var existName = _context.Quizzes.Any(e => e.Name.Equals(quizCreation.Quiz.Name));
+            if (quizCreation.Quiz.Name.IsNullOrEmpty())
             {
-                Description = "Không có thông tin gì được để lại!";
+                quizCreation.Quiz.Name = "Chưa đặt tên";
+            }
+            else if (quizCreation.Quiz.Description.IsNullOrEmpty())
+            {
+                quizCreation.Quiz.Description = "Không có thông tin gì được để lại!";
             }
             if (existName)
             {
-                quizName += "(Trùng tên)";
-                Description = "Đề này có tên trùng với đề khác";
+                quizCreation.Quiz.Name += "(Trùng tên)";
+                quizCreation.Quiz.Description = "Đề này có tên trùng với đề khác";
             }
             //int cho phép giá trị null để có thể check điều kiện
-            if (quantity < 25)
+            if (quizCreation.QuestQuantity/*questQuantity*/ < 25)
             {
                 return Problem("The quantity field is required and must bigger than 25.");
             }
@@ -278,10 +295,10 @@ namespace Driving_License.Controllers
                     command.CommandText = "proc_CreateQuiz";
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.Add(new SqlParameter("@Name", SqlDbType.NVarChar) { Value = quizName });
-                    command.Parameters.Add(new SqlParameter("@LicenseID", SqlDbType.NVarChar) { Value = LicenseId });
-                    command.Parameters.Add(new SqlParameter("@Describe", SqlDbType.NVarChar) { Value = Description });
-                    command.Parameters.Add(new SqlParameter("@quantity", SqlDbType.Int) { Value = quantity });
+                    command.Parameters.Add(new SqlParameter("@Name", SqlDbType.NVarChar) { Value = quizCreation.Quiz.Name });
+                    command.Parameters.Add(new SqlParameter("@LicenseID", SqlDbType.NVarChar) { Value = quizCreation.Quiz.LicenseId });
+                    command.Parameters.Add(new SqlParameter("@Describe", SqlDbType.NVarChar) { Value = quizCreation.Quiz.Description });
+                    command.Parameters.Add(new SqlParameter("@quantity", SqlDbType.Int) { Value = quizCreation.QuestQuantity/*questQuantity*/ });
 
                     _context.Database.OpenConnection();
 
@@ -295,50 +312,41 @@ namespace Driving_License.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
-                return RedirectToAction("QuizList", "Manage");
+                return Ok("Created!");
             }
         }
         //==========================================================================================================
-        [HttpGet]
-        public async Task<IActionResult> Edit(int quizid)
-        {
-            var quiz = await _context.Quizzes
-                .Include(quiz => quiz.Questions)
-                .AsSplitQuery()
-                .FirstOrDefaultAsync(m => m.QuizId == quizid);
-            if (quiz == null)
-            {
-                return NotFound();
-            }
-            ViewData["LicenseId"] = new SelectList(_context.Licenses, "LicenseId", "LicenseId", quiz.LicenseId);
-            return View("~/Views/Manage/Quiz/Update.cshtml", quiz);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit([FromBody] Quiz edited_Quiz)
+        [HttpPut]
+        [Route("edit/{quizid}")]
+        public async Task<IActionResult> Edit(int quizid,[FromBody] Quiz edited_Quiz)
         {
             //Compare edited_quiz with old_quiz
             if (edited_Quiz != null)
             {
                 var old_Quiz = await _context.Quizzes
-                    .Include(q => q.Questions)
-                    .FirstOrDefaultAsync(q => q.QuizId == edited_Quiz.QuizId);
+                    //.Include(q => q.Questions)
+                    .FirstOrDefaultAsync(q => q.QuizId == quizid);
 
                 if (old_Quiz != null)
                 {
-                    if (old_Quiz.Name != edited_Quiz.Name)
+                    if (!edited_Quiz.Name.IsNullOrEmpty())
                     {
                         old_Quiz.Name = edited_Quiz.Name;
                     }
-                    if (old_Quiz.LicenseId != edited_Quiz.LicenseId)
+                    if (!edited_Quiz.LicenseId.IsNullOrEmpty())
                     {
                         old_Quiz.LicenseId = edited_Quiz.LicenseId;
                     }
-                    if (old_Quiz.Description != edited_Quiz.Description)
+                    if (!edited_Quiz.Description.IsNullOrEmpty())
                     {
                         old_Quiz.Description = edited_Quiz.Description;
                     }
+                    await _context.SaveChangesAsync();
+                    return Ok(old_Quiz);
+                }
+            }
 
+                    /*
                     //Compare quiz question
                     if (edited_Quiz.Questions != null && edited_Quiz.Questions.Count > 0)
                     {
@@ -372,7 +380,7 @@ namespace Driving_License.Controllers
                 }
             }
             //------------------------------
-            /*if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -393,9 +401,12 @@ namespace Driving_License.Controllers
                 return RedirectToAction("QuizList", "Manage");
             }
             ViewData["LicenseId"] = new SelectList(_context.Licenses, "LicenseId", "LicenseId", quiz.LicenseId);*/
-            return RedirectToAction("QuizDetail", "Manage", new { quizId = edited_Quiz.QuizId });
+            return Problem("The value edited is null");
         }
+
         //==========================================================================================================
+        [HttpDelete]
+        [Route("delete/{quizid}")]
         public async Task<IActionResult> Delete(int quizid)
         {
             if (_context.Quizzes == null)
@@ -405,26 +416,17 @@ namespace Driving_License.Controllers
             var quiz = await _context.Quizzes.FindAsync(quizid);
             if (quiz != null)
             {
-                //Delete constrain of Quiz
-                using DbCommand command_Foreign = _context.Database.GetDbConnection().CreateCommand();
-                command_Foreign.CommandText = "proc_DeleteHave";
-                command_Foreign.CommandType = CommandType.StoredProcedure;
-
-                command_Foreign.Parameters.Add(new SqlParameter("@QuizID", SqlDbType.Int) { Value = quiz.QuizId });
-                command_Foreign.Parameters.Add(new SqlParameter("@QuestionID", SqlDbType.Int) { Value =  DBNull.Value}); 
-
                 using DbCommand command_Primary = _context.Database.GetDbConnection().CreateCommand();
                 command_Primary.CommandText = "proc_DeleteQuiz";
                 command_Primary.CommandType = CommandType.StoredProcedure;
 
                 command_Primary.Parameters.Add(new SqlParameter("@quizID", SqlDbType.Int) { Value = quiz.QuizId });
-                command_Primary.Parameters.Add(new SqlParameter("@LicenseID", SqlDbType.Int) { Value = DBNull.Value });
+                command_Primary.Parameters.Add(new SqlParameter("@LicenseID", SqlDbType.NVarChar) { Value = DBNull.Value });
 
                 _context.Database.OpenConnection();
 
                 try
                 {
-                    command_Foreign.ExecuteNonQuery();
                     command_Primary.ExecuteNonQuery();
                 }
                 finally
@@ -434,7 +436,7 @@ namespace Driving_License.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("QuizList", "Manage");
+            return Ok("Deleted!");
         }
 
         public async Task<IActionResult> DeleteQuizQuest(int quizid, int questid)
