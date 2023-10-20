@@ -27,8 +27,7 @@
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                 aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/soft-ui-dashboard/pages/dashboard.html "
-                target="_blank">
+            <a class="navbar-brand m-0" href="#">
                 <img src="../assets/img/logo.png" class="navbar-brand-img h-100" alt="main_logo">
                 <span class="ms-1 font-weight-bold">Testing for dashboard</span>
             </a>
@@ -213,7 +212,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">
+                    <a class="nav-link" href="../home.html">
                         <div
                             class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg fill="#000000" height="200px" width="200px" version="1.1" id="Layer_1"
@@ -706,6 +705,28 @@
                         </div>
                     </div>
                 </div>
+
+                <!--CHART 2-->
+                <div class="col-lg-7">
+                    <div class="card z-index-2">
+                        <div class="card-header pb-0">
+                            <h6>Testing overview</h6>
+                            <p class="text-sm">
+                                <i class="fa fa-arrow-up text-success"></i>
+                                <span class="font-weight-bold">4% more</span> in 2023
+                            </p>
+                        </div>
+
+                        <div class="card-body p-3">
+                            <div class="chart">
+                                <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+
             </div>
         </div>
         </div>
@@ -804,7 +825,7 @@
             data: {
                 labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                 datasets: [{
-                    label: "Mobile apps",
+                    label: "Users",
                     tension: 0.4,
                     borderWidth: 0,
                     pointRadius: 0,
@@ -817,7 +838,7 @@
 
                 },
                 {
-                    label: "Websites",
+                    label: "Courses",
                     tension: 0.4,
                     borderWidth: 0,
                     pointRadius: 0,
