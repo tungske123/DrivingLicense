@@ -38,6 +38,7 @@ create table Vehicle
    [Address] nvarchar(100),
    RentPrice decimal,
    [Status] bit,
+   [Description] nvarchar(max)
 );
 
 create table Users
