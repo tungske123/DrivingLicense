@@ -209,7 +209,9 @@
                                     <button id="doubleDropdownButton" data-dropdown-toggle="motorbike"
                                         data-dropdown-placement="right-start" type="button"
                                         class="flex items-center gap-2 w-full py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                        <input type="checkbox" class="type_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" value="Xe máy"> Xe máy
+                                        <input type="checkbox"
+                                            class="type_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                            value="Xe máy"> Xe máy
                                     </button>
                                     <div id="motorbike"
                                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
@@ -231,7 +233,9 @@
                                     <button id="doubleDropdownButton" data-dropdown-toggle="car"
                                         data-dropdown-placement="right-start" type="button"
                                         class="flex items-center gap-2 w-full py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                        <input type="checkbox" class="type_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" value="Xe ô tô">Xe ô tô
+                                        <input type="checkbox"
+                                            class="type_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                            value="Xe ô tô">Xe ô tô
                                     </button>
                                     <div id="car"
                                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
@@ -255,7 +259,7 @@
                                                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Vinfast</label>
                                             </li>
                                         </ul>
-                                    </div>    
+                                    </div>
                                 </div>
                                 <!-- Price -->
                                 <h2 id="price-heading">
@@ -496,52 +500,55 @@
                                 <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
                                     800x400px)</p>
                             </div>
-                            <input id="dropzone-file" type="file" name="image" class="hidden" />
+                            <input id="dropzone-file" type="file" name="Image" class="hidden" />
                         </label>
                     </div>
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
                         <div>
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
                                 xe</label>
-                            <input type="text" name="name" id="name"
+                            <input type="text" name="Name" id="name"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tên xe" required="">
                         </div>
                         <div>
                             <label for="years" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Năm
                                 sản xuất</label>
-                            <input type="text" name="yeasr" id="years"
+                            <input type="text" name="Years" id="years"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập năm sản xuất của xe" required="">
                         </div>
                         <div>
                             <label for="brand"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hãng</label>
-                            <input type="text" name="brand" id="brand"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Nhập hãng xe" required="">
+                            <select id="brand" name="Brand"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option selected>Chọn hãng xe</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Honda">Honda</option>
+                            </select>
                         </div>
 
                         <div>
                             <label for="price"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá</label>
-                            <input type="text" name="price" id="price"
+                            <input type="text" name="Price" id="price"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập giá xe" required="">
                         </div>
                         <div>
                             <label for="newbrand"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><span
-                                    class="text-red-700">Hoặc</span> chọn hãng
+                                    class="text-red-700">Hoặc</span> nhập hãng
                                 mới</label>
-                            <input type="text" name="newbrand" id="newbrand"
+                            <input type="text" id="newbrand"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tên hãng mới" required="">
                         </div>
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại
-                                xe</label><select id="category"
+                                xe</label><select id="category" name="Type"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option selected="">Loại xe</option>
                                 <option value="TV">Xe 4 chỗ</option>
@@ -553,7 +560,7 @@
                     </div>
                     <div class=""><label for="description"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô
-                            tả</label><textarea id="description" rows="4" name="description"
+                            tả</label><textarea id="description" rows="4" name="Description"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập mô tả xe"></textarea></div>
                     <button type="submit"
