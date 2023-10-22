@@ -120,7 +120,7 @@
                                 </div>
                                 <input type="text" id="vehicleSearch"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Tìm theo tên xe" required="">
+                                    placeholder="Tìm theo tên xe">
                             </div>
                         </form>
                     </div>
@@ -477,9 +477,9 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="">
+                <form action="" id="addForm" enctype="multipart/form-data" method="post">
                     <figure class="max-w-lg" style="margin: 0 auto;margin-bottom: 10px;">
-                        <img class="h-auto max-w-full rounded-lg"
+                        <img class="h-auto max-w-full rounded-lg" id="addPreviewImage"
                             src="https://flowbite.com/docs/images/examples/image-1@2x.jpg" alt="image description">
                         <figcaption class="mt-2 text-sm text-center text-grey-500 dark:text-gray-400 font-bold">Ảnh xem
                             trước
@@ -500,7 +500,7 @@
                                 <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
                                     800x400px)</p>
                             </div>
-                            <input id="dropzone-file" type="file" name="Image" class="hidden" />
+                            <input id="dropzone-file" type="file" accept="image/*" name="Image" class="hidden add_image" />
                         </label>
                     </div>
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
@@ -508,21 +508,21 @@
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
                                 xe</label>
                             <input type="text" name="Name" id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="add_name bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tên xe" required="">
                         </div>
                         <div>
                             <label for="years" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Năm
                                 sản xuất</label>
                             <input type="text" name="Years" id="years"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="add_years bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập năm sản xuất của xe" required="">
                         </div>
                         <div>
                             <label for="brand"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hãng</label>
                             <select id="brand" name="Brand"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                class="add_brand bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option selected>Chọn hãng xe</option>
                                 <option value="Toyota">Toyota</option>
                                 <option value="Honda">Honda</option>
@@ -532,8 +532,8 @@
                         <div>
                             <label for="price"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá</label>
-                            <input type="text" name="Price" id="price"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            <input type="number" name="RentPrice" id="price"
+                                class="add_price bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập giá xe" required="">
                         </div>
                         <div>
@@ -542,26 +542,39 @@
                                     class="text-red-700">Hoặc</span> nhập hãng
                                 mới</label>
                             <input type="text" id="newbrand"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Nhập tên hãng mới" required="">
+                                class="add_newbrand bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập tên hãng mới">
                         </div>
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại
                                 xe</label><select id="category" name="Type"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                class="add_type bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option selected="">Loại xe</option>
-                                <option value="TV">Xe 4 chỗ</option>
-                                <option value="PC">Xe 2 chỗ</option>
-                                <option value="GA">Xe tải</option>
+                                <option value="Xe máy">Xe máy</option>
+                                <option value="Xe ô tô">Xe ô tô</option>
+                                <option value="Xe tải - bán tải">Xe tải - bán tải</option>
                             </select>
                         </div>
-
+                        <div>
+                            <label for="phone"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện thoại</label>
+                            <input type="tel" id="phone" name="ContactNumber"
+                                class="add_phone bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập số điện thoại liên hệ" required="">
+                        </div>
+                        <div>
+                            <label for="address"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ</label>
+                            <input type="text" id="address" name="Address"
+                                class="add_address bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập địa chỉ liên hệ" required="">
+                        </div>
                     </div>
-                    <div class=""><label for="description"
+                    <div class=""><label for="add_description"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô
-                            tả</label><textarea id="description" rows="4" name="Description"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            tả</label><textarea id="add_description" rows="4" name="Description"
+                            class="add_description block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Nhập mô tả xe"></textarea></div>
                     <button type="submit"
                         class="text-white mt-3 inline-flex items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
@@ -600,9 +613,9 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="">
+                <form action="" method="post" enctype="multipart/form-data">
                     <figure class="max-w-lg" style="margin: 0 auto;margin-bottom: 10px;">
-                        <img class="h-auto max-w-full rounded-lg"
+                        <img class="h-auto max-w-full rounded-lg" id="updateVehicleImage"
                             src="https://flowbite.com/docs/images/examples/image-1@2x.jpg" alt="image description">
                         <figcaption class="mt-2 text-sm text-center text-grey-500 dark:text-gray-400 font-bold">Ảnh xem
                             trước
@@ -631,36 +644,36 @@
                         <div>
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
                                 xe</label>
-                            <input type="text" name="name" id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            <input type="text" name="name" id="name" 
+                                class="updateName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập tên xe" required="">
                         </div>
                         <div>
                             <label for="years" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Năm
                                 sản xuất</label>
                             <input type="text" name="yeasr" id="years"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="updateYears bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập năm sản xuất của xe" required="">
                         </div>
                         <div>
                             <label for="brand"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hãng</label>
                             <input type="text" name="brand" id="brand"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="updateBrand bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập hãng xe" required="">
                         </div>
                         <div>
                             <label for="price"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá</label>
                             <input type="text" name="price" id="price"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="updatePrice bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Nhập giá xe" required="">
                         </div>
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại
                                 xe</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                class="updateType bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option selected="">Loại xe</option>
                                 <option value="TV">Xe 4 chỗ</option>
                                 <option value="PC">Xe 2 chỗ</option>
@@ -712,26 +725,26 @@
                 <dl>
                     <!-- <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Ảnh</dt> -->
                     <figure class="max-w-lg">
-                        <img class="h-auto max-w-full rounded-lg"
+                        <img class="h-auto max-w-full rounded-lg" id="readVehicleImage"
                             src="https://i1-vnexpress.vnecdn.net/2023/05/10/Vios202310jpg-1683690295.jpg?w=750&h=450&q=100&dpr=1&fit=crop&s=BteldbQmWr_H2MzwpRG3DQ"
                             alt="image description">
-                        <figcaption class="mt-2 text-xl text-center text-black-500 dark:text-gray-400 font-bold">Toyota
+                        <figcaption class="mt-2 text-xl text-center text-black-500 dark:text-gray-400 font-bold" id="readVehicleName">Toyota
                             Vios
                         </figcaption>
                     </figure>
                     <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Mô tả</dt>
-                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Lorem ipsum dolor sit amet
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readDescription">Lorem ipsum dolor sit amet
                         consectetur adipisicing elit. Debitis qui placeat, voluptatum nam ipsum, minima facilis
                         deserunt, maiores quisquam veniam rerum? Illo inventore laboriosam omnis provident aut eum
                         tenetur vitae.</dd>
                     <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Hãng</dt>
-                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Toyota</dd>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readBrand">Toyota</dd>
                     <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Năm sản xuất</dt>
-                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">2015</dd>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readYears">2015</dd>
                     <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Giá thuê</dt>
-                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">250.000 VNĐ/ Giờ</dd>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readPrice">250.000 VNĐ/ Giờ</dd>
                     <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Bằng lái</dt>
-                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">B1</dd>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readLicense">B1</dd>
                 </dl>
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3 sm:space-x-4">
