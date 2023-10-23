@@ -61,7 +61,7 @@ function getFormattedPrice(price: number) {
     return price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".").toString();
 }
 
-// Create a Set to store elements that have listeners
+var currentVehicleID: string = ``;
 
 function renderVehicleTable(vehicleList: Vehicle[]) {
     let template = document.getElementById('vehicle-row-template') as HTMLTemplateElement;
@@ -97,18 +97,21 @@ function renderVehicleTable(vehicleList: Vehicle[]) {
             deleteButton.setAttribute('vid', vehicle.vehicleId);
             editButton.addEventListener('click', async () => {
                 const vid = editButton.getAttribute('vid');
+                currentVehicleID = vid;
                 await loadVehicleToEditModal(vid);
                 toggleUpdateModal();
             });
             detailsButton.addEventListener('click', async () => {
                 const vid = detailsButton.getAttribute('vid');
+                currentVehicleID = vid;
                 await loadVehicleToDetailsModal(vid);
                 toggleDetailsModal();
             });
             deleteButton.addEventListener('click', async () => {
                 const vid = deleteButton.getAttribute('vid');
+                currentVehicleID = vid;
                 await DeleteVehicle(vid);
-                toggleDetailsModal();
+                toggleDeleteModal();
             });
             vehicleTableBody.appendChild(clone);
         });
@@ -191,7 +194,7 @@ async function resetFilter() {
     await fetchVehiclesData();
 }
 
-// var currentVehicleID: string = ``;
+
 
 async function fetchSingleVehicleData(vehicleId: string): Promise<Vehicle> {
     const url = `https://localhost:7235/api/vehicles/${vehicleId}`;
@@ -341,6 +344,24 @@ async function DeleteVehicle(vehicleId: string) {
         console.error(`Http error!${error}`);
     }
 }
+
+const updateForm = document.getElementById('updateForm');
+updateForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await UpdateVehicle(currentVehicleID);
+    alert('Cập nhật thành công!');
+});
+
+const deleteModalButtons = document.querySelectorAll('.deleteModalBtn') as NodeListOf<HTMLButtonElement>;
+deleteModalButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const action = btn.getAttribute('btnaction');
+        if (action === 'confirm') {
+            await DeleteVehicle(currentVehicleID);
+            alert('Xóa thành công');
+        }
+    });
+});
 
 priceInputs.forEach(priceInput => {
     priceInput.addEventListener('input', () => {

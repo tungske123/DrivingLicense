@@ -105,7 +105,7 @@ function fetchVehiclesData() {
 function getFormattedPrice(price) {
     return price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".").toString();
 }
-// Create a Set to store elements that have listeners
+var currentVehicleID = "";
 function renderVehicleTable(vehicleList) {
     var _this = this;
     var template = document.getElementById('vehicle-row-template');
@@ -145,6 +145,7 @@ function renderVehicleTable(vehicleList) {
                     switch (_a.label) {
                         case 0:
                             vid = editButton.getAttribute('vid');
+                            currentVehicleID = vid;
                             return [4 /*yield*/, loadVehicleToEditModal(vid)];
                         case 1:
                             _a.sent();
@@ -159,6 +160,7 @@ function renderVehicleTable(vehicleList) {
                     switch (_a.label) {
                         case 0:
                             vid = detailsButton.getAttribute('vid');
+                            currentVehicleID = vid;
                             return [4 /*yield*/, loadVehicleToDetailsModal(vid)];
                         case 1:
                             _a.sent();
@@ -173,10 +175,11 @@ function renderVehicleTable(vehicleList) {
                     switch (_a.label) {
                         case 0:
                             vid = deleteButton.getAttribute('vid');
+                            currentVehicleID = vid;
                             return [4 /*yield*/, DeleteVehicle(vid)];
                         case 1:
                             _a.sent();
-                            toggleDetailsModal();
+                            toggleDeleteModal();
                             return [2 /*return*/];
                     }
                 });
@@ -273,7 +276,6 @@ function resetFilter() {
         });
     });
 }
-// var currentVehicleID: string = ``;
 function fetchSingleVehicleData(vehicleId) {
     return __awaiter(this, void 0, void 0, function () {
         var url, response, data, vehicle, error_2;
@@ -491,6 +493,39 @@ function DeleteVehicle(vehicleId) {
         });
     });
 }
+var updateForm = document.getElementById('updateForm');
+updateForm.addEventListener('submit', function (e) { return __awaiter(_this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                e.preventDefault();
+                return [4 /*yield*/, UpdateVehicle(currentVehicleID)];
+            case 1:
+                _a.sent();
+                alert('Cập nhật thành công!');
+                return [2 /*return*/];
+        }
+    });
+}); });
+var deleteModalButtons = document.querySelectorAll('.deleteModalBtn');
+deleteModalButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+        var action;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    action = btn.getAttribute('btnaction');
+                    if (!(action === 'confirm')) return [3 /*break*/, 2];
+                    return [4 /*yield*/, DeleteVehicle(currentVehicleID)];
+                case 1:
+                    _a.sent();
+                    alert('Xóa thành công');
+                    _a.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); });
+});
 priceInputs.forEach(function (priceInput) {
     priceInput.addEventListener('input', function () {
         var priceValue = Number(priceInput.value.replace(/\D/g, ''));
