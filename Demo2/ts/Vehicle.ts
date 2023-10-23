@@ -49,7 +49,9 @@ async function fetchVehiclesData() {
         }
         const data = await response.json();
         console.log(data);
+        totalPages = Number(data.totalPages);
         renderVehicleTable(data.items);
+        renderPagingBar();
     } catch (error) {
         console.error(`Error: ${error}`);
     }
@@ -92,7 +94,10 @@ function renderVehicleTable(vehicleList: Vehicle[]) {
             const detailsButton = dropDownContent.querySelector('.details_btn') as HTMLButtonElement;
             detailsButton.setAttribute('vid', vehicle.vehicleId);
             const deleteButton = dropDownContent.querySelector('.cancel_btn') as HTMLButtonElement;
-            editButton.addEventListener('click', () => {
+            deleteButton.setAttribute('vid', vehicle.vehicleId);
+            editButton.addEventListener('click', async () => {
+                const vid = editButton.getAttribute('vid');
+                await loadVehicleToEditModal(vid);
                 toggleUpdateModal();
             });
             detailsButton.addEventListener('click', async () => {
@@ -100,7 +105,9 @@ function renderVehicleTable(vehicleList: Vehicle[]) {
                 await loadVehicleToDetailsModal(vid);
                 toggleDetailsModal();
             });
-            deleteButton.addEventListener('click', () => {
+            deleteButton.addEventListener('click', async () => {
+                const vid = deleteButton.getAttribute('vid');
+                await DeleteVehicle(vid);
                 toggleDetailsModal();
             });
             vehicleTableBody.appendChild(clone);
@@ -179,6 +186,7 @@ async function resetFilter() {
     brandCheckList.forEach(brandCheck => {
         brandCheck.checked = false;
     });
+    page = 1;
     sendData.reset();
     await fetchVehiclesData();
 }
@@ -206,6 +214,22 @@ async function fetchSingleVehicleData(vehicleId: string): Promise<Vehicle> {
     }
 }
 
+async function addVehicle(data: FormData) {
+    const url = `https://localhost:7235/api/vehicles/add`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data
+        });
+        if (response.status !== 204) {
+            throw new Error(`Http Error! Status code: ${response.status}`);
+        }
+        console.log('Add vehicle success');
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+}
+
 async function loadVehicleToDetailsModal(vehicleId: string) {
     const vehicle: Vehicle = await fetchSingleVehicleData(vehicleId);
     const readVehicleImageElement = document.getElementById('readVehicleImage') as HTMLImageElement;
@@ -225,7 +249,97 @@ async function loadVehicleToDetailsModal(vehicleId: string) {
 
 async function loadVehicleToEditModal(vehicleId: string) {
     const vehicle: Vehicle = await fetchSingleVehicleData(vehicleId);
+    const updateVehicleIDElement = document.getElementById('updateVehicleID') as HTMLDivElement;
+    const updateImageElement = document.getElementById('updateVehicleImage') as HTMLImageElement;
+    const updateNameElement = document.querySelector('.updateName') as HTMLInputElement;
+    const updateYearsElement = document.querySelector('.updateYears') as HTMLInputElement;
+    const updateBrandElement = document.querySelector('.updateBrand') as HTMLInputElement;
+    const updatePriceElement = document.querySelector('.updatePrice') as HTMLInputElement;
+    const updateTypeElement = document.querySelector('.updateType') as HTMLInputElement;
+    const updateContactNumberElement = document.querySelector('.updateContactNumber') as HTMLInputElement;
+    const updateAddressElement = document.querySelector('.updateAddress') as HTMLInputElement;
+    const updateDescriptionElement = document.querySelector('.updateDescription') as HTMLTextAreaElement;
 
+    updateVehicleIDElement.textContent = vehicleId;
+    updateImageElement.src = `/img/vehicle/${vehicle.image}`;
+    updateNameElement.value = vehicle.name;
+    updateYearsElement.value = vehicle.years.toString();
+    updateBrandElement.value = vehicle.brand;
+    updatePriceElement.value = vehicle.rentPrice.toString();
+    updateTypeElement.value = vehicle.type;
+    updateContactNumberElement.value = vehicle.contactNumber;
+    updateAddressElement.value = vehicle.address;
+    updateDescriptionElement.value = vehicle.description;
+
+}
+
+async function UpdateVehicle(vehicleId: string) {
+    if (vehicleId === null || vehicleId === ``) {
+        console.log('Update vehicle failed');
+        return;
+    }
+    const url = `https://localhost:7235/api/vehicles/update/${vehicleId}`;
+    const updateForm = document.getElementById('updateForm') as HTMLFormElement;
+    const formData = new FormData();
+    const fileImageInput = document.querySelector('.updateImageFile') as HTMLInputElement;
+    const updateNameElement = document.querySelector('.updateName') as HTMLInputElement;
+    const updateYearsElement = document.querySelector('.updateYears') as HTMLInputElement;
+    const updateBrandElement = document.querySelector('.updateBrand') as HTMLInputElement;
+    const updatePriceElement = document.querySelector('.updatePrice') as HTMLInputElement;
+    const updateTypeElement = document.querySelector('.updateType') as HTMLInputElement;
+    const updateContactNumberElement = document.querySelector('.updateContactNumber') as HTMLInputElement;
+    const updateAddressElement = document.querySelector('.updateAddress') as HTMLInputElement;
+    const updateDescriptionElement = document.querySelector('.updateDescription') as HTMLTextAreaElement;
+
+    formData.append('Name', updateNameElement.name);
+    if (fileImageInput !== null) {
+        let imageFile = fileImageInput.files![0];
+        if (imageFile !== null) {
+            formData.append('Image', imageFile);
+        }
+    }
+    formData.append('Brand', updateBrandElement.value);
+    formData.append('Type', updateTypeElement.value);
+    formData.append('Years', updateYearsElement.value);
+    formData.append('ContactNumber', updateContactNumberElement.value);
+    formData.append('Address', updateAddressElement.value);
+    formData.append('RentPrice', updatePriceElement.value);
+
+
+    try {
+        const response = await fetch(url, {
+            method: 'PATCH',
+            body: formData
+        });
+        if (response.status !== 204) {
+            throw new Error(`Http error! Status code: ${response.status}`);
+        }
+        console.log('Update vehicle success!');
+    } catch (error) {
+        console.error(`Http error!${error}`);
+    }
+}
+
+async function DeleteVehicle(vehicleId: string) {
+    if (vehicleId === null || vehicleId === ``) {
+        console.log('Delete vehicle failed');
+        return;
+    }
+    const url = `https://localhost:7235/api/vehicles/delete/${vehicleId}`;
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.status !== 204) {
+            throw new Error(`Http error! Status code: ${response.status}`);
+        }
+        console.log('Delete vehicle success!');
+    } catch (error) {
+        console.error(`Http error!${error}`);
+    }
 }
 
 priceInputs.forEach(priceInput => {
@@ -264,6 +378,7 @@ typeCheckList.forEach(typeCheck => {
                 sendData.types.splice(index, 1);
             }
         }
+        page = 1;
         await fetchVehiclesData();
     });
 });
@@ -278,6 +393,7 @@ brandCheckList.forEach(brandCheck => {
                 sendData.brands.splice(index, 1);
             }
         }
+        page = 1;
         await fetchVehiclesData();
     });
 });
@@ -285,6 +401,7 @@ brandCheckList.forEach(brandCheck => {
 vehicleSearch.addEventListener('input', async () => {
     const newKeyword = String(vehicleSearch.value);
     sendData.keyword = newKeyword;
+    page = 1;
     await fetchVehiclesData();
 });
 
@@ -312,9 +429,9 @@ addImageInput.addEventListener('change', (event) => {
     reader.readAsDataURL(file);
 });
 
-addForm.addEventListener('submit', (e: Event) => {
+addForm.addEventListener('submit', async (e: Event) => {
     e.preventDefault();
-    const url = `https://localhost:7235/api/vehicles/add`;
+
     const addNameInput = document.querySelector('.add_name') as HTMLInputElement;
     const addYearsInput = document.querySelector('.add_years') as HTMLInputElement;
     const addBrandInput = document.querySelector('.add_brand') as HTMLInputElement;
@@ -348,17 +465,54 @@ addForm.addEventListener('submit', (e: Event) => {
     // if (descriptionContent) {
     //     formData.append('Description', descriptionContent);
     // }
-    fetch(url, {
-        method: 'POST',
-        body: formData
-    }).then(response => {
-        if (response.status !== 204) {
-            throw new Error(`Http Error! Status code: ${response.status}`);
-        }
-        console.log('Add vehicle success');
-    }).catch(error => {
-        console.error(`Error: ${error}`);
-    });
+    await addVehicle(formData);
     alert('Thêm xe thành công');
 });
+
+const pagingContent = document.getElementById('pagingContent') as HTMLSpanElement;
+const prevButton = document.getElementById('prevBtn') as HTMLButtonElement;
+const nextButton = document.getElementById('nextBtn') as HTMLButtonElement;
+var totalPages: number = 1;
+
+function renderPagingBar() {
+    pagingContent.innerHTML = '';
+    const pageClassName = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`;
+    const activeClassName = `flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-red-700 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white`;
+    for (var pageCnt = 1; pageCnt <= totalPages; ++pageCnt) {
+        const li = document.createElement('li');
+        const pageButton = document.createElement('button');
+        pageButton.setAttribute('cnt', pageCnt.toString());
+        pageButton.textContent = pageCnt.toString();
+        if (pageCnt === page) {
+            pageButton.className = activeClassName;
+        } else {
+            pageButton.className = pageClassName;
+        }
+        pageButton.addEventListener('click', async () => {
+            const newPage = Number(pageButton.getAttribute('cnt'));
+            page = newPage;
+            await fetchVehiclesData();
+        });
+        li.appendChild(pageButton);
+        pagingContent.appendChild(li);
+    }
+}
+
+prevButton.addEventListener('click', async () => {
+    --page;
+    if (page <= 0) {
+        page = totalPages;
+    }
+    await fetchVehiclesData();
+});
+
+nextButton.addEventListener('click', async () => {
+    ++page;
+    if (page > totalPages) {
+        page = 1;
+    }
+    await fetchVehiclesData();
+});
+
+
 

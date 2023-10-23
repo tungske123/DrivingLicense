@@ -89,7 +89,9 @@ function fetchVehiclesData() {
                 case 3:
                     data = _a.sent();
                     console.log(data);
+                    totalPages = Number(data.totalPages);
                     renderVehicleTable(data.items);
+                    renderPagingBar();
                     return [3 /*break*/, 5];
                 case 4:
                     error_1 = _a.sent();
@@ -136,9 +138,21 @@ function renderVehicleTable(vehicleList) {
             var detailsButton = dropDownContent.querySelector('.details_btn');
             detailsButton.setAttribute('vid', vehicle.vehicleId);
             var deleteButton = dropDownContent.querySelector('.cancel_btn');
-            editButton.addEventListener('click', function () {
-                toggleUpdateModal();
-            });
+            deleteButton.setAttribute('vid', vehicle.vehicleId);
+            editButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+                var vid;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            vid = editButton.getAttribute('vid');
+                            return [4 /*yield*/, loadVehicleToEditModal(vid)];
+                        case 1:
+                            _a.sent();
+                            toggleUpdateModal();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
             detailsButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
                 var vid;
                 return __generator(this, function (_a) {
@@ -153,9 +167,20 @@ function renderVehicleTable(vehicleList) {
                     }
                 });
             }); });
-            deleteButton.addEventListener('click', function () {
-                toggleDetailsModal();
-            });
+            deleteButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+                var vid;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            vid = deleteButton.getAttribute('vid');
+                            return [4 /*yield*/, DeleteVehicle(vid)];
+                        case 1:
+                            _a.sent();
+                            toggleDetailsModal();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
             vehicleTableBody.appendChild(clone);
         });
     }
@@ -238,6 +263,7 @@ function resetFilter() {
                     brandCheckList.forEach(function (brandCheck) {
                         brandCheck.checked = false;
                     });
+                    page = 1;
                     sendData.reset();
                     return [4 /*yield*/, fetchVehiclesData()];
                 case 1:
@@ -283,6 +309,36 @@ function fetchSingleVehicleData(vehicleId) {
         });
     });
 }
+function addVehicle(data) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, response, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "https://localhost:7235/api/vehicles/add";
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'POST',
+                            body: data
+                        })];
+                case 2:
+                    response = _a.sent();
+                    if (response.status !== 204) {
+                        throw new Error("Http Error! Status code: ".concat(response.status));
+                    }
+                    console.log('Add vehicle success');
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_3 = _a.sent();
+                    console.error("Error: ".concat(error_3));
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
 function loadVehicleToDetailsModal(vehicleId) {
     return __awaiter(this, void 0, void 0, function () {
         var vehicle, readVehicleImageElement, readVehicleNameElement, readDescriptionElement, readBrandElement, readYearsElement, readPriceElement;
@@ -310,13 +366,127 @@ function loadVehicleToDetailsModal(vehicleId) {
 }
 function loadVehicleToEditModal(vehicleId) {
     return __awaiter(this, void 0, void 0, function () {
-        var vehicle;
+        var vehicle, updateVehicleIDElement, updateImageElement, updateNameElement, updateYearsElement, updateBrandElement, updatePriceElement, updateTypeElement, updateContactNumberElement, updateAddressElement, updateDescriptionElement;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fetchSingleVehicleData(vehicleId)];
                 case 1:
                     vehicle = _a.sent();
+                    updateVehicleIDElement = document.getElementById('updateVehicleID');
+                    updateImageElement = document.getElementById('updateVehicleImage');
+                    updateNameElement = document.querySelector('.updateName');
+                    updateYearsElement = document.querySelector('.updateYears');
+                    updateBrandElement = document.querySelector('.updateBrand');
+                    updatePriceElement = document.querySelector('.updatePrice');
+                    updateTypeElement = document.querySelector('.updateType');
+                    updateContactNumberElement = document.querySelector('.updateContactNumber');
+                    updateAddressElement = document.querySelector('.updateAddress');
+                    updateDescriptionElement = document.querySelector('.updateDescription');
+                    updateVehicleIDElement.textContent = vehicleId;
+                    updateImageElement.src = "/img/vehicle/".concat(vehicle.image);
+                    updateNameElement.value = vehicle.name;
+                    updateYearsElement.value = vehicle.years.toString();
+                    updateBrandElement.value = vehicle.brand;
+                    updatePriceElement.value = vehicle.rentPrice.toString();
+                    updateTypeElement.value = vehicle.type;
+                    updateContactNumberElement.value = vehicle.contactNumber;
+                    updateAddressElement.value = vehicle.address;
+                    updateDescriptionElement.value = vehicle.description;
                     return [2 /*return*/];
+            }
+        });
+    });
+}
+function UpdateVehicle(vehicleId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, updateForm, formData, fileImageInput, updateNameElement, updateYearsElement, updateBrandElement, updatePriceElement, updateTypeElement, updateContactNumberElement, updateAddressElement, updateDescriptionElement, imageFile, response, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (vehicleId === null || vehicleId === "") {
+                        console.log('Update vehicle failed');
+                        return [2 /*return*/];
+                    }
+                    url = "https://localhost:7235/api/vehicles/update/".concat(vehicleId);
+                    updateForm = document.getElementById('updateForm');
+                    formData = new FormData();
+                    fileImageInput = document.querySelector('.updateImageFile');
+                    updateNameElement = document.querySelector('.updateName');
+                    updateYearsElement = document.querySelector('.updateYears');
+                    updateBrandElement = document.querySelector('.updateBrand');
+                    updatePriceElement = document.querySelector('.updatePrice');
+                    updateTypeElement = document.querySelector('.updateType');
+                    updateContactNumberElement = document.querySelector('.updateContactNumber');
+                    updateAddressElement = document.querySelector('.updateAddress');
+                    updateDescriptionElement = document.querySelector('.updateDescription');
+                    formData.append('Name', updateNameElement.name);
+                    if (fileImageInput !== null) {
+                        imageFile = fileImageInput.files[0];
+                        if (imageFile !== null) {
+                            formData.append('Image', imageFile);
+                        }
+                    }
+                    formData.append('Brand', updateBrandElement.value);
+                    formData.append('Type', updateTypeElement.value);
+                    formData.append('Years', updateYearsElement.value);
+                    formData.append('ContactNumber', updateContactNumberElement.value);
+                    formData.append('Address', updateAddressElement.value);
+                    formData.append('RentPrice', updatePriceElement.value);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'PATCH',
+                            body: formData
+                        })];
+                case 2:
+                    response = _a.sent();
+                    if (response.status !== 204) {
+                        throw new Error("Http error! Status code: ".concat(response.status));
+                    }
+                    console.log('Update vehicle success!');
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_4 = _a.sent();
+                    console.error("Http error!".concat(error_4));
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function DeleteVehicle(vehicleId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, response, error_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (vehicleId === null || vehicleId === "") {
+                        console.log('Delete vehicle failed');
+                        return [2 /*return*/];
+                    }
+                    url = "https://localhost:7235/api/vehicles/delete/".concat(vehicleId);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })];
+                case 2:
+                    response = _a.sent();
+                    if (response.status !== 204) {
+                        throw new Error("Http error! Status code: ".concat(response.status));
+                    }
+                    console.log('Delete vehicle success!');
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_5 = _a.sent();
+                    console.error("Http error!".concat(error_5));
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
@@ -377,6 +547,7 @@ typeCheckList.forEach(function (typeCheck) {
                             sendData.types.splice(index, 1);
                         }
                     }
+                    page = 1;
                     return [4 /*yield*/, fetchVehiclesData()];
                 case 1:
                     _a.sent();
@@ -400,6 +571,7 @@ brandCheckList.forEach(function (brandCheck) {
                             sendData.brands.splice(index, 1);
                         }
                     }
+                    page = 1;
                     return [4 /*yield*/, fetchVehiclesData()];
                 case 1:
                     _a.sent();
@@ -415,6 +587,7 @@ vehicleSearch.addEventListener('input', function () { return __awaiter(_this, vo
             case 0:
                 newKeyword = String(vehicleSearch.value);
                 sendData.keyword = newKeyword;
+                page = 1;
                 return [4 /*yield*/, fetchVehiclesData()];
             case 1:
                 _a.sent();
@@ -451,53 +624,126 @@ addImageInput.addEventListener('change', function (event) {
     // Read the image file as a data URL
     reader.readAsDataURL(file);
 });
-addForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var url = "https://localhost:7235/api/vehicles/add";
-    var addNameInput = document.querySelector('.add_name');
-    var addYearsInput = document.querySelector('.add_years');
-    var addBrandInput = document.querySelector('.add_brand');
-    var addNewBrandInput = document.querySelector('.add_newbrand');
-    var addPriceInput = document.querySelector('.add_price');
-    var addTypeInput = document.querySelector('.add_type');
-    var addAddressInput = document.querySelector('.add_address');
-    var addContactNumber = document.querySelector('.add_phone');
-    var addDescriptionInput = document.querySelector('.add_description');
-    var formData = new FormData();
-    var imageFile = addImageInput.files[0];
-    formData.append('Name', addNameInput.value);
-    if (addImageInput !== null) {
-        formData.append('Image', imageFile);
-    }
-    formData.append('Years', addYearsInput.value);
-    if (addNewBrandInput.value !== null && addNewBrandInput.value !== "") {
-        if (addBrandInput.value !== null && addBrandInput.value !== "") {
-            alert('Vui lòng chỉ chọn hãng đã có hoặc hãng mới');
-            return;
+addForm.addEventListener('submit', function (e) { return __awaiter(_this, void 0, void 0, function () {
+    var addNameInput, addYearsInput, addBrandInput, addNewBrandInput, addPriceInput, addTypeInput, addAddressInput, addContactNumber, addDescriptionInput, formData, imageFile;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                e.preventDefault();
+                addNameInput = document.querySelector('.add_name');
+                addYearsInput = document.querySelector('.add_years');
+                addBrandInput = document.querySelector('.add_brand');
+                addNewBrandInput = document.querySelector('.add_newbrand');
+                addPriceInput = document.querySelector('.add_price');
+                addTypeInput = document.querySelector('.add_type');
+                addAddressInput = document.querySelector('.add_address');
+                addContactNumber = document.querySelector('.add_phone');
+                addDescriptionInput = document.querySelector('.add_description');
+                formData = new FormData();
+                imageFile = addImageInput.files[0];
+                formData.append('Name', addNameInput.value);
+                if (addImageInput !== null) {
+                    formData.append('Image', imageFile);
+                }
+                formData.append('Years', addYearsInput.value);
+                if (addNewBrandInput.value !== null && addNewBrandInput.value !== "") {
+                    if (addBrandInput.value !== null && addBrandInput.value !== "") {
+                        alert('Vui lòng chỉ chọn hãng đã có hoặc hãng mới');
+                        return [2 /*return*/];
+                    }
+                    formData.append('Brand', addNewBrandInput.value);
+                }
+                else {
+                    formData.append('Brand', addBrandInput.value);
+                }
+                formData.append('RentPrice', addPriceInput.value);
+                formData.append('Type', addTypeInput.value);
+                formData.append('Address', addAddressInput.value);
+                formData.append('ContactNumber', addContactNumber.value);
+                // let descriptionContent = tinymce.get('add_description')?.getContent();
+                // if (descriptionContent) {
+                //     formData.append('Description', descriptionContent);
+                // }
+                return [4 /*yield*/, addVehicle(formData)];
+            case 1:
+                // let descriptionContent = tinymce.get('add_description')?.getContent();
+                // if (descriptionContent) {
+                //     formData.append('Description', descriptionContent);
+                // }
+                _a.sent();
+                alert('Thêm xe thành công');
+                return [2 /*return*/];
         }
-        formData.append('Brand', addNewBrandInput.value);
-    }
-    else {
-        formData.append('Brand', addBrandInput.value);
-    }
-    formData.append('RentPrice', addPriceInput.value);
-    formData.append('Type', addTypeInput.value);
-    formData.append('Address', addAddressInput.value);
-    formData.append('ContactNumber', addContactNumber.value);
-    // let descriptionContent = tinymce.get('add_description')?.getContent();
-    // if (descriptionContent) {
-    //     formData.append('Description', descriptionContent);
-    // }
-    fetch(url, {
-        method: 'POST',
-        body: formData
-    }).then(function (response) {
-        if (response.status !== 204) {
-            throw new Error("Http Error! Status code: ".concat(response.status));
-        }
-        console.log('Add vehicle success');
-    }).catch(function (error) {
-        console.error("Error: ".concat(error));
     });
-    alert('Thêm xe thành công');
-});
+}); });
+var pagingContent = document.getElementById('pagingContent');
+var prevButton = document.getElementById('prevBtn');
+var nextButton = document.getElementById('nextBtn');
+var totalPages = 1;
+function renderPagingBar() {
+    var _this = this;
+    pagingContent.innerHTML = '';
+    var pageClassName = "flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
+    var activeClassName = "flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-red-700 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
+    var _loop_1 = function () {
+        var li = document.createElement('li');
+        var pageButton = document.createElement('button');
+        pageButton.setAttribute('cnt', pageCnt.toString());
+        pageButton.textContent = pageCnt.toString();
+        if (pageCnt === page) {
+            pageButton.className = activeClassName;
+        }
+        else {
+            pageButton.className = pageClassName;
+        }
+        pageButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+            var newPage;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        newPage = Number(pageButton.getAttribute('cnt'));
+                        page = newPage;
+                        return [4 /*yield*/, fetchVehiclesData()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        li.appendChild(pageButton);
+        pagingContent.appendChild(li);
+    };
+    for (var pageCnt = 1; pageCnt <= totalPages; ++pageCnt) {
+        _loop_1();
+    }
+}
+prevButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                --page;
+                if (page <= 0) {
+                    page = totalPages;
+                }
+                return [4 /*yield*/, fetchVehiclesData()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+nextButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                ++page;
+                if (page > totalPages) {
+                    page = 1;
+                }
+                return [4 /*yield*/, fetchVehiclesData()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
