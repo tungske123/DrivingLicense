@@ -6,6 +6,7 @@ using Driving_License.Utils;
 using X.PagedList;
 using Driving_License.ViewModels;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel;
 
 namespace Driving_License.Controllers
 {
@@ -29,18 +30,18 @@ namespace Driving_License.Controllers
         //action: QuizList
         [HttpGet]
         [Route("quizlist")]
-        public async Task<IActionResult> QuizList(int page = 1, int pagesize = 5)
+        public async Task<IActionResult> QuizList(/*int page = 1, int pagesize = 5*/)
         {
-            page = page < 1 ? 1 : page;
+            //page = page < 1 ? 1 : page;
             var QuizList = await _context.Quizzes.ToListAsync();
-            var pagedQuizzes = QuizList.ToPagedList(page, pagesize);//(Start at, how mane)
+            //var pagedQuizzes = QuizList.ToPagedList(page, pagesize);//(Start at, how mane)
             return Ok(QuizList);
         }
 
         //action: SearchQuiz(keyword) ---------------------------------------
         [HttpGet]
-        [Route("search")]
-        public async Task<IActionResult> SearchQuiz(string name, int page = 1, int pagesize = 5)
+        [Route("search/{name}")]
+        public async Task<IActionResult> SearchQuiz(string name/*, int page = 1, int pagesize = 5*/)
         {
             ViewBag.searchedQuiz = name;
             if (string.IsNullOrEmpty(name))
@@ -48,9 +49,9 @@ namespace Driving_License.Controllers
                 return RedirectToAction("QuizList");
             }
             var QuizList = await _context.Quizzes.Where(q => q.Name.Contains(name)).ToListAsync();
-            var pagedQuizzes = QuizList.ToPagedList(page, pagesize);//(Start at, how mane)
+            //var pagedQuizzes = QuizList.ToPagedList(page, pagesize);//(Start at, how mane)
 
-            return View("~/Views/Manage/Quizzes.cshtml", pagedQuizzes);
+            return Ok(QuizList);
         }
 
         //action: CreateQuiz ---------------------------------------
@@ -82,12 +83,12 @@ namespace Driving_License.Controllers
         //action: UserList
         [HttpGet]
         [Route("userlist")]
-        public async Task<IActionResult> UserList(int page = 1, int pagesize = 5)
+        public async Task<IActionResult> UserList(/*int page = 1, int pagesize = 5*/)
         {
-            page = page < 1 ? 1 : page;
+            //page = page < 1 ? 1 : page;
 
             var UserList = await _context.Users.ToListAsync();
-            var pagedUsers = UserList.ToPagedList(page, pagesize);//(Start at, how mane)
+            //var pagedUsers = UserList.ToPagedList(page, pagesize);//(Start at, how mane)
             return Ok(UserList);
         }
 
@@ -113,7 +114,9 @@ namespace Driving_License.Controllers
         }
 
         //action: SearchUser ---------------------------------------
-        public async Task<IActionResult> SearchUser(string name, int page = 1, int pagesize = 5)
+        [HttpGet]
+        [Route("search/{name}")]
+        public async Task<IActionResult> SearchUser(string name/*, int page = 1, int pagesize = 5*/)
         {
             ViewBag.searchedQuiz = name;
             if (name.IsNullOrEmpty())
@@ -121,9 +124,42 @@ namespace Driving_License.Controllers
                 return RedirectToAction("UserList");
             }
             var user_list = await _context.Users.Where(u => u.FullName.Contains(name)).ToListAsync();
-            var pagedQuizzes = user_list.ToPagedList(page, pagesize);//(Start at, how mane)
+            //var pagedQuizzes = user_list.ToPagedList(page, pagesize);//(Start at, how mane)
 
-            return View("~/Views/Manage/Users.cshtml", pagedQuizzes);
+            return Ok(user_list);
+        }
+
+        //============================[ Question ]=================================
+        //action: QuestionList
+        [HttpGet]
+        [Route("questionlist/{licenseId}")]
+        public async Task<IActionResult> QuestionList(string licenseId/*int page = 1, int pagesize = 5*/)
+        {
+            //page = page < 1 ? 1 : page; 
+            var questlist = await _context.Questions.Where(q =>q.LicenseId.Equals(licenseId)).ToListAsync();
+            if (licenseId.IsNullOrEmpty())
+            {
+                return Ok(await _context.Questions.ToListAsync());
+            }
+            //var pagedUsers = UserList.ToPagedList(page, pagesize);//(Start at, how mane)
+            return Ok(questlist);
+        }
+
+        //============================[ Account ]=================================
+        //action: QuestionList
+        [HttpGet]
+        [Route("accountlist/{role}")]
+        public async Task<IActionResult> AccountList(string role/*int page = 1, int pagesize = 5*/)
+        {
+            //page = page < 1 ? 1 : page;
+
+            var accountlist = await _context.Accounts.Where(acc => acc.Role.Equals(role)).ToListAsync();
+            if (role.IsNullOrEmpty())
+            {
+                return Ok(await _context.Accounts.ToListAsync());
+            }
+            //var pagedUsers = UserList.ToPagedList(page, pagesize);//(Start at, how mane)
+            return Ok(accountlist);
         }
     }
 }

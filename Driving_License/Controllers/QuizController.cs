@@ -297,7 +297,7 @@ namespace Driving_License.Controllers
 
                     command.Parameters.Add(new SqlParameter("@Name", SqlDbType.NVarChar) { Value = quizCreation.Quiz.Name });
                     command.Parameters.Add(new SqlParameter("@LicenseID", SqlDbType.NVarChar) { Value = quizCreation.Quiz.LicenseId });
-                    command.Parameters.Add(new SqlParameter("@Describe", SqlDbType.NVarChar) { Value = quizCreation.Quiz.Description });
+                    command.Parameters.Add(new SqlParameter("@Description", SqlDbType.NVarChar) { Value = quizCreation.Quiz.Description });
                     command.Parameters.Add(new SqlParameter("@quantity", SqlDbType.Int) { Value = quizCreation.QuestQuantity/*questQuantity*/ });
 
                     _context.Database.OpenConnection();
@@ -316,7 +316,7 @@ namespace Driving_License.Controllers
             }
         }
         //==========================================================================================================
-        [HttpPut]
+        [HttpPatch]
         [Route("edit/{quizid}")]
         public async Task<IActionResult> Edit(int quizid,[FromBody] Quiz edited_Quiz)
         {

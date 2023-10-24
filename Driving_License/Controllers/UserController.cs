@@ -37,22 +37,22 @@ namespace Driving_License.Controllers
                 .FirstOrDefaultAsync(u => u.UserId == userid);
             if (user == null)
             {
-                return Problem("The id is not match any Quizzes in database");
+                return Problem("The id is not match any Users in database");
             }
             return Ok(user);
         }
 
+        //==========================================================================================================
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> Create([FromBody] AccountCreation accountUser)
         {
-            bool inputNull = false;
             var existUserName = _context.Accounts.Any(a => a.Username.Equals(accountUser.Username));
             if (accountUser.Fullname.IsNullOrEmpty() || accountUser.Email.IsNullOrEmpty() || accountUser.Password.IsNullOrEmpty())
             {
                 return Problem("Không được bỏ trống vùng nhập tên hoặc email, hoặc mật khẩu!");
             }
-            if (!accountUser.Username.IsNullOrEmpty() && !existUserName && inputNull == false)
+            if (!accountUser.Username.IsNullOrEmpty() && !existUserName)
             {
                 using (DbCommand command = _context.Database.GetDbConnection().CreateCommand())
                 {
@@ -119,7 +119,7 @@ namespace Driving_License.Controllers
         }
 
         //==========================================================================================================
-        [HttpPut]
+        [HttpPatch]
         [Route("edit/{userid}")]
         public async Task<IActionResult> Edit(Guid userid, [FromBody] User edited_User)
         {
@@ -137,58 +137,38 @@ namespace Driving_License.Controllers
             }
             else
             {
-
-                try
+                if (!edited_User.Avatar.IsNullOrEmpty())
                 {
-                    if (!edited_User.Avatar.IsNullOrEmpty())
-                    {
-                        user.Avatar = edited_User.Avatar;
-                    }
-                    if (!edited_User.Cccd.IsNullOrEmpty())
-                    {
-                        user.Cccd = edited_User.Cccd;
-                    }
-                    if (!edited_User.Email.IsNullOrEmpty())
-                    {
-                        user.Email = edited_User.Email;
-                    }
-                    if (!edited_User.FullName.IsNullOrEmpty())
-                    {
-                        user.FullName = edited_User.FullName;
-                    }
-                    if (user.BirthDate != edited_User.BirthDate)
-                    {
-                        user.BirthDate = edited_User.BirthDate;
-                    }
-                    if (!edited_User.Address.IsNullOrEmpty())
-                    {
-                        user.Address = edited_User.Address;
-
-                    }
-                    if (!edited_User.PhoneNumber.IsNullOrEmpty())
-                    {
-                        user.PhoneNumber = edited_User.PhoneNumber;
-                    }
-                    await _context.SaveChangesAsync();
-                    return Ok(user);
+                    user.Avatar = edited_User.Avatar;
                 }
-                catch (DbUpdateConcurrencyException)
+                if (!edited_User.Cccd.IsNullOrEmpty())
                 {
-                    if (!UserExists(edited_User.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    user.Cccd = edited_User.Cccd;
                 }
-                return Problem("");
+                if (!edited_User.Email.IsNullOrEmpty())
+                {
+                    user.Email = edited_User.Email;
+                }
+                if (!edited_User.FullName.IsNullOrEmpty())
+                {
+                    user.FullName = edited_User.FullName;
+                }
+                if (user.BirthDate != edited_User.BirthDate)
+                {
+                    user.BirthDate = edited_User.BirthDate;
+                }
+                if (!edited_User.Address.IsNullOrEmpty())
+                {
+                    user.Address = edited_User.Address;
+
+                }
+                if (!edited_User.PhoneNumber.IsNullOrEmpty())
+                {
+                    user.PhoneNumber = edited_User.PhoneNumber;
+                }
+                await _context.SaveChangesAsync();
+                return Ok(user);
             }
-        }
-        private bool UserExists(Guid id)
-        {
-            return _context.Users.Any(e => e.UserId == id);
         }
     }
 }

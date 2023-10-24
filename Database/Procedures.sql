@@ -32,13 +32,13 @@ go
 create or alter procedure proc_CreateQuiz (
 	@Name nvarchar(100),
 	@LicenseID nvarchar(10),
-	@Describe nvarchar(max),
+	@Description nvarchar(max),
 	@quantity int
 )
 as
 begin
 	--INSERT ANOTHER QUIZ
-	insert into Quiz(LicenseID, [Name], [Description]) values (@LicenseID, @Name, @Describe);
+	insert into Quiz(LicenseID, [Name], [Description]) values (@LicenseID, @Name, @Description);
 	declare @QuizID int;
 	set @QuizID = SCOPE_IDENTITY();
 
