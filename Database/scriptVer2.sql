@@ -58,6 +58,7 @@ create table Users
 
 create table Records
 (
+	RecordID uniqueidentifier default newid() primary key,
 	UserID uniqueidentifier default newid(),
 	LicenseID nvarchar(10),
 	TestDate DATETIME,
@@ -65,7 +66,6 @@ create table Records
 	Physical_Condition nvarchar(100),
 	foreign key (UserID) references dbo.Users(UserID),
 	foreign key (LicenseID) references dbo.License(LicenseID),
-	PRIMARY KEY (UserID, LicenseID)
 );
 
 
