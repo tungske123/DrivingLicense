@@ -1,26 +1,19 @@
 -----------------------------------------[ INSERT VALUES ]-----------------------------------------------------
 /*[QUICK FIND] - Press: Ctrl + G
-Account_____17
-User________26
-License_____33
-Vehicle_____60
-Quiz________87, 11364
-Question____108
-Have________2750
-Answer______2767
+User________19
+Manage_____37
+License_____45
+Vehicle_____72
+Quiz________99, 11376
+Question____120
+Have________2762
+Answer______2779
 
 
 */
 
 use DrivingLicense;
 go
-insert into Account(Username, [Password], [Role]) values
-('admin' , '12345' , 'admin'),
-('manager' , '12345' , 'staff'),
-('teacher1' , '12345' , 'lecturer'),
-('teacher2' , '12345' , 'lecturer'),
-('teacher3' , '12345' , 'lecturer');
-
 --=================
 --Insert new user account:
 exec dbo.proc_signUpAccount @username = 'user123', @password = '123', @email = 'user123@example.com', @name=N'Người dùng A';
@@ -38,6 +31,15 @@ exec dbo.proc_signUpAccount @username = 'hans', @password = '7890', @email = 'ha
 exec dbo.proc_signUpAccount @username = 'pierre', @password = '12345', @email = 'pierre@france.com', @name=N'Pierre Dupont';
 exec dbo.proc_signUpAccount @username = 'luca', @password = '67890', @email = 'luca@italy.com', @name=N'Luca Rossi';
 exec dbo.proc_signUpAccount @username = 'david', @password = '13579', @email = 'david@uk.com', @name=N'David Smith';
+
+--=================
+--Insert other Role account:
+exec dbo.proc_signUpAccount @username = 'admin', @password = '12345', @email = N'Learn2Drive@admin.com', @name=N'Administrator', @roleSet='admin';
+exec dbo.proc_signUpAccount @username = 'staff', @password = '12345', @email = N'Learn2Drive@staff.com', @name=N'Staff', @roleSet='staff';
+exec dbo.proc_signUpAccount @username = 'giaolang', @password = '12345', @email = N'HoangNT20@fe.edu.vn', @name=N'Nguyễn Thế Hoàng', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'nhattq9', @password = '12345', @email = N'nhattq9@fe.edu.vn', @name=N'Trần Quang Nhật', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'sangnm18', @password = '12345', @email = N'sangnm18@fe.edu.vn', @name=N'Nguyễn Minh Sang', @roleSet='lecturer';
+go
 
 --=================
 insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],ExamContent,Tips) values
