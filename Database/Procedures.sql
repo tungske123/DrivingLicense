@@ -264,7 +264,7 @@ create or alter procedure proc_DeleteFeedback(
 )
 as 
 begin
-	exec proc_DeleteRateReply null,@FeedbackID,@userID,null;	--Remove constain
+	exec proc_DeleteResponse null,@FeedbackID,@userID,null;	--Remove constain
 
 	delete from Feedback where FeedbackID = @FeedbackID;
 	delete from Feedback where userID = @userID;
@@ -363,7 +363,7 @@ begin
 
 	if(@confirm_DeleteAccount = 'yes')
 	begin
-		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from Administrator where AdminID = @AdminID);
+		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from [Admin] where AdminID = @AdminID);
 		delete from Account where AccountID = @AccountID and [Role] = 'admin';
 	end
 end;
@@ -401,7 +401,7 @@ begin
 
 		else if (@roleNew = 'admin')
 		begin
-			insert into dbo.Administrator(AccountID, Fullname ,Email, ContactNumber)--insert new admin
+			insert into dbo.[Admin](AccountID, Fullname ,Email, ContactNumber)--insert new admin
 			values(@accountID, @fullname, @email, @phoneNum);
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
 		end
