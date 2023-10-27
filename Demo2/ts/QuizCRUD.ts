@@ -78,7 +78,7 @@ async function addQuiz() {
     const quizDescriptionElement = document.querySelector('.quizDescription') as HTMLInputElement;
     const randomCheckBox = document.getElementById('randomCheckBox') as HTMLInputElement;
     const data = {
-        quizName: quizNameElement.textContent,
+        quizName: quizNameElement.value,
         licenseID: String(quizLicenseElement.value),
         quantity: Number(quizQuestionCntElememnt.value),
         description: String(quizDescriptionElement.value),
@@ -206,13 +206,22 @@ clearQuizFilterLink.addEventListener('click', async (e) => {
 
 
 //For questions
+class Answer {
+    answerId: number;
+    questionId: number;
+    isCorrect: boolean;
+    answerText: string;
+    answerImage: string;
+}
 class Question {
     questionId: number;
     licenseId: string;
     questionText: string;
     questionImage: string;
     isCritical: boolean;
+    answers: Answer[];
 }
+
 var questionPagingData = {
     questionPage: 1,
     totalQuestionPages: 1
@@ -282,10 +291,90 @@ function renderQuestionTableData(questionList: Question[]) {
         cells[1].textContent = question.questionText;
         cells[2].textContent = question.licenseId;
         cells[3].textContent = question.isCritical ? `Có` : `Không`;
-
+        const detailsButton = cells[4].querySelector('.detailsButton') as HTMLButtonElement;
+        detailsButton.setAttribute('quesid', question.questionId.toString());
+        detailsButton.addEventListener('click', async () => {
+            const questionID = Number(detailsButton.getAttribute('quesid'));
+            loadQuestionDetailsModal(questionID);
+            toggleQuestionDetailsModal();
+        })
         questionTableBody.appendChild(clone);
     });
 }
+
+async function fetchSingleQuestion(questionId: number): Promise<Question> {
+    const url = `https://localhost:7235/api/questions/${questionId}`;
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!response.ok) {
+        throw new Error(`Http Error! Status code: ${response.status}`);
+    }
+    const data = await response.json();
+    const question: Question = data;
+    return question;
+}
+
+async function loadQuestionDetailsModal(questionId: number) {
+    var question = await fetchSingleQuestion(questionId);
+    const questionTextElement = document.getElementById('questionText') as HTMLInputElement;
+    const questionImageElement = document.getElementById('questionImage') as HTMLImageElement;
+    const questionModalAnswersSection = document.getElementById('questionModalAnswersSection') as HTMLDivElement;
+    questionModalAnswersSection.innerHTML = ``;
+    questionTextElement.textContent = question.questionText;
+    const hasImage: boolean = (question.questionImage !== null && question.questionImage !== "" && question.questionImage !== "none");
+    questionImageElement.setAttribute('srcset', (hasImage) ? `/img/${question.questionImage}` : `https://flowbite.com/docs/images/examples/image-1@2x.jpg`);
+    const answerTemplate = document.getElementById('answer-template') as HTMLTemplateElement;
+    question.answers.forEach(answer => {
+        let clone = document.importNode(answerTemplate.content, true);
+        const answerCheck = clone.querySelector('.answerCheck') as HTMLInputElement;
+        const answerLabel = clone.querySelector('.answerLabel') as HTMLLabelElement;
+        if (answer.isCorrect) {
+            answerCheck.checked = true;
+        }
+        answerCheck.setAttribute('value', answer.answerId.toString());
+        answerLabel.textContent = answer.answerText;
+        questionModalAnswersSection.appendChild(clone);
+    });
+}
+
+function toggleQuestionDetailsModal() {
+    const questionDetailsModal = document.getElementById('questionDetailsModal') as HTMLDivElement;
+    const opened = (!questionDetailsModal.classList.contains('hidden') && questionDetailsModal.classList.contains('flex') && questionDetailsModal.classList.contains('blur-background'));
+    if (!opened) {
+        questionDetailsModal.classList.remove('hidden');
+        questionDetailsModal.classList.add('flex');
+        questionDetailsModal.classList.add('blur-background');
+        questionDetailsModal.style.zIndex = `200`;
+        questionDetailsModal.style.justifyContent = 'center';
+        questionDetailsModal.style.alignItems = 'center';
+    } else {
+        questionDetailsModal.classList.add('hidden');
+        questionDetailsModal.classList.remove('flex');
+        questionDetailsModal.classList.remove('blur-background');
+        questionDetailsModal.style.zIndex = `-1`;
+    }
+}
+
+const prevQuestionButton = document.getElementById('prevQuestionButton') as HTMLButtonElement;
+const nextQuestionButton = document.getElementById('nextQuestionButton') as HTMLButtonElement;
+prevQuestionButton.addEventListener('click', async () => {
+    --questionPagingData.questionPage;
+    if (questionPagingData.questionPage <= 0) {
+        questionPagingData.questionPage = questionPagingData.totalQuestionPages;
+    }
+    await fetchQuestionsDataPaging();
+});
+nextQuestionButton.addEventListener('click', async () => {
+    ++questionPagingData.questionPage;
+    if (questionPagingData.questionPage > questionPagingData.totalQuestionPages) {
+        questionPagingData.questionPage = 1;
+    }
+    await fetchQuestionsDataPaging();
+});
 
 function renderQuestionPagingBar() {
     const questionPageBar = document.getElementById('questionPageBar') as HTMLSpanElement;

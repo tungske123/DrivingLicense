@@ -120,6 +120,44 @@ function fetchQuizData() {
         });
     });
 }
+function addQuiz() {
+    return __awaiter(this, void 0, void 0, function () {
+        var quizNameElement, quizQuestionCntElememnt, quizLicenseElement, quizDescriptionElement, randomCheckBox, data, url, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    quizNameElement = document.querySelector('.quizName');
+                    quizQuestionCntElememnt = document.querySelector('.quizQuestionCnt');
+                    quizLicenseElement = document.querySelector('.quizLicense');
+                    quizDescriptionElement = document.querySelector('.quizDescription');
+                    randomCheckBox = document.getElementById('randomCheckBox');
+                    data = {
+                        quizName: quizNameElement.value,
+                        licenseID: String(quizLicenseElement.value),
+                        quantity: Number(quizQuestionCntElememnt.value),
+                        description: String(quizDescriptionElement.value),
+                        hasRandomQuestions: randomCheckBox.checked,
+                        questionIDList: QuestionIDList
+                    };
+                    url = "https://localhost:7235/api/quizzes/generate";
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        })];
+                case 1:
+                    response = _a.sent();
+                    if (response.status !== 204) {
+                        throw new Error("Http Error! Status code: ".concat(response.status));
+                    }
+                    alert('Thêm bộ đề thành công');
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 var quizTableBody = document.getElementById('quizTableBody');
 function toggleQuizDetailsModal() {
 }
@@ -255,6 +293,11 @@ clearQuizFilterLink.addEventListener('click', function (e) { return __awaiter(_t
     });
 }); });
 //For questions
+var Answer = /** @class */ (function () {
+    function Answer() {
+    }
+    return Answer;
+}());
 var Question = /** @class */ (function () {
     function Question() {
     }
@@ -311,6 +354,7 @@ function fetchQuestionsDataPaging() {
 }
 var questionTableBody = document.getElementById('questionTableBody');
 function renderQuestionTableData(questionList) {
+    var _this = this;
     questionTableBody.innerHTML = "";
     if (questionList === null || questionList.length === 0) {
         return;
@@ -346,9 +390,129 @@ function renderQuestionTableData(questionList) {
         cells[1].textContent = question.questionText;
         cells[2].textContent = question.licenseId;
         cells[3].textContent = question.isCritical ? "C\u00F3" : "Kh\u00F4ng";
+        var detailsButton = cells[4].querySelector('.detailsButton');
+        detailsButton.setAttribute('quesid', question.questionId.toString());
+        detailsButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+            var questionID;
+            return __generator(this, function (_a) {
+                questionID = Number(detailsButton.getAttribute('quesid'));
+                loadQuestionDetailsModal(questionID);
+                toggleQuestionDetailsModal();
+                return [2 /*return*/];
+            });
+        }); });
         questionTableBody.appendChild(clone);
     });
 }
+function fetchSingleQuestion(questionId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, response, data, question;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "https://localhost:7235/api/questions/".concat(questionId);
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })];
+                case 1:
+                    response = _a.sent();
+                    if (!response.ok) {
+                        throw new Error("Http Error! Status code: ".concat(response.status));
+                    }
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    question = data;
+                    return [2 /*return*/, question];
+            }
+        });
+    });
+}
+function loadQuestionDetailsModal(questionId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var question, questionTextElement, questionImageElement, questionModalAnswersSection, hasImage, answerTemplate;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetchSingleQuestion(questionId)];
+                case 1:
+                    question = _a.sent();
+                    questionTextElement = document.getElementById('questionText');
+                    questionImageElement = document.getElementById('questionImage');
+                    questionModalAnswersSection = document.getElementById('questionModalAnswersSection');
+                    questionModalAnswersSection.innerHTML = "";
+                    questionTextElement.textContent = question.questionText;
+                    hasImage = (question.questionImage !== null && question.questionImage !== "" && question.questionImage !== "none");
+                    questionImageElement.setAttribute('srcset', (hasImage) ? "/img/".concat(question.questionImage) : "https://flowbite.com/docs/images/examples/image-1@2x.jpg");
+                    answerTemplate = document.getElementById('answer-template');
+                    question.answers.forEach(function (answer) {
+                        var clone = document.importNode(answerTemplate.content, true);
+                        var answerCheck = clone.querySelector('.answerCheck');
+                        var answerLabel = clone.querySelector('.answerLabel');
+                        if (answer.isCorrect) {
+                            answerCheck.checked = true;
+                        }
+                        answerCheck.setAttribute('value', answer.answerId.toString());
+                        answerLabel.textContent = answer.answerText;
+                        questionModalAnswersSection.appendChild(clone);
+                    });
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function toggleQuestionDetailsModal() {
+    var questionDetailsModal = document.getElementById('questionDetailsModal');
+    var opened = (!questionDetailsModal.classList.contains('hidden') && questionDetailsModal.classList.contains('flex') && questionDetailsModal.classList.contains('blur-background'));
+    if (!opened) {
+        questionDetailsModal.classList.remove('hidden');
+        questionDetailsModal.classList.add('flex');
+        questionDetailsModal.classList.add('blur-background');
+        questionDetailsModal.style.zIndex = "200";
+        questionDetailsModal.style.justifyContent = 'center';
+        questionDetailsModal.style.alignItems = 'center';
+    }
+    else {
+        questionDetailsModal.classList.add('hidden');
+        questionDetailsModal.classList.remove('flex');
+        questionDetailsModal.classList.remove('blur-background');
+        questionDetailsModal.style.zIndex = "-1";
+    }
+}
+var prevQuestionButton = document.getElementById('prevQuestionButton');
+var nextQuestionButton = document.getElementById('nextQuestionButton');
+prevQuestionButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                --questionPagingData.questionPage;
+                if (questionPagingData.questionPage <= 0) {
+                    questionPagingData.questionPage = questionPagingData.totalQuestionPages;
+                }
+                return [4 /*yield*/, fetchQuestionsDataPaging()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+nextQuestionButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                ++questionPagingData.questionPage;
+                if (questionPagingData.questionPage > questionPagingData.totalQuestionPages) {
+                    questionPagingData.questionPage = 1;
+                }
+                return [4 /*yield*/, fetchQuestionsDataPaging()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
 function renderQuestionPagingBar() {
     var _this = this;
     var questionPageBar = document.getElementById('questionPageBar');
@@ -429,24 +593,17 @@ function updateQuestionCount() {
     chosenQuestionCount.textContent = numOfQuestion.toString() + " C\u00E2u";
     console.log(QuestionIDList);
 }
-// const questionCheckBoxList = document.querySelectorAll('.questionCheck') as NodeListOf<HTMLInputElement>;
-// questionCheckBoxList.forEach(questionCheck => {
-//     questionCheck.addEventListener('input', () => {
-//         const questionID = Number(questionCheck.getAttribute('value'));
-//         const index = QuestionIDList.indexOf(questionID);
-//         if (questionCheck.checked) {
-//             if (index === -1) {
-//                 QuestionIDList.push(questionID);
-//                 updateQuestionCount();
-//             }
-//         } else {
-//             if (index !== -1) {
-//                 QuestionIDList.splice(index, 1);
-//                 updateQuestionCount();
-//             }
-//         }
-//     });
-// });
+var quizAddButton = document.getElementById('quizAddButton');
+quizAddButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, addQuiz()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
 window.addEventListener('DOMContentLoaded', function () { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {

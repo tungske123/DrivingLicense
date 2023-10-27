@@ -12,17 +12,23 @@
 
     <!--custom css file-->
     <link rel="stylesheet" href="CSS/styleCRUDQuiz.css">
+    <style>
+        .blur-background {
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Black with 60% opacity */
+        }
+    </style>
     <title>Quiz CRUD</title>
 </head>
 
 <body>
-    <button data-modal-target="medium-modal" data-modal-toggle="medium-modal"
+    <!-- <button data-modal-target="questionDetailsModal" data-modal-toggle="questionDetailsModal"
         class="block w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button">
         Default modal
-    </button>
+    </button> -->
     <!-- Default Modal -->
-    <div id="medium-modal" tabindex="-1"
+    <div id="questionDetailsModal" tabindex="-1"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-lg max-h-full">
             <!-- Modal content -->
@@ -32,9 +38,8 @@
                     <h3 class="text-xl font-medium text-gray-900 dark:text-white">
                         Chi tiết câu hỏi
                     </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-hide="medium-modal">
+                    <button type="button" onclick="toggleQuestionDetailsModal();"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -54,22 +59,30 @@
                     <img srcset="https://flowbite.com/docs/images/examples/image-1@2x.jpg"
                         class="w-full h-auto max-w-xl rounded-lg" alt="image description" id="questionImage">
                     <hr />
+                    <template id="answer-template">
+                        <div class="flex items-center mb-4">
+                            <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-1"
+                                class="answerLabel ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Anwser 1</label>
+                        </div>
+                    </template>
                     <div id="questionModalAnswersSection">
                         <div class="flex items-center mb-4">
                             <input id="default-radio-1" type="radio" value="" name="default-radio"
-                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                             <label for="default-radio-1"
-                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Anwser 1</label>
+                                class="answerLabel ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Anwser 1</label>
                         </div>
                         <div class="flex items-center mb-4">
                             <input id="default-radio-1" type="radio" value="" name="default-radio"
-                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                             <label for="default-radio-1"
                                 class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 2</label>
                         </div>
                         <div class="flex items-center mb-4">
                             <input id="default-radio-1" type="radio" value="" name="default-radio"
-                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                             <label for="default-radio-1"
                                 class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 3</label>
                         </div>
@@ -83,7 +96,7 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                    <button data-modal-hide="medium-modal" type="button"
+                    <button type="button" onclick="toggleQuestionDetailsModal();"
                         class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Ok</button>
                 </div>
             </div>
@@ -484,7 +497,6 @@
                     </h2>
                     <div id="accordion-color-body-2" class="hidden" aria-labelledby="questionSelectionSection">
                         <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
-
                             <div class="searchSection mb-3">
                                 <div class="flex">
                                     <button id="dropdown-button" data-dropdown-toggle="dropdown"
@@ -580,7 +592,7 @@
                                         </td>
                                         <td>
                                             <button type="button"
-                                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
+                                                class="detailsButton focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
                                                 tiết</button>
                                         </td>
                                     </tr>
@@ -767,7 +779,7 @@
                                     </span>
                                     <ul class="inline-flex items-stretch -space-x-px">
                                         <li>
-                                            <a href="#"
+                                            <button id="prevQuestionButton"
                                                 class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                                 <span class="sr-only">Previous</span>
                                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
@@ -776,7 +788,7 @@
                                                         d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                                                         clip-rule="evenodd" />
                                                 </svg>
-                                            </a>
+                                            </button>
                                         </li>
                                         <span id="questionPageBar" class="flex">
                                             <li>
@@ -801,7 +813,7 @@
                                             </li>
                                         </span>
                                         <li>
-                                            <a href="#"
+                                            <button id="nextQuestionButton"
                                                 class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                                 <span class="sr-only">Next</span>
                                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
@@ -810,7 +822,7 @@
                                                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                                         clip-rule="evenodd" />
                                                 </svg>
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
                                 </nav>
