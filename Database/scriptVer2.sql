@@ -39,6 +39,7 @@ create table Vehicle
    ContactNumber nvarchar(20),
    [Address] nvarchar(100),
    RentPrice decimal,
+   [Description] nvarchar(max),
    [Status] bit,
 );
 
@@ -58,14 +59,27 @@ create table Users
    foreign key (AccountID) references dbo.Account(AccountID)
 );
 
+create table ExamProfile
+(
+	ExamProfileID uniqueidentifier default newid() primary key,
+	UserID uniqueidentifier default newid(),
+	LicenseID nvarchar(10) default newid(),
+	ExamDate datetime,
+	ExamResult nvarchar(100),
+	HealthCondition nvarchar(max),
+	[Status] nvarchar(50),
+
+	foreign key (UserID) references dbo.Users(UserID),
+	foreign key (LicenseID) references dbo.License(LicenseID)
+);
 
 create table Rent
 (
    RentID uniqueidentifier default newid() primary key,
    VehicleID uniqueidentifier default newid(),
    UserID uniqueidentifier default newid(),
-   StartTime time,
-   EndTime time,
+   StartTime datetime,
+   EndTime datetime,
    TotalRentPrice decimal,
    [status] nvarchar(100),
 
@@ -85,23 +99,31 @@ create table Teacher
    foreign key (AccountID) references dbo.Account(AccountID)
 );
 
+create table Hire
+(
+	HireID uniqueidentifier default newid() primary key,
+	TeacherID uniqueidentifier default newid(),
+	UserID uniqueidentifier default newid(),
+	HireDate datetime,
+	[Status] nvarchar(50),
+
+	foreign key (TeacherID) references dbo.Teacher(TeacherID),
+	foreign key (UserID) references dbo.Users(UserID),
+);
+
 create table Schedule
 (
    ScheduleID uniqueidentifier default newid() primary key,
-   TeacherID uniqueidentifier default newid(),
-   UserID uniqueidentifier default newid(),
+   HireID uniqueidentifier default newid(),
    LicenseID nvarchar(10),
    StartTime time,
    EndTime time,
-   [Date] date,
-   Price decimal,
+   [Date] datetime,
    [Address] nvarchar(100),
-   [status] nvarchar(50),
+   [Status] nvarchar(50),
 
-
-   foreign key (TeacherID) references dbo.Teacher(TeacherID),
-   foreign key (UserID) references dbo.Users(UserID),
-   foreign key (LicenseID) references dbo.License(LicenseID),
+   foreign key (HireID) references dbo.Hire(HireID),
+   foreign key (LicenseID) references dbo.License(LicenseID)
 );
 
 create table Quiz
@@ -122,7 +144,7 @@ create table Question
    QuestionImage nvarchar(max),
    isCritical bit,
 
-   foreign key (LicenseID) references License(LicenseID),
+   foreign key (LicenseID) references License(LicenseID)
 );
 
 create table Have(
@@ -157,7 +179,7 @@ create table Attempt (
 );
 create table AttemptDetail (
    AttemptDetailID uniqueidentifier default newid() primary key,
-   AttemptID uniqueidentifier,
+   AttemptID uniqueidentifier default newid(),
    QuestionID int not null,
    SelectedAnswerID int null,
    IsCorrect bit,
@@ -179,8 +201,8 @@ create table Staff(
 );
 go
 
-create table Administrator(
-	AdministratorID uniqueidentifier default newid() primary key,
+create table [Admin](
+	AdminID uniqueidentifier default newid() primary key,
 	AccountID uniqueidentifier default newid() unique,
 	FullName nvarchar(100),
 	Email nvarchar(100),
@@ -190,43 +212,43 @@ create table Administrator(
 );
 go
 
-create table ReportRate(
-	ReportRID int identity (1,1) primary key,
+create table Feedback(
+	FeedbackID int identity (1,1) primary key,
 	userID uniqueidentifier default newid(),
-	ReportDate date,
+	FeedbackDate date,
 	SenderName nvarchar(100),
-	ReportTitle nvarchar(1000),
-	[Description] nvarchar(4000),
+	Title nvarchar(max),
+	[Description] nvarchar(max),
 	[Status] nvarchar(50)
 
 	foreign key (userID) references dbo.Users(UserID),
 );
 go
 
-create table RateReply(
-	ReplyID int identity (1,1) primary key,
-	reportRID int,
-	userID uniqueidentifier default newid(),
-	staffID uniqueidentifier default newid(),
-	ReplyDate date,
+create table Response(
+	ResponseID int identity (1,1) primary key,
+	FeedbackID int,
+	UserID uniqueidentifier default newid(),
+	StaffID uniqueidentifier default newid(),
+	ResponseDate date,
 	ReplierName nvarchar(100),
-	[ReplyContent] nvarchar(4000)
+	[ReplyContent] nvarchar(max)
 	
-	foreign key (reportRID) references dbo.ReportRate(ReportRID),
+	foreign key (FeedbackID) references dbo.Feedback(FeedbackID),
 	foreign key (userID) references dbo.Users(UserID),
 	foreign key (staffID) references dbo.Staff(StaffID),
 );
 go
 
-create table ReportSystem(
-	ReportSID int identity (1,1) primary key,
-	staffID uniqueidentifier default newid(),
-	ReportDate date,
-	TotalExamProfile_submited int,
+create table Statistic(
+	StatisticID int identity (1,1) primary key,
+	StaffID uniqueidentifier default newid(),
+	StatisticDate datetime,
+	TotalExamProfile int,
 	TotalQuizDid int,
 	TotalReportRate int
 
-	foreign key (staffID) references dbo.Staff(StaffID)
+	foreign key (StaffID) references dbo.Staff(StaffID)
 );
 go
 
@@ -240,13 +262,13 @@ dbcc checkident ('Question', reseed, 1);
 dbcc checkident ('Quiz', reseed, 1);
 
 --RESET ReportRate ID:
-dbcc checkident ('ReportRate', reseed, 1);
+dbcc checkident ('Feedback', reseed, 1);
 
 --RESET RateReply ID:
-dbcc checkident ('RateReply', reseed, 1);
+dbcc checkident ('Response', reseed, 1);
 
 --RESET ReportSystem ID:
-dbcc checkident ('ReportSystem', reseed, 1);
+dbcc checkident ('Statistic', reseed, 1);
 
 /*
 Quan hệ 1:1 giữa hai bảng có nghĩa là

@@ -114,16 +114,30 @@ go
 -----------------------------------[ DELETE SCHEDULE]-------------------------------
 create or alter procedure proc_DeleteSchedule(
 	@ScheduleID uniqueidentifier,
-	@UserID uniqueidentifier,
-	@TeacherID uniqueidentifier,
+	@HireID uniqueidentifier,
 	@LicenseID nvarchar(10)
 )
 as
 begin
 	delete from Schedule where ScheduleID = @ScheduleID;
-	delete from Schedule where UserID = @UserID;
-    delete from Schedule where TeacherID = @TeacherID;
+	delete from Schedule where HireID = @HireID
 	delete from Schedule where LicenseID = @LicenseID;
+end;
+go
+
+-----------------------------------[ DELETE HIRE]-------------------------------
+create or alter procedure proc_DeleteHire(
+	@HireID uniqueidentifier,
+	@TeacherID uniqueidentifier,
+	@UserID uniqueidentifier
+)
+as
+begin
+	exec proc_DeleteSchedule null,@HireID,null;		--Remove constain
+
+	delete from Hire where HireID = @HireID;
+	delete from Hire where TeacherID = @TeacherID
+	delete from Hire where UserID = @UserID;
 end;
 go
 
@@ -201,15 +215,15 @@ begin
 end;
 go
 
------------------------------------[ Delete Quiz ]-------------------------------
+-----------------------------------[ DELETE QUIZ ]-------------------------------
 create or alter procedure proc_DeleteQuiz(
 	@quizID int,
 	@LicenseID nvarchar(10)
 )
 as 
 begin
-	exec proc_DeleteAttempt null,null,@quizID;
-	exec proc_DeleteHave @quizID,null;
+	exec proc_DeleteAttempt null,null,@quizID;		--Remove constain
+	exec proc_DeleteHave @quizID,null;				--Remove constain
 
 	delete from Quiz where LicenseID= @LicenseID;
 	delete from Quiz where QuizID = @quizID;
@@ -227,45 +241,45 @@ begin
 end;
 go
 */
------------------------------------[ Delete RateReply]-------------------------------
-create or alter procedure proc_DeleteRateReply(
-	@ReplyID int,
-	@reportRID int,
+-----------------------------------[ Delete Response]-------------------------------
+create or alter procedure proc_DeleteResponse(
+	@ResponseID int,
+	@FeedbackID int,
 	@userID uniqueidentifier,
 	@staffID uniqueidentifier
 )
 as 
 begin
-	delete from RateReply where ReplyID = @ReplyID;
-	delete from RateReply where reportRID = @reportRID;
-	delete from RateReply where userID = @userID;
-	delete from RateReply where staffID= @staffID;
+	delete from Response where ResponseID = @ResponseID;
+	delete from Response where FeedbackID = @FeedbackID;
+	delete from Response where userID = @userID;
+	delete from Response where staffID= @staffID;
 end;
 go
 
------------------------------------[ Delete ReportRate]-------------------------------
-create or alter procedure proc_DeleteReportRate(
-	@ReportRID int,
+-----------------------------------[ DELETE FEEDBACK ]-------------------------------
+create or alter procedure proc_DeleteFeedback(
+	@FeedbackID int,
 	@userID uniqueidentifier
 )
 as 
 begin
-	exec proc_DeleteRateReply null,@ReportRID,@userID,null;
+	exec proc_DeleteRateReply null,@FeedbackID,@userID,null;	--Remove constain
 
-	delete from ReportRate where ReportRID = @ReportRID;
-	delete from ReportRate where userID = @userID;
+	delete from Feedback where FeedbackID = @FeedbackID;
+	delete from Feedback where userID = @userID;
 end;
 go
 
------------------------------------[ Delete ReportSystem]-------------------------------
-create or alter procedure proc_DeleteReportSystem(
-	@ReportSID int,
+-----------------------------------[ DELETE STATISTIC ]-------------------------------
+create or alter procedure proc_DeleteStatistic(
+	@StatisticID int,
 	@staffID uniqueidentifier
 )
 as 
 begin
-	delete from ReportSystem where ReportSID = @ReportSID;
-	delete from ReportSystem where staffID = @staffID;
+	delete from Statistic where StatisticID = @StatisticID;
+	delete from Statistic where staffID = @staffID;
 end;
 go
 
@@ -278,10 +292,10 @@ create or alter procedure proc_DeleteUser(
 as 
 begin
 	if(@UserID = null or @UserID = '') set @UserID = (select UserID from Users where AccountID = @AccountID);
-	exec proc_DeleteSchedule null,@UserID,null,null;	--Remove constain
+	exec proc_DeleteHire null,null,@UserID;				--Remove constain
 	exec proc_DeleteRent null,null,@UserID;				--Remove constain
 	exec proc_DeleteAttempt null,@UserID,null;			--Remove constain
-	exec proc_DeleteReportRate null,@UserID;			--Remove constain
+	exec proc_DeleteFeedback null,@UserID;				--Remove constain
 
 	delete from Users where UserID = @UserID;			--Then delete
 
@@ -302,7 +316,7 @@ create or alter procedure proc_DeleteLecturer(
 as 
 begin
 	if(@TeacherID = null or @TeacherID = '') set @TeacherID = (select TeacherID from Teacher where AccountID = @AccountID);
-	exec proc_DeleteSchedule null,null ,@TeacherID ,null;	--Remove constain
+	exec proc_DeleteHire null,@TeacherID,null;				--Remove constain
 
 	delete from Teacher where TeacherID = @TeacherID;		--Then delete
 
@@ -323,8 +337,8 @@ create or alter procedure proc_DeleteStaff(
 as 
 begin
 	if(@StaffID = null or @StaffID = '') set @StaffID = (select StaffID from Staff where AccountID = @AccountID);
-	exec proc_DeleteRateReply null,null,null,@StaffID;		--Remove constain
-	exec proc_DeleteReportSystem null,@StaffID;				--Remove constain
+	exec proc_DeleteResponse null,null,null,@StaffID;		--Remove constain
+	exec proc_DeleteStatistic null,@StaffID;				--Remove constain
 
 	delete from Staff where StaffID = @StaffID;				--Then delete
 
@@ -339,17 +353,17 @@ go
 -----------------------------------[ DELETE ADMIN ]-------------------------------
 create or alter procedure proc_DeleteAdmin(
 	@AccountID uniqueidentifier,
-	@AdministratorID uniqueidentifier,
+	@AdminID uniqueidentifier,
 	@confirm_DeleteAccount varchar(10)
 )
 as 
 begin
-	if(@AdministratorID = null or @AdministratorID = '') set @AdministratorID = (select AdministratorID from Administrator where AccountID = @AccountID);
-	delete from Administrator where AdministratorID = @AdministratorID;
+	if(@AdminID = null or @AdminID = '') set @AdminID = (select AdminID from [Admin] where AccountID = @AccountID);
+	delete from [Admin] where AdminID = @AdminID;
 
 	if(@confirm_DeleteAccount = 'yes')
 	begin
-		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from Administrator where AdministratorID = @AdministratorID);
+		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from Administrator where AdminID = @AdminID);
 		delete from Account where AccountID = @AccountID and [Role] = 'admin';
 	end
 end;
