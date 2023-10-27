@@ -1,22 +1,18 @@
 ﻿use master;
 go
-if exists (select name
-from sys.databases
-where name = 'DrivingLicense')
+if exists (select name from sys.databases where name = 'DrivingLicense')
 begin
-   drop database DrivingLicense;
+	drop database DrivingLicense;
 end;
 go
 create database DrivingLicense;
 go
 use DrivingLicense;
 
-
-
 create table Account
 (
    AccountID uniqueidentifier default newid() primary key,
-   Username nvarchar(100),
+   Username nvarchar(100) unique,
    [Password] nvarchar(100),
    [Role] nvarchar(50),
 );
@@ -24,6 +20,12 @@ create table License
 (
    LicenseID nvarchar(10) primary key,
    LicenseName nvarchar(100),
+   Describe nvarchar(max),
+   Condition nvarchar(max),
+   Cost nvarchar(max),
+   [Time] nvarchar(max),
+   ExamContent nvarchar(max),
+   Tips nvarchar(max)
 );
 
 create table Vehicle
@@ -37,14 +39,14 @@ create table Vehicle
    ContactNumber nvarchar(20),
    [Address] nvarchar(100),
    RentPrice decimal,
+   [Description] nvarchar(max),
    [Status] bit,
-   [Description] nvarchar(max)
 );
 
 create table Users
 (
    UserID uniqueidentifier default newid() primary key,
-   AccountID uniqueidentifier default newid(),
+   AccountID uniqueidentifier default newid() unique,
    Avatar nvarchar(max),
    CCCD nvarchar(15),
    Email nvarchar(100),
@@ -53,31 +55,33 @@ create table Users
    Nationality nvarchar(100),
    PhoneNumber nvarchar(20),
    [Address] nvarchar(100),
+
    foreign key (AccountID) references dbo.Account(AccountID)
 );
 
-create table Records
+create table ExamProfile
 (
-	RecordID uniqueidentifier default newid() primary key,
+	ExamProfileID uniqueidentifier default newid() primary key,
 	UserID uniqueidentifier default newid(),
-	LicenseID nvarchar(10),
-	TestDate DATETIME,
-	TestResult nvarchar(50),
-	Physical_Condition nvarchar(100),
-	foreign key (UserID) references dbo.Users(UserID),
-	foreign key (LicenseID) references dbo.License(LicenseID),
-);
+	LicenseID nvarchar(10) default newid(),
+	ExamDate datetime,
+	ExamResult nvarchar(100),
+	HealthCondition nvarchar(max),
+	[Status] nvarchar(50),
 
+	foreign key (UserID) references dbo.Users(UserID),
+	foreign key (LicenseID) references dbo.License(LicenseID)
+);
 
 create table Rent
 (
    RentID uniqueidentifier default newid() primary key,
    VehicleID uniqueidentifier default newid(),
    UserID uniqueidentifier default newid(),
-   StartDate datetime,
-   EndDate datetime,
+   StartTime datetime,
+   EndTime datetime,
    TotalRentPrice decimal,
-   status nvarchar(100),
+   [status] nvarchar(100),
 
    foreign key (VehicleID) references dbo.Vehicle(VehicleID),
    foreign key (UserID) references dbo.Users(UserID)
@@ -86,7 +90,7 @@ create table Rent
 create table Teacher
 (
    TeacherID uniqueidentifier default newid() primary key,
-   AccountID uniqueidentifier default newid(),
+   AccountID uniqueidentifier default newid() unique,
    FullName nvarchar(100),
    Information nvarchar(max),
    ContactNumber nvarchar(20),
@@ -95,23 +99,31 @@ create table Teacher
    foreign key (AccountID) references dbo.Account(AccountID)
 );
 
+create table Hire
+(
+	HireID uniqueidentifier default newid() primary key,
+	TeacherID uniqueidentifier default newid(),
+	UserID uniqueidentifier default newid(),
+	HireDate datetime,
+	[Status] nvarchar(50),
+
+	foreign key (TeacherID) references dbo.Teacher(TeacherID),
+	foreign key (UserID) references dbo.Users(UserID),
+);
+
 create table Schedule
 (
    ScheduleID uniqueidentifier default newid() primary key,
-   TeacherID uniqueidentifier default newid(),
-   UserID uniqueidentifier default newid(),
+   HireID uniqueidentifier default newid(),
    LicenseID nvarchar(10),
    StartTime time,
    EndTime time,
-   Date date,
-   Price decimal,
-   Address nvarchar(100),
-   status nvarchar(50),
+   [Date] datetime,
+   [Address] nvarchar(100),
+   [Status] nvarchar(50),
 
-
-   foreign key (TeacherID) references dbo.Teacher(TeacherID),
-   foreign key (UserID) references dbo.Users(UserID),
-   foreign key (LicenseID) references dbo.License(LicenseID),
+   foreign key (HireID) references dbo.Hire(HireID),
+   foreign key (LicenseID) references dbo.License(LicenseID)
 );
 
 create table Quiz
@@ -120,7 +132,6 @@ create table Quiz
    LicenseID nvarchar(10),
    [Name] nvarchar(100),
    [Description] nvarchar(max),
-
 
    foreign key (LicenseID) references dbo.License(LicenseID)
 );
@@ -133,7 +144,7 @@ create table Question
    QuestionImage nvarchar(max),
    isCritical bit,
 
-   foreign key (LicenseID) references License(LicenseID),
+   foreign key (LicenseID) references License(LicenseID)
 );
 
 create table Have(
@@ -168,7 +179,7 @@ create table Attempt (
 );
 create table AttemptDetail (
    AttemptDetailID uniqueidentifier default newid() primary key,
-   AttemptID uniqueidentifier,
+   AttemptID uniqueidentifier default newid(),
    QuestionID int not null,
    SelectedAnswerID int null,
    IsCorrect bit,
@@ -176,82 +187,98 @@ create table AttemptDetail (
    foreign key (AttemptID) references dbo.Attempt(AttemptID),
    foreign key (QuestionID) references dbo.Question(QuestionID),
    foreign key (SelectedAnswerID) references dbo.Answer(AnswerID),
-
 );
 go
 
------------------------------------[ Procedures / Functions / Triggers / Views ]-------------------------------------
+create table Staff(
+	StaffID uniqueidentifier default newid() primary key,
+	AccountID uniqueidentifier default newid() unique,
+	FullName nvarchar(100),
+	Email nvarchar(100),
+	ContactNumber nvarchar(20),
 
-create or alter function fn_GetAcountID (@username nvarchar(100), @password nvarchar(100))
-returns nvarchar(50)
-as
-begin
-   declare @AccountID as nvarchar(50);
-   select @AccountID = convert(nvarchar(50), AccountID)
-   from dbo.Account
-   where Username = @username and Password = @password;
-   return @AccountID;
-end;
+   foreign key (AccountID) references dbo.Account(AccountID)
+);
 go
 
-create or alter procedure proc_signUpAccount @username nvarchar(100), @password nvarchar(100), @email nvarchar(100)
-as
-begin
-   declare @AccountID as nvarchar(50);
+create table [Admin](
+	AdminID uniqueidentifier default newid() primary key,
+	AccountID uniqueidentifier default newid() unique,
+	FullName nvarchar(100),
+	Email nvarchar(100),
+	ContactNumber nvarchar(20),
 
-   -- Declare temporary table
-   declare @InsertedIDs table (AccountID nvarchar(50));
-   insert into dbo.Account (Username, [Password], [Role])
-   output inserted.AccountID into @InsertedIDs(AccountID)
-   values(@username, @password, 'user');
+   foreign key (AccountID) references dbo.Account(AccountID)
+);
+go
 
-   -- Get accountID from temp table
-   select @AccountID = AccountID from @InsertedIDs;
-   insert into dbo.Users(AccountID,Email)
-   values(@AccountID, @email);
-end;
+create table Feedback(
+	FeedbackID int identity (1,1) primary key,
+	userID uniqueidentifier default newid(),
+	FeedbackDate date,
+	SenderName nvarchar(100),
+	Title nvarchar(max),
+	[Description] nvarchar(max),
+	[Status] nvarchar(50)
+
+	foreign key (userID) references dbo.Users(UserID),
+);
 go
-create or alter view vw_getAllAccountEmails
-as
-select 'user' as 'Role', AccountID, Email
-from dbo.Users
-union all
-select 'teacher' as 'Role', AccountID, Email
-from dbo.Teacher;
-go
-/*------------------------------------------
-create or alter procedure proc_changeRole @accountID nvarchar(50), @fullname nvarchar(100), @email nvarchar(100), @roleNew nvarchar(50)
-as
-begin
-	declare @roleOld nvarchar(50);
-	set @roleOld = (select [Role] from dbo.Account where AccountID = @accountID
+
+create table Response(
+	ResponseID int identity (1,1) primary key,
+	FeedbackID int,
+	UserID uniqueidentifier default newid(),
+	StaffID uniqueidentifier default newid(),
+	ResponseDate date,
+	ReplierName nvarchar(100),
+	[ReplyContent] nvarchar(max)
 	
-	if (@roleNew = N'Giảng viên') 
-	begin
-		insert into dbo.Teacher(AccountID, Fullname, Email) --insert new teacher
-		values(@AccountID, @fullname, @email)
-		update Account set Role=@roleNew where AccountID = @accountID;--update role of account
-	end
+	foreign key (FeedbackID) references dbo.Feedback(FeedbackID),
+	foreign key (userID) references dbo.Users(UserID),
+	foreign key (staffID) references dbo.Staff(StaffID),
+);
+go
 
-	else if (@roleNew = N'Nhân viên')
-	begin
-		insert into dbo.Staff(AccountID, Fullname ,Email)
-		values(@AccountID, @fullname, @email);
-		update Account set Role=@roleNew where AccountID = @accountID; --update role of account
-	end
+create table Statistic(
+	StatisticID int identity (1,1) primary key,
+	StaffID uniqueidentifier default newid(),
+	StatisticDate datetime,
+	TotalExamProfile int,
+	TotalQuizDid int,
+	TotalReportRate int
 
-	else if (@roleNew = N'Quản trị viên')
-	begin
-		insert into dbo.[Admin](AccountID, Fullname ,Email)
-		values(@AccountID, @fullname, @email);
-		update Account set Role=@roleNew where AccountID = @accountID; --update role of account
-	end
+	foreign key (StaffID) references dbo.Staff(StaffID)
+);
+go
 
-	else if (@roleNew = 'Người dùng')
-	begin
-		insert into dbo.Users(AccountID, Fullname ,Email)
-		values(@AccountID, @fullname, @email);
-		update Account set Role=@roleNew where AccountID = @accountID; --update role of account
-	end
-end;
+--RESET Auto Answer ID:
+dbcc checkident ('Answer', reseed, 1);
+
+--RESET Auto Question ID:
+dbcc checkident ('Question', reseed, 1);
+
+--RESET Auto Quiz ID:
+dbcc checkident ('Quiz', reseed, 1);
+
+--RESET ReportRate ID:
+dbcc checkident ('Feedback', reseed, 1);
+
+--RESET RateReply ID:
+dbcc checkident ('Response', reseed, 1);
+
+--RESET ReportSystem ID:
+dbcc checkident ('Statistic', reseed, 1);
+
+/*
+Quan hệ 1:1 giữa hai bảng có nghĩa là
+mỗi hàng trong bảng này chỉ có thể liên kết với một hàng duy nhất trong bảng kia và ngược lại.
+Trong trường hợp này, mỗi giáo viên (“Teacher”) chỉ có thể có một tài khoản (“Account”) và
+mỗi tài khoản chỉ thuộc về một giáo viên.
+
+Tuy nhiên, để xác định chính xác loại quan hệ giữa hai bảng,
+chúng ta cần thêm thông tin về cách các khóa này được sử dụng trong cơ sở dữ liệu.
+Ví dụ, nếu “AccountID” trong bảng “Teacher” là khóa ngoại tham chiếu đến “AccountID” trong bảng “Account”,
+và mỗi “AccountID” là duy nhất cho mỗi giáo viên, thì đó có thể là một quan hệ 1:1. Nhưng nếu một “AccountID”
+có thể liên kết với nhiều giáo viên, thì đó sẽ là quan hệ 1:n.
 */
