@@ -91,6 +91,7 @@ create table Teacher
 (
    TeacherID uniqueidentifier default newid() primary key,
    AccountID uniqueidentifier default newid() unique,
+   Avatar nvarchar(max),
    FullName nvarchar(100),
    Information nvarchar(max),
    ContactNumber nvarchar(20),
