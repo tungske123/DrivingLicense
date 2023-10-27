@@ -10344,6 +10344,10 @@ fieldset:disabled .btn {
   padding-left: 0.5rem !important;
 }
 
+.ps-3-5 {
+  padding-left: 0.75rem !important;
+}
+
 .ps-3 {
   padding-left: 1rem !important;
 }
@@ -26680,3 +26684,7 @@ pre[class*="language-"] {
 }
 
 /*# sourceMappingURL=dashboard-free.css.map */
+/*NEW */
+.h-4 {
+  height: 1rem
+}
