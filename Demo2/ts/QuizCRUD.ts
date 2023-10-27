@@ -2,19 +2,28 @@ const checkAllCheckBox = document.getElementById('checkbox-all-search') as HTMLI
 checkAllCheckBox.addEventListener('input', () => {
     const checkStatus: boolean = checkAllCheckBox.checked;
     const questionCheckBoxes = document.querySelectorAll('.questionCheck') as NodeListOf<HTMLInputElement>;
+    if (checkStatus) {
+        selectAllQuestions();
+    } else {
+        removeAllQuestions();
+    }
     questionCheckBoxes.forEach(questionCheck => {
         questionCheck.checked = checkStatus;
-        const questionID = Number(questionCheck.getAttribute('value'));
-        const index = QuestionIDList.indexOf(questionID);
-        if (index !== -1 && checkStatus === true && !questionCheck.checked) {
-            QuestionIDList.push(questionID);
-            updateQuestionCount();
-        } else {
-            QuestionIDList.splice(index, 1);
-            updateQuestionCount();
-        }
     });
 });
+
+function selectAllQuestions() {
+    removeAllQuestions();
+    const questionCheckBoxes = document.querySelectorAll('.questionCheck') as NodeListOf<HTMLInputElement>;
+    questionCheckBoxes.forEach(questionCheck => {
+        const questionId = Number(questionCheck.getAttribute('value'));
+        QuestionIDList.push(questionId);
+    });
+}
+
+function removeAllQuestions() {
+    QuestionIDList.splice(0, QuestionIDList.length);
+}
 
 const randomCheckBox = document.getElementById('randomCheckBox') as HTMLInputElement;
 const questionSelectionSection = document.getElementById('questionSelectionSection') as HTMLHeadingElement;
@@ -60,6 +69,35 @@ async function fetchQuizData() {
     } catch (error) {
         console.error(`Error: ${error}`);
     }
+}
+
+async function addQuiz() {
+    const quizNameElement = document.querySelector('.quizName') as HTMLInputElement;
+    const quizQuestionCntElememnt = document.querySelector('.quizQuestionCnt') as HTMLInputElement;
+    const quizLicenseElement = document.querySelector('.quizLicense') as HTMLInputElement;
+    const quizDescriptionElement = document.querySelector('.quizDescription') as HTMLInputElement;
+    const randomCheckBox = document.getElementById('randomCheckBox') as HTMLInputElement;
+    const data = {
+        quizName: quizNameElement.textContent,
+        licenseID: String(quizLicenseElement.value),
+        quantity: Number(quizQuestionCntElememnt.value),
+        description: String(quizDescriptionElement.value),
+        hasRandomQuestions: randomCheckBox.checked,
+        questionIDList: QuestionIDList
+    };
+
+    const url = `https://localhost:7235/api/quizzes/generate`;
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    if (response.status !== 204) {
+        throw new Error(`Http Error! Status code: ${response.status}`);
+    }
+    alert('Thêm bộ đề thành công');
 }
 
 const quizTableBody = document.getElementById('quizTableBody');
@@ -226,6 +264,21 @@ function renderQuestionTableData(questionList: Question[]) {
         } else {
             questionCheckBox.checked = false;
         }
+        questionCheckBox.addEventListener('input', () => {
+            const questionId = Number(questionCheckBox.getAttribute('value'));
+            const index = QuestionIDList.indexOf(questionId);
+            if (questionCheckBox.checked) {
+                if (index === -1) {
+                    QuestionIDList.push(questionId);
+                    updateQuestionCount();
+                }
+            } else {
+                if (index !== -1) {
+                    QuestionIDList.splice(index, 1);
+                    updateQuestionCount();
+                }
+            }
+        });
         cells[1].textContent = question.questionText;
         cells[2].textContent = question.licenseId;
         cells[3].textContent = question.isCritical ? `Có` : `Không`;
@@ -283,28 +336,14 @@ questionLicenseCheckBoxes.forEach(checkBox => {
 function updateQuestionCount() {
     const numOfQuestion = QuestionIDList.length;
     const chosenQuestionCount = document.getElementById('chosenQuestionCount') as HTMLSpanElement;
-    chosenQuestionCount.textContent = numOfQuestion.toString();
+    chosenQuestionCount.textContent = numOfQuestion.toString() + ` Câu`;
+    console.log(QuestionIDList);
 }
 
-const questionCheckBoxList = document.querySelectorAll('.questionCheck') as NodeListOf<HTMLInputElement>;
-questionCheckBoxList.forEach(questionCheck => {
-    questionCheck.addEventListener('input', () => {
-        const questionID = Number(questionCheck.getAttribute('value'));
-        const index = QuestionIDList.indexOf(questionID);
-        if (questionCheck.checked) {
-            if (index === -1) {
-                QuestionIDList.push(questionID);
-                updateQuestionCount();
-            }
-        } else {
-            if (index !== -1) {
-                QuestionIDList.splice(index, 1);
-                updateQuestionCount();
-            }
-        }
-    });
+const quizAddButton = document.getElementById('quizAddButton') as HTMLButtonElement;
+quizAddButton.addEventListener('click', async () => {
+    await addQuiz();
 });
-
 window.addEventListener('DOMContentLoaded', async () => {
     await fetchQuizData();
     await fetchQuestionsDataPaging();

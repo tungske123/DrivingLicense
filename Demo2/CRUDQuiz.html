@@ -16,6 +16,79 @@
 </head>
 
 <body>
+    <button data-modal-target="medium-modal" data-modal-toggle="medium-modal"
+        class="block w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button">
+        Default modal
+    </button>
+    <!-- Default Modal -->
+    <div id="medium-modal" tabindex="-1"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-lg max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        Chi tiết câu hỏi
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="medium-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6">
+                    <p class="mb-4 text-gray-500 dark:text-gray-400 whitespace-normal" style="text-wrap: balance;"
+                        id="questionText">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium, velit. Dicta aliquid,
+                        animi ducimus minima minus nobis eum fugiat praesentium. Veritatis nihil obcaecati natus ducimus
+                        culpa omnis, error tempora deserunt!
+                    </p>
+                    <img srcset="https://flowbite.com/docs/images/examples/image-1@2x.jpg"
+                        class="w-full h-auto max-w-xl rounded-lg" alt="image description" id="questionImage">
+                    <hr />
+                    <div id="questionModalAnswersSection">
+                        <div class="flex items-center mb-4">
+                            <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-1"
+                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Anwser 1</label>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-1"
+                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 2</label>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-1"
+                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 3</label>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-1"
+                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 4</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="medium-modal" type="button"
+                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Start block -->
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
@@ -353,7 +426,7 @@
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
                                         bộ đề</label>
                                     <input type="text" name="name" id="name"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder="Nhập tên bộ đề" required="">
                                 </div>
                                 <div>
@@ -361,13 +434,13 @@
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số
                                         lượng câu hỏi</label>
                                     <input type="number" name="amount" id="amount" value="25"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        class="quizQuestionCnt bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder="Nhập số lượng câu hỏi" required="">
                                 </div>
                                 <div><label for="license"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại bằng
                                         lái</label><select id="license" name="license"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        class="quizLicense bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                         <option selected="">Chọn loại bằng lái</option>
                                         <option value="A1">A1</option>
                                         <option value="A2">A2</option>
@@ -377,7 +450,7 @@
                             <div class=""><label for="quizdescription"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô tả bộ
                                     đề</label><textarea id="quizdescription" rows="4" name="quizdescription"
-                                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    class="quizDescription block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="Nhập mô tả bộ đề ở đây">Bộ đề cho bằng lái A1 gồm 25 câu</textarea>
                             </div>
                             <div style="margin-block: 20px;">
@@ -742,17 +815,15 @@
                                     </ul>
                                 </nav>
                             </div>
-
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal body -->
-                <form action="" method="post">
-                    <button type="button"
-                        class="inline-center text-white mt-10 bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Thêm
-                        đề này</button>
-                </form>
+
+                <button type="button" id="quizAddButton"
+                    class="inline-center text-white mt-10 bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Thêm
+                    đề này</button>
 
             </div>
         </div>

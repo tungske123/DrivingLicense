@@ -39,20 +39,27 @@ var checkAllCheckBox = document.getElementById('checkbox-all-search');
 checkAllCheckBox.addEventListener('input', function () {
     var checkStatus = checkAllCheckBox.checked;
     var questionCheckBoxes = document.querySelectorAll('.questionCheck');
+    if (checkStatus) {
+        selectAllQuestions();
+    }
+    else {
+        removeAllQuestions();
+    }
     questionCheckBoxes.forEach(function (questionCheck) {
-        var questionID = Number(questionCheck.getAttribute('value'));
-        var index = QuestionIDList.indexOf(questionID);
-        if (index !== -1 && checkStatus === true) {
-            QuestionIDList.push(questionID);
-            updateQuestionCount();
-        }
-        else {
-            QuestionIDList.splice(index, 1);
-            updateQuestionCount();
-        }
         questionCheck.checked = checkStatus;
     });
 });
+function selectAllQuestions() {
+    removeAllQuestions();
+    var questionCheckBoxes = document.querySelectorAll('.questionCheck');
+    questionCheckBoxes.forEach(function (questionCheck) {
+        var questionId = Number(questionCheck.getAttribute('value'));
+        QuestionIDList.push(questionId);
+    });
+}
+function removeAllQuestions() {
+    QuestionIDList.splice(0, QuestionIDList.length);
+}
 var randomCheckBox = document.getElementById('randomCheckBox');
 var questionSelectionSection = document.getElementById('questionSelectionSection');
 randomCheckBox.addEventListener('input', function () {
@@ -320,6 +327,22 @@ function renderQuestionTableData(questionList) {
         else {
             questionCheckBox.checked = false;
         }
+        questionCheckBox.addEventListener('input', function () {
+            var questionId = Number(questionCheckBox.getAttribute('value'));
+            var index = QuestionIDList.indexOf(questionId);
+            if (questionCheckBox.checked) {
+                if (index === -1) {
+                    QuestionIDList.push(questionId);
+                    updateQuestionCount();
+                }
+            }
+            else {
+                if (index !== -1) {
+                    QuestionIDList.splice(index, 1);
+                    updateQuestionCount();
+                }
+            }
+        });
         cells[1].textContent = question.questionText;
         cells[2].textContent = question.licenseId;
         cells[3].textContent = question.isCritical ? "C\u00F3" : "Kh\u00F4ng";
@@ -403,27 +426,27 @@ questionLicenseCheckBoxes.forEach(function (checkBox) {
 function updateQuestionCount() {
     var numOfQuestion = QuestionIDList.length;
     var chosenQuestionCount = document.getElementById('chosenQuestionCount');
-    chosenQuestionCount.textContent = numOfQuestion.toString();
+    chosenQuestionCount.textContent = numOfQuestion.toString() + " C\u00E2u";
+    console.log(QuestionIDList);
 }
-var questionCheckBoxList = document.querySelectorAll('.questionCheck');
-questionCheckBoxList.forEach(function (questionCheck) {
-    questionCheck.addEventListener('input', function () {
-        var questionID = Number(questionCheck.getAttribute('value'));
-        var index = QuestionIDList.indexOf(questionID);
-        if (questionCheck.checked) {
-            if (index === -1) {
-                QuestionIDList.push(questionID);
-                updateQuestionCount();
-            }
-        }
-        else {
-            if (index !== -1) {
-                QuestionIDList.splice(index, 1);
-                updateQuestionCount();
-            }
-        }
-    });
-});
+// const questionCheckBoxList = document.querySelectorAll('.questionCheck') as NodeListOf<HTMLInputElement>;
+// questionCheckBoxList.forEach(questionCheck => {
+//     questionCheck.addEventListener('input', () => {
+//         const questionID = Number(questionCheck.getAttribute('value'));
+//         const index = QuestionIDList.indexOf(questionID);
+//         if (questionCheck.checked) {
+//             if (index === -1) {
+//                 QuestionIDList.push(questionID);
+//                 updateQuestionCount();
+//             }
+//         } else {
+//             if (index !== -1) {
+//                 QuestionIDList.splice(index, 1);
+//                 updateQuestionCount();
+//             }
+//         }
+//     });
+// });
 window.addEventListener('DOMContentLoaded', function () { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
