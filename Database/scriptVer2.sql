@@ -78,10 +78,10 @@ create table Rent
    RentID uniqueidentifier default newid() primary key,
    VehicleID uniqueidentifier default newid(),
    UserID uniqueidentifier default newid(),
-   StartTime datetime,
-   EndTime datetime,
+   StartDate datetime,
+   EndDate datetime,
    TotalRentPrice decimal,
-   [status] nvarchar(100),
+   [Status] nvarchar(100),
 
    foreign key (VehicleID) references dbo.Vehicle(VehicleID),
    foreign key (UserID) references dbo.Users(UserID)
