@@ -10,18 +10,22 @@ create or alter procedure proc_signUpAccount(
 )
 as
 begin
-   declare @AccountID as nvarchar(50);
+	-- Declare temporary table
+	declare @InsertedIDs table (AccountID uniqueidentifier);
 
-   -- Declare temporary table
-   declare @InsertedIDs table (AccountID nvarchar(50));
-   insert into dbo.Account (Username, [Password], [Role])
-   output inserted.AccountID into @InsertedIDs(AccountID)
-   values(@username, @password, @roleSet);
+	insert into dbo.Account (Username, [Password], [Role])
+	output inserted.AccountID into @InsertedIDs(AccountID)
+	values(@username, @password, @roleSet);
+	declare @accountID as uniqueidentifier;
+	SET @accountID = (SELECT TOP 1 AccountID FROM @InsertedIDs);
 
-   -- Get accountID from temp table
-   select @AccountID = AccountID from @InsertedIDs;
-   insert into dbo.Users(AccountID,FullName,Email)
-   values(@AccountID, @name, @email);
+	if(@roleSet = 'user')
+	begin
+		-- Get accountID from temp table
+		--select @AccountID = AccountID from @InsertedIDs;
+		insert into dbo.Users(AccountID,FullName,Email)
+		values(@accountID, @name, @email);
+	end;
 
    if(@roleSet != 'user')
    begin
@@ -381,8 +385,17 @@ as
 begin
 	declare @roleOld nvarchar(50);
 	set @roleOld = (select [Role] from dbo.Account where AccountID = @accountID)
+	
+	if(@roleOld = 'lecturer' and not exists(select * from dbo.Teacher where AccountID = @accountID))
+	insert into dbo.Teacher(AccountID, Fullname, Email, ContactNumber)values(@accountID, @fullname, @email, @phoneNum);
 
-	if(@roleNew != @roleOld)
+	else if(@roleOld = 'staff' and not exists(select * from dbo.Staff where AccountID = @accountID))
+	insert into dbo.Staff(AccountID, Fullname ,Email, ContactNumber)values(@accountID, @fullname, @email, @phoneNum);
+
+	else if(@roleOld = 'admin'and not exists(select * from dbo.[Admin] where AccountID = @accountID))
+	insert into dbo.[Admin](AccountID, Fullname ,Email, ContactNumber)values(@accountID, @fullname, @email, @phoneNum);
+	
+	if(@roleOld!=@roleNew)
 	begin
 		--______________________ Update Role______________________
 		if (@roleNew = 'lecturer') 
@@ -422,6 +435,7 @@ begin
 end;
 go
 
+-------------------------------------------[ CALCULATE QUIZ RESULT ]----------------------------------------------
 CREATE OR ALTER         procedure [dbo].[proc_CalculateQuizResult] @AttemptID uniqueidentifier
 as
 declare @CorrectQuestionCnt as int;
