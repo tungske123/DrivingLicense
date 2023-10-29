@@ -19,7 +19,7 @@ go
 exec dbo.proc_signUpAccount @username = 'user123', @password = '123', @email = 'user123@example.com', @name=N'Người dùng A';
 exec dbo.proc_signUpAccount @username = 'ok123', @password = '123', @email = 'ok123@ok.com' , @name=N'Người dùng B';
 exec dbo.proc_signUpAccount @username = 'hoangph', @password = 'se172789', @email = 'hoangphse172789@fpt.edu.vn' , @name=N'Phạm Huy Hoàng';
-exec dbo.proc_signUpAccount @username = 'fptu', @password = '123', @email = 'fpt@fe.edu.vn', @name=N'FPT University';
+exec dbo.proc_signUpAccount @username = 'fptu', @password = '123', @email = 'fpt@fe.edu.vn', @name=N'FPT University', @roleSet='user';
 exec dbo.proc_signUpAccount @username = 'fuihoan123', @password = '123', @email = 'fuihoan@japanese.com', @name= N'フイ　ホアン';
 exec dbo.proc_signUpAccount @username = 'ngocanh', @password = '456', @email = 'ngocanh@vietnam.com', @name=N'Nguyễn Ngọc Anh';
 exec dbo.proc_signUpAccount @username = 'tommy', @password = '789', @email = 'tommy@usa.com', @name=N'Tommy Lee';
