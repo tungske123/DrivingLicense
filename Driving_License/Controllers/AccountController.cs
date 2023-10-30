@@ -57,7 +57,7 @@ namespace Driving_License.Controllers
                 return Ok(account);
             }
         }
-
+        
         //==========================================================================================================
         [HttpDelete]
         [Route("delete/{accountid}")]
@@ -75,8 +75,8 @@ namespace Driving_License.Controllers
                 command.CommandText = "proc_DeleteUser";
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add(new SqlParameter("@AccountID", SqlDbType.UniqueIdentifier) { Value = user.AccountId });
-                command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.UniqueIdentifier) { Value = userid });
+                //command.Parameters.Add(new SqlParameter("@AccountID", SqlDbType.UniqueIdentifier) { Value = User.AccountId });
+                //command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.UniqueIdentifier) { Value = userid });
 
                 _context.Database.OpenConnection();
 

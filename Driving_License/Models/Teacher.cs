@@ -17,7 +17,9 @@ public partial class Teacher
 
     public string Email { get; set; }
 
+    public string Avatar { get; set; }
+
     public virtual Account Account { get; set; }
 
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+    public virtual ICollection<Hire> Hires { get; set; } = new List<Hire>();
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Driving_License.Models;
 using Driving_License.Utils;
 using X.PagedList;
 using Driving_License.ViewModels;

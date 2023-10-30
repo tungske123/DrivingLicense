@@ -13,7 +13,11 @@ public partial class Account
 
     public string Role { get; set; }
 
-    public virtual ICollection<Teacher> Teachers { get; set; } = new List<Teacher>();
+    public virtual Admin Admin { get; set; }
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual Staff Staff { get; set; }
+
+    public virtual Teacher Teacher { get; set; }
+
+    public virtual User User { get; set; }
 }
