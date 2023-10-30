@@ -29,7 +29,7 @@ begin
 
    if(@roleSet != 'user')
    begin
-		exec proc_changeRole @AccountID, @name, @email, null, @roleSet;
+		exec proc_changeRole @accountID, @name, @email, null, @roleSet;
 	end
 end;
 go
@@ -384,8 +384,8 @@ create or alter procedure proc_changeRole(
 as
 begin
 	declare @roleOld nvarchar(50);
-	set @roleOld = (select [Role] from dbo.Account where AccountID = @accountID)
-	
+	set @roleOld = (select [Role] from dbo.Account where AccountID = @accountID);
+
 	if(@roleOld = 'lecturer' and not exists(select * from dbo.Teacher where AccountID = @accountID))
 	insert into dbo.Teacher(AccountID, Fullname, Email, ContactNumber)values(@accountID, @fullname, @email, @phoneNum);
 
@@ -436,7 +436,7 @@ end;
 go
 
 -------------------------------------------[ CALCULATE QUIZ RESULT ]----------------------------------------------
-CREATE OR ALTER         procedure [dbo].[proc_CalculateQuizResult] @AttemptID uniqueidentifier
+create or alter procedure [dbo].[proc_CalculateQuizResult] @AttemptID uniqueidentifier
 as
 declare @CorrectQuestionCnt as int;
 declare @IncorrectQuestionCnt as int;
@@ -470,7 +470,7 @@ where AttemptID = @AttemptID;
 
 -----------------------------------------------------------------------------------------------
 go
-CREATE OR ALTER     procedure [dbo].[proc_getAllAttemptsDataFromUsers] @UserId uniqueidentifier
+create or alter procedure [dbo].[proc_getAllAttemptsDataFromUsers] @UserId uniqueidentifier
 as
 -- Create a temporary table to store results
 create table #AttemptResults (
@@ -541,31 +541,31 @@ drop table #AttemptResults;
 
 -----------------------------------------------------------------------------------------------
 go
-CREATE OR ALTER     PROCEDURE [dbo].[proc_GetQuizAttempStats] @AttemptID uniqueidentifier
-AS
-BEGIN
-    SELECT
+create or alter procedure [dbo].[proc_GetQuizAttempStats] @AttemptID uniqueidentifier
+as
+begin
+    select
         q.QuestionText,
-        CASE
-            WHEN att.SelectedAnswerID IS NOT NULL THEN (SELECT AnswerText FROM dbo.Answer WHERE AnswerID = att.SelectedAnswerID)
-            ELSE NULL -- UserAnswer is NULL for questions without user answers
-        END AS 'UserAnswer',
-        (SELECT a.AnswerText FROM dbo.Answer a WHERE a.QuestionID = q.QuestionID AND a.isCorrect = 1) AS 'CorrectAnswer',
-        CASE
-            WHEN att.SelectedAnswerID IS NULL THEN 0 -- Set IsCorrect to 0 for questions without user answers
-            ELSE att.IsCorrect
-        END AS 'IsCorrect'
-    FROM
+        case
+            when att.SelectedAnswerID is not null then (select AnswerText from dbo.Answer where AnswerID = att.SelectedAnswerID)
+            else null -- UserAnswer is NULL for questions without user answers
+        end AS 'UserAnswer',
+        (select a.AnswerText from dbo.Answer a where a.QuestionID = q.QuestionID and a.isCorrect = 1) as 'CorrectAnswer',
+        case
+            when att.SelectedAnswerID is null then 0 -- Set IsCorrect to 0 for questions without user answers
+            else att.IsCorrect
+        end as 'IsCorrect'
+    from
         dbo.Question q
-    LEFT JOIN
-        dbo.AttemptDetail att ON q.QuestionID = att.QuestionID AND att.AttemptID = @AttemptID
-    WHERE
+    left join
+        dbo.AttemptDetail att on q.QuestionID = att.QuestionID and att.AttemptID = @AttemptID
+    where
         q.QuestionID IN (
-            SELECT QuestionID
-            FROM dbo.Have
-            WHERE QuizID = (SELECT QuizID FROM dbo.Attempt WHERE AttemptID = @AttemptID)
+            select QuestionID
+            from dbo.Have
+            where QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID)
         );
-END
+end
 /*
 -----------------------------------[ COUNT CORRECT ANSWER ]-------------------------------
 create or alter function fn_CountCorrect (
@@ -650,4 +650,4 @@ end;
 go
 */
 
--- use master;
+use master;
