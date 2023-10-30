@@ -10,7 +10,7 @@ create or alter procedure proc_signUpAccount(
 )
 as
 begin
-   -- Declare temporary table
+	-- Declare temporary table
 	declare @InsertedIDs table (AccountID uniqueidentifier);
 
 	insert into dbo.Account (Username, [Password], [Role])
