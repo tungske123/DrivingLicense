@@ -6,7 +6,7 @@ create or alter procedure proc_signUpAccount(
 	@password nvarchar(100),
 	@email nvarchar(100),
 	@name nvarchar(100),
-	@roleSet nvarchar(50) = 'user'	--default value
+	@roleSet nvarchar(50) = 'user'		--default value
 )
 as
 begin
@@ -434,6 +434,138 @@ begin
 	end
 end;
 go
+
+-------------------------------------------[ CALCULATE QUIZ RESULT ]----------------------------------------------
+create or alter procedure [dbo].[proc_CalculateQuizResult] @AttemptID uniqueidentifier
+as
+declare @CorrectQuestionCnt as int;
+declare @IncorrectQuestionCnt as int;
+declare @TotalQuestionCnt as int;
+declare @QuizID as int;
+declare @Result as decimal(18, 2);
+declare @RemainingQuestion as int;
+declare @AttemptDate as date;
+set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
+set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
+set @CorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 1);
+set @IncorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 0);
+set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
+set @Result = cast(@CorrectQuestionCnt as decimal(18, 2)) / cast(@TotalQuestionCnt as decimal(18, 2)) * 100.0;
+set @RemainingQuestion = @TotalQuestionCnt - @CorrectQuestionCnt - @IncorrectQuestionCnt;
+select @AttemptID as 'AttemptID',
+(select [Name] from dbo.Quiz where QuizID = @QuizID) as 'QuizName', 
+(select LicenseID from dbo.Quiz where QuizID = @QuizID) as 'License',
+@AttemptDate as 'AttemptDate',
+@TotalQuestionCnt as 'TotalQuestion',
+@CorrectQuestionCnt as 'CorrectQuestion', @IncorrectQuestionCnt as 'IncorrectQuestion', 
+@RemainingQuestion as 'RemainingQuestion',
+@Result as 'Result'
+from dbo.AttemptDetail att
+where att.AttemptID = @AttemptID
+group by att.AttemptID;
+update dbo.Attempt
+set Grade = cast(@Result as decimal(18, 2))
+where AttemptID = @AttemptID;
+
+
+-----------------------------------------------------------------------------------------------
+go
+create or alter procedure [dbo].[proc_getAllAttemptsDataFromUsers] @UserId uniqueidentifier
+as
+-- Create a temporary table to store results
+create table #AttemptResults (
+    AttemptID uniqueidentifier,
+    QuizName nvarchar(max),
+    License nvarchar(max),
+    AttemptDate date,
+    TotalQuestion int,
+    CorrectQuestion int,
+    IncorrectQuestion int,
+    RemainingQuestion int,
+    Result decimal(18, 2)
+);
+
+-- Iterate through each attempt for the user
+declare @AttemptID uniqueidentifier;
+
+declare AttemptCursor cursor for
+select AttemptID
+from dbo.Attempt
+where UserId = @UserId;  -- Replace with the actual column name that represents the user's ID
+
+open AttemptCursor;
+fetch next from AttemptCursor into @AttemptID;
+
+while @@fetch_status = 0
+begin
+    declare @CorrectQuestionCnt as int;
+    declare @IncorrectQuestionCnt as int;
+    declare @TotalQuestionCnt as int;
+    declare @QuizID as int;
+    declare @Result as decimal(18, 2);
+    declare @RemainingQuestion as int;
+    declare @AttemptDate as date;
+
+    set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
+    set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
+    set @CorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 1);
+    set @IncorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 0);
+    set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
+    set @Result = cast(@CorrectQuestionCnt as decimal(18, 2)) / cast(@TotalQuestionCnt as decimal(18, 2)) * 100.0;
+    set @RemainingQuestion = @TotalQuestionCnt - @CorrectQuestionCnt - @IncorrectQuestionCnt;
+
+    insert into #AttemptResults (AttemptID, QuizName, License, AttemptDate, TotalQuestion, CorrectQuestion, IncorrectQuestion, RemainingQuestion, Result)
+    select
+	    @AttemptID as 'AttemptID',
+        (select [Name] from dbo.Quiz where QuizID = @QuizID),
+        (select LicenseID from dbo.Quiz where QuizID = @QuizID),
+        @AttemptDate,
+        @TotalQuestionCnt,
+        @CorrectQuestionCnt,
+        @IncorrectQuestionCnt,
+        @RemainingQuestion,
+        @Result;
+
+    fetch next from AttemptCursor into @AttemptID;
+end;
+
+close AttemptCursor;
+deallocate AttemptCursor;
+
+-- Select the results from the temporary table
+select * from #AttemptResults;
+
+-- Drop the temporary table
+drop table #AttemptResults;
+
+
+-----------------------------------------------------------------------------------------------
+go
+create or alter procedure [dbo].[proc_GetQuizAttempStats] @AttemptID uniqueidentifier
+as
+begin
+    select
+        q.QuestionText,
+        case
+            when att.SelectedAnswerID is not null then (select AnswerText from dbo.Answer where AnswerID = att.SelectedAnswerID)
+            else null -- UserAnswer is NULL for questions without user answers
+        end AS 'UserAnswer',
+        (select a.AnswerText from dbo.Answer a where a.QuestionID = q.QuestionID and a.isCorrect = 1) as 'CorrectAnswer',
+        case
+            when att.SelectedAnswerID is null then 0 -- Set IsCorrect to 0 for questions without user answers
+            else att.IsCorrect
+        end as 'IsCorrect'
+    from
+        dbo.Question q
+    left join
+        dbo.AttemptDetail att on q.QuestionID = att.QuestionID and att.AttemptID = @AttemptID
+    where
+        q.QuestionID IN (
+            select QuestionID
+            from dbo.Have
+            where QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID)
+        );
+end
 /*
 -----------------------------------[ COUNT CORRECT ANSWER ]-------------------------------
 create or alter function fn_CountCorrect (
