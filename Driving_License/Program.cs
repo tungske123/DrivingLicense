@@ -18,6 +18,20 @@ builder.Services.AddDbContext<DrivingLicenseContext>(options =>
 {
     options.UseSqlServer(configuration.GetConnectionString("DrivingLicenseDB"));
 });
+// Add Cors
+/*builder.Services.AddCors(x => x.AddPolicy("MyCors", build =>
+{
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));*/
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMyOrigin", builder => builder.WithOrigins("*")
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+    options.AddPolicy("AllowMyOrigin", builder => builder.WithOrigins("*")
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+});
 
 //Add sesssion
 builder.Services.AddSession(options =>
@@ -50,13 +64,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseCors("AllowMyOrigin");
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.UseSession();
-
 
 app.MapControllerRoute(
     name: "default",

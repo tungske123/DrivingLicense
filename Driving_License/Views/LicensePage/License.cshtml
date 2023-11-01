@@ -1,0 +1,184 @@
+﻿@model Driving_License.ViewModels.LicenseTypeData
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--custom css file-->
+    <link rel="stylesheet" href="/css/styleLicensePage.css">
+    <!--icon file-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2554/2554896.png">
+    <title>L2D - Bằng lái B1</title>
+    <script>
+        document.querySelector('.license_list').classList.add('active');
+        var License = (function () {
+            function License() {
+                this.licenseId = "";
+                this.licenseName = "";
+                this.describe = "";
+                this.condition = "";
+                this.cost = "";
+                this.time = "";
+                this.examContent = "";
+                this.tips = "";
+            }
+            return License;
+        }());
+        function fetchData() {
+            fetch('https://localhost:7002/license/@ViewBag.licenseid', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(function (response) {
+                if (!response.ok) {
+                    throw new Error("error");
+                }
+                return response.json();
+            }).then(function (data) {
+                console.log(data);
+                var license = data;
+                renderData(license);
+            }).then(function (error) {
+                console.error(error);
+            });
+        }
+        function renderData(license) {
+            var heading = document.getElementById("heading");
+            heading.innerHTML = "B\u1EB1ng l\u00E1i ".concat(license.licenseId);
+            var describe = document.getElementById('Describe');
+            describe.innerHTML = license.describe;
+            var condition = document.getElementById('Condition');
+            condition.innerHTML = license.condition;
+            var Cost = document.getElementById('Cost');
+            Cost.innerHTML = license.cost;
+            var Time = document.getElementById('Time');
+            Time.innerHTML = license.time;
+            var Exam = document.getElementById('Exam-Content');
+            Exam.innerHTML = license.examContent;
+            var Tips = document.getElementById('Tips');
+            Tips.innerHTML = license.tips;
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchData();
+        });
+    </script>
+</head>
+
+<body>
+    @{
+        ViewData["Title"] = "L2D - Bằng lái B1";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <div class="container-fluid" style="margin-top: 100px;">
+        <div class="header row border-bottom border-danger hidden-load">
+            <h1 id="heading" class="title hidden-load col-md-4">
+                
+            </h1>
+            <div class="description hidden-load col-md-8">
+                <article class="text-content">
+                    <p class="lead">
+                        Thông tin
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                             fill="currentColor" class="bi bi-info-circle-fill mb-1" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                        </svg>
+                    </p>
+                    <ul id="Describe">
+                        
+                    </ul>
+                </article>
+                <article class="text-content">
+                    <p class="lead">
+                        Điều kiện thi
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             class="bi bi-info-circle-fill mb-1" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                        </svg>
+                    </p>
+                    <ul id="Condition">
+                        
+                    </ul>
+                </article>
+                <article class="text-content">
+                    <p class="lead">
+                        Lệ phí
+                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23"
+                             fill="currentColor" class="bi bi-cash-stack mb-1" viewBox="0 0 16 16">
+                            <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1H1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+                            <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2H3z" />
+                        </svg>
+                    </p>
+                    <ul id="Cost">
+                        
+
+                    </ul>
+                </article>
+                <article class="text-content">
+                    <p class="lead">
+                        Thời gian cần nắm
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                             fill="currentColor" class="bi bi-clock mb-1" viewBox="0 0 16 16">
+                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
+                        </svg>
+                    </p>
+                    Theo quy định tại Điều 17 Thông tư 12/2017/TT-BGTVT về thời hạn sử dụng của giấy phép lại xe
+                    hạng  như sau:
+                    <ul id="Time">
+                        
+                    </ul>
+                </article>
+            </div>
+        </div>
+        <section class="body row border-bottom border-danger hidden-load">
+            <h1 class="title hidden-load">Nội dung thi</h1>
+            <div class="body-content hidden-load row">
+                <div class="text-content hidden-load col-md-8">
+                    @* <h2>Thi Lý Thuyết & Thực hành</h2> *@
+                    <ul id="Exam-Content">
+                        
+                    </ul>
+                    
+                </div>
+                <div class="buttons hidden-load col-md-4 mb-3">
+                    <button class="btn">Đăng ký hồ sơ thi</button>
+                    <button class="btn" onclick="location.href='/Quiz?licenseid=B1';">Thi thử lý thuyết</button>
+                    <button class="btn">Đăng kí học</button>
+                </div>
+            </div>
+        </section>
+        <div class="row">
+            <div class="images col-md-3 hidden-load">
+                <img src="@ViewBag.image_link" alt=""
+                     class="img-fluid mb-5">
+                <img src="@ViewBag.image_link" alt=""
+                     class="img-fluid">
+            </div>
+            <div class="col-md-6 hidden-load">
+                <h1 class="title hidden-load">Mẹo thi thực hành</h1>
+                <div class="text-content hidden-load">
+                    <ul id="Tips" style="text-align: justify;">
+                        
+                    </ul>
+                    <h5 class="text-center"><strong>Chúc các bạn may mắn!!!</strong></h5>
+                </div>
+            </div>
+            <div class="images col-md-3 hidden-load">
+                <img src="@ViewBag.image_link" alt=""
+                     class="img-fluid mb-5">
+                <img src="@ViewBag.image_link" alt=""
+                     class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <style>
+        .images :is(img) {
+            border-radius: 3px;
+        }
+    </style>
+    
+</body>
+
+</html>
