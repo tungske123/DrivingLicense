@@ -4,22 +4,16 @@ using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Driving_License.Filters;
+using L2D_WebApp.Filters;
 using System.Net.Mail;
 using System.Text.Json;
 using X.PagedList;
 using Microsoft.VisualBasic;
+using Azure;
+using Microsoft.AspNetCore.JsonPatch;
 
-namespace Driving_License.Controllers
+namespace L2D_WebApp.Controllers
 {
-    public record VehicleRequestData
-    {
-        public string Keyword { get; set; }
-        public List<string> Types { get; set; }
-        public List<string> Brands { get; set; }
-        public decimal StartPrice { get; set; } = Decimal.MinusOne;
-        public decimal EndPrice { get; set; } = Decimal.MinusOne;
-    }
     public record RentHistoryData
     {
         public string Keyword { get; set; }
@@ -59,6 +53,8 @@ namespace Driving_License.Controllers
             return (user is not null) ? user.UserId.ToString() : string.Empty;
         }
 
+
+        [LoginFilter]
         [HttpPost]
         [Route("api/rent/insert/{id:guid}")]
         public async Task<IActionResult> AddRentAPI([FromRoute] Guid id, [FromBody] Rent rent)
@@ -135,73 +131,6 @@ namespace Driving_License.Controllers
         }
 
         [HttpPost]
-        [Route("api/rent/{page}")]
-        [Produces("application/json")]
-        public async Task<IActionResult> Page([FromBody] VehicleRequestData data, [FromRoute] int page = 1)
-        {
-            const int pageSize = 8;
-            IQueryable<Vehicle> query = _context.Vehicles.AsQueryable();
-            if (!string.IsNullOrEmpty(data.Keyword))
-            {
-                query = query.Where(vehicle => EF.Functions.Like(vehicle.Name, $"%{data.Keyword}%"));
-                //query = query.Where(vehicle => vehicle.Name.Contains(data.Keyword));
-            }
-            if (data.Types.Count > 0)
-            {
-                foreach (var type in data.Types)
-                {
-                    query = query.Where(vehicle => data.Types.Contains(vehicle.Type));
-                }
-            }
-            if (data.Brands.Count > 0)
-            {
-                foreach (var brand in data.Brands)
-                {
-                    query = query.Where(vehicle => data.Brands.Contains(vehicle.Brand));
-                }
-            }
-            if (data.StartPrice != Decimal.MinusOne)
-            {
-                query = query.Where(vehicle => vehicle.RentPrice >= data.StartPrice);
-            }
-            if (data.EndPrice != Decimal.MinusOne)
-            {
-                query = query.Where(vehicle => vehicle.RentPrice <= data.EndPrice);
-            }
-            query = query.OrderBy(vehicle => vehicle.Name);
-            PageResult<Vehicle> pageResult = await GetPagedDataAsync<Vehicle>(query, page, pageSize);
-            return Ok(pageResult);
-        }
-
-        [HttpGet]
-        [Route("api/rent/topone")]
-        [Produces("application/json")]
-        public async Task<IActionResult> GetTop1RentVehicle()
-        {
-            int RentCount = await _context.Rents.CountAsync();
-            if (RentCount == 0)
-            {
-                return NotFound();
-            }
-            var vehicleWithMostRents = await _context.Rents
-                .GroupBy(r => r.VehicleId)
-                .Select(g => new
-                {
-                    VehicleID = g.Key,
-                    RentCount = g.Count()
-                })
-                .OrderByDescending(g => g.RentCount)
-                .Join(_context.Vehicles, rent => rent.VehicleID,
-                vehicle => vehicle.VehicleId, (rent, vehicle) => new
-                {
-                    Vehicle = vehicle,
-                    RentCount = rent.RentCount
-                }).AsNoTracking().FirstOrDefaultAsync();
-            return Ok(vehicleWithMostRents);
-        }
-
-
-        [HttpPost]
         [Route("api/rent/filter/{uid:guid}")]
         [Produces("application/json")]
         public async Task<IActionResult> GetRentByDate([FromRoute] Guid uid, [FromBody] RentHistoryData data)
@@ -270,6 +199,7 @@ namespace Driving_License.Controllers
                 {
                     RentId = rent.RentId,
                     VehicleName = rent.Vehicle.Name,
+                    VehicleImage = rent.Vehicle.Image,
                     StartDate = rent.StartDate,
                     EndDate = rent.EndDate,
                     TotalRentPrice = rent.TotalRentPrice,
@@ -279,16 +209,55 @@ namespace Driving_License.Controllers
             return Ok(finalRentHistoryData);
         }
 
+        [LoginFilter]
         [HttpDelete]
         [Route("api/rent/delete/{uid:guid}")]
         public async Task<IActionResult> DeleteRent([FromRoute] Guid uid, Guid rid)
         {
-            var userRent = await _context.Rents.FirstOrDefaultAsync(rent => rent.UserId.Equals(uid) && rent.RentId.Equals(rid));
+            var userRent = await _context.Rents.SingleOrDefaultAsync(rent => rent.UserId.Equals(uid) && rent.RentId.Equals(rid));
             if (userRent is null)
             {
                 return NotFound();
             }
             _context.Rents.Remove(userRent);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        [HttpGet]
+        [Route("api/rent/{rid:guid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetRentData([FromRoute] Guid rid)
+        {
+            var rent = await _context.Rents
+                .Include(r => r.Vehicle)
+                .AsSplitQuery()
+                .AsNoTracking()
+                .SingleOrDefaultAsync(r => r.RentId.Equals(rid));
+            return (rent is null) ? NotFound("Can't find any rent") : Ok(rent);
+        }
+
+
+        [LoginFilter]
+        [HttpPatch]
+        [Route("api/rent/update/{rid:guid}")]
+        public async Task<IActionResult> UpdateRent([FromRoute] Guid rid, [FromBody] JsonPatchDocument<Rent> patchDoc)
+        {
+            if (rid == Guid.Empty || patchDoc is null)
+            {
+                return BadRequest();
+            }
+            var rent = await _context.Rents.SingleOrDefaultAsync(rent => rent.RentId.Equals(rid));
+            if (rent is null)
+            {
+                return NotFound("Can't find any rent");
+            }
+            patchDoc.ApplyTo(rent, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             await _context.SaveChangesAsync();
             return NoContent();
         }

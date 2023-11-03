@@ -83,7 +83,7 @@ function getFinalCalculatedPrice(): number {
 
 function updateRentPrice() {
     if (!checkValidRentDate()) {
-        alert('Vui lòng nhập ngày và giờ phù hợp');
+        alert('Vui lòng chọn ngày và giờ phù hợp');
         CostElement.textContent = `Chưa có thông tin`;
         return;
     }

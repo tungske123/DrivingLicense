@@ -19,7 +19,7 @@ public partial class Question
 
     public virtual ICollection<AttemptDetail> AttemptDetails { get; set; } = new List<AttemptDetail>();
 
-    public virtual License? License { get; set; }
+    public virtual License License { get; set; }
 
     public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
 }

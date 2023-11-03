@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Driving_License.Filters
+namespace L2D_WebApp.Filters
 {
     public class LoginFilter : ActionFilterAttribute
     {

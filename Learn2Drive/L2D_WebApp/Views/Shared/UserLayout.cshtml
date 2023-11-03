@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <!--Flowbite css file-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
+
+    @if (!string.IsNullOrEmpty(@ViewBag.icon_link))
+    {
+        <link rel="icon" href="@ViewBag.icon_link">
+    }
+    else
+    {
+        <link rel="icon" href="/img/favicon_1.ico">
+    }
+    <title>@ViewData["Title"]</title>
+</head>
+
+<body>
+    @RenderBody()
+    <script src="~/js/LoadAnimations.js"></script>
+    <!--flowbite js library-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+    <!--datepicker flowbite library-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script>
+    <!--chart flowbite library-->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</body>
+
+</html>

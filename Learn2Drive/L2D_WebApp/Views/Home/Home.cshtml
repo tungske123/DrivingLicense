@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .inline-center {
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -12,214 +23,365 @@
         ViewData["Title"] = "Learn2Drive";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
-    <!--Home section-->
-    <section class="home hidden-load" id="home">
-        <div class="home-text hidden-load">
-            <h1>We have Everthing <br> your <span>car</span> Need</h1>
-            <p style="width: 28vw;">Chúc mừng bạn đến Trung tâm dạy lái xe uy tín số 1 tại MẼO</p>
-            <!--home Button-->
-            <a href="" class="btn hidden-load discover-button">Discover Now</a>
+    <!--modal-->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng kí học</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" id="RegisterForm">
+                        <h6 style="color: red;" class="mb-3">Đăng kí giáo viên dạy lái xe</h6>
+                        <p class="text-secondary">
+                            Nhằm nâng cao chất lượng đào tạo cũng như hỗ trợ học viên, trung tâm chúng tôi có hỗ
+                            trợ
+                            học viên đăng
+                            kí thêm giáo viên hướng dẫn tập lái A-Z. Bạn vui lòng chọn ngày và ca học bên dưới.
+                            Hiện tại trung tâm đang hỗ trợ 3 ca học.
+                        </p>
+                        <ul class="list-group text-secondary" style="margin-block: 10px;">
+                            <li class="list-group-item text-secondary">
+                                <div class="form-check">
+                                    <input class="form-check-input" value="morning" type="radio" name="slot" id="slot1"
+                                        checked>
+                                    <label class="form-check-label" for="slot1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-brightness-high" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                                        </svg> Ca sáng: <span class="text-danger" style="font-weight: bold;">7:00 ~
+                                            11:00</span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li class="list-group-item text-secondary">
+                                <div class="form-check">
+                                    <input class="form-check-input" value="afternoon" type="radio" name="slot"
+                                        id="slot2">
+                                    <label class="form-check-label" for="slot2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-sunset" viewBox="0 0 16 16">
+                                            <path
+                                                d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                                        </svg> Ca chiều: <span class="text-danger" style="font-weight: bold;">14:00 ~
+                                            18:00</span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li class="list-group-item text-secondary">
+                                <div class="form-check">
+                                    <input class="form-check-input" value="evening" type="radio" name="slot" id="slot3">
+                                    <label class="form-check-label" for="slot3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-moon" viewBox="0 0 16 16">
+                                            <path
+                                                d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                                        </svg> Ca tối: <span class="text-danger" style="font-weight: bold;">17:00 ~
+                                            21:00</span>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="form-floating mb-3">
+                            <select name="Licenseid" id="licenseid" class="form-select" required>
+                                <option value="" selected>Chọn loại bằng lái</option>
+                                <option value="A1">A1</option>
+                                <option value="A2">A2</option>
+                                <option value="B1">B1</option>
+                            </select>
+                            <label for="licenseid" class="form-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="mb-1 bi bi-postcard" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4Zm7.5.5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7ZM2 5.5a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5Zm0 2a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5Zm0 2a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5ZM10.5 5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3ZM13 8h-2V6h2v2Z" />
+                                </svg> Loại bằng lái
+                            </label>
+                        </div>
+
+                        <div style="display: flex;justify-content: space-between;">
+                            <div class="form-floating mb-3" style="width: 45%;">
+                                <input type="date" id="courseStartDate" name="courseStartDate" class="form-control"
+                                    required>
+                                <label for="courseStartDate" class="form-label">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                                        class="mb-1 bi bi-calendar4-range" viewBox="0 0 16 16">
+                                        <path
+                                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
+                                        <path
+                                            d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" />
+                                    </svg> Chọn ngày bắt đầu học
+                                </label>
+                            </div>
+                            <div class="form-floating mb-3" style="width: 45%;">
+                                <input type="date" id="courseEndDate" name="courseEndDate" class="form-control"
+                                    required>
+                                <label for="courseEndDate" class="form-label">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                                        class="mb-1 bi bi-calendar4-range" viewBox="0 0 16 16">
+                                        <path
+                                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
+                                        <path
+                                            d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" />
+                                    </svg> Chọn ngày kết thúc học
+                                </label>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-floating mb-3">
+                            <select name="teacherid" id="teacherid" class="form-select">
+                                <option value="" selected>Chọn giáo viên</option>
+                                <option value="DAA3024B-DEC1-422F-A070-144253088AD8">Nguyễn Văn A</option>
+                            </select>
+                            <label for="teacherid" class="form-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="mb-1 bi bi-person-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                </svg> Giáo viên</label>
+                        </div>
+                        <p class="text-secondary mb-2">Sau khi đăng kí, bạn sẽ học tại đây</p>
+                        <div class="form-floating mb-3">
+                            <input type="text" id="address" name="address" value="Quận 9, TP.HCM" class="form-control"
+                                readonly>
+                            <label for="address" class="form-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="mb-1 bi bi-geo-alt" viewBox="0 0 16 16">
+                                    <path
+                                        d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                </svg> Địa điểm học
+                            </label>
+                        </div>
+                        <p class="text-secondary mb-2">Chi tiết hơn vui lòng liên hệ số điện thoại trung tâm.
+                        </p>
+                        <div class="form-floating mb-3">
+                            <input type="text" id="phone" value="123456789" class="form-control" readonly>
+                            <label for="phone" class="form-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="mb-1 bi bi-telephone" viewBox="0 0 16 16">
+                                    <path
+                                        d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                </svg> Số điện thoại trung tâm <span style="font-weight: bold;">Learn<span
+                                        class="text-danger">2</span>Drive</span>
+                            </label>
+                        </div>
+                        <button class="btn btn-danger inline-center" type="submit">Đăng kí học</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
         </div>
-    </section>
-    <!--cars section-->
-    <section class="info" id="cars">
-        <div class="heading hidden-load">
-            <span>Khoá học</span>
-            <h2>Các khoá học lái xe</h2>
-        </div>
-        <!--Cars container-->
-        <div class="info-container container">
-            <!--box hidden-load 1-->
-            <div class="box hidden-load">
-                <img src="img/A1.jpg" alt="">
-                <a href="/Home/License?licenseid=A1">
-                    <h2>Hạng A1</h2>
-                </a>
-            </div>
-
-            <div class="box hidden-load">
-                <img src="img/A2.webp" alt="">
-                <a href="">
-                    <h2>Hạng A2</h2>
-                </a>
-            </div>
-            <!--box hidden-load 2-->
-            <div class="box hidden-load">
-                <img src="img/sosan.jpeg" alt="">
-                <a href="/Home/License?licenseid=B1">
-                    <h2>Hạng B1 số tự động</h2>
-                </a>
-            </div>
-
-            <!--box hidden-load 7-->
-            <div class="box hidden-load">
-                <img src="img/car5.jpg" alt="">
-                <a href="">
-                    <h2>Hạng B2</h2>
-                </a>
-            </div>
-
-            <!--box hidden-load 3-->
-            <div class="box hidden-load">
-                <img src="img/C.jpg" alt="">
-                <a href="">
-                    <h2>Hạng C</h2>
-                </a>
-            </div>
-
-            <!--box hidden-load 4-->
-            <div class="box hidden-load">
-                <img src="img/D.jpg">
-                <a href="">
-                    <h2>Hạng D-E</h2>
-                </a>
-            </div>
-        </div>
-
-    </section>
-
-    <!--About-->
-    <section>
-        <section class="about container hidden-load" id="about">
-            <div class="about-img hidden-load">
-                <img src="img/about.png" alt="">
-            </div>
-            <div class="about-text hidden-load">
-                <span>About Us</span>
-                <h2>Khoá học chất lượng với <br> Giá Rẻ</h2>
-                <p>Học Thử Trải Nghiệm trước khi Đăng kí</p>
-                <!--About Button-->
-                <p>Gọi Ngay</p>
-                <a href="#" class="btn2">SĐT</a>
+    </div>
+    <main>
+        <!--Home section-->
+        <section class="home hidden-load" id="home">
+            <div class="home-text hidden-load">
+                @* <h1>We have Everthing <br> your <span>car</span> Need</h1> *@
+                <h3 style="width: 28vw;">
+                    Chúc mừng bạn đến với trung tâm đào tạo lái xe
+                    <br />
+                    <br />
+                    Learn<span style="color: red;">2</span>Drive
+                </h3>
+                <!--home Button-->
+                @* <a href="" class="btn hidden-load discover-button">Khám phá</a> *@
             </div>
         </section>
-    </section>
-    <!--parts section-->
-    <section class="parts hidden-load" id="parts">
-        <div class="heading">
-            <span>What We Offer</span>
-            <h2>L2D</h2>
-            <p>Chúng Tôi luôn mang đến khóa học lái xe tốt nhất </p>
-        </div>
-        <!--parts container-->
-        <div class="parts-container container hidden-load">
-            <!--box hidden-load 1-->
-
-            <div class="box hidden-load">
-                <div class="icon-box hidden-load-img" style="width: 48px;">
-                    <img src="img/thanh-toan-da-dang.png" alt="">
+        <!--cars section-->
+        <section class="info" id="cars">
+            <div class="heading hidden-load">
+                <span style="font-weight: bold;">Khoá học</span>
+                <h2>Các hạng bằng lái đào tạo</h2>
+            </div>
+            <!--Cars container-->
+            <div class="info-container container">
+                <!--box hidden-load 1-->
+                <div class="box hidden-load">
+                    <img src="img/A1.jpg" alt="">
+                    <a href="/Home/License?licenseid=A1">
+                        <h2>Hạng A1</h2>
+                    </a>
                 </div>
-                <div class="content">
-                    Hình thức thanh toán đa dạng. Chi phí được chia ra nhiều lần đóng hoặc <span>trả góp </span> qua thẻ
-                    tín dụng giúp giảm tải cho sinh viên
+                <div class="box hidden-load">
+                    <img src="img/A2.webp" alt="">
+                    <a href="/Home/License?licenseid=A2">
+                        <h2>Hạng A2</h2>
+                    </a>
+                </div>
+                <!--box hidden-load 2-->
+                <div class="box hidden-load">
+                    <img src="img/sosan.jpeg" alt="">
+                    <a href="/Home/License?licenseid=B1">
+                        <h2>Hạng B1 số tự động</h2>
+                    </a>
+                </div>
+                <!--box hidden-load 7-->
+                <div class="box hidden-load">
+                    <img src="img/car5.jpg" alt="">
+                    <a href="/Home/License?licenseid=B2">
+                        <h2>Hạng B2</h2>
+                    </a>
+                </div>
+                <!--box hidden-load 3-->
+                <div class="box hidden-load">
+                    <img src="img/C.jpg" alt="">
+                    <a href="/Home/License?licenseid=C">
+                        <h2>Hạng C</h2>
+                    </a>
+                </div>
+                <!--box hidden-load 4-->
+                <div class="box hidden-load">
+                    <img src="img/D.jpg">
+                    <a href="/Home/License?licenseid=D">
+                        <h2>Hạng D-E</h2>
+                    </a>
                 </div>
             </div>
-
-            <!--box hidden-load 2-->
-
-            <div class="box hidden-load">
-                <div class="icon-box hidden-load-img" style="width: 48px;">
-                    <img src="img/thanh-toan-da-dang.png" alt="">
+        </section>
+        <!--About-->
+        <section>
+            <section class="about container hidden-load" id="about">
+                <div class="about-img hidden-load">
+                    <img src="img/about.png" alt="">
                 </div>
-                <div class="content">
-                    Hình thức thanh toán đa dạng. Chi phí được chia ra nhiều lần đóng hoặc <span>trả góp </span> qua thẻ
-                    tín dụng giúp giảm tải cho sinh viên
+                <div class="about-text hidden-load">
+                    <span>Về chúng tôi</span>
+                    <h2>Khoá học chất lượng với <br> Giá Rẻ</h2>
+                    <p>Học Thử Trải Nghiệm trước khi Đăng kí</p>
+                    <!--About Button-->
+                    <p>Gọi Ngay</p>
+                    <a href="" class="btn2">SĐT</a>
+                </div>
+            </section>
+        </section>
+        <!--parts section-->
+        <section class="parts hidden-load" id="parts">
+            <div class="heading">
+                <a href="" class="logo">Learn<span>2</span>Drive</a>
+                <p>Chúng tôi luôn cố gắng mang đến dịch vụ tốt nhất</p>
+            </div>
+            <button class="btn hidden-load discover-button"
+                style="position: relative;left: 50%;transform: translateX(-50%);" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" id="registerButton">Đăng kí
+                ngay</button>
+            <!--parts container-->
+            <div class="parts-container container hidden-load">
+                <!--box hidden-load 1-->
+                <div class="box hidden-load">
+                    <div class="icon-box hidden-load-img" style="width: 48px;">
+                        <i class="fa-solid fa-credit-card fa-xl" style="color: #dd2754;"></i>
+                    </div>
+                    <div class="content">
+                        Hình thức thanh toán đa dạng. Chi phí được chia ra nhiều lần đóng hoặc <span>trả góp </span> qua
+                        thẻ
+                        tín dụng giúp giảm tải cho sinh viên, học sinh.
+                    </div>
+                </div>
+                <!--box hidden-load 2-->
+                <div class="box hidden-load">
+                    <div class="icon-box hidden-load-img" style="width: 48px;">
+                        <i class="fa-solid fa-person-chalkboard fa-xl" style="color: #dd2754;"></i>
+                    </div>
+                    <div class="content">
+                        Đội ngũ giảng viên <span>giàu kinh nghiệm</span>,
+                        hỗ trợ học viên nhiệt tình từ <span>A-Z</span>, giúp học viên sớm thuần thục và làm quen với các
+                        thao tác, xử lý tình huống khi trên xe
+                    </div>
+                </div>
+                <!--box hidden-load 3-->
+                <div class="box hidden-load">
+                    <div class="icon-box hidden-load-img" style="width: 48px;">
+                        <i class="fa-solid fa-school fa-xl" style="color: #dd2754;"></i>
+                    </div>
+                    <div class="content">
+                        <span>Sân tập rộng, thoáng mát</span>. Trung tâm chúng tôi cung cấp đầy đủ các thiết bị, phương
+                        tiện
+                        cũng như cơ sở vật chất tốt nhất để
+                        giúp học viên sớm làm quen với bài thi sát hạch.
+                    </div>
+                </div>
+                <!--box hidden-load 4-->
+                <div class="box hidden-load">
+                    <div class="icon-box hidden-load-img" style="width: 48px;">
+                        <i class="fa-solid fa-car fa-xl" style="color: #dd2754;"></i>
+                    </div>
+                    <div class="content">
+                        <span>Đa dạng xe, mẫu mã</span> cho thuê giúp tăng sự hứng thú của học viên trong quá trình học
+                        ở
+                        trung tâm
+                    </div>
+                    <button class="btn btn-danger inline-center mt-2" onclick="location.href='/Rent';">Thuê
+                        ngay</button>
+                </div>
+                <!--box hidden-load 5-->
+                <div class="box hidden-load">
+                    <div class="icon-box hidden-load-img" style="width: 48px;">
+                        <i class="fa-solid fa-circle-info fa-xl" style="color: #dd2754;"></i>
+                    </div>
+                    <div class="content">
+                        <span>Thông tin hữu ích</span> với các bài viết về mẹo thi lý thuyết và thực hành của các hạng
+                        bằng
+                        lái
+                    </div>
+                </div>
+                <!--box hidden-load 6-->
+                <div class="box hidden-load">
+                    <div class="icon-box hidden-load-img" style="width: 48px;">
+                        <i class="fa-solid fa-id-card-clip fa-xl" style="color: #dd2754;"></i>
+                    </div>
+                    <div class="content">
+                        <span>Thủ tục đăng kí thi tiện lợi</span>, có thể đăng kí làm hồ sơ thi online cho nhiều hạng
+                        bằng
+                        lái khác nhau
+                    </div>
                 </div>
             </div>
-
-            <!--box hidden-load 3-->
-
-            <div class="box hidden-load">
-                <div class="icon-box hidden-load-img" style="width: 48px;">
-                    <img src="img/thanh-toan-da-dang.png" alt="">
-                </div>
-                <div class="content">
-                    Hình thức thanh toán đa dạng. Chi phí được chia ra nhiều lần đóng hoặc <span>trả góp </span> qua thẻ
-                    tín dụng giúp giảm tải cho sinh viên
-                </div>
-            </div>
-
-            <!--box hidden-load 4-->
-
-            <div class="box hidden-load">
-                <div class="icon-box hidden-load-img" style="width: 48px;">
-                    <img src="img/thanh-toan-da-dang.png" alt="">
-                </div>
-                <div class="content">
-                    Hình thức thanh toán đa dạng. Chi phí được chia ra nhiều lần đóng hoặc <span>trả góp </span> qua thẻ
-                    tín dụng giúp giảm tải cho sinh viên
-                </div>
-            </div>
-
-            <!--box hidden-load 5-->
-
-            <div class="box hidden-load">
-                <div class="icon-box hidden-load-img" style="width: 48px;">
-                    <img src="img/thanh-toan-da-dang.png" alt="">
-                </div>
-                <div class="content">
-                    Hình thức thanh toán đa dạng. Chi phí được chia ra nhiều lần đóng hoặc <span>trả góp </span> qua thẻ
-                    tín dụng giúp giảm tải cho sinh viên
-                </div>
-            </div>
-
-            <!--box hidden-load 6-->
-
-            <div class="box hidden-load">
-                <div class="icon-box hidden-load-img" style="width: 48px;">
-                    <img src="img/thanh-toan-da-dang.png" alt="">
-                </div>
-                <div class="content">
-                    Hình thức thanh toán đa dạng. Chi phí được chia ra nhiều lần đóng hoặc <span>trả góp </span> qua thẻ
-                    tín dụng giúp giảm tải cho sinh viên
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--Blog Container-->
-    <section class="blog" id="blog">
-        <div class="heading">
-            <span>Blog & News</span>
-            <h2>Our Blog Content</h2>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis, fugit hic molestias numquam voluptate,
-                dolores sit dolorem quisquam maiores.</p>
-        </div>
-        <!--Blog Container-->
-        <div class="blog-container container">
-            <!--box hidden-load 1-->
-            <div class="box hidden-load">
-                <img src="img/car1.jpg" alt="">
-                <span>August 21 2022</span>
-                <h3>How To Get Perfect Car At Low Price</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis, fugit hic molestias numquam
-                    voluptate, dolores sit dolorem quisquam maiores.</p>
-                <a href="#" class="blog-btn">Read More<i class='bx bx-right-arrow-alt'></i> </a>
-            </div>
-
-            <!--box hidden-load 2-->
-            <div class="box hidden-load">
-                <img src="img/car8.jpg" alt="">
-                <span>August 21 2022</span>
-                <h3>How To Get Perfect Car At Low Price</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis, fugit hic molestias numquam
-                    voluptate, dolores sit dolorem quisquam maiores.</p>
-                <a href="#" class="blog-btn">Read More<i class='bx bx-right-arrow-alt'></i> </a>
-            </div>
-
-            <!--box hidden-load 3-->
-            <div class="box hidden-load">
-                <img src="img/car3.jpg" alt="">
-                <span>August 21 2022</span>
-                <h3>How To Get Perfect Car At Low Price</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis, fugit hic molestias numquam
-                    voluptate, dolores sit dolorem quisquam maiores.</p>
-                <a href="#" class="blog-btn">Read More<i class='bx bx-right-arrow-alt'></i> </a>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
     <script>
         document.querySelector('.home-link').classList.add('active');
         document.querySelector('.home').style.backgroundImage = "url('/img/Background-home.png')";
+        async function checkLogin() {
+            try {
+                const response = await fetch('https://localhost:7235/api/login/check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                return response.ok;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        var registerButton = document.getElementById('registerButton');
+        registerButton.addEventListener('click', async (e) => {
+            var loggedIn = await checkLogin();
+            if (loggedIn === false) {
+                e.preventDefault();
+                window.location = '/Login';
+                return;
+            }
+        });
+        var registerForm = document.getElementById('RegisterForm');
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            var formData = new FormData(registerForm);
+            var url = `https://localhost:7235/api/hire/register/${UserId}`;
+            var response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            if (response.status !== 204) {
+                throw new Error(`HTTP Error! Status code: ${response.status}`);
+            }
+            alert(`Đăng kí học thành công!`);
+        });
     </script>
 </body>
 

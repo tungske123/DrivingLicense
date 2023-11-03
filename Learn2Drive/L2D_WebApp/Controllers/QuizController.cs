@@ -6,11 +6,12 @@ using System.Text.Json;
 using L2D_DataAccess.Utils;
 using System.Text;
 using System.Text.Json.Serialization;
-using Driving_License.Filters;
+using L2D_WebApp.Filters;
 using L2D_DataAccess.Repositories;
+using Microsoft.AspNetCore.JsonPatch;
 //using System.ComponentModel;
 
-namespace Driving_License.Controllers
+namespace L2D_WebApp.Controllers
 {
     public class QuizController : Controller
     {
@@ -118,7 +119,6 @@ namespace Driving_License.Controllers
                     .AsSplitQuery()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(att => att.AttemptId == attemptId);
-
             }
             return attemptSession;
         }
@@ -238,11 +238,124 @@ namespace Driving_License.Controllers
             //Calculate the result and forward to the result page
             var quizResultModel = await QuizRepository.Instance.CalculateQuizResult(Guid.Parse(AttemptSessionID));
             var QuizQuestionDataDB = await QuizRepository.Instance.GetQuizAttemptStats(Guid.Parse(AttemptSessionID));
-            quizResultModel.QuestionDataList.AddRange(QuizQuestionDataDB);
+            if (quizResultModel is not null)
+            {
+                quizResultModel.QuestionDataList.AddRange(QuizQuestionDataDB);
+                quizResultModel.AttemptID = Guid.Parse(AttemptSessionID);
+            }
             //Delete quiz session
             HttpContext.Session.Remove("quizsession");
             await HttpContext.Session.CommitAsync();
             return View("~/Views/QuizResult.cshtml", quizResultModel);
+        }
+
+        //CRUD
+
+        public record QuizFilterData
+        {
+            public string Keyword { get; set; }
+            public string LicenseID { get; set; }
+        };
+
+        [HttpPost]
+        [Route("api/quizzes")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetQuizzesPaging([FromBody] QuizFilterData data, int page = 1)
+        {
+            var query = _context.Quizzes.AsQueryable();
+            if (!string.IsNullOrEmpty(data.Keyword))
+            {
+                query = query.Where(quiz => quiz.Name.ToLower().Contains(data.Keyword.ToLower()));
+            }
+            if (!string.IsNullOrEmpty(data.LicenseID))
+            {
+                query = query.Where(quiz => quiz.LicenseId.Equals(data.LicenseID));
+            }
+            query = query.OrderBy(quiz => quiz.Name);
+            const int pageSize = 5;
+            var pageResult = await GetPagedDataAsync<Quiz>(query, page, pageSize);
+            return Ok(pageResult);
+        }
+
+        [HttpGet]
+        [Route("api/quiz/{qid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetQuizByID([FromRoute] int qid)
+        {
+            var quiz = await _context.Quizzes
+                .Include(q => q.Questions)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(q => q.QuizId == qid);
+            return (quiz is not null) ? Ok(quiz) : NotFound($"Can't find any quiz with id {qid}");
+        }
+
+        public record QuizFormData
+        {
+            public string QuizName { get; set; }
+            public string LicenseID { get; set; }
+            public int Quantity { get; set; }
+            public string Description { get; set; }
+            public bool HasRandomQuestions { get; set; }
+            public List<int> QuestionIDList { get; set; }
+        };
+
+        [HttpPost]
+        [Route("api/quizzes/generate")]
+        public async Task<IActionResult> GenerateQuizQuestionsRandomly([FromBody] QuizFormData data)
+        {
+            if (data is null)
+            {
+                return BadRequest();
+            }
+            if (data.HasRandomQuestions)
+            {
+                await QuizRepository.Instance.GenerateQuizQuestions(data.QuizName, data.LicenseID, data.Description, data.Quantity);
+                return NoContent();
+            }
+            if (data.QuestionIDList is null || data.QuestionIDList.Count == 0)
+            {
+                return BadRequest();
+            }
+            var quiz = new Quiz
+            {
+                Name = data.QuizName,
+                LicenseId = data.LicenseID,
+                Description = data.Description
+            };
+
+            var questionList = await _context.Questions
+                .Where(question => data.QuestionIDList.Contains(question.QuestionId))
+                .ToListAsync();
+            //Add to have table
+            foreach (var question in questionList)
+            {
+                quiz.Questions.Add(question);
+            }
+
+            await _context.Quizzes.AddAsync(quiz);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPatch]
+        [Route("api/quizzes/update/{qid:guid}")]
+        public async Task<IActionResult> UpdateQuiz([FromRoute] Guid qid, [FromBody] QuizFormData FormData)
+        {
+            if (qid == Guid.Empty || FormData is null)
+            {
+                return BadRequest();
+            }
+            var quiz = await _context.Quizzes.SingleOrDefaultAsync(q => q.QuizId.Equals(qid));
+            if (quiz is null)
+            {
+                return NotFound($"Can't find any quiz with id {qid}");
+            }
+            quiz.Name = FormData.QuizName;
+            quiz.LicenseId = FormData.LicenseID;
+            quiz.Description = FormData.Description;
+            _context.Quizzes.Update(quiz);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

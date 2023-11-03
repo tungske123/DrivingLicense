@@ -20,8 +20,8 @@
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
     <!--Form Sign up-->
-    <section class="form-c sign-up-form" id="container">
-        <div class="form-container sign-up-container">
+    <section class="form-c sign-up-form hidden-load" id="container">
+        <div class="form-container sign-up-container hidden-load">
             <form action="/Login/signup" class="needs-validation" method="post" novalidate>
                 <h1>Sign Up </h1>
                 <!--Icon social-->
@@ -66,7 +66,7 @@
                 <button class="primary mt-3" type="submit">Sign Up</button>
             </form>
         </div>
-        <div class="form-container sign-in-container">
+        <div class="form-container sign-in-container hidden-load">
             <form action="/Login/login" method="post" novalidate>
                 <h1>Đăng nhập</h1>
                 <p style="color:red">@TempData["Message"]</p>

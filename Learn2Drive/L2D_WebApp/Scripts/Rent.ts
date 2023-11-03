@@ -120,7 +120,7 @@ function createVehicleItem(vehicleId: string, name: string, category: string, pr
 
     const imageDiv = document.createElement('div');
     imageDiv.className = 'car_image';
-    imageDiv.innerHTML = `<img src="/img/vehicle/${image}" alt="">`;
+    imageDiv.innerHTML = `<img class="rounded-2" src="/img/vehicle/${image}" alt="">`;
 
     const bottomContentDiv = document.createElement('div');
     bottomContentDiv.className = 'car_bottom_content';
@@ -169,7 +169,7 @@ async function fetchVehicleDataAsync() {
         startPrice: startPrice,
         endPrice: endPrice
     };
-    const fetchURL: string = `https://localhost:7235/api/rent/${page}`;
+    const fetchURL: string = `https://localhost:7235/api/vehicle/${page}`;
     try {
         const response = await fetch(fetchURL, {
             method: 'POST',
@@ -299,7 +299,7 @@ async function renderPageItems(totalPages: number) {
 
 async function fetchTop1VehicleAsync() {
     try {
-        const response = await fetch('https://localhost:7235/api/rent/topone', {
+        const response = await fetch('https://localhost:7235/api/vehicle/topone', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -383,6 +383,8 @@ maxInput.addEventListener('input', () => {
     formatPriceInput(maxInput);
 });
 window.addEventListener('DOMContentLoaded', async () => {
+    const rentBtn = document.getElementById('rentButton') as HTMLButtonElement;
+    rentBtn.click();
     await fetchTop1VehicleAsync();
     await fetchVehicleDataAsync();
 });

@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 //using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using L2D_WebApp.Utils;
+
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
@@ -11,6 +14,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers(options =>
 {
     options.RespectBrowserAcceptHeader = true;
+    options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
+});
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 // builder.Services.AddControllers().AddJsonOptions(x =>
 //                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -24,6 +32,9 @@ builder.Services.AddDbContext<DrivingLicenseContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowMyOrigin", builder => builder.WithOrigins("http://127.0.0.1:5500")
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+    options.AddPolicy("AllowMyOrigin", builder => builder.WithOrigins("http://127.0.0.1:5502")
     .AllowAnyHeader()
     .AllowAnyMethod());
 });

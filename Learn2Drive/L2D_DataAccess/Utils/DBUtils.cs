@@ -4,6 +4,9 @@ using System.Data;
 
 namespace L2D_DataAccess.Utils;
 
+/*
+dotnet ef dbcontext scaffold "Server=(local);uid=sa;pwd=12345;database=DrivingLicense;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models --force --project "D:\Dev\C#\Learn2Drive\L2D_DataAccess\L2D_DataAccess.csproj"
+ */
 public static class DBUtils
 {
     public static SqlConnection getConnection()

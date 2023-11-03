@@ -1308,7 +1308,7 @@ header {
     height: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    justify-items: center;
+    justify-items: start;
     gap: 25px;
     .car_item
 
@@ -1676,3 +1676,36 @@ header {
 .show-section {
     display: unset;
 }
+/*.rent-card-section {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    column-gap: 20px;
+}
+
+.rent-card-section {
+    .card {
+        .card-title {
+            font-weight: bold;
+            color: var(--main-color);
+        }
+        .card-subtitle {
+            font-weight: bold;
+            font-size: large;
+        }
+        .card-body {
+            padding-inline: 10px;
+        }
+        .card-img :is(img) {
+            border-radius: 10px;
+        }
+        .card-description {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 1fr);
+            padding-inline: 5px;
+        }
+    }
+}
+.filter_car_bar {
+    margin-right: 0;
+} */

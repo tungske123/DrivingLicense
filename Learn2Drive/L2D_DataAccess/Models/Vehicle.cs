@@ -23,6 +23,8 @@ public partial class Vehicle
 
     public decimal RentPrice { get; set; }
 
+    public string Description { get; set; }
+
     public bool Status { get; set; }
 
     public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();

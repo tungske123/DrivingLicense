@@ -17,5 +17,5 @@ public partial class Answer
 
     public virtual ICollection<AttemptDetail> AttemptDetails { get; set; } = new List<AttemptDetail>();
 
-    public virtual Question Question { get; set; } = null!;
+    public virtual Question Question { get; set; }
 }

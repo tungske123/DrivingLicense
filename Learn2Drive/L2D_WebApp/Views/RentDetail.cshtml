@@ -6,6 +6,7 @@
     var nfi = cultureInfo.NumberFormat;
     nfi.CurrencySymbol = "";
     string formattedPrice = @Model.RentPrice.ToString("N0", nfi);
+    string ImagePath = @$"/img/vehicle/{Model.Image}";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -66,24 +67,24 @@
                         <div class="main-img">
                             <div class="cover-car-item">
                                 <img loading="lazy"
-                                     src="https://cdn-img-v2.webbnc.net/uploadv2/web/89/8958/product/2023/02/20/03/50/1676862271_1.jpg?v=4"
+                                     src="@ImagePath"
                                      alt="Cho thuê xe tự lái">
                             </div>
                         </div>
                         <div class="sub-img">
                             <div class="cover-car-item">
                                 <img loading="lazy"
-                                     src="https://cdn-img-v2.webbnc.net/uploadv2/web/89/8958/product/2023/02/20/03/50/1676862274_2.jpg?v=4"
+                                     src="@ImagePath"
                                      alt="Cho thuê xe tự lái">
                             </div>
                             <div class="cover-car-item">
                                 <img loading="lazy"
-                                     src="https://cdn-img-v2.webbnc.net/uploadv2/web/89/8958/product/2023/02/20/03/50/1676862277_3.jpg?v=4"
+                                     src="@ImagePath"
                                      alt="Cho thuê xe tự lái">
                             </div>
                             <div class="cover-car-item">
                                 <img loading="lazy"
-                                     src="https://cdn-img-v2.webbnc.net/uploadv2/web/89/8958/product/2023/02/20/03/50/1676862280_4.jpg?v=4"
+                                     src="@ImagePath"
                                      alt="Cho thuê xe tự lái">
                             </div>
                         </div>
@@ -117,7 +118,7 @@
                             </div>
                             <div class="dropdown-form">
                                 <label><i class="fa-solid fa-location-dot"></i> Địa điểm giao nhận xe</label>
-                                <div class="wrap-form has-arrow"><span class="value">TP. Hồ Chí Minh</span></div>
+                                <div class="wrap-form has-arrow"><span class="value">@Model.Address</span></div>
                             </div>
                             <div class="line-page"></div>
                             <div class="price-container">
@@ -199,10 +200,7 @@
                         <div class="info-car-desc">
                             <h6 style="color: red;">Mô tả</h6>
                             <p class="info-text shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                                Quasi tenetur dicta atque molestiae aperiam!
-                                Nulla quidem ipsum iusto temporibus necessitatibus ab velit amet ducimus laboriosam,
-                                illum voluptates a reprehenderit fugiat?
+                                @Model.Description
                             </p>
                         </div>
                     </div>

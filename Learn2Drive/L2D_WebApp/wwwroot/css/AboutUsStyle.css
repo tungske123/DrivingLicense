@@ -305,8 +305,7 @@ header.shadow #search-icon {
     overflow: hidden;
     padding: 0 .1em;
     cursor: pointer;
-    color: #1095c1;
-    ;
+    /* color: #1095c1; */
     border: solid #0000;
     margin-left: 10px;
 }
@@ -320,11 +319,16 @@ header.shadow #search-icon {
 
 .hover-box {
     border-width: .1em .1em calc(.1em + 20px) calc(.1em + 20px);
+    /* background:
+        conic-gradient(at left 20px bottom 20px,
+            #0000 90deg, rgb(255 255 255 /0.3) 0 225deg, rgb(255 255 255 /0.6) 0) border-box,
+        conic-gradient(at left calc(.1em + 20px) bottom calc(.1em + 20px),
+            #0000 90deg, #1095c1 0) 0 100%/calc(100% - .1em) calc(100% - .1em) border-box; */
     background:
         conic-gradient(at left 20px bottom 20px,
             #0000 90deg, rgb(255 255 255 /0.3) 0 225deg, rgb(255 255 255 /0.6) 0) border-box,
         conic-gradient(at left calc(.1em + 20px) bottom calc(.1em + 20px),
-            #0000 90deg, #1095c1 0) 0 100%/calc(100% - .1em) calc(100% - .1em) border-box;
+            #0000 90deg, #f33e3e 0) 0 100%/calc(100% - .1em) calc(100% - .1em) border-box;
     transform: translate(calc(20px/-1), 20px);
     clip-path:
         polygon(20px 0%,
@@ -422,7 +426,8 @@ header.shadow #search-icon {
 /*------------------------------------------------------------
 Third Section */
 .section-bg {
-    background-color: #6bc1e9;
+    /* background-color: #6bc1e9; */
+    background-color: #FF6969;
 }
 
 .third .third-section-content {
@@ -432,7 +437,8 @@ Third Section */
 .third .third-section-content h3 {
     font-weight: 400;
     font-size: 37px;
-    color: #37517e;
+    /* color: #37517e; */
+    color: white;
 }
 
 .third .third-section-content h4 {
@@ -443,7 +449,8 @@ Third Section */
 
 .third .third-section-content p {
     font-size: 15px;
-    color: #848484;
+    /* color: #848484; */
+    color: white;
 }
 
 .third .accordion-list {
@@ -477,7 +484,7 @@ Third Section */
 }
 
 .third .accordion-list span {
-    color: #47b2e4;
+    /* color: #47b2e4; */
     font-weight: 600;
     font-size: 18px;
     padding-right: 10px;
@@ -519,7 +526,8 @@ Third Section */
 Fourth Section */
 
 .fourth {
-    background: linear-gradient(rgba(40, 58, 90, 0.9), rgba(40, 58, 90, 0.9)), url("../img/cta-bg.jpg") fixed center center;
+    /* background: linear-gradient(rgba(40, 58, 90, 0.9), rgba(40, 58, 90, 0.9)), url("../img/cta-bg.jpg") fixed center center; */
+    background-color: #FF6969;
     background-size: cover;
     padding: 120px 0;
 }

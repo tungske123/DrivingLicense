@@ -11,9 +11,9 @@ public partial class Rent
 
     public Guid UserId { get; set; }
 
-    public DateTime StartDate { get; set; } = DateTime.MinValue;
+    public DateTime StartDate { get; set; }
 
-    public DateTime EndDate { get; set; } = DateTime.MinValue;
+    public DateTime EndDate { get; set; }
 
     public decimal TotalRentPrice { get; set; }
 

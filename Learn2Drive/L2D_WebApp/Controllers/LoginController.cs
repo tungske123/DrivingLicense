@@ -2,7 +2,6 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using L2D_DataAccess.Utils;
-using L2D_DataAccess.Models;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 //using Microsoft.AspNetCore.Authentication.Cookies;
 //using Driving_License.Models.Users;
 
-namespace Driving_License.Controllers
+namespace L2D_WebApp.Controllers
 {
     public class LoginController : Controller
     {
@@ -175,6 +174,18 @@ namespace Driving_License.Controllers
                 byte25string += targetData[i].ToString("x2");
             }
             return byte25string;
+        }
+
+        [HttpPost]
+        [Route("api/login/check")]
+        public IActionResult CheckLogin()
+        {
+            var usersession = HttpContext.Session.GetString("usersession");
+            if (string.IsNullOrEmpty(usersession))
+            {
+                return Unauthorized();
+            }
+            return Ok();
         }
     }
 }

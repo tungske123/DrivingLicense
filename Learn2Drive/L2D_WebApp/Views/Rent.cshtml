@@ -15,10 +15,16 @@
     <link rel="stylesheet" href="~/css/styleRent.css">
     <!--Browser Icons-->
     <link rel="icon" type="image/jpg" href="img/favicon_1.ico" />
+    <style>
+        .box {
+            background-color: none;
+        }
+    </style>
     <title>RentPage</title>
 </head>
 
 <body>
+    
     <!--HomePage Section-->
     <section class="home_page_section section" id="home_page">
         <div class="container">
@@ -32,7 +38,7 @@
                     Chúng tôi luôn cố gắng đem đến đa dạng các mẫu mã, dòng xe với chất lượng tốt
                     và giá cả phải chăng để phục vụ người học
                     <br>
-                    <button class="btn btn-outline-danger mt-3" onclick="location.href='#car';">Khám phá</button>
+                    <button class="btn btn-outline-danger mt-3" onclick="location.href='#car';" id="rentButton">Khám phá</button>
                 </div>
                 <!--Download Icon-->
                 <!--Bây có thể xoá-->
@@ -127,12 +133,6 @@
                     <div class="item">
                         <div class="icon text-success">
                             <i class="fa-solid fa-square-check "></i>
-                            Xe 4 chỗ
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="icon text-success">
-                            <i class="fa-solid fa-square-check "></i>
                             Đi êm
                         </div>
                     </div>
@@ -172,12 +172,12 @@
                         Tìm xe
                     </div>
                     <div class="head_sub_title">
-                        Lorem ipsum dolor sit amet consectetur adipisicing
+                        Learn<span style="color: red;">2</span>Drive luôn cố gắng cung cấp chất lượng xe tốt nhất
                     </div>
                 </div>
 
                 <div class="bottom_box">
-                    <div class="left_box">
+                    @* <div class="left_box">
                         <div class="circle_profile">
                             <img src="img/Assets/Image/Image-5.jpg" alt="">
                         </div>
@@ -193,11 +193,11 @@
                         <div class="circle_profile">
                             1k+
                         </div>
-                    </div>
+                    </div> *@
 
-                    <div class="separator"></div>
+                    @* <div class="separator"></div> *@
 
-                    <div class="right_box">
+                    @* <div class="right_box">
                         <div class="star_box">
                             <div class="icon">
                                 <i class="fa-solid fa-star"></i>
@@ -212,7 +212,7 @@
 
                             </p>
                         </div>
-                    </div>
+                    </div> *@
                 </div>
             </div>
 
@@ -338,6 +338,9 @@
             <ul class="pagination"></ul>
         </nav>
     </section>
+    <script>
+        document.querySelector('.rentLink').classList.add('active');
+    </script>
     <script src="~/js/Rent.js"></script>
 </body>
 

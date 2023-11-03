@@ -25,6 +25,7 @@ namespace L2D_DataAccess.Repositories
                 {
                     return new QuizResult
                     {
+                        AttemptID = AttemptID,
                         QuizName = reader["QuizName"] as string,
                         License = reader["License"] as string,
                         AttemptDate = Convert.ToDateTime(reader["AttemptDate"]),
@@ -95,6 +96,7 @@ namespace L2D_DataAccess.Repositories
                 {
                     quizResultList.Add(new QuizResult
                     {
+                        AttemptID = (Guid)(reader["AttemptID"]),
                         QuizName = reader["QuizName"] as string,
                         License = reader["License"] as string,
                         AttemptDate = Convert.ToDateTime(reader["AttemptDate"]),
@@ -115,6 +117,30 @@ namespace L2D_DataAccess.Repositories
                 await connection.CloseAsync();
             }
             return quizResultList;
+        }
+
+        public async Task GenerateQuizQuestions(string QuizName, string LicenseID, string Description, int Quantity = 25)
+        {
+            using var connection = new SqlConnection(DBUtils.getConnectionString());
+            try
+            {
+                await connection.OpenAsync();
+                using var command = new SqlCommand("[dbo].[proc_CreateQuiz]", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Name", QuizName);
+                command.Parameters.AddWithValue("@LicenseID", LicenseID);
+                command.Parameters.AddWithValue("@Description", Description);
+                command.Parameters.AddWithValue("@Quantity", Quantity);
+                await command.ExecuteNonQueryAsync();
+            }
+            catch (SqlException ex)
+            {
+                await Console.Out.WriteLineAsync($"Generate quiz questions error: {ex.Message}");
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
         }
     }
 }

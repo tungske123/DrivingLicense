@@ -4,7 +4,7 @@ namespace L2D_DataAccess.ViewModels
 {
     public class QuizResult
     {
-        [Key]
+        public Guid AttemptID { get; set; }
         public string QuizName { get; set; }
         public string License { get; set; }
         public DateTime AttemptDate { get; set; }
