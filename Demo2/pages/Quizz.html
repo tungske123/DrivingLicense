@@ -391,6 +391,46 @@
         </nav>
 
         <!--Table-->
+        <!--CRUD Quiz Section-->
+
+        <!-- Modal -->
+        <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm bộ đề</h5>
+                        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="h4 text-danger">Thông tin</p>
+                        <div style="display: flex;column-gap: 20px;">
+                            <div class="input-group">
+                                <input type="text" class="quizName form-control" name="QuizName" placeholder="Nhập tên bộ đề" required>
+                            </div>
+                            <div class="input-group">
+                                <input type="number" class="quizQuestionCnt form-control" name="quizQuestionCnt" 
+                                placeholder="Nhập số lượng câu hỏi" value="25" required>
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <select name="LicenseID" id="" class="quizLicense form-select">
+                                <option name="" id="" selected>Chọn loại bằng lái</option>
+                                <option value="A1">A1</option>
+                                <option value="A2">A2</option>
+                                <option value="A3">A3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn bg-gradient-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
@@ -399,7 +439,7 @@
                             <h6>Sinh Viên</h6>
                             <div class="d-flex align-items-center pb-0">
 
-                                <div class="dropdown justify-content-start " id="filterDropdown">
+                                <div class="dropdown justify-content-start" id="filterDropdown">
                                     <button type="button" class="btn dropdown-toggle mb-0 bg-white"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                         Filter
@@ -426,18 +466,9 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="align-items-center justify-content-center">
-                                    <button class="btn bg-gradient-danger mb-0" type="button"
-                                        id="createProductModalButton" data-modal-target="createProductModal"
-                                        data-modal-toggle="createProductModal">
-                                        <span class="btn-inner--icon">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                        <span class="btn-inner--text">
-                                            Thêm bộ đề
-                                        </span>
-                                    </button>
-                                </div>
+                                <button type="button" class="btn bg-gradient-danger mt-3" style="margin-left: 5px;" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">Thêm bộ đề</button>
+
 
                                 <div class="ms-md-auto pe-md-0 form-group mb-0 w-80">
                                     <div class="input-group input-group">
@@ -469,21 +500,21 @@
                                         <tr>
                                             <td scope="row">
 
-                                                <div class="text-xs font-weight-bold align-middle py-1">
-                                                    <span class="text-secondary text-xs font-weight-bold">Đề số 1</span>
+                                                <div class="text-sm font-weight-bold align-middle py-1">
+                                                    <span class="text-secondary text-sm font-weight-bold">Đề số 1</span>
                                                 </div>
                                             </td>
 
 
                                             <td scope="row">
-                                                <div class="text-xs font-weight-bold align-middle py-1">
-                                                    <span class="text-secondary text-xs font-weight-bold">A1</span>
+                                                <div class="text-sm font-weight-bold align-middle py-1">
+                                                    <span class="text-secondary text-sm font-weight-bold">A1</span>
                                                 </div>
                                             </td>
 
                                             <td scope="row">
-                                                <div class="text-xs font-weight-bold align-middle py-1 ">
-                                                    <span class="text-secondary text-xs font-weight-bold">Lorem ipsum
+                                                <div class="text-sm font-weight-bold align-middle py-1 ">
+                                                    <span class="text-secondary text-sm font-weight-bold">Lorem ipsum
                                                         dolor sit, amet consectetur adipisicing elit. Dolore voluptatum
                                                         quibusdam beatae obcaecati.</span>
                                                 </div>
@@ -491,7 +522,7 @@
 
                                             <td>
                                                 <div class="dropdown">
-                                                    
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -499,6 +530,11 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script src="../assets/js/core/popper.min.js"></script>
@@ -507,6 +543,7 @@
     <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="..//assets/js/soft-design-system.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
 </body>
 
 </html>

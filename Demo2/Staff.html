@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--flowbite css library-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.css" rel="stylesheet" />
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300&display=swap" rel="stylesheet">
+    <!--custom css files-->
+    <link rel="stylesheet" href="/Demo2/CSS/styleStaffPage.css">
+    <style>
+        .inline-center {
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .blur-background {
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Black with 60% opacity */
+        }
+
+        .open-dropdown {
+            position: absolute;
+            inset: auto auto 0px 0px;
+            margin: 0px;
+            transform: translate3d(1008px, -122.4px, 0px);
+        }
+    </style>
+    <title>Staff Page</title>
+</head>
+
+<body>
+    <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+        type="button"
+        class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        <span class="sr-only">Open sidebar</span>
+        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+            </path>
+        </svg>
+    </button>
+
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        aria-label="Sidebar">
+        <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+            <a href="" class="flex items-center pl-2.5 mb-5">
+                <img src="https://cdn-icons-png.flaticon.com/512/3721/3721600.png" class="h-6 mr-3 sm:h-7"
+                    alt="Learn2Drive" />
+                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+                    Learn<span class="text-red-700">2</span>Drive
+                </span>
+            </a>
+            <ul class="space-y-2 font-medium" id="sidebar-content">
+                <li class="dashboard-item">
+                    <a href="#staffInfo"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
+                        </svg>
+                        <span class="ml-3">Thông tin</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="#manageVehicle"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg"
+                            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            viewBox="0 0 512 512">
+                            
+                            <path
+                                d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
+                        </svg> -->
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.5 10.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Zm0 0a2.225 2.225 0 0 0-1.666.75H12m3.5-.75a2.225 2.225 0 0 1 1.666.75H19V7m-7 4V3h5l2 4m-7 4H6.166a2.225 2.225 0 0 0-1.666-.75M12 11V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v9h1.834a2.225 2.225 0 0 1 1.666-.75M19 7h-6m-8.5 3.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
+                        </svg>
+                        <span class="ml-3">Quản lý xe thuê</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="#manageQuiz"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5h6M9 8h6m-6 3h6M4.996 5h.01m-.01 3h.01m-.01 3h.01M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
+                        </svg>
+                        <span class="ml-3">Quản lý bộ đề</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="/Home"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8v10a1 1 0 0 0 1 1h4v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5h4a1 1 0 0 0 1-1V8M1 10l9-9 9 9" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Về trang chủ</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <section class="p-4 sm:ml-64 staff-tab" style="display: none;" id="staffInfo">
+        <form method="post" id="staffInfoForm">
+            <div class="mb-6">
+                <label for="fullname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Họ và
+                    tên</label>
+                <input type="text" id="fullname" name="FullName"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập họ và tên" required>
+            </div>
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
+                <div class="mb-6">
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ
+                        email</label>
+                    <input type="email" id="email" name="Email"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Nhập địa chỉ email" required>
+                </div>
+                <div class="mb-6">
+                    <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện
+                        thoại</label>
+                    <input type="tel" id="phone" name="Phone"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Nhập số điện thoại">
+                </div>
+            </div>
+            <div class="mb-6">
+                <label for="password"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <input type="password" id="password" name="Password"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập mật khẩu" required>
+            </div>
+            <div class="mb-6">
+                <label for="repass" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
+                    password</label>
+                <input type="password" id="repass"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Xác nhận mật khẩu" required>
+            </div>
+            <button type="submit"
+                class="inline-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                Lưu
+            </button>
+        </form>
+    </section>
+    <section class="p-4 sm:ml-64 staff-tab" id="manageVehicle" style="display: none;">
+        <template id="vehicle-row-template">
+            <tr class="border-b dark:border-gray-700">
+                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Toyota
+                    Vios</td>
+                <td class="px-4 py-3">Toyota</td>
+                <td class="px-4 py-3">2015</td>
+                <td class="px-4 py-3">4 chỗ</td>
+                <td class="px-4 py-3">B1</td>
+                <td class="px-4 py-3">250.000 VNĐ</td>
+                <td class="px-4 py-3 flex items-center justify-end buttons_cell">
+                    <button id="dropdown-button" data-dropdown-toggle="dropdown"
+                        class="dropdown_button inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                        type="button">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                    </button>
+                    <div id="dropdown"
+                        class="dropdown_content hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-1 text-sm" aria-labelledby="dropdown-button">
+                            <li>
+                                <button type="button" data-modal-target="updateProductModal"
+                                    data-modal-toggle="updateProductModal"
+                                    class="edit_btn flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20"
+                                        fill="currentColor" aria-hidden="true">
+                                        <path
+                                            d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                    </svg>
+                                    Sửa
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" data-modal-target="readProductModal"
+                                    data-modal-toggle="readProductModal"
+                                    class="details_btn flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20"
+                                        fill="currentColor" aria-hidden="true">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                    Chi tiết
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" data-modal-target="deleteModal" data-modal-toggle="deleteModal"
+                                    class="cancel_btn flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
+                                    <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"
+                                            d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
+                                    </svg>
+                                    Delete
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </template>
+        <!-- Start block -->
+        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+            <div class="mx-auto max-w-screen-xl">
+                <!-- Start coding here -->
+                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                    <div
+                        class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                        <div class="w-full md:w-1/2">
+                            <form class="flex items-center">
+                                <label for="vehicleSearch" class="sr-only">Search</label>
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                            fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="vehicleSearch"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Tìm theo tên xe">
+                                </div>
+                            </form>
+                        </div>
+                        <div
+                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                            <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
+                                data-modal-toggle="createProductModal"
+                                class="flex items-center justify-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                </svg>
+                                Thêm xe
+                            </button>
+                            <!-- <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown"
+                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                type="button">
+                                <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                </svg>
+                                Sắp xếp
+                            </button>
+                            <div id="actionsDropdown"
+                                class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="actionsDropdownButton">
+                                    <li>
+                                        <a href="#"
+                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Theo
+                                            tên</a>
+                                    </li>
+                                </ul>
+                                <div class="py-1">
+                                    <a href="#"
+                                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Theo
+                                        năm sản xuất</a>
+                                </div>
+                            </div> -->
+                            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
+                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                    class="h-4 w-4 mr-1.5 -ml-1 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Lọc
+                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                </svg>
+                            </button>
+                            <div id="filterDropdown"
+                                class="z-10 hidden px-3 pt-1 bg-white rounded-lg shadow w-80 dark:bg-gray-700 right-0">
+                                <div class="flex items-center justify-between pt-2">
+                                    <!-- <h6 class="text-sm font-medium text-black dark:text-white">Filters</h6> -->
+                                    <div class="flex items-center space-x-3">
+                                        <button id="resetButton"
+                                            class="text-red-700 flex items-center text-sm font-medium text-primary-600 dark:text-primary-500 hover:underline">Reset</button>
+                                    </div>
+                                </div>
+                                <div id="accordion-flush" data-accordion="collapse"
+                                    data-active-classes="text-black dark:text-white"
+                                    data-inactive-classes="text-gray-500 dark:text-gray-400">
+                                    <!-- Category -->
+                                    <h2 id="category-heading">
+                                        <button type="button"
+                                            class="flex items-center justify-between w-full py-2 px-1.5 text-sm font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                            data-accordion-target="#category-body" aria-expanded="true"
+                                            aria-controls="category-body">
+                                            <span>Loại xe</span>
+                                            <svg aria-hidden="true" data-accordion-icon=""
+                                                class="w-5 h-5 rotate-180 shrink-0" fill="currentColor"
+                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                            </svg>
+                                        </button>
+                                    </h2>
+                                    <div id="category-body" class="hidden" aria-labelledby="category-heading">
+                                        <!-- <button id="doubleDropdownButton" data-dropdown-toggle="motorbike"
+                                            data-dropdown-placement="right-start" type="button"
+                                            class="flex items-center gap-2 w-full py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <input type="checkbox"
+                                                class="type_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                value="Xe máy"> Xe máy
+                                        </button>
+                                        <div id="motorbike"
+                                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                            <ul class="space-y-2" style="padding: 10px;">
+                                                <li class="flex items-center">
+                                                    <input id="Honda" type="checkbox" value="Honda"
+                                                        class="brand_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="Honda"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Honda</label>
+                                                </li>
+                                                <li class="flex items-center">
+                                                    <input id="Yamaha" type="checkbox" value="Yamaha"
+                                                        class="brand_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="Yamaha"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Yamaha</label>
+                                                </li>
+                                            </ul>
+                                        </div> -->
+                                        <button id="doubleDropdownButton" data-dropdown-toggle="car"
+                                            data-dropdown-placement="right-start" type="button"
+                                            class="flex items-center gap-2 w-full py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <!-- <input type="checkbox"
+                                                class="type_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                value="Xe ô tô">Xe  -->
+                                        </button>
+                                        <div id="car"
+                                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                            <template id="filterBrandTemplate">
+                                                <li class="flex items-center">
+                                                    <input id="Mercedes" type="checkbox" value="Mercedes"
+                                                        class="brand_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="Mercedes"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Mercedes</label>
+                                                </li>
+                                            </template>
+                                            <ul class="space-y-2" style="padding: 10px;" id="filterBrandList">
+                                                <li class="flex items-center">
+                                                    <input id="Mercedes" type="checkbox" value="Mercedes"
+                                                        class="brand_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="Mercedes"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Mercedes</label>
+                                                </li>
+                                                <li class="flex items-center">
+                                                    <input id="BMW" type="checkbox" value="BMW"
+                                                        class="brand_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="BMW"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">BMW</label>
+                                                </li>
+                                                <li class="flex items-center">
+                                                    <input id="Vinfast" type="checkbox" value="Vinfast"
+                                                        class="brand_check w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                    <label for="Vinfast"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Vinfast</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Price -->
+                                    <h2 id="price-heading">
+                                        <button type="button"
+                                            class="flex items-center justify-between w-full py-2 px-1.5 text-sm font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                            data-accordion-target="#price-body" aria-expanded="true"
+                                            aria-controls="price-body">
+                                            <span>Price</span>
+                                            <svg aria-hidden="true" data-accordion-icon=""
+                                                class="w-5 h-5 rotate-180 shrink-0" fill="currentColor"
+                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                            </svg>
+                                        </button>
+                                    </h2>
+                                    <div id="price-body" class="hidden" aria-labelledby="price-heading">
+                                        <div
+                                            class="flex items-center py-2 space-x-3 font-light border-b border-gray-200 dark:border-gray-600">
+                                            <div>
+                                                <label for="start_price"
+                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Từ</label>
+                                                <input type="text" id="start_price"
+                                                    class="price_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    placeholder="Nhập giá nhỏ nhất">
+                                            </div>
+                                            <div>
+                                                <label for="end_price"
+                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Đến</label>
+                                                <input type="text" id="end_price"
+                                                    class="price_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    placeholder="Nhập giá lớn nhất">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead
+                                class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-4">Tên xe</th>
+                                    <th scope="col" class="px-4 py-3">Hãng xe</th>
+                                    <th scope="col" class="px-4 py-3">Năm sản xuất</th>
+                                    <th scope="col" class="px-4 py-3">Loại xe</th>
+                                    <th scope="col" class="px-4 py-3">Loại bằng lái</th>
+                                    <th scope="col" class="px-4 py-3">Giá thuê theo giờ</th>
+                                    <th scope="col" class="px-4 py-3">
+                                        <span class="sr-only">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="vehicleTableBody">
+                                <tr class="border-b dark:border-gray-700">
+                                    <td scope="row"
+                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        Toyota
+                                        Vios</td>
+                                    <td class="px-4 py-3">Toyota</td>
+                                    <td class="px-4 py-3">2015</td>
+                                    <td class="px-4 py-3">4 chỗ</td>
+                                    <td class="px-4 py-3">B1</td>
+                                    <td class="px-4 py-3">250.000 VNĐ</td>
+                                    <td class="px-4 py-3 flex items-center justify-end">
+                                        <button id="apple-imac-27-dropdown-button"
+                                            data-dropdown-toggle="apple-imac-27-dropdown"
+                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                            type="button">
+                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                            </svg>
+                                        </button>
+                                        <div id="apple-imac-27-dropdown"
+                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                            <ul class="py-1 text-sm" aria-labelledby="apple-imac-27-dropdown-button">
+                                                <li>
+                                                    <button type="button" data-modal-target="updateProductModal"
+                                                        data-modal-toggle="updateProductModal"
+                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                            viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path
+                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                                        </svg>
+                                                        Sửa
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button type="button" data-modal-target="readProductModal"
+                                                        data-modal-toggle="readProductModal"
+                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                            viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                        </svg>
+                                                        Chi tiết
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button type="button" data-modal-target="deleteModal"
+                                                        data-modal-toggle="deleteModal"
+                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
+                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                fill="currentColor"
+                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
+                                                        </svg>
+                                                        Delete
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div role="status" class="w-full animate-pulse" id="tableLoader" style="display: none;">
+                            <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+                            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
+                            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
+                            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+                            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                        aria-label="Table navigation">
+                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                            Showing
+                            <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                            of
+                            <span class="font-semibold text-gray-900 dark:text-white">1000</span>
+                        </span>
+                        <ul class="inline-flex items-stretch -space-x-px">
+                            <li>
+                                <button id="prevBtn"
+                                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    <span class="sr-only">Previous</span>
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </li>
+                            <span id="pagingContent" class="flex">
+                                <li>
+                                    <button
+                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</button>
+                                </li>
+                                <li>
+                                    <button
+                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</button>
+                                </li>
+                                <li> <!--active page-->
+                                    <button
+                                        class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</button>
+                                </li>
+                            </span>
+                            <li>
+                                <button id="nextBtn"
+                                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    <span class="sr-only">Next</span>
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+        <!-- End block -->
+        <!-- Create modal -->
+        <div id="createProductModal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <!-- Modal header -->
+                    <div
+                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thêm xe</h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-target="createProductModal" data-modal-toggle="createProductModal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <form action="" id="addForm" enctype="multipart/form-data" method="post">
+                        <figure class="max-w-lg" style="margin: 0 auto;margin-bottom: 10px;">
+                            <img class="h-auto max-w-full rounded-lg" id="addPreviewImage"
+                                src="https://flowbite.com/docs/images/examples/image-1@2x.jpg" alt="image description">
+                            <figcaption class="mt-2 text-sm text-center text-grey-500 dark:text-gray-400 font-bold">Ảnh
+                                xem
+                                trước
+                            </figcaption>
+                        </figure>
+                        <div class="flex items-center justify-center w-full mb-5">
+                            <label for="dropzone-file"
+                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
+                                            class="font-semibold">Click để upload ảnh xe</span></p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
+                                        800x400px)</p>
+                                </div>
+                                <input id="dropzone-file" type="file" accept="image/*" name="Image"
+                                    class="hidden add_image" />
+                            </label>
+                        </div>
+                        <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                            <div>
+                                <label for="name"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
+                                    xe</label>
+                                <input type="text" name="Name" id="name"
+                                    class="add_name bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập tên xe" required="">
+                            </div>
+                            <div>
+                                <label for="years"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Năm
+                                    sản xuất</label>
+                                <input type="text" name="Years" id="years"
+                                    class="add_years bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập năm sản xuất của xe" required="">
+                            </div>
+                            <div>
+                                <label for="brand"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hãng</label>
+                                <select id="brand" name="Brand"
+                                    class="add_brand bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected>Chọn hãng xe</option>
+                                    <option value="Toyota">Toyota</option>
+                                    <option value="Honda">Honda</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="price"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá</label>
+                                <input type="number" name="RentPrice" id="price"
+                                    class="add_price bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập giá xe" required="">
+                            </div>
+                            <div>
+                                <label for="newbrand"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><span
+                                        class="text-red-700">Hoặc</span> nhập hãng
+                                    mới</label>
+                                <input type="text" id="newbrand"
+                                    class="add_newbrand bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập tên hãng mới">
+                            </div>
+                            <div>
+                                <label for="category"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại
+                                    xe</label><select id="category" name="Type"
+                                    class="add_type bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <option selected="">Loại xe</option>
+                                    <option value="Xe máy 50cc - 175cc (Hạng A1)">Xe máy 50cc - 175cc (Hạng A1)</option>
+                                    <option value="Xe máy > 175cc (Hạng A2)">Xe máy &gt; 175cc (Hạng A2)</option>
+                                    <option value="Xe 3 bánh (Hạng A3)">Xe 3 bánh (Hạng A3)</option>
+                                    <option value="Xe máy kéo nhỏ (dưới 1000kg) (Hạng A4)">Xe máy kéo nhỏ (dưới 1000kg)
+                                        (Hạng A4)</option>
+                                    <option value="Ô tô 9 chỗ, tải, bán tải (dưới 3500kg) (Hạng B1, B2)">Ô tô 9 chỗ,
+                                        tải, bán tải (dưới 3500kg) (Hạng B1, B2)</option>
+                                    <option value="Ô tô > 10 chỗ, tải, bán tải (trên 3500kg) (Hạng C, D, E)">Ô tô &gt;
+                                        10 chỗ, tải, bán tải (trên 3500kg) (Hạng C, D, E)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="phone"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện
+                                    thoại</label>
+                                <input type="tel" id="phone" name="ContactNumber"
+                                    class="add_phone bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập số điện thoại liên hệ" required="">
+                            </div>
+                            <div>
+                                <label for="address"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ</label>
+                                <input type="text" id="address" name="Address"
+                                    class="add_address bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập địa chỉ liên hệ" required="">
+                            </div>
+                        </div>
+                        <div class=""><label for="add_description"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô
+                                tả</label><textarea id="add_description" rows="4" name="Description"
+                                class="add_description block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập mô tả xe"></textarea></div>
+                        <button type="submit"
+                            class="text-white mt-3 inline-flex items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                            <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Thêm xe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Update modal -->
+        <div id="updateProductModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <!-- Modal header -->
+                    <div
+                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sửa thông tin xe</h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-toggle="updateProductModal">
+                            <svg ar ia-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <form action="" method="post" enctype="multipart/form-data" id="updateForm">
+                        <figure class="max-w-lg" style="margin: 0 auto;margin-bottom: 10px;">
+                            <img class="h-auto max-w-full rounded-lg" id="updateVehicleImage"
+                                src="https://flowbite.com/docs/images/examples/image-1@2x.jpg" alt="image description">
+                            <figcaption class="mt-2 text-sm text-center text-grey-500 dark:text-gray-400 font-bold">Ảnh
+                                xem
+                                trước
+                            </figcaption>
+                        </figure>
+                        <div class="flex items-center justify-center w-full mb-5">
+                            <label for="dropzone-file"
+                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
+                                            class="font-semibold">Click để upload ảnh xe</span></p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
+                                        800x400px)</p>
+                                </div>
+                                <input id="dropzone-file" type="file" name="Image" class="hidden updateImageFile" />
+                            </label>
+                        </div>
+
+                        <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                            <div hidden id="updateVehicleID"></div>
+                            <div>
+                                <label for="name"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
+                                    xe</label>
+                                <input type="text" name="Name" id="name"
+                                    class="updateName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập tên xe">
+                            </div>
+                            <div>
+                                <label for="years"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Năm
+                                    sản xuất</label>
+                                <input type="text" name="Years" id="years"
+                                    class="updateYears bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập năm sản xuất của xe">
+                            </div>
+                            <div>
+                                <label for="brand"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hãng</label>
+                                <input type="text" name="Brand" id="brand"
+                                    class="updateBrand bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập hãng xe">
+                            </div>
+                            <div>
+                                <label for="price"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá</label>
+                                <input type="text" name="Price" id="price"
+                                    class="updatePrice bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập giá xe">
+                            </div>
+                            <div>
+                                <label for="category"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại
+                                    xe</label><select id="category"
+                                    class="updateType bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <option selected="">Loại xe</option>
+                                    <option value="Xe máy 50cc - 175cc (Hạng A1)">Xe máy 50cc - 175cc (Hạng A1)</option>
+                                    <option value="Xe máy > 175cc (Hạng A2)">Xe máy &gt; 175cc (Hạng A2)</option>
+                                    <option value="Xe 3 bánh (Hạng A3)">Xe 3 bánh (Hạng A3)</option>
+                                    <option value="Xe máy kéo nhỏ (dưới 1000kg) (Hạng A4)">Xe máy kéo nhỏ (dưới 1000kg)
+                                        (Hạng A4)</option>
+                                    <option value="Ô tô 9 chỗ, tải, bán tải (dưới 3500kg) (Hạng B1, B2)">Ô tô 9 chỗ,
+                                        tải, bán tải (dưới 3500kg) (Hạng B1, B2)</option>
+                                    <option value="Ô tô > 10 chỗ, tải, bán tải (trên 3500kg) (Hạng C, D, E)">Ô tô &gt;
+                                        10 chỗ, tải, bán tải (trên 3500kg) (Hạng C, D, E)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="phone"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện
+                                    thoại</label>
+                                <input type="tel" name="ContactNumber" id="phone"
+                                    class="updateContactNumber bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập số điện thoại liên hệ">
+                            </div>
+                            <div>
+                                <label for="address"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ</label>
+                                <input type="text" name="Address" id="address"
+                                    class="updateAddress bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập địa chỉ liên hệ">
+                            </div>
+                        </div>
+                        <div class=""><label for="description"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô
+                                tả</label><textarea id="description" rows="4"
+                                class="updateDescription block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập mô tả xe"></textarea></div>
+                        <button type="submit" style="display: inline-block;
+                    position: relative;
+                    left: 50%;
+                    transform: translateX(-50%);"
+                            class="text-white inline-flex items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                            Cập nhật xe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Read modal -->
+        <div id="readProductModal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <!-- Modal header -->
+                    <div class="flex justify-between mb-4 rounded-t sm:mb-5">
+                        <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                            <h3 class="font-semibold ">Thông tin xe</h3>
+                        </div>
+                        <div>
+                            <button type="button"
+                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-toggle="readProductModal">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+                    </div>
+                    <dl>
+                        <!-- <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Ảnh</dt> -->
+                        <figure class="max-w-lg">
+                            <img class="h-auto max-w-full rounded-lg" id="readVehicleImage"
+                                src="https://i1-vnexpress.vnecdn.net/2023/05/10/Vios202310jpg-1683690295.jpg?w=750&h=450&q=100&dpr=1&fit=crop&s=BteldbQmWr_H2MzwpRG3DQ"
+                                alt="image description">
+                            <figcaption class="mt-2 text-xl text-center text-black-500 dark:text-gray-400 font-bold"
+                                id="readVehicleName">Toyota
+                                Vios
+                            </figcaption>
+                        </figure>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Mô tả</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readDescription">Lorem
+                            ipsum dolor sit amet
+                            consectetur adipisicing elit. Debitis qui placeat, voluptatum nam ipsum, minima facilis
+                            deserunt, maiores quisquam veniam rerum? Illo inventore laboriosam omnis provident aut eum
+                            tenetur vitae.</dd>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Hãng</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readBrand">Toyota</dd>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Năm sản xuất</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readYears">2015</dd>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Giá thuê</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readPrice">250.000 VNĐ/
+                            Giờ</dd>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Bằng lái</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400" id="readLicense">B1</dd>
+                    </dl>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-3 sm:space-x-4">
+                            <button type="button"
+                                class="text-white inline-flex items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                <svg aria-hidden="true" class="mr-1 -ml-1 w-5 h-5" fill="currentColor"
+                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                    <path fill-rule="evenodd"
+                                        d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Sửa
+                            </button>
+                        </div>
+                        <button type="button"
+                            class="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                            <svg aria-hidden="true" class="w-5 h-5 mr-1.5 -ml-1" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Xóa
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Delete modal -->
+        <div id="deleteModal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <button type="button" btnaction="cancel"
+                        class="deleteModalBtn text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="deleteModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
+                        fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to delete this item?</p>
+                    <div class="flex justify-center items-center space-x-4">
+                        <button data-modal-toggle="deleteModal" type="button" btnaction="cancel"
+                            class="deleteModalBtn py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No,
+                            cancel</button>
+                        <button type="submit" btnaction="confirm"
+                            class="deleteModalBtn py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Yes,
+                            I'm sure
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/Demo2/ts/Vehicle.js"></script>
+    </section>
+    <section class="p-4 sm:ml-64 staff-tab" id="manageQuiz" style="display: none;">
+
+        <!-- <button data-modal-target="questionDetailsModal" data-modal-toggle="questionDetailsModal"
+        class="block w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button">
+        Default modal
+    </button> -->
+        <!-- Default Modal -->
+        <div id="questionDetailsModal" tabindex="-1"
+            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-lg max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                            Chi tiết câu hỏi
+                        </h3>
+                        <button type="button" onclick="toggleQuestionDetailsModal();"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-6">
+                        <p class="mb-4 text-gray-500 dark:text-gray-400 whitespace-normal" style="text-wrap: balance;"
+                            id="questionText">
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium, velit. Dicta aliquid,
+                            animi ducimus minima minus nobis eum fugiat praesentium. Veritatis nihil obcaecati natus
+                            ducimus
+                            culpa omnis, error tempora deserunt!
+                        </p>
+                        <img srcset="https://flowbite.com/docs/images/examples/image-1@2x.jpg"
+                            class="w-full h-auto max-w-xl rounded-lg" alt="image description" id="questionImage">
+                        <hr />
+                        <template id="answer-template">
+                            <div class="flex items-center mb-4">
+                                <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                    class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                <label for="default-radio-1"
+                                    class="answerLabel ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Anwser
+                                    1</label>
+                            </div>
+                        </template>
+                        <div id="questionModalAnswersSection">
+                            <div class="flex items-center mb-4">
+                                <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                    class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                <label for="default-radio-1"
+                                    class="answerLabel ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Anwser
+                                    1</label>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                    class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                <label for="default-radio-1"
+                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 2</label>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                    class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                <label for="default-radio-1"
+                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 3</label>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                    class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                <label for="default-radio-1"
+                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Answer 4</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div
+                        class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        <button type="button" onclick="toggleQuestionDetailsModal();"
+                            class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Start block -->
+        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+                <!-- Start coding here -->
+                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                    <div
+                        class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                        <div class="w-full md:w-1/2">
+                            <form class="flex items-center">
+                                <label for="quizSearchBar" class="sr-only">Search</label>
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                            fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="quizSearchBar"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Tìm theo tên đề" required="">
+                                </div>
+                            </form>
+                        </div>
+                        <div
+                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                            <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
+                                data-modal-toggle="createProductModal"
+                                class="flex items-center justify-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                </svg>
+                                Thêm bộ đề
+                            </button>
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+
+                                <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
+                                    class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                    type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                        class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Bộ lọc
+                                    <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                    </svg>
+                                </button>
+                                <div id="filterDropdown"
+                                    class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <a href="" id="clearQuizFilter" class="text-sm text-red-700 underline">Xóa bộ
+                                        lọc</a>
+                                    <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Hạng bằng lái
+                                    </h6>
+                                    <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
+                                        <li class="flex items-center">
+                                            <input id="A1" type="radio" value="A1" name="quizLicense"
+                                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                            <label for="A1"
+                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">A1</label>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <input id="A2" type="radio" value="A2" name="quizLicense"
+                                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                            <label for="A2"
+                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">A2</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <template id="quiz-row-template">
+                            <tr class="border-b dark:border-gray-700">
+                                <td scope="row"
+                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Đề số 1</td>
+                                <td class="px-4 py-3">A1</td>
+                                <td class="px-4 py-3 whitespace-normal">
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit. Excepturi impedit nulla consequuntur doloremque eius soluta
+                                    aliquam commodi eligendi, dolorem quae, delectus corrupti autem est non magnam
+                                    beatae praesentium libero neque.</td>
+                                <td class="px-4 py-3 flex items-center justify-end">
+                                    <button id="benq-ex2710q-dropdown-button"
+                                        data-dropdown-toggle="benq-ex2710q-dropdown"
+                                        class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                        type="button">
+                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        </svg>
+                                    </button>
+                                    <div id="benq-ex2710q-dropdown"
+                                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm" aria-labelledby="benq-ex2710q-dropdown-button">
+                                            <li>
+                                                <button type="button" data-modal-target="updateProductModal"
+                                                    data-modal-toggle="updateProductModal"
+                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                        viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path
+                                                            d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                                    </svg>
+                                                    Edit
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" data-modal-target="readProductModal"
+                                                    data-modal-toggle="readProductModal"
+                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                        viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                    </svg>
+                                                    Preview
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" data-modal-target="deleteModal"
+                                                    data-modal-toggle="deleteModal"
+                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
+                                                    <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            fill="currentColor"
+                                                            d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
+                                                    </svg>
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead
+                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-4">Tên bộ đề</th>
+                                    <th scope="col" class="px-4 py-3">Loại bằng lái</th>
+                                    <th scope="col" class="px-4 py-3">Mô tả</th>
+                                    <th scope="col" class="px-4 py-3">
+                                        <span class="sr-only">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="quizTableBody">
+                                <tr class="border-b dark:border-gray-700">
+                                    <td scope="row"
+                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        Đề số 1</td>
+                                    <td class="px-4 py-3">A1</td>
+                                    <td class="px-4 py-3 whitespace-normal">
+                                        Lorem ipsum dolor sit amet consectetur
+                                        adipisicing elit. Excepturi impedit nulla consequuntur doloremque eius soluta
+                                        aliquam commodi eligendi, dolorem quae, delectus corrupti autem est non magnam
+                                        beatae praesentium libero neque.</td>
+                                    <td class="px-4 py-3 flex items-center justify-end">
+                                        <button id="benq-ex2710q-dropdown-button"
+                                            data-dropdown-toggle="benq-ex2710q-dropdown"
+                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                            type="button">
+                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                            </svg>
+                                        </button>
+                                        <div id="benq-ex2710q-dropdown"
+                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                            <ul class="py-1 text-sm" aria-labelledby="benq-ex2710q-dropdown-button">
+                                                <li>
+                                                    <button type="button" data-modal-target="updateProductModal"
+                                                        data-modal-toggle="updateProductModal"
+                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                            viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path
+                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                                        </svg>
+                                                        Edit
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button type="button" data-modal-target="readProductModal"
+                                                        data-modal-toggle="readProductModal"
+                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                            viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                        </svg>
+                                                        Preview
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button type="button" data-modal-target="deleteModal"
+                                                        data-modal-toggle="deleteModal"
+                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
+                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                fill="currentColor"
+                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
+                                                        </svg>
+                                                        Delete
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                        aria-label="Table navigation">
+                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                            Showing
+                            <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                            of
+                            <span class="font-semibold text-gray-900 dark:text-white">1000</span>
+                        </span>
+                        <ul class="inline-flex items-stretch -space-x-px">
+                            <li>
+                                <button id="prevQuizPageBtn"
+                                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    <span class="sr-only">Previous</span>
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </li>
+                            <span class="pageBarBody flex">
+                                <li>
+                                    <a href=""
+                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                                </li>
+                                <li>
+                                    <a href=""
+                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                                </li>
+                                <li>
+                                    <a href=""
+                                        class="text-red-700 flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
+                                </li>
+                                <li>
+                                    <a href=""
+                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
+                                </li>
+                                <li>
+                                    <a href=""
+                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
+                                </li>
+                            </span>
+                            <li>
+                                <button id="nextQuizPageBtn"
+                                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    <span class="sr-only">Next</span>
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+        <!-- End block -->
+        <!-- Create modal -->
+        <div id="createProductModal" tabindex="-1" aria-hidden="true"
+            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-7xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <!-- Modal header -->
+                    <div
+                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thêm đề</h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-target="createProductModal" data-modal-toggle="createProductModal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns=" http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+
+                    <div id="accordion-color" data-accordion="collapse"
+                        data-active-classes="bg-red-100 dark:bg-gray-800 text-red-600 dark:text-white">
+                        <h2 id="accordion-color-heading-1">
+                            <button type="button"
+                                class="flex items-center justify-between w-full p-5 font-bold text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 dark:border-gray-700 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-color-body-1" aria-expanded="true"
+                                aria-controls="accordion-color-body-1">
+                                <span>Thông tin</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-color-body-1" class="hidden" aria-labelledby="accordion-color-heading-1">
+                            <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+                                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                                    <div>
+                                        <label for="name"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
+                                            bộ đề</label>
+                                        <input type="text" name="name" id="name"
+                                            class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                            placeholder="Nhập tên bộ đề" required="">
+                                    </div>
+                                    <div>
+                                        <label for="amount"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số
+                                            lượng câu hỏi</label>
+                                        <input type="number" name="amount" id="amount" value="25"
+                                            class="quizQuestionCnt bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                            placeholder="Nhập số lượng câu hỏi" required="">
+                                    </div>
+                                    <div><label for="license"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại
+                                            bằng
+                                            lái</label><select id="license" name="license"
+                                            class="quizLicense bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                            <option selected="">Chọn loại bằng lái</option>
+                                            <option value="A1">A1</option>
+                                            <option value="A2">A2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class=""><label for="quizdescription"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô tả bộ
+                                        đề</label><textarea id="quizdescription" rows="4" name="quizdescription"
+                                        class="quizDescription block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Nhập mô tả bộ đề ở đây">Bộ đề cho bằng lái A1 gồm 25 câu</textarea>
+                                </div>
+                                <div style="margin-block: 20px;">
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="randomCheckBox" value="random" class="sr-only peer">
+                                        <div
+                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600">
+                                        </div>
+                                        <span class="ml-3 text-sm font-medium text-red-700 dark:text-gray-300">
+                                            Ngẫu nhiên câu hỏi
+                                        </span>
+                                    </label>
+                                    <p id="helper-text-explanation"
+                                        class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        Tạo sẵn
+                                        câu hỏi ngẫu nhiên cho đề dựa trên số lượng đã nhập (theo loại bằng).</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 id="questionSelectionSection">
+                            <button type="button"
+                                class="flex items-center justify-between w-full p-5 font-bold text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 dark:border-gray-700 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-color-body-2" aria-expanded="false"
+                                aria-controls="accordion-color-body-2">
+                                <span>Câu hỏi</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-color-body-2" class="hidden" aria-labelledby="questionSelectionSection">
+                            <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
+                                <div class="searchSection mb-3">
+                                    <div class="flex">
+                                        <button id="dropdown-button" data-dropdown-toggle="dropdown"
+                                            class="licenseFilterBtn flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                                            type="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                                class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20"
+                                                fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                                    clip-rule="evenodd" />
+                                            </svg> Loại bằng<svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                                            </svg></button>
+                                        <div id="dropdown"
+                                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                            <ul
+                                                class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                <li
+                                                    class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="A1" type="radio" value="A1" name="list-radio"
+                                                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                        <label for="A1"
+                                                            class="licenseCheck w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">A1</label>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="A2" type="radio" value="A2" name="list-radio"
+                                                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                        <label for="A2"
+                                                            class="licenseCheck w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">A2</label>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="B1" type="radio" value="B1" name="list-radio"
+                                                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                        <label for="B1"
+                                                            class="licenseCheck w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">B1</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="relative w-full">
+                                            <input type="search" id="questionSearchBar"
+                                                class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-red-300 focus:border-red-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-red-400"
+                                                placeholder="Nhập nội dung câu hỏi">
+                                            <button type="submit"
+                                                class="absolute top-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-red-700 rounded-r-lg border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                                <svg class="w-4 h-4" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                                </svg>
+                                                <span class="sr-only">Search</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div id="questionTableSection" class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                    <template id="question-row-template">
+                                        <tr
+                                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td class="w-4 p-4">
+                                                <div class="flex items-center">
+                                                    <input id="question" type="checkbox"
+                                                        class="questionCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                    <label for="question" class="sr-only">checkbox</label>
+                                                </div>
+                                            </td>
+                                            <td scope="row"
+                                                class="py-4 font-medium text-gray-900 whitespace-normal dark:text-white max-w-md">
+                                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt
+                                                natus
+                                                accusamus quidem reprehenderit officia possimus ullam inventore
+                                                maxime?
+                                                Nam odit tempore ab cumque fuga inventore! Sed officiis aliquid
+                                                recusandae tenetur?
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                A1
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                Có
+                                            </td>
+                                            <td>
+                                                <button type="button"
+                                                    class="detailsButton focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
+                                                    tiết</button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                        <thead
+                                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="p-4">
+                                                    <div class="flex items-center">
+                                                        <input id="checkbox-all-search" type="checkbox"
+                                                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                        <label for="checkbox-all-search"
+                                                            class="sr-only">checkbox</label>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-center">
+                                                    Nội dung câu hỏi
+                                                </th>
+                                                <th scope="col" class="px-6 py-3 text-center">
+                                                    Loại bằng lái
+                                                </th>
+                                                <th scope="col" class="px-6 py-3 text-red-700 text-center">
+                                                    Câu điểm liệt
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="questionTableBody">
+                                            <tr
+                                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <td class="w-4 p-4">
+                                                    <div class="flex items-center">
+                                                        <input id="question" type="checkbox"
+                                                            class="questionCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                        <label for="question" class="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row"
+                                                    class="py-4 font-medium text-gray-900 whitespace-normal dark:text-white max-w-md">
+                                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt
+                                                    natus
+                                                    accusamus quidem reprehenderit officia possimus ullam inventore
+                                                    maxime?
+                                                    Nam odit tempore ab cumque fuga inventore! Sed officiis aliquid
+                                                    recusandae tenetur?
+                                                </th>
+                                                <td class="px-6 py-4 text-center">
+                                                    A1
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
+                                                    Có
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
+                                                        tiết</button>
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <td class="w-4 p-4">
+                                                    <div class="flex items-center">
+                                                        <input id="checkbox-table-search-3" type="checkbox"
+                                                            class="questionCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                        <label for="checkbox-table-search-3"
+                                                            class="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row"
+                                                    class="py-4 font-medium text-gray-900 whitespace-normal dark:text-white max-w-md">
+                                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt
+                                                    natus
+                                                    accusamus quidem reprehenderit officia possimus ullam inventore
+                                                    maxime?
+                                                    Nam odit tempore ab cumque fuga inventore! Sed officiis aliquid
+                                                    recusandae tenetur?
+                                                </th>
+                                                <td class="px-6 py-4 text-center">
+                                                    A2
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
+                                                    Có
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
+                                                        tiết</button>
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <td class="w-4 p-4">
+                                                    <div class="flex items-center">
+                                                        <input id="checkbox-table-search-3" type="checkbox"
+                                                            class="questionCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                        <label for="checkbox-table-search-3"
+                                                            class="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row"
+                                                    class="py-4 font-medium text-gray-900 whitespace-normal dark:text-white max-w-md">
+                                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt
+                                                    natus
+                                                    accusamus quidem reprehenderit officia possimus ullam inventore
+                                                    maxime?
+                                                    Nam odit tempore ab cumque fuga inventore! Sed officiis aliquid
+                                                    recusandae tenetur?
+                                                </th>
+                                                <td class="px-6 py-4 text-center">
+                                                    A2
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
+                                                    Có
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
+                                                        tiết</button>
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <td class="w-4 p-4">
+                                                    <div class="flex items-center">
+                                                        <input id="checkbox-table-search-3" type="checkbox"
+                                                            class="questionCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                        <label for="checkbox-table-search-3"
+                                                            class="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row"
+                                                    class="py-4 font-medium text-gray-900 whitespace-normal dark:text-white max-w-md">
+                                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt
+                                                    natus
+                                                    accusamus quidem reprehenderit officia possimus ullam inventore
+                                                    maxime?
+                                                    Nam odit tempore ab cumque fuga inventore! Sed officiis aliquid
+                                                    recusandae tenetur?
+                                                </th>
+                                                <td class="px-6 py-4 text-center">
+                                                    A2
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
+                                                    Có
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
+                                                        tiết</button>
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <td class="w-4 p-4">
+                                                    <div class="flex items-center">
+                                                        <input id="checkbox-table-search-3" type="checkbox"
+                                                            class="questionCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                        <label for="checkbox-table-search-3"
+                                                            class="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row"
+                                                    class="py-4 font-medium text-gray-900 whitespace-normal dark:text-white max-w-md">
+                                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt
+                                                    natus
+                                                    accusamus quidem reprehenderit officia possimus ullam inventore
+                                                    maxime?
+                                                    Nam odit tempore ab cumque fuga inventore! Sed officiis aliquid
+                                                    recusandae tenetur?
+                                                </th>
+                                                <td class="px-6 py-4 text-center">
+                                                    A2
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
+                                                    Có
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Chi
+                                                        tiết</button>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                                        aria-label="Table navigation">
+                                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                            Số câu hỏi đã chọn:
+                                            <span class="font-semibold text-red-700 dark:text-white"
+                                                id="chosenQuestionCount">0 câu</span>
+                                        </span>
+                                        <ul class="inline-flex items-stretch -space-x-px">
+                                            <li>
+                                                <button id="prevQuestionButton"
+                                                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                                    <span class="sr-only">Previous</span>
+                                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                        viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </li>
+                                            <span id="questionPageBar" class="flex">
+                                                <li>
+                                                    <a href=""
+                                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                                                </li>
+                                                <li>
+                                                    <a href=""
+                                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                                                </li>
+                                                <li>
+                                                    <a href=""
+                                                        class="flex items-center text-red-700 justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
+                                                </li>
+                                                <li>
+                                                    <a href=""
+                                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
+                                                </li>
+                                                <li>
+                                                    <a href=""
+                                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
+                                                </li>
+                                            </span>
+                                            <li>
+                                                <button id="nextQuestionButton"
+                                                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                                    <span class="sr-only">Next</span>
+                                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                        viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+
+                    <button type="button" id="quizAddButton"
+                        class="inline-center text-white mt-10 bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Thêm
+                        đề này</button>
+
+                </div>
+            </div>
+        </div>
+        <!-- Update modal -->
+        <div id="updateProductModal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <!-- Modal header -->
+                    <div
+                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sửa thông tin đề</h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-toggle="updateProductModal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <form action="#">
+                        <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                            <div>
+                                <label for="name"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
+                                    bộ đề</label>
+                                <input type="text" name="name" id="name"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập tên bộ đề" required="">
+                            </div>
+                            <div>
+                                <label for="amount"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số
+                                    lượng câu hỏi</label>
+                                <input type="number" name="amount" id="amount"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nhập số lượng câu hỏi" required="">
+                            </div>
+                            <div><label for="license"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại bằng
+                                    lái</label><select id="license" name="license"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <option selected="">Loại bằng lái</option>
+                                    <option value="A1">A1</option>
+                                    <option value="A2">A2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class=""><label for="quizdescription"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô tả bộ
+                                đề</label><textarea id="quizdescription" rows="4" name="quizdescription"
+                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập mô tả bộ đề ở đây"></textarea>
+                        </div>
+                        <div class="flex items-center space-x-4 mt-3">
+                            <button type="submit" id="updateBtn"
+                                class="flex items-center justify-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Lưu</button>
+                            <button type="button"
+                                class="text-red-600 inline-flex items-center  border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                                <svg class="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Delete
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Read modal -->
+        <div id="readProductModal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <!-- Modal header -->
+                    <div class="flex justify-between mb-4 rounded-t sm:mb-5">
+                        <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                            <h3 class="font-semibold ">Thông tin bộ đề</h3>
+                        </div>
+                        <div>
+                            <button type="button"
+                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-toggle="readProductModal">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+                    </div>
+                    <dl>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Tên bộ đề</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Đề số 1</dd>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Loại bằng lái</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">A1</dd>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Số lượng câu hỏi</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+                            25
+                        </dd>
+                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Mô tả</dt>
+                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Lorem, ipsum dolor sit amet
+                            consectetur adipisicing elit. Adipisci tempora libero quam nostrum, sapiente nesciunt! Totam
+                            magni tempora alias aut quisquam, ab nisi sunt repellat commodi cupiditate accusantium
+                            delectus
+                            neque?</dd>
+                    </dl>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-3 sm:space-x-4">
+                            <button type="button"
+                                class="text-white inline-flex items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                <svg aria-hidden="true" class="mr-1 -ml-1 w-5 h-5" fill="currentColor"
+                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                    <path fill-rule="evenodd"
+                                        d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Sửa
+                            </button>
+                            <button type="button"
+                                class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Preview</button>
+                        </div>
+                        <button type="button"
+                            class="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                            <svg aria-hidden="true" class="w-5 h-5 mr-1.5 -ml-1" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Delete modal -->
+        <div id="deleteModal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <!-- Modal content -->
+                <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <button type="button"
+                        class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="deleteModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
+                        fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <p class="mb-4 text-gray-500 dark:text-gray-300">Xác nhận xóa bộ đề</p>
+                    <div class="flex justify-center items-center space-x-4">
+                        <button data-modal-toggle="deleteModal" type="button"
+                            class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Hủy</button>
+                        <button type="submit"
+                            class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Đồng
+                            ý xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/Demo2/ts/QuizCRUD.js"></script>
+    </section>
+
+
+    <script src="/Demo2/ts/Staff.js"></script>
+    <!--flowbite js library-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
+    <!--datepicker library-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
+    <!--chart library-->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</body>
+
+</html>

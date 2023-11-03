@@ -33,7 +33,8 @@
                 <button class="icon-button btn btn-outline-danger" onclick="closeModal();">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                         <path fill="none" d="M0 0h24v24H0z" />
-                        <path fill="currentColor" d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
+                        <path fill="currentColor"
+                            d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
                     </svg>
                 </button>
             </header>
@@ -43,7 +44,7 @@
                         <th><i class="fa-solid fa-car"></i> Xe</th>
                         <th><i class="fa-solid fa-calendar-days"></i> Ngày thuê</th>
                         <th><i class="fa-solid fa-calendar-days"></i> Ngày hết hạn</th>
-                        <th><i class="fa-solid fa-money-bill"></i>  Tổng chi phí</th>
+                        <th><i class="fa-solid fa-money-bill"></i> Tổng chi phí</th>
                     </tr>
                     <tr>
                         <td>Honda City</td>
@@ -59,7 +60,7 @@
             </footer>
         </article>
     </div>
-    <div class="rent-body"> 
+    <div class="rent-body">
         <div class="detail-car">
             <div class="cover-car-modal">
                 <div class="m-container">
@@ -100,14 +101,16 @@
                         <div class="rent-box shadow-lg p-3 mb-5 bg-body-tertiary rounded" id="cardetail"
                             style="position: relative;">
                             <div class="form-floating">
-                                <input id="startdate" type="datetime-local" class="form-control mb-2 mt-1 start-date" name="startdate"
-                                value="2023-09-01T08:30" />
-                                <label for="startdate" class="form-label"><i class="fa-solid fa-calendar-days"></i> Ngày bắt đầu thuê</label>
+                                <input id="startdate" type="datetime-local" class="form-control mb-2 mt-1 start-date"
+                                    name="startdate" value="2023-09-01T08:30" />
+                                <label for="startdate" class="form-label"><i class="fa-solid fa-calendar-days"></i> Ngày
+                                    bắt đầu thuê</label>
                             </div>
                             <div class="form-floating">
-                                <input id="enddate" type="datetime-local" class="form-control mb-2 end-date" name="enddate"
-                                    value="2023-09-01T08:30" />
-                                <label for="enddate" class="form-label"><i class="fa-solid fa-calendar-days"></i> Ngày kết thúc thuê</label>
+                                <input id="enddate" type="datetime-local" class="form-control mb-2 end-date"
+                                    name="enddate" value="2023-09-01T08:30" />
+                                <label for="enddate" class="form-label"><i class="fa-solid fa-calendar-days"></i> Ngày
+                                    kết thúc thuê</label>
                             </div>
                             <div class="dropdown-form">
                                 <label><i class="fa-solid fa-location-dot"></i> Địa điểm giao nhận xe</label>
@@ -166,19 +169,22 @@
                                 </div>
                                 <div class="outstanding-features__item">
                                     <div class="title">
-                                        <p class="sub" style="color: red;"><i class="fa-regular fa-copyright"></i> Thương Hiệu</p>
+                                        <p class="sub" style="color: red;"><i class="fa-regular fa-copyright"></i>
+                                            Thương Hiệu</p>
                                         <p class="main">Honda</p>
                                     </div>
                                 </div>
                                 <div class="outstanding-features__item">
                                     <div class="title">
-                                        <p class="sub" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá</p>
+                                        <p class="sub" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá
+                                        </p>
                                         <p class="main">950.000 VNĐ/Giờ</p>
                                     </div>
                                 </div>
                                 <div class="outstanding-features__item">
                                     <div class="title">
-                                        <p class="sub" style="color: red;"><i class="fa-regular fa-id-card"></i> Bằng lái</p>
+                                        <p class="sub" style="color: red;"><i class="fa-regular fa-id-card"></i> Bằng
+                                            lái</p>
                                         <button class="btn btn-danger" style="display: block;">B1</button>
                                     </div>
                                 </div>
@@ -188,21 +194,173 @@
                         <div class="info-car-desc">
                             <h6 style="color: red;">Mô tả</h6>
                             <p class="info-text shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
-                                Quasi tenetur dicta atque molestiae aperiam! 
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                                Quasi tenetur dicta atque molestiae aperiam!
                                 Nulla quidem ipsum iusto temporibus necessitatibus ab velit amet ducimus laboriosam,
                                 illum voluptates a reprehenderit fugiat?
                             </p>
                         </div>
                     </div>
+                    <div class="course-register-section" style="width: 60%;display: inline-block;
+                    position: relative;
+                    left: 50%;
+                    transform: translateX(-50%);">
+                        <form action="" method="post" id="RegisterForm">
+                            <div class="shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                                <h6 style="color: red;" class="mb-3">Đăng kí kèm giáo viên dạy lái xe</h6>
+                                <p class="text-secondary">
+                                    Nhằm nâng cao chất lượng đào tạo cũng như hỗ trợ học viên, trung tâm chúng tôi có hỗ
+                                    trợ
+                                    học viên đăng
+                                    kí thêm giáo viên hướng dẫn tập lái A-Z. Bạn vui lòng chọn ngày và ca học bên dưới.
+                                    Hiện tại trung tâm đang hỗ trợ 3 ca học.
+                                </p>
+                                <ul class="list-group text-secondary" style="margin-block: 10px;">
+                                    <li class="list-group-item text-secondary">
+                                        <div class="form-check">
+                                            <input class="form-check-input" value="morning" type="radio" name="slot" id="slot1" checked>
+                                            <label class="form-check-label" for="slot1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-brightness-high"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                                                </svg> Ca sáng: <span class="text-danger"
+                                                    style="font-weight: bold;">7:00 ~
+                                                    11:00</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item text-secondary">
+                                        <div class="form-check">
+                                            <input class="form-check-input" value="afternoon" type="radio" name="slot" id="slot2">
+                                            <label class="form-check-label" for="slot2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-sunset" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                                                </svg> Ca chiều: <span class="text-danger"
+                                                    style="font-weight: bold;">14:00 ~ 18:00</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item text-secondary">
+                                        <div class="form-check">
+                                            <input class="form-check-input" value="evening" type="radio" name="slot" id="slot3">
+                                            <label class="form-check-label" for="slot3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-moon" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                                                </svg> Ca tối: <span class="text-danger"
+                                                    style="font-weight: bold;">17:00 ~
+                                                    21:00</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="form-floating mb-3">
+                                    <select name="Licenseid" id="licenseid" class="form-select" required>
+                                        <option value="" selected>Chọn loại bằng lái</option>
+                                        <option value="A1">A1</option>
+                                        <option value="A2">A2</option>
+                                        <option value="B1">B1</option>
+                                    </select>
+                                    <label for="licenseid" class="form-label">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="mb-1 bi bi-postcard" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4Zm7.5.5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7ZM2 5.5a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5Zm0 2a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5Zm0 2a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5ZM10.5 5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3ZM13 8h-2V6h2v2Z" />
+                                        </svg> Loại bằng lái
+                                    </label>
+                                </div>
+
+                                <div style="display: flex;justify-content: space-between;">
+                                    <div class="form-floating mb-3" style="width: 45%;">
+                                        <input type="date" id="courseStartDate" name="courseStartDate"
+                                            class="form-control" required>
+                                        <label for="courseStartDate" class="form-label">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+                                                fill="currentColor" class="mb-1 bi bi-calendar4-range"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
+                                                <path
+                                                    d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" />
+                                            </svg> Chọn ngày bắt đầu học
+                                        </label>
+                                    </div>
+                                    <div class="form-floating mb-3" style="width: 45%;">
+                                        <input type="date" id="courseEndDate" name="courseEndDate" class="form-control"
+                                            required>
+                                        <label for="courseEndDate" class="form-label">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+                                                fill="currentColor" class="mb-1 bi bi-calendar4-range"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
+                                                <path
+                                                    d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" />
+                                            </svg> Chọn ngày kết thúc học
+                                        </label>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="form-floating mb-3">
+                                    <select name="teacherid" id="teacherid" class="form-select">
+                                        <option value="" selected>Chọn giáo viên</option>
+                                        <option value="DAA3024B-DEC1-422F-A070-144253088AD8">Nguyễn Văn A</option>
+                                    </select>
+                                    <label for="teacherid" class="form-label">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mb-1 bi bi-person-fill" viewBox="0 0 16 16">
+                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                          </svg> Giáo viên</label>
+                                </div>
+                                <p class="text-secondary mb-2">Sau khi đăng kí, bạn sẽ học tại đây</p>
+                                <div class="form-floating mb-3">
+                                    <input type="text" id="address" name="address" value="Quận 9, TP.HCM" class="form-control"
+                                        readonly>
+                                    <label for="address" class="form-label">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="mb-1 bi bi-geo-alt" viewBox="0 0 16 16">
+                                            <path
+                                                d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                                            <path
+                                                d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                        </svg> Địa điểm học
+                                    </label>
+                                </div>
+
+                                <p class="text-secondary mb-2">Chi tiết hơn vui lòng liên hệ số điện thoại trung tâm.
+                                </p>
+                                <div class="form-floating mb-3">
+                                    <input type="text" id="phone" value="123456789" class="form-control" readonly>
+                                    <label for="phone" class="form-label">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="mb-1 bi bi-telephone" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                        </svg> Số điện thoại trung tâm <span style="font-weight: bold;">Learn<span
+                                                class="text-danger">2</span>Drive</span>
+                                    </label>
+                                </div>
+
+                                <button class="btn btn-danger" style="display: inline-block;
+                                position: relative;
+                                left: 50%;
+                                transform: translateX(-50%);" type="submit">Đăng kí học</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-    <sc ript src="/Demo2/ts/RentDetailFunctions.js"></script>
+    <script src="/Demo2/ts/RentDetailFunctions.js"></script>
 </body>
 
 </html>

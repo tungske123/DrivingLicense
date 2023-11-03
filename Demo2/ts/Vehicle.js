@@ -63,9 +63,90 @@ var tableLoader = document.getElementById('tableLoader');
 var createModal = document.getElementById('createProductModal');
 var page = 1;
 var sendData = new VehicleRequestData();
+function loadVehicleTypesData(typeList) {
+    if (typeList === null || typeList.length === 0) {
+        console.log('No vehicle types');
+        return;
+    }
+    var addTypeSelect = document.querySelector('.add_type');
+    addTypeSelect.options.length = 0;
+    var updateTypeSelect = document.querySelector('.updateType');
+    updateTypeSelect.options.length = 0;
+    typeList.forEach(function (type) {
+        var option = document.createElement('option');
+        option.text = type;
+        option.value = type;
+        addTypeSelect.add(option);
+        updateTypeSelect.add(option);
+    });
+}
+function loadVehicleBrandsData(brandList) {
+    if (brandList === null || brandList.length === 0) {
+        console.log('No vehicle brands');
+        return;
+    }
+    var addBrandSelect = document.querySelector('.add_brand');
+    addBrandSelect.options.length = 0;
+    var defaultOption = document.createElement('option');
+    defaultOption.text = 'Chọn hãng xe';
+    defaultOption.value = "";
+    defaultOption.selected = true;
+    addBrandSelect.add(defaultOption);
+    var filterBrandList = document.getElementById('filterBrandList');
+    filterBrandList.innerHTML = "";
+    var filterBrandTemplate = document.getElementById('filterBrandTemplate');
+    brandList.forEach(function (brand) {
+        var option = document.createElement('option');
+        option.text = brand;
+        option.value = brand;
+        addBrandSelect.add(option);
+        var clone = document.importNode(filterBrandTemplate.content, true);
+        var brandCheck = clone.querySelector('.brand_check');
+        brandCheck.setAttribute('id', brand);
+        brandCheck.setAttribute('value', brand);
+        var brandLabel = clone.querySelector('label');
+        brandLabel.textContent = brand;
+        filterBrandList.appendChild(clone);
+    });
+}
+function fetchVehiclesFilterData() {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, response, data, brandList, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    url = "https://localhost:7235/api/vehicles/filterdata";
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })];
+                case 1:
+                    response = _a.sent();
+                    if (!response.ok) {
+                        throw new Error("HTTP Error! Status code: ".concat(response.status));
+                    }
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    console.log(data);
+                    brandList = data.brandList;
+                    loadVehicleBrandsData(brandList);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    console.error("Error: ".concat(error_1));
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
 function fetchVehiclesData() {
     return __awaiter(this, void 0, void 0, function () {
-        var fetchUrl, response, data, error_1;
+        var fetchUrl, response, data, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -94,8 +175,8 @@ function fetchVehiclesData() {
                     renderPagingBar();
                     return [3 /*break*/, 5];
                 case 4:
-                    error_1 = _a.sent();
-                    console.error("Error: ".concat(error_1));
+                    error_2 = _a.sent();
+                    console.error("Error: ".concat(error_2));
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
@@ -240,8 +321,11 @@ function reverseFormatPrice(price) {
 window.addEventListener('DOMContentLoaded', function () { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, fetchVehiclesData()];
+            case 0: return [4 /*yield*/, fetchVehiclesFilterData()];
             case 1:
+                _a.sent();
+                return [4 /*yield*/, fetchVehiclesData()];
+            case 2:
                 _a.sent();
                 return [2 /*return*/];
         }
@@ -278,7 +362,7 @@ function resetFilter() {
 }
 function fetchSingleVehicleData(vehicleId) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, response, data, vehicle, error_2;
+        var url, response, data, vehicle, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -303,8 +387,8 @@ function fetchSingleVehicleData(vehicleId) {
                     vehicle = data;
                     return [2 /*return*/, vehicle];
                 case 4:
-                    error_2 = _a.sent();
-                    console.error("Error! ".concat(error_2));
+                    error_3 = _a.sent();
+                    console.error("Error! ".concat(error_3));
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
@@ -313,14 +397,14 @@ function fetchSingleVehicleData(vehicleId) {
 }
 function addVehicle(data) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, response, error_3;
+        var url, response, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     url = "https://localhost:7235/api/vehicles/add";
                     _a.label = 1;
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
+                    _a.trys.push([1, 5, , 6]);
                     return [4 /*yield*/, fetch(url, {
                             method: 'POST',
                             body: data
@@ -331,12 +415,18 @@ function addVehicle(data) {
                         throw new Error("Http Error! Status code: ".concat(response.status));
                     }
                     console.log('Add vehicle success');
-                    return [3 /*break*/, 4];
+                    return [4 /*yield*/, fetchVehiclesData()];
                 case 3:
-                    error_3 = _a.sent();
-                    console.error("Error: ".concat(error_3));
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    _a.sent();
+                    return [4 /*yield*/, fetchVehiclesFilterData()];
+                case 4:
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_4 = _a.sent();
+                    console.error("Error: ".concat(error_4));
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
@@ -401,7 +491,7 @@ function loadVehicleToEditModal(vehicleId) {
 }
 function UpdateVehicle(vehicleId) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, updateForm, formData, fileImageInput, updateNameElement, updateYearsElement, updateBrandElement, updatePriceElement, updateTypeElement, updateContactNumberElement, updateAddressElement, updateDescriptionElement, imageFile, response, error_4;
+        var url, updateForm, formData, fileImageInput, updateNameElement, updateYearsElement, updateBrandElement, updatePriceElement, updateTypeElement, updateContactNumberElement, updateAddressElement, updateDescriptionElement, imageFile, response, error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -436,7 +526,7 @@ function UpdateVehicle(vehicleId) {
                     formData.append('RentPrice', updatePriceElement.value);
                     _a.label = 1;
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
+                    _a.trys.push([1, 5, , 6]);
                     return [4 /*yield*/, fetch(url, {
                             method: 'PATCH',
                             body: formData
@@ -447,19 +537,25 @@ function UpdateVehicle(vehicleId) {
                         throw new Error("Http error! Status code: ".concat(response.status));
                     }
                     console.log('Update vehicle success!');
-                    return [3 /*break*/, 4];
+                    return [4 /*yield*/, fetchVehiclesData()];
                 case 3:
-                    error_4 = _a.sent();
-                    console.error("Http error!".concat(error_4));
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    _a.sent();
+                    return [4 /*yield*/, fetchVehiclesFilterData()];
+                case 4:
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_5 = _a.sent();
+                    console.error("Http error!".concat(error_5));
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
 }
 function DeleteVehicle(vehicleId) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, response, error_5;
+        var url, response, error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -470,7 +566,7 @@ function DeleteVehicle(vehicleId) {
                     url = "https://localhost:7235/api/vehicles/delete/".concat(vehicleId);
                     _a.label = 1;
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
+                    _a.trys.push([1, 5, , 6]);
                     return [4 /*yield*/, fetch(url, {
                             method: 'DELETE',
                             headers: {
@@ -483,12 +579,18 @@ function DeleteVehicle(vehicleId) {
                         throw new Error("Http error! Status code: ".concat(response.status));
                     }
                     console.log('Delete vehicle success!');
-                    return [3 /*break*/, 4];
+                    return [4 /*yield*/, fetchVehiclesData()];
                 case 3:
-                    error_5 = _a.sent();
-                    console.error("Http error!".concat(error_5));
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    _a.sent();
+                    return [4 /*yield*/, fetchVehiclesFilterData()];
+                case 4:
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_6 = _a.sent();
+                    console.error("Http error!".concat(error_6));
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
@@ -699,12 +801,9 @@ addForm.addEventListener('submit', function (e) { return __awaiter(_this, void 0
                 // if (descriptionContent) {
                 //     formData.append('Description', descriptionContent);
                 // }
+                formData.append('Description', addDescriptionInput.value);
                 return [4 /*yield*/, addVehicle(formData)];
             case 1:
-                // let descriptionContent = tinymce.get('add_description')?.getContent();
-                // if (descriptionContent) {
-                //     formData.append('Description', descriptionContent);
-                // }
                 _a.sent();
                 alert('Thêm xe thành công');
                 return [2 /*return*/];

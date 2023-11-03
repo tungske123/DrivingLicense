@@ -34,6 +34,77 @@ const tableLoader = document.getElementById('tableLoader') as HTMLDivElement;
 const createModal = document.getElementById('createProductModal') as HTMLDivElement;
 var page = 1;
 var sendData: VehicleRequestData = new VehicleRequestData();
+
+
+function loadVehicleTypesData(typeList: string[]) {
+    if (typeList === null || typeList.length === 0) {
+        console.log('No vehicle types');
+        return;
+    }
+    const addTypeSelect = document.querySelector('.add_type') as HTMLSelectElement;
+    addTypeSelect.options.length = 0;
+    const updateTypeSelect = document.querySelector('.updateType') as HTMLSelectElement;
+    updateTypeSelect.options.length = 0;
+    typeList.forEach(type => {
+        let option = document.createElement('option');
+        option.text = type;
+        option.value = type;
+        addTypeSelect.add(option);
+        updateTypeSelect.add(option);
+    });
+}
+
+function loadVehicleBrandsData(brandList: string[]) {
+    if (brandList === null || brandList.length === 0) {
+        console.log('No vehicle brands');
+        return;
+    }
+    const addBrandSelect = document.querySelector('.add_brand') as HTMLSelectElement;
+    addBrandSelect.options.length = 0;
+    const defaultOption = document.createElement('option');
+    defaultOption.text = 'Chọn hãng xe';
+    defaultOption.value = ``;
+    defaultOption.selected = true;
+    addBrandSelect.add(defaultOption);
+    const filterBrandList = document.getElementById('filterBrandList') as HTMLUListElement;
+    filterBrandList.innerHTML = ``;
+    const filterBrandTemplate = document.getElementById('filterBrandTemplate') as HTMLTemplateElement;
+    brandList.forEach(brand => {
+        let option = document.createElement('option');
+        option.text = brand;
+        option.value = brand;
+        addBrandSelect.add(option);
+        let clone = document.importNode(filterBrandTemplate.content, true);
+        let brandCheck = clone.querySelector('.brand_check') as HTMLInputElement;
+        brandCheck.setAttribute('id', brand);
+        brandCheck.setAttribute('value', brand);
+        let brandLabel = clone.querySelector('label') as HTMLLabelElement;
+        brandLabel.textContent = brand;
+        filterBrandList.appendChild(clone);
+    });
+}
+async function fetchVehiclesFilterData() {
+    try {
+        const url = `https://localhost:7235/api/vehicles/filterdata`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP Error! Status code: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        const brandList: string[] = data.brandList;
+        loadVehicleBrandsData(brandList);
+        // const typeList: string[] = data.typeList;
+        // loadVehicleTypesData(typeList);
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+}
 async function fetchVehiclesData() {
     const fetchUrl = `https://localhost:7235/api/vehicle/${page}`;
     try {
@@ -170,6 +241,7 @@ function reverseFormatPrice(price: string): number {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+    await fetchVehiclesFilterData();
     await fetchVehiclesData();
 });
 
@@ -228,6 +300,8 @@ async function addVehicle(data: FormData) {
             throw new Error(`Http Error! Status code: ${response.status}`);
         }
         console.log('Add vehicle success');
+        await fetchVehiclesData();
+        await fetchVehiclesFilterData();
     } catch (error) {
         console.error(`Error: ${error}`);
     }
@@ -318,6 +392,8 @@ async function UpdateVehicle(vehicleId: string) {
             throw new Error(`Http error! Status code: ${response.status}`);
         }
         console.log('Update vehicle success!');
+        await fetchVehiclesData();
+        await fetchVehiclesFilterData();
     } catch (error) {
         console.error(`Http error!${error}`);
     }
@@ -340,6 +416,8 @@ async function DeleteVehicle(vehicleId: string) {
             throw new Error(`Http error! Status code: ${response.status}`);
         }
         console.log('Delete vehicle success!');
+        await fetchVehiclesData();
+        await fetchVehiclesFilterData();
     } catch (error) {
         console.error(`Http error!${error}`);
     }
@@ -455,13 +533,13 @@ addForm.addEventListener('submit', async (e: Event) => {
 
     const addNameInput = document.querySelector('.add_name') as HTMLInputElement;
     const addYearsInput = document.querySelector('.add_years') as HTMLInputElement;
-    const addBrandInput = document.querySelector('.add_brand') as HTMLInputElement;
+    const addBrandInput = document.querySelector('.add_brand') as HTMLSelectElement;
     const addNewBrandInput = document.querySelector('.add_newbrand') as HTMLInputElement;
     const addPriceInput = document.querySelector('.add_price') as HTMLInputElement;
-    const addTypeInput = document.querySelector('.add_type') as HTMLInputElement;
+    const addTypeInput = document.querySelector('.add_type') as HTMLSelectElement;
     const addAddressInput = document.querySelector('.add_address') as HTMLInputElement;
     const addContactNumber = document.querySelector('.add_phone') as HTMLInputElement;
-    const addDescriptionInput = document.querySelector('.add_description') as HTMLInputElement;
+    const addDescriptionInput = document.querySelector('.add_description') as HTMLTextAreaElement;
     let formData = new FormData();
     let imageFile = addImageInput.files![0];
     formData.append('Name', addNameInput.value);
@@ -486,6 +564,7 @@ addForm.addEventListener('submit', async (e: Event) => {
     // if (descriptionContent) {
     //     formData.append('Description', descriptionContent);
     // }
+    formData.append('Description', addDescriptionInput.value);
     await addVehicle(formData);
     alert('Thêm xe thành công');
 });
