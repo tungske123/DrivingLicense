@@ -9,6 +9,7 @@
     <!--icon file-->
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2554/2554896.png">
     <title>L2D - Bằng lái B1</title>
+    
 </head>
 
 <body>
@@ -18,9 +19,14 @@
     }
     <div class="container-fluid" style="margin-top: 100px;">
         <div class="header row border-bottom border-danger hidden-load">
-            <h1 class="title hidden-load col-md-4">
-                Bằng lái B1
+            <h1 id="Heading" class="title hidden-load col-md-4">
+                 Bằng lái B1
             </h1>
+            
+            @* Get licenseid *@
+            <div style="display: none" id="licenseid">@ViewBag.licenseid</div>
+            
+            @* Render License *@
             <div class="description hidden-load col-md-8">
                 <article class="text-content">
                     <p class="lead">
@@ -30,17 +36,19 @@
                             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
                         </svg>
                     </p>
-                    <p>
-                        Bằng lái xe B1 là giấy phép lái xe hạng thấp nhất do cơ quan nhà nước có thẩm quyền cấp cho chủ
-                        phương tiện theo quy định được nêu rõ tại Thông tư 12/2017/TT-BGTVT. <br>
-                        Theo đó, bằng lái xe B1 dành cho người điều khiển xe ô tô số tự động và không có mục đích kinh
-                        doanh. Bao gồm các loại xe sau:
-                    </p>
-                    <ul>
-                        <li>Xe ô tô số tự động 09 chỗ ngồi bao gồm cả ghế lái xe</li>
-                        <li>Xe ô tô tải số tự động dưới 3.500 kg</li>
-                        <li>Xe kéo thêm rơ mooc tải trọng dưới 3.500 kg</li>
-                    </ul>
+                    <div id="Describe">
+                        <p>
+                            Bằng lái xe B1 là giấy phép lái xe hạng thấp nhất do cơ quan nhà nước có thẩm quyền cấp cho chủ
+                            phương tiện theo quy định được nêu rõ tại Thông tư 12/2017/TT-BGTVT. <br>
+                            Theo đó, bằng lái xe B1 dành cho người điều khiển xe ô tô số tự động và không có mục đích kinh
+                            doanh. Bao gồm các loại xe sau:
+                        </p>
+                        <ul>
+                            <li>Xe ô tô số tự động 09 chỗ ngồi bao gồm cả ghế lái xe</li>
+                            <li>Xe ô tô tải số tự động dưới 3.500 kg</li>
+                            <li>Xe kéo thêm rơ mooc tải trọng dưới 3.500 kg</li>
+                        </ul>
+                    </div>
                 </article>
                 <article class="text-content">
                     <p class="lead">
@@ -50,15 +58,17 @@
                             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
                         </svg>
                     </p>
-                    <p>
-                        Điều kiện thi bằng lái xe B1 đã được quy định rõ ràng tại Điều 7 Thông tư 12/2017/TT-BGTVT. Theo
-                        đó, người thi bằng lái xe B1 phải đáp ứng đầy đủ các điều kiện sau:
-                        <ul>
-                            <li>Người dự thi là công dân Việt Nam</li>
-                            <li>Người nước ngoài được phép cư trú hoặc đang làm việc, học tập tại Việt Nam</li>
-                            <li>Phải đủ 18 tuổi trở lên tính đến ngày dự thi sát hạch lái xe</li>
-                        </ul>
-                    </p>
+                    <div id="Condition">
+                        <p>
+                            Điều kiện thi bằng lái xe B1 đã được quy định rõ ràng tại Điều 7 Thông tư 12/2017/TT-BGTVT. Theo
+                            đó, người thi bằng lái xe B1 phải đáp ứng đầy đủ các điều kiện sau:
+                            <ul>
+                                <li>Người dự thi là công dân Việt Nam</li>
+                                <li>Người nước ngoài được phép cư trú hoặc đang làm việc, học tập tại Việt Nam</li>
+                                <li>Phải đủ 18 tuổi trở lên tính đến ngày dự thi sát hạch lái xe</li>
+                            </ul>
+                        </p>
+                    </div>
                 </article>
                 <article class="text-content">
                     <p class="lead">
@@ -69,14 +79,16 @@
                             <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2H3z" />
                         </svg>
                     </p>
-                    <p>
-                        Từ ngày 1/8/2023, Mức phí thi sát hạch lái xe ô tô (hạng xe B1, B2, C, D, E, F): <br>
-                        mức thu từ <strong>80.000 đồng/lần</strong> đến <strong style="color: red;">
-                            350.000
-                            đồng/lần.
-                        </strong>
+                    <div id="Cost">
+                        <p>
+                            Từ ngày 1/8/2023, Mức phí thi sát hạch lái xe ô tô (hạng xe B1, B2, C, D, E, F): <br>
+                            mức thu từ <strong>80.000 đồng/lần</strong> đến <strong style="color: red;">
+                                350.000
+                                đồng/lần.
+                            </strong>
 
-                    </p>
+                        </p>
+                    </div>
                 </article>
                 <article class="text-content">
                     <p class="lead">
@@ -89,7 +101,7 @@
                     </p>
                     Theo quy định tại Điều 17 Thông tư 12/2017/TT-BGTVT về thời hạn sử dụng của giấy phép lại xe
                     hạng B1 như sau:
-                    <ul>
+                    <ul id="Time">
                         <li>
                             Đối với nữ giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>
                                 55
@@ -106,7 +118,7 @@
                             Trường hợp người lái xe trên 45 tuổi với nữ giới và trên 50 tuổi với nam giới thì giấy phép
                             lái
                             xe hạng B1 được cấp có thời hạn <strong>10 năm</strong> kể từ ngày cấp.
-                        </li>
+                        </li>       
                     </ul>
                 </article>
             </div>
@@ -114,7 +126,7 @@
         <section class="body row border-bottom border-danger hidden-load">
             <h1 class="title hidden-load">Nội dung thi</h1>
             <div class="body-content hidden-load row">
-                <div class="text-content hidden-load col-md-8">
+                <div id="Exam-Content" class="text-content hidden-load col-md-8">
                     <h2>Thi Lý Thuyết</h2>
                     <p style="text-align: justify;">
                         Hiện nay phần thi lý thuyết lấy bằng B1 được thi trực tuyến thông quan mạng internet. Thí sinh
@@ -158,14 +170,14 @@
         </section>
         <div class="row">
             <div class="images col-md-3 hidden-load">
-                <img src="https://cdn.diemnhangroup.com/seoulacademy/2023/02/thi-sat-hach-lai-xe-b1-gom-nhung-gi-7.jpg" alt=""
+                <img src="@ViewBag.image_link" alt=""
                      class="img-fluid mb-5">
-                <img src="https://cdn.diemnhangroup.com/seoulacademy/2023/02/thi-sat-hach-lai-xe-b1-gom-nhung-gi-5.jpg" alt=""
+                <img src="@ViewBag.image_link" alt=""
                      class="img-fluid">
             </div>
             <div class="col-md-6 hidden-load">
                 <h1 class="title hidden-load">Mẹo thi thực hành</h1>
-                <div class="text-content hidden-load">
+                <div id="Tips" class="text-content hidden-load">
                     <h2 class="mt-2">Mẹo phần thi sa hình</h2>
                     <ul style="text-align: justify;">
                         <li>
@@ -198,9 +210,9 @@
                 </div>
             </div>
             <div class="images col-md-3 hidden-load">
-                <img src="https://cdn.diemnhangroup.com/seoulacademy/2023/02/thi-sat-hach-lai-xe-b1-gom-nhung-gi-2.jpg" alt=""
+                <img src="@ViewBag.image_link" alt=""
                      class="img-fluid mb-5">
-                <img src="https://cdn.diemnhangroup.com/seoulacademy/2023/02/thi-sat-hach-lai-xe-b1-gom-nhung-gi-2.jpg" alt=""
+                <img src="@ViewBag.image_link" alt=""
                      class="img-fluid">
             </div>
         </div>
@@ -210,6 +222,7 @@
             border-radius: 3px;
         }
     </style>
+    <script src="~/js/License.js"></script>
     <script>
         document.querySelector('.license_list').classList.add('active');
     </script>
