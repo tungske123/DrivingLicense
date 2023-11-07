@@ -11,10 +11,12 @@ namespace L2D_WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DrivingLicenseContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DrivingLicenseContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -43,46 +45,46 @@ namespace L2D_WebApp.Controllers
                 "D" => "https://hoclaixethanhcong.vn/images/tin-tuc/tin-tuc-2/13/bang-lai-xe-hang-d-bao-nhieu-tuoi.jpg",
                 _ => "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/11/bang-lai-xe-container.jpg"
             };
-            //Key: LicenseID, Value: the link to the icon img of the page
+
             ViewBag.icon_link = icon_link;
             ViewBag.image_link = image_link;
             ViewBag.licenseid = licenseid;
-            return View(@$"~/Views/license.cshtml");    
+            return View(@$"~/Views/License.cshtml");
         }
 
 
         [HttpGet]
-        [Route("license")]  //https://localhost:7002/license
+        [Route("license")]  //https://localhost:7235/license
         public async Task<IActionResult> GetAllLicense()
         {
-            var _context = new DrivingLicenseContext();
             try
             {
-                var licenselist = await _context.Licenses.ToListAsync();
+                var licenselist = await _context.Licenses.AsNoTracking().ToListAsync();
                 return Ok(licenselist);
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi trong quá trình xử lý yêu cầu");
+                return BadRequest($"An error occurred when processing request: {ex.Message}");
             }
         }
+
+
         [HttpGet]
-        [Route("license/{licenseid}")] //https://localhost:7002/license/A2
+        [Route("license/{licenseid}")] //https://localhost:7235/license/A2
         public async Task<IActionResult> GetLicenseById(string licenseid)
         {
-            var _context = new DrivingLicenseContext();
             try
             {
-                var license = await _context.Licenses.SingleOrDefaultAsync(license => license.LicenseId.Equals(licenseid));
-                if (license == null)
+                var license = await _context.Licenses.AsNoTracking().SingleOrDefaultAsync(license => license.LicenseId.Equals(licenseid));
+                if (license is null)
                 {
-                    return NotFound("Không tìm thấy bằng lái.");
+                    return NotFound($"Can't find any license with id {licenseid}");
                 }
                 return Ok(license);
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi trong quá trình xử lý yêu cầu");
+                return BadRequest($"An error occurred when processing request: {ex.Message}");
             }
         }
 
@@ -90,14 +92,17 @@ namespace L2D_WebApp.Controllers
         {
             return View();
         }
+
         public IActionResult Error404() {
             return View("~/Views/404NotFound.cshtml");
         }
+
         public IActionResult Intro()
         {
             ViewBag.icon_link = "https://cdn-icons-png.flaticon.com/512/3930/3930246.png";
             return View("~/Views/AboutUs.cshtml");
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

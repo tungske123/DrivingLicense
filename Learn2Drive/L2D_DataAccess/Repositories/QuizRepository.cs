@@ -7,10 +7,12 @@ namespace L2D_DataAccess.Repositories
     {
         private static readonly Lazy<QuizRepository> lazy = new Lazy<QuizRepository>(() => new QuizRepository());
         public static QuizRepository Instance { get { return lazy.Value; } }
+
         private QuizRepository()
         {
 
         }
+        
         public async Task<QuizResult> CalculateQuizResult(Guid AttemptID)
         {
             using var connection = new SqlConnection(DBUtils.getConnectionString());
@@ -142,5 +144,10 @@ namespace L2D_DataAccess.Repositories
                 await connection.CloseAsync();
             }
         }
+
+        //public async Task DeleteQuiz(int QuizId)
+        //{
+
+        //}
     }
 }

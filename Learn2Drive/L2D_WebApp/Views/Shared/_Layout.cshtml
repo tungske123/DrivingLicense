@@ -63,20 +63,14 @@
                         <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=B1';">Bằng B1</li>
                         <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=B2';">Bằng B2</li>
                         <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=C';">Bằng C</li>
-                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=D';">Bằng D</li>
-                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=E';">Bằng E</li>
-                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=FB2';">Bằng FB2</li>
-                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=FC';">Bằng FC</li>
-                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=FD';">Bằng FD</li>
-                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=FE';">Bằng FE</li>
-
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=D-E';">Bằng D-E</li>
                     </ul>
                 </li>
-                <li> <a href="/Quiz">Thi thử</a></li>
+                <li> <a href="/Quiz" class="quizLink">Thi thử</a></li>
                 <li> <a href="/Rent" class="rentLink">Thuê xe</a></li>
                 @if (@account is not null)
                 {
-                    <li><a href="/User">@account.Username</a></li>
+                    <li><a href="/Login/Authorize">@account.Username</a></li>
                     <li><a href="/Login/logout">Đăng Xuất</a></li>
                 }
                 else

@@ -6,6 +6,7 @@ using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using L2D_DataAccess.Models;
 //using System.Net.NetworkInformation;
 //using System.Threading.Tasks;
 //using Microsoft.AspNetCore.Authorization;
@@ -35,6 +36,26 @@ namespace L2D_WebApp.Controllers
             ViewBag.icon_link = "https://cdn-icons-png.flaticon.com/128/1000/1000997.png";
             return View("~/Views/Login.cshtml");
         }
+
+        public IActionResult Authorize()
+        {
+            string ControllerName = string.Empty;
+            var accountsession = HttpContext.Session.GetString("usersession");
+            if (!string.IsNullOrEmpty(accountsession))
+            {
+                var account = JsonSerializer.Deserialize<Account>(accountsession);
+                ControllerName = account.Role.ToLower() switch
+                {
+                    "user" => "User",
+                    "teacher" => "Teacher",
+                    "staff" => "Staff",
+                    "admin" => "Admin",
+                    _ => string.Empty
+                };
+            }
+            return RedirectToAction("Index", ControllerName);
+        }
+
         [HttpPost]
         public async Task<IActionResult> login(IFormCollection form)
         {

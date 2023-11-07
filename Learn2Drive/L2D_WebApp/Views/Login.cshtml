@@ -5,10 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--font css files-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
     <!--style css-->
     <link rel="stylesheet" href="/css/styleLogin.css">
     <title>Login Page</title>
@@ -16,7 +13,7 @@
 
 <body>
     @{
-        ViewData["Title"] = "Login Page";
+        ViewData["Title"] = "L2D - Đăng Nhập";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
     <!--Form Sign up-->
@@ -38,32 +35,32 @@
                 </div>
                 <span>Tạo tài khoản</span>
                 <div class="input-group">
-                    <input type="text" name="Username" id="username" placeholder="Enter your username"
+                    <input type="text" name="Username" id="username" placeholder="Nhập tên tài khoản (tên hiển thị)"
                            required>
                     <div class="invalid-feedback">
-                        Enter your username
+                        Nhập tên tài khoản (tên hiển thị)
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="password" id="password" placeholder="Enter your password"
+                    <input type="password" name="password" id="password" placeholder="Nhập mật khẩu của bạn"
                            required>
                     <div class="invalid-feedback">
-                        Enter your password
+                        Nhập mật khẩu
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="repass" id="repass" placeholder="Enter your password again" required>
+                    <input type="password" name="repass" id="repass" placeholder="Xác nhận mật khẩu" required>
                     <div class="invalid-feedback">
-                        Reconfirm your password
+                        Xác nhận mật khẩu
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="email" name="email" id="email" placeholder="Enter your email" required>
+                    <input type="email" name="email" id="email" placeholder="Nhập email của bạn" required>
                     <div class="invalid-feedback">
-                        Enter your email
+                        Nhập email của bạn
                     </div>
                 </div>
-                <button class="primary mt-3" type="submit">Sign Up</button>
+                <button class="primary mt-3" type="submit">Đăng kí</button>
             </form>
         </div>
         <div class="form-container sign-in-container hidden-load">
@@ -86,18 +83,18 @@
                 </div>
                 <!-- <span>Or If you have an account, please Login </span> -->
                 <div class="input-group">
-                    <input type="text" name="username" id="username" placeholder="Username" required>
+                    <input type="text" name="username" id="username" placeholder="Tên tài khoản" required>
                     <div class="invalid-feedback">
-                        Please enter your username
+                        Tên tài khoản
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="password" placeholder="Password" required />
+                    <input type="password" name="password" placeholder="Mật khẩu" required />
                     <div class="invalid-feedback">
-                        Please enter your password
+                        Mật khẩu
                     </div>
                 </div>
-                <button class="primary">Sign In</button>
+                <button class="primary">Đăng nhập</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -105,7 +102,7 @@
                 <div class="overlay-panel overlay-left">
                     <h1>Tạo tài khoản ngay</h1>
                     <p>Hoặc nếu bạn có tài khoản thì hãy</p>
-                    <button class="ghost" id="SignIn">Sign In</button>
+                    <button class="ghost" id="SignIn">Đăng nhập</button>
                 </div>
 
                 <div class="overlay-panel overlay-right">
@@ -113,7 +110,7 @@
                     <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem tempora facere repudiandae
                         mollitia quo quis a recusandae odio totam accusamus sint rem dolore repellat modi blanditiis,
                         consectetur, quam reiciendis velit.</p> -->
-                    <button class="ghost mt-5" id="SignUp">Sign Up</button>
+                    <button class="ghost mt-5" id="SignUp">Đăng kí</button>
                 </div>
             </div>
         </div>

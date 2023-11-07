@@ -1,6 +1,9 @@
-﻿using L2D_DataAccess.Utils;
+﻿using L2D_DataAccess.Models;
+using L2D_DataAccess.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace L2D_WebApp.Controllers
 {
@@ -8,6 +11,22 @@ namespace L2D_WebApp.Controllers
     {
         private readonly DrivingLicenseContext _context;
         public StaffController(DrivingLicenseContext context) => _context = context;
+
+        public async Task<IActionResult> Index()
+        {
+            var accountsession = HttpContext.Session.GetString("usersession");
+            if (!string.IsNullOrEmpty(accountsession))
+            {
+                var account = JsonSerializer.Deserialize<Account>(accountsession);
+                if (account.Role.ToLower().Equals("staff"))
+                {
+                    var staff = await _context.Staff.SingleOrDefaultAsync(s => s.AccountId.Equals(account.AccountId));
+                    ViewBag.StaffId = staff.StaffId;
+                }
+            }
+            return View("~/Views/Staff.cshtml");
+        }
+
 
         [HttpGet]
         [Route("api/staff/info/{sid:guid}")]
@@ -20,20 +39,43 @@ namespace L2D_WebApp.Controllers
             }
             var staff = await _context.Staff
                 .Include(staff => staff.Account)
+                .Select(s => new
+                {
+                    StaffId = s.StaffId,
+                    FullName = s.FullName,
+                    Email = s.Email,
+                    ContactNumber = s.ContactNumber,
+                    Password = s.Account.Password
+                })
                 .AsNoTracking().SingleOrDefaultAsync(s => s.StaffId.Equals(sid));
             return (staff is not null) ? Ok(staff) : NotFound($"Can't find any staffs with id {sid}");
         }
 
+        public class StaffUpdateDto
+        {
+            [Required]
+            public string FullName { get; set; }
+
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
+
+            public string ContactNumber { get; set; }
+
+            [Required]
+            public string Password { get; set; }
+        }
+
+
         [HttpPut]
         [Route("api/staff/info/update/{sid:guid}")]
-        public async Task<IActionResult> UpdateStaffInfo([FromRoute] Guid sid, [FromForm] IFormCollection formData)
+        public async Task<IActionResult> UpdateStaffInfo([FromRoute] Guid sid, [FromForm] StaffUpdateDto formData)
         {
             if (sid == Guid.Empty)
             {
                 return BadRequest("Invalid staff id");
             }
             var staff = await _context.Staff
-                .Include(s => s.Account)
                 .SingleOrDefaultAsync(s => s.StaffId.Equals(sid));
 
             if (staff is null)
@@ -41,18 +83,33 @@ namespace L2D_WebApp.Controllers
                 return NotFound($"Can't find any staffs with id {sid}");
             }
 
-            string FullName = formData["FullName"];
-            string Email = formData["Email"];
-            string ContactNumber = formData["ContactNumber"];
-            string Password = formData["Password"];
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            staff.FullName = FullName;
-            staff.Email = Email;
-            staff.ContactNumber = ContactNumber;
-            staff.Account.Password = Password;
-
-            _context.Update(staff);
-            await _context.SaveChangesAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                string FullName = formData.FullName;
+                string Email = formData.Email;
+                string ContactNumber = formData.ContactNumber;
+                string Password = formData.Password;
+                await _context.Staff.Where(staff => staff.StaffId.Equals(sid))
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.FullName, FullName)
+                    .SetProperty(s => s.Email, Email)
+                    .SetProperty(s => s.ContactNumber, ContactNumber));
+                await _context.Accounts.Where(a => a.AccountId.Equals(staff.AccountId))
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(a => a.Password, Password));
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return BadRequest("An error occurred when updating staff");
+            }
 
             return NoContent();
         }

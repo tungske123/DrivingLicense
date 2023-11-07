@@ -1021,7 +1021,7 @@ header {
     background: #FFFFFE;
     box-shadow: var(--box-shadow);
     border-radius: 20px;
-    border: 2px solid #FFD580;
+    /* border: 2px solid #FFD580; */
     display: flex;
     flex-direction: row;
     .left_container
@@ -1117,7 +1117,7 @@ header {
     padding: 20px;
     background: #FFFFFE;
     border-radius: 10px;
-    border: 2px solid #FFD580;
+    /* border: 2px solid #FFD580; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1181,7 +1181,7 @@ header {
     box-shadow: var(--box-shadow);
     background: #FFFFFE;
     border-radius: 20px;
-    border: 2px solid #FFD580;
+    /* border: 2px solid #FFD580; */
     .head_title
 
 {

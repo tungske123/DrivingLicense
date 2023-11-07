@@ -1,7 +1,9 @@
-﻿using L2D_DataAccess.Utils;
+﻿using L2D_DataAccess.Models;
+using L2D_DataAccess.Utils;
 using L2D_WebApp.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace L2D_WebApp.Controllers
 {
@@ -10,6 +12,18 @@ namespace L2D_WebApp.Controllers
         private readonly DrivingLicenseContext _context;
         public AdminController(DrivingLicenseContext context) => _context = context;
 
+        public async Task<IActionResult> Index()
+        {
+            var accountsession = HttpContext.Session.GetString("usersession");
+            if (!string.IsNullOrEmpty(accountsession))
+            {
+                var account = JsonSerializer.Deserialize<Account>(accountsession);
+                var admin = await _context.Admins.AsNoTracking().SingleOrDefaultAsync(ad => ad.AccountId.Equals(account.AccountId));
+                ViewBag.AdminId = admin.AdminId;
+            }
+            
+            return View("~/Views/Admin.cshtml");
+        }
 
         [HttpGet]
         [Route("api/admin/rent/data")]
@@ -86,12 +100,58 @@ namespace L2D_WebApp.Controllers
                     "@name = @p3, @roleSet = @p4", Username, Password, Email, Name, Role);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-            } catch
+            }
+            catch
             {
                 await transaction.RollbackAsync();
                 return BadRequest("An error occurred during the request");
             }
             return NoContent();
         }
+
+        [HttpDelete]
+        [Route("api/admin/accounts/delete/{aid:guid}")]
+        public async Task<IActionResult> DeleteAccount([FromRoute] Guid aid)
+        {
+            if (aid == Guid.Empty)
+            {
+                return BadRequest("Invalid account id");
+            }
+            var account = await _context.Accounts.SingleOrDefaultAsync(acc => acc.AccountId.Equals(aid));
+            if (account is null)
+            {
+                return NotFound($"Can't find any accounts with id {aid}");
+            }
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                switch (account.Role.ToLower())
+                {
+                    case "user":
+                        await _context.Users.Where(user => user.AccountId.Equals(aid)).ExecuteDeleteAsync();
+                        break;
+                    case "teacher":
+                        await _context.Teachers.Where(teacher => teacher.AccountId.Equals(aid)).ExecuteDeleteAsync();
+                        break;
+                    case "staff":
+                        await _context.Staff.Where(staff => staff.AccountId.Equals(aid)).ExecuteDeleteAsync();
+                        break;
+                    default:
+                        break;
+                }
+
+                await _context.Accounts.Where(acc => acc.AccountId.Equals(aid)).ExecuteDeleteAsync();
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred when processing request: {ex.Message}");
+            }
+            return NoContent();
+        }
+
     }
 }

@@ -51,12 +51,12 @@ namespace L2D_WebApp.Controllers
         public async Task<IActionResult> Index()
         {
             const string UserProfileViewPath = "~/Views/UserProfile.cshtml";
-            var usersession = System.Text.Json.JsonSerializer.Deserialize<Account>(HttpContext.Session.GetString("usersession"));
-            if (usersession.Role.Equals("user"))
+            var accountsession = System.Text.Json.JsonSerializer.Deserialize<Account>(HttpContext.Session.GetString("usersession"));
+            if (accountsession.Role.Equals("user"))
             {
                 var user = await _context.Users
                     .Include(user => user.Account)
-                    .SingleOrDefaultAsync(u => u.AccountId.Equals(usersession.AccountId));
+                    .SingleOrDefaultAsync(u => u.AccountId.Equals(accountsession.AccountId));
                 ViewBag.user = user;
             }
             return View(UserProfileViewPath);

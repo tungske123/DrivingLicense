@@ -229,12 +229,13 @@ namespace L2D_WebApp.Controllers
             {
                 return BadRequest();
             }
-            var vehicle = await _context.Vehicles.SingleOrDefaultAsync(v => v.VehicleId.Equals(vid));
-            if (vehicle is null)
+            if (!await _context.Vehicles.AnyAsync(vehicle => vehicle.VehicleId.Equals(vid)))
             {
                 return NotFound($"Can't find any vehicle with id {vid}");
             }
-            _context.Vehicles.Remove(vehicle);
+
+            await _context.Vehicles.Where(vehicle => vehicle.VehicleId.Equals(vid))
+                .ExecuteDeleteAsync();
             await _context.SaveChangesAsync();
             return NoContent();
         }

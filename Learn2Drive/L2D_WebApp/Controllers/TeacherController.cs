@@ -1,6 +1,8 @@
-﻿using L2D_DataAccess.Utils;
+﻿using L2D_DataAccess.Models;
+using L2D_DataAccess.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace L2D_WebApp.Controllers
 {
@@ -10,6 +12,22 @@ namespace L2D_WebApp.Controllers
         public TeacherController(DrivingLicenseContext context)
         {
             _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var accountsession = HttpContext.Session.GetString("usersession");
+            if (!string.IsNullOrEmpty(accountsession))
+            {
+                var account = JsonSerializer.Deserialize<Account>(accountsession);
+                if (account.Role.ToLower().Equals("teacher"))
+                {
+                    var teacher = await _context.Teachers
+                        .AsNoTracking().SingleOrDefaultAsync(t => t.AccountId.Equals(account.AccountId));
+                    ViewBag.TeacherId = teacher.TeacherId;
+                }
+            }
+            return View("~/Views/Teacher.cshtml");
         }
 
         private async Task<string> SaveTeacherImage(string FullName, IFormFile Image)
@@ -74,27 +92,38 @@ namespace L2D_WebApp.Controllers
             {
                 return BadRequest($"Can't find any teacher with id {tid}");
             }
-            IFormFile Avatar = FormData.Files["Avatar"];
-            string FullName = FormData["FullName"];
-            string PhoneNumber = FormData["PhoneNumber"];
-            string Email = FormData["Email"];
-            string Description = FormData["Description"];
-            string Password = FormData["Password"];
 
-            if (Avatar is not null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                string AvatarImagePath = await SaveTeacherImage(FullName, Avatar);
-                teacher.Avatar = AvatarImagePath;
+                IFormFile Avatar = FormData.Files["Avatar"];
+                string FullName = FormData["FullName"];
+                string PhoneNumber = FormData["PhoneNumber"];
+                string Email = FormData["Email"];
+                string Description = FormData["Description"];
+                string Password = FormData["Password"];
+
+                if (Avatar is not null)
+                {
+                    string AvatarImagePath = await SaveTeacherImage(FullName, Avatar);
+                    teacher.Avatar = AvatarImagePath;
+                }
+
+                teacher.FullName = FullName;
+                teacher.ContactNumber = PhoneNumber;
+                teacher.Email = Email;
+                teacher.Information = Description;
+                teacher.Account.Password = Password;
+
+                _context.Update(teacher);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
-
-            teacher.FullName = FullName;
-            teacher.ContactNumber = PhoneNumber;
-            teacher.Email = Email;
-            teacher.Information = Description;
-            teacher.Account.Password = Password;
-
-            _context.Update(teacher);
-            await _context.SaveChangesAsync();
+            catch
+            {
+                await transaction.RollbackAsync();
+                return BadRequest("An error occurred when updating teacher profile");
+            }
             return NoContent();
         }
 

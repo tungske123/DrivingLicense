@@ -338,23 +338,82 @@ namespace L2D_WebApp.Controllers
         }
 
         [HttpPatch]
-        [Route("api/quizzes/update/{qid:guid}")]
-        public async Task<IActionResult> UpdateQuiz([FromRoute] Guid qid, [FromBody] QuizFormData FormData)
+        [Route("api/quizzes/update/{qid}")]
+        public async Task<IActionResult> UpdateQuiz([FromRoute] int qid, [FromBody] QuizFormData FormData)
         {
-            if (qid == Guid.Empty || FormData is null)
+            if (FormData is null)
             {
                 return BadRequest();
             }
-            var quiz = await _context.Quizzes.SingleOrDefaultAsync(q => q.QuizId.Equals(qid));
-            if (quiz is null)
+
+            if (!await _context.Quizzes.AnyAsync(quiz => quiz.QuizId == qid))
             {
                 return NotFound($"Can't find any quiz with id {qid}");
             }
-            quiz.Name = FormData.QuizName;
-            quiz.LicenseId = FormData.LicenseID;
-            quiz.Description = FormData.Description;
-            _context.Quizzes.Update(quiz);
-            await _context.SaveChangesAsync();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.Quizzes.Where(quiz => quiz.QuizId == qid)
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(q => q.Name, FormData.QuizName)
+                    .SetProperty(q => q.LicenseId, FormData.LicenseID)
+                    .SetProperty(q => q.Description, FormData.Description));
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return BadRequest("An error ocurred when updating quiz");
+            }
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("api/quizzes/delete/{qid}")]
+        public async Task<IActionResult> DeleteQuiz([FromRoute] int qid)
+        {
+            if (qid <= 0)
+            {
+                return BadRequest("Invalid quiz id");
+            }
+
+            var quiz = await _context.Quizzes.Include(quiz => quiz.Questions)
+                .SingleOrDefaultAsync(q => q.QuizId == qid);
+            if (quiz is null)
+            {
+                return NotFound($"Can't find any quizzes");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var quizAttemptList = await _context
+                    .Attempts.Where(attempt => attempt.QuizId == qid)
+                    .ToListAsync();
+                foreach (var attempt in quizAttemptList)
+                {
+                    await _context.AttemptDetails.Where(at => at.AttemptId.Equals(attempt.AttemptId)).ExecuteDeleteAsync();
+                }
+
+                await _context.Attempts.Where(a => a.QuizId == qid).ExecuteDeleteAsync();
+
+                foreach (var question in quiz.Questions)
+                {
+                    quiz.Questions.Remove(question);
+                }
+
+                await _context.Quizzes.Where(quiz => quiz.QuizId == qid).ExecuteDeleteAsync();
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return BadRequest("An error occurred when deleting quiz");
+            }
+
             return NoContent();
         }
     }
