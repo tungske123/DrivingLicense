@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="/Demo2/CSS/styleTestAdmin.css">
     <!--icon css file-->
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/324/324125.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .inline-center {
             display: inline-block;
@@ -26,6 +29,24 @@
 </head>
 
 <body>
+    <!-- <div id="marketing-banner" tabindex="-1" class="fixed z-50 flex flex-col md:flex-row justify-between w-[calc(100%-2rem)] p-4 -translate-x-1/2 bg-white border border-gray-100 rounded-lg shadow-sm lg:max-w-7xl left-1/2 top-6 dark:bg-gray-700 dark:border-gray-600">
+        <div class="flex flex-col items-start mb-3 mr-4 md:items-center md:flex-row md:mb-0">
+            <div class="flex items-center mb-2 border-gray-200 md:pr-4 md:mr-4 md:border-r md:mb-0 dark:border-gray-600">
+                <img src="img/favicon_1.ico" class="h-6 mr-2" alt="Flowbite Logo">
+                <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">Learn<span class="text-red-700">2</span>Drive</span>
+            </div>
+            <p class="flex items-center text-xl font-normal text-red-700 dark:text-gray-400">Welcome, admin!</p>
+        </div>
+        <div class="flex items-center flex-shrink-0">
+            <button data-dismiss-target="#marketing-banner" type="button" class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 dark:hover:bg-gray-600 dark:hover:text-white">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close banner</span>
+            </button>
+        </div>
+    </div> -->
+
     <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
         type="button"
         class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -39,7 +60,7 @@
     </button>
 
     <aside id="logo-sidebar"
-        class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        class="hidden-load fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
             <a href="" class="flex items-center pl-2.5 mb-5">
@@ -102,28 +123,58 @@
                         <span class="flex-1 ml-3 whitespace-nowrap">Về trang chủ</span>
                     </a>
                 </li>
-
             </ul>
         </div>
     </aside>
     <section class="p-4 sm:ml-64 admin-tab" id="dashboardSection" style="display: none;">
         <!--graph-->
-        <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-            <h4 class="text-2xl font-bold dark:text-white">Thống kê doanh thu thuê xe</h4>
-            <div class="flex justify-between">
-                <div>
-                    <h6 class="text-lg font-bold dark:text-white">Tổng: <span style="color: #d90429;"
-                            id="totalMoney">5.000.000 VNĐ</span></h6>
-                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Năm 2023</p>
-                </div>
-                
-            </div>
-            <div id="area-chart"></div>
-            <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
-                <div class="flex justify-between items-center pt-5">
-                    
-                </div>
-            </div>
+        <div class="wrapper" style="display: flex;column-gap: 30px;">
+            <aside class="left-dashboard-content">
+                <article class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                    <h4 class="text-2xl font-bold dark:text-white">Thống kê doanh thu thuê xe</h4>
+                    <div class="flex justify-between">
+                        <div>
+                            <h6 class="text-lg font-bold dark:text-white">Tổng: <span style="color: #d90429;"
+                                    id="totalMoney">5.000.000 VNĐ</span></h6>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">Năm 2023</p>
+                        </div>
+                    </div>
+                    <div id="area-chart"></div>
+                    <div
+                        class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                        <div class="flex justify-between items-center pt-5">
+                        </div>
+                    </div>
+                </article>
+                <article
+                    class="mt-5 block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Thống kê người dùng
+                    </h5>
+                    <p class="font-normal text-gray-700 dark:text-gray-400">
+                        <span><i class="fa-solid fa-user" style="color: #cd1313;"></i> 500 người dùng</span>
+                    </p>
+                </article>
+                <article
+                    class="mt-5 block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Lượt đăng kí thi
+                    </h5>
+                    <p class="font-normal text-gray-700 dark:text-gray-400">
+                        <span><i class="fa-solid fa-file-invoice" style="color: #cd1313;"></i> 300 hồ sơ</span>
+                    </p>
+                </article>
+
+            </aside>
+            <aside class="right-dashboard-content">
+                <article
+                    class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                    <div class="flex flex-col justify-between p-4 leading-normal">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy
+                            technology acquisitions 2021</h5>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise
+                            technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    </div>
+                </article>
+            </aside>
         </div>
     </section>
     <ul hidden id="chartdatalist">
@@ -140,7 +191,7 @@
         <li hidden="true" class="chartdate"></li>
         <li hidden="true" class="chartdate"></li>
     </ul>
-    <section class="p-4 sm:ml-64 admin-tab" style="display: none;" id="adminInfo">
+    <section class="p-4 sm:ml-64 admin-tab hidden-load" style="display: none;" id="adminInfo">
         <form method="post" id="adminInfoForm">
             <div class="mb-6">
                 <label for="fullname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Họ và
@@ -158,7 +209,8 @@
                         placeholder="Nhập địa chỉ email" required>
                 </div>
                 <div class="mb-6">
-                    <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện thoại</label>
+                    <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện
+                        thoại</label>
                     <input type="tel" id="phone" name="Phone"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Nhập số điện thoại">
@@ -172,8 +224,8 @@
                     placeholder="Nhập mật khẩu" required>
             </div>
             <div class="mb-6">
-                <label for="repass"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
+                <label for="repass" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
+                    password</label>
                 <input type="password" id="repass"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Xác nhận mật khẩu" required>
@@ -184,7 +236,7 @@
             </button>
         </form>
     </section>
-    <section class="p-4 sm:ml-64 admin-tab" id="manageAccount" style="display: none;">
+    <section class="p-4 sm:ml-64 admin-tab hidden-load" id="manageAccount" style="display: none;">
 
     </section>
     <script src="/Demo2/ts/Admin.js"></script>
@@ -227,8 +279,8 @@
                     gradient: {
                         opacityFrom: 0.55,
                         opacityTo: 0,
-                        shade: "#d90429",
-                        gradientToColors: ["#d90429"],
+                        shade: "#ED7D31",
+                        gradientToColors: ["#ED7D31"],
                     },
                 },
                 dataLabels: {
@@ -250,7 +302,7 @@
                     {
                         name: "",
                         data: chartDatas,
-                        color: "#d90429",
+                        color: "#ED7D31",
                     },
                 ],
                 xaxis: {
@@ -276,6 +328,8 @@
             }
         });
     </script>
+
+    <script src="/Demo2/JS/LoadAnimations.js"></script>
     <!--flowbite js library-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
     <!--flowbite charts-->

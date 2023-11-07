@@ -39,6 +39,24 @@ staffTabLinkList.forEach(tabLink => {
 
 staffTabLinkList[0].click();
 const staffId: string = `EF262EF6-9D98-4634-9348-63BB5965A8E2`;
+class Staff {
+    staffId: string;
+    fullName: string;
+    email: string;
+    contactNumber: string;
+    password: string;
+}
+function renderStaffInfo(staff: Staff) {
+    const FullNameInput = document.getElementById('fullname') as HTMLInputElement;
+    const EmailElement = document.getElementById('email') as HTMLInputElement;
+    const PhoneElement = document.getElementById('phone') as HTMLInputElement;
+    const PasswordElement = document.getElementById('password') as HTMLInputElement;
+
+    FullNameInput.value = staff.fullName;
+    EmailElement.value = staff.email;
+    PhoneElement.value = staff.email;
+    PasswordElement.value = staff.password;
+}
 async function fetchStaffInfoData() {
     try {
         const url = `https://localhost:7235/api/staff/info/${staffId}`;
@@ -54,7 +72,8 @@ async function fetchStaffInfoData() {
         const data = await response.json();
         console.log(data);
         //renderInfoHere
-        
+        const staff: Staff = data;
+        renderStaffInfo(staff);
     } catch (error) {
         console.error(`Error: ${error}`);
     }
@@ -78,6 +97,12 @@ async function updateStaffInfo() {
         console.error(error);
     }
 }
+
+const staffInfoForm = document.getElementById('staffInfoForm') as HTMLFormElement;
+staffInfoForm.addEventListener('submit', async (e) => {
+    e.preventDefault(); 
+    await updateStaffInfo();
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
     await fetchStaffInfoData();

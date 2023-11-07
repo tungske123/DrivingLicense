@@ -177,6 +177,16 @@ function renderQuizTable(quizList) {
         cells[0].textContent = quiz.name;
         cells[1].textContent = quiz.licenseId;
         cells[2].textContent = quiz.description;
+        var quizDropdownButton = cells[3].querySelector('.quizDropDownButton');
+        quizDropdownButton.addEventListener('click', function () {
+            var quizDropDownContent = cells[3].querySelector('.quizDropDownContent');
+            if (!quizDropDownContent.classList.contains('open-dropdown')) {
+                quizDropDownContent.classList.add('open-dropdown');
+            }
+            else {
+                quizDropDownContent.classList.remove('open-dropdown');
+            }
+        });
         quizTableBody.appendChild(clone);
     });
 }

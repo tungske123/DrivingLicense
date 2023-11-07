@@ -126,6 +126,15 @@ function renderQuizTable(quizList: Quiz[]) {
         cells[0].textContent = quiz.name;
         cells[1].textContent = quiz.licenseId;
         cells[2].textContent = quiz.description;
+        let quizDropdownButton = cells[3].querySelector('.quizDropDownButton') as HTMLButtonElement;
+        quizDropdownButton.addEventListener('click', () => {
+            let quizDropDownContent = cells[3].querySelector('.quizDropDownContent') as HTMLDivElement;
+            if (!quizDropDownContent.classList.contains('open-dropdown')) {
+                quizDropDownContent.classList.add('open-dropdown');
+            } else {
+                quizDropDownContent.classList.remove('open-dropdown');
+            }
+        });
         quizTableBody.appendChild(clone);
     });
 }
