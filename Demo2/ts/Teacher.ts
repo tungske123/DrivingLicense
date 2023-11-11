@@ -4,7 +4,7 @@ teacherTabLinkList.forEach(tabLink => {
     tabLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const tabList = document.querySelectorAll('.user-tab') as NodeListOf<HTMLElement>;
+        const tabList = document.querySelectorAll('.teacher-tab') as NodeListOf<HTMLElement>;
         tabList.forEach(tab => {
             tab.style.display = 'none';
         });
@@ -205,7 +205,7 @@ function displayCalendar(month: number, year: number): void {
         }
     }
 }
-const userId: string = `1AD7482E-2EB6-4394-B63A-D22120241532`;
+
 class Schedule {
     scheduleId: string;
     hireId: string;
@@ -218,7 +218,7 @@ class Schedule {
 }
 const year: number = 2023;
 async function fetchScheduleData(month: number) {
-    const url: string = `https://localhost:7235/api/user/schedules/${userId}?month=${month}`;
+    const url: string = `https://localhost:7235/api/teacher/schedules/${teacherId}?month=${month}`;
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -255,7 +255,7 @@ async function fetchScheduleData(month: number) {
 
 async function fetchScheduleDataForDay(day: number, month: number) {
     const dateParam = `${year}-${month}-${day}`;
-    const url: string = `https://localhost:7235/api/user/schedules/date/${userId}?date=${dateParam}`;
+    const url: string = `https://localhost:7235/api/teacher/schedules/date/${teacherId}?date=${dateParam}`;
     console.log('Date to fetch: ' + dateParam);
     console.log(url);
     try {
@@ -365,11 +365,99 @@ monthSelect.addEventListener('input', () => {
     fetchScheduleData(month);
 });
 
+class HireInfo {
+    hireId: string;
+    teacherId: string;
+    licenseId: string;
+    userId: string;
+    userName: string;
+    hireDate: Date;
+    status: string;
+}
+
+async function fetchHireData() {
+    try {
+        const url = `https://localhost:7235/api/teacher/hirerequest/${teacherId}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP ERROR! Status code: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        var hireInfoList: HireInfo[] = data;
+        renderHireTable(hireInfoList);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function updateHireRequestStatus(hireId: string, status: string) {
+    try {
+        const url = `https://localhost:7235/api/teacher/hirerequest/update/${hireId}?status=${status}`;
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.status !== 204) {
+            throw new Error(`HTTP ERROR! Status code: ${response.status}`);
+        }
+        var currentDate = new Date();
+        var currentMonth = currentDate.getMonth() + 1;
+        monthSelect.selectedIndex = currentMonth;
+        await fetchScheduleData(currentMonth);
+        await fetchHireData();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function renderHireTable(hireInfoList: HireInfo[]) {
+    const hireTableBody = document.getElementById('hireTableBody') as HTMLTableSectionElement;
+    hireTableBody.innerHTML = ``;
+    if (hireInfoList === null || hireInfoList.length === 0) {
+        console.log('No hire data');
+        return;
+    }
+    hireInfoList.forEach(hireInfo => {
+        let template = document.getElementById('hire-row-template') as HTMLTemplateElement;
+        let clone = document.importNode(template.content, true);
+        let NameElement = clone.querySelector('.HireUsername') as HTMLTableCellElement;
+        NameElement.textContent = hireInfo.userName;
+
+        let HireDateElement = clone.querySelector('.HireDate') as HTMLTableCellElement;
+        HireDateElement.textContent = new Date(hireInfo.hireDate).toLocaleString();
+
+        let LicenseElement = clone.querySelector('.HireLicense') as HTMLTableCellElement;
+        LicenseElement.textContent = hireInfo.licenseId;
+
+        let StatusElement = clone.querySelector('.HireStatus') as HTMLSelectElement;
+        StatusElement.setAttribute('hid', hireInfo.hireId);
+        StatusElement.value = hireInfo.status;
+
+        StatusElement.addEventListener('input', async () => {
+            var status = String(StatusElement.value);
+            if (window.confirm(`Cập nhật trạng thái thành ${status}?`)) {
+                var hireId = StatusElement.getAttribute('hid');
+                await updateHireRequestStatus(hireId, status);
+                alert(`Cập nhật thành công trạng thái thành ${status}`);
+            }
+        });
+
+        hireTableBody.appendChild(clone);
+    });
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1;
     monthSelect.selectedIndex = currentMonth;
     await fetchScheduleData(currentMonth);
-
+    await fetchHireData();
 });

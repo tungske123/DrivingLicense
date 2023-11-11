@@ -40,7 +40,7 @@ var teacherTabLinkList = document.querySelectorAll('#sidebar-content .dashboard-
 teacherTabLinkList.forEach(function (tabLink) {
     tabLink.addEventListener('click', function (e) {
         e.preventDefault();
-        var tabList = document.querySelectorAll('.user-tab');
+        var tabList = document.querySelectorAll('.teacher-tab');
         tabList.forEach(function (tab) {
             tab.style.display = 'none';
         });
@@ -251,7 +251,6 @@ function displayCalendar(month, year) {
         }
     }
 }
-var userId = "1AD7482E-2EB6-4394-B63A-D22120241532";
 var Schedule = /** @class */ (function () {
     function Schedule() {
     }
@@ -265,7 +264,7 @@ function fetchScheduleData(month) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    url = "https://localhost:7235/api/user/schedules/".concat(userId, "?month=").concat(month);
+                    url = "https://localhost:7235/api/teacher/schedules/".concat(teacherId, "?month=").concat(month);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
@@ -328,7 +327,7 @@ function fetchScheduleDataForDay(day, month) {
             switch (_a.label) {
                 case 0:
                     dateParam = "".concat(year, "-").concat(month, "-").concat(day);
-                    url = "https://localhost:7235/api/user/schedules/date/".concat(userId, "?date=").concat(dateParam);
+                    url = "https://localhost:7235/api/teacher/schedules/date/".concat(teacherId, "?date=").concat(dateParam);
                     console.log('Date to fetch: ' + dateParam);
                     console.log(url);
                     _a.label = 1;
@@ -436,6 +435,124 @@ monthSelect.addEventListener('input', function () {
     var month = Number(monthSelect.value);
     fetchScheduleData(month);
 });
+var HireInfo = /** @class */ (function () {
+    function HireInfo() {
+    }
+    return HireInfo;
+}());
+function fetchHireData() {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, response, data, hireInfoList, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    url = "https://localhost:7235/api/teacher/hirerequest/".concat(teacherId);
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })];
+                case 1:
+                    response = _a.sent();
+                    if (!response.ok) {
+                        throw new Error("HTTP ERROR! Status code: ".concat(response.status));
+                    }
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    console.log(data);
+                    hireInfoList = data;
+                    renderHireTable(hireInfoList);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_4 = _a.sent();
+                    console.error(error_4);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function updateHireRequestStatus(hireId, status) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, response, currentDate, currentMonth, error_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 4, , 5]);
+                    url = "https://localhost:7235/api/teacher/hirerequest/update/".concat(hireId, "?status=").concat(status);
+                    return [4 /*yield*/, fetch(url, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })];
+                case 1:
+                    response = _a.sent();
+                    if (response.status !== 204) {
+                        throw new Error("HTTP ERROR! Status code: ".concat(response.status));
+                    }
+                    currentDate = new Date();
+                    currentMonth = currentDate.getMonth() + 1;
+                    monthSelect.selectedIndex = currentMonth;
+                    return [4 /*yield*/, fetchScheduleData(currentMonth)];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, fetchHireData()];
+                case 3:
+                    _a.sent();
+                    return [3 /*break*/, 5];
+                case 4:
+                    error_5 = _a.sent();
+                    console.error(error_5);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+function renderHireTable(hireInfoList) {
+    var _this = this;
+    var hireTableBody = document.getElementById('hireTableBody');
+    hireTableBody.innerHTML = "";
+    if (hireInfoList === null || hireInfoList.length === 0) {
+        console.log('No hire data');
+        return;
+    }
+    hireInfoList.forEach(function (hireInfo) {
+        var template = document.getElementById('hire-row-template');
+        var clone = document.importNode(template.content, true);
+        var NameElement = clone.querySelector('.HireUsername');
+        NameElement.textContent = hireInfo.userName;
+        var HireDateElement = clone.querySelector('.HireDate');
+        HireDateElement.textContent = new Date(hireInfo.hireDate).toLocaleString();
+        var LicenseElement = clone.querySelector('.HireLicense');
+        LicenseElement.textContent = hireInfo.licenseId;
+        var StatusElement = clone.querySelector('.HireStatus');
+        StatusElement.setAttribute('hid', hireInfo.hireId);
+        StatusElement.value = hireInfo.status;
+        StatusElement.addEventListener('input', function () { return __awaiter(_this, void 0, void 0, function () {
+            var status, hireId;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        status = String(StatusElement.value);
+                        if (!window.confirm("C\u1EADp nh\u1EADt tr\u1EA1ng th\u00E1i th\u00E0nh ".concat(status, "?"))) return [3 /*break*/, 2];
+                        hireId = StatusElement.getAttribute('hid');
+                        return [4 /*yield*/, updateHireRequestStatus(hireId, status)];
+                    case 1:
+                        _a.sent();
+                        alert("C\u1EADp nh\u1EADt th\u00E0nh c\u00F4ng tr\u1EA1ng th\u00E1i th\u00E0nh ".concat(status));
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        }); });
+        hireTableBody.appendChild(clone);
+    });
+}
 document.addEventListener('DOMContentLoaded', function () { return __awaiter(_this, void 0, void 0, function () {
     var currentDate, currentMonth;
     return __generator(this, function (_a) {
@@ -446,6 +563,9 @@ document.addEventListener('DOMContentLoaded', function () { return __awaiter(_th
                 monthSelect.selectedIndex = currentMonth;
                 return [4 /*yield*/, fetchScheduleData(currentMonth)];
             case 1:
+                _a.sent();
+                return [4 /*yield*/, fetchHireData()];
+            case 2:
                 _a.sent();
                 return [2 /*return*/];
         }
