@@ -201,12 +201,16 @@ namespace L2D_WebApp.Controllers
         [Route("api/login/check")]
         public IActionResult CheckLogin()
         {
-            var usersession = HttpContext.Session.GetString("usersession");
-            if (string.IsNullOrEmpty(usersession))
+            var accountsession = HttpContext.Session.GetString("usersession");
+            if (string.IsNullOrEmpty(accountsession))
             {
                 return Unauthorized();
             }
-            return Ok();
+            var account = JsonSerializer.Deserialize<Account>(accountsession);
+            return Ok(new
+            {
+                Role = account.Role
+            });
         }
     }
 }

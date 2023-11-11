@@ -102,8 +102,35 @@ function getRentData() {
     };
     return data;
 }
+function CheckRentPermission() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const url = `https://localhost:7235/api/login/check`;
+            const response = yield fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.status !== 200) {
+                window.location.href = '/Login';
+                return;
+            }
+            const data = yield response.json();
+            const role = data.role;
+            if (role !== 'user') {
+                alert('Thuê xe không thành công! Chỉ có tài khoản học viên mới được thuê xe!');
+                return;
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
+    });
+}
 function submitAndSentRentData() {
     return __awaiter(this, void 0, void 0, function* () {
+        yield CheckRentPermission();
         const hasValidPrice = (CostElement.textContent !== `Chưa có thông tin`);
         if (!hasValidPrice) {
             alert('Vui lòng chọn ngày và giờ thuê phù hợp');

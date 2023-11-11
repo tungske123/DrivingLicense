@@ -67,6 +67,16 @@ namespace L2D_WebApp.Controllers
             }
 
             var teacher = await _context.Teachers.Include(t => t.Account)
+                .Select(t => new
+                {
+                    TeacherId = t.TeacherId,
+                    Avatar = t.Avatar,
+                    FullName = t.FullName,
+                    Information = t.Information,
+                    ContactNumber = t.ContactNumber,
+                    Email = t.Email,
+                    Password = t.Account.Password
+                })
                 .AsNoTracking().SingleOrDefaultAsync(t => t.TeacherId.Equals(tid));
 
             if (teacher is null)
@@ -146,7 +156,7 @@ namespace L2D_WebApp.Controllers
             }
             var hireList = await _context.Hires
                 .Include(hire => hire.Schedules)
-                .Where(hire => hire.TeacherId.Equals(tid))
+                .Where(hire => hire.TeacherId.Equals(tid) && !hire.Status.Equals("Chờ duyệt"))
                 .SelectMany(hire => hire.Schedules)
                 .Where(schedule => schedule.Date.Month == month)
                 .OrderBy(schedule => schedule.Date)
@@ -175,7 +185,7 @@ namespace L2D_WebApp.Controllers
             }
             var hireList = await _context.Hires
                .Include(hire => hire.Schedules)
-               .Where(hire => hire.TeacherId.Equals(tid))
+               .Where(hire => hire.TeacherId.Equals(tid) && !hire.Status.Equals("Chờ duyệt"))
                .SelectMany(hire => hire.Schedules)
                .Where(schedule => schedule.Date == date)
                .OrderBy(schedule => schedule.Date)
@@ -183,6 +193,78 @@ namespace L2D_WebApp.Controllers
                .AsSplitQuery()
                .ToListAsync();
             return Ok(hireList);
+        }
+
+        [HttpGet]
+        [Route("api/teacher/hirerequest/{tid:guid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetHireRequests([FromRoute] Guid tid)
+        {
+            if (tid == Guid.Empty)
+            {
+                return BadRequest("Invalid teacher id");
+            }
+            if (!await _context.Teachers.AnyAsync(teacher => teacher.TeacherId.Equals(tid)))
+            {
+                return NotFound($"Can't find any teachers with id ${tid}");
+            }
+            var hireList = await _context.Hires
+                .Include(hire => hire.User)
+                .Include(hire => hire.Schedules)
+                .Select(hire => new
+                {
+                    HireId = hire.HireId,
+                    TeacherId = hire.TeacherId,
+                    LicenseId = hire.Schedules.FirstOrDefault(s => s.HireId.Equals(hire.HireId)).LicenseId,
+                    UserId = hire.UserId,
+                    UserName = hire.User.FullName,
+                    HireDate = hire.HireDate,
+                    Status = hire.Status
+                })
+                .Where(hire => hire.TeacherId.Equals(tid))
+                .AsNoTracking()
+                .ToListAsync();
+            return Ok(hireList);
+        }
+
+        [HttpPut]
+        [Route("api/teacher/hirerequest/update/{hid:guid}")]
+        public async Task<IActionResult> UpdateHireRequestStatus([FromRoute] Guid hid, string status)
+        {
+            if (hid == Guid.Empty)
+            {
+                return BadRequest("Invalid hire id");
+            }
+
+            if (!await _context.Hires.AnyAsync(hire => hire.HireId.Equals(hid)))
+            {
+                return BadRequest($"Can't find any hire requests with id {hid}");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+
+                await _context.Hires.Where(hire => hire.HireId.Equals(hid))
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(hire => hire.Status, status));
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("api/teachers")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetAllTeachers()
+        {
+            var teacherList = await _context.Teachers.AsNoTracking().ToListAsync();
+            return Ok(teacherList);
         }
     }
 }

@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--style css-->
     <link rel="stylesheet" href="/css/styleLogin.css">
+    <!--google login library-->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <title>Login Page</title>
 </head>
 
@@ -20,15 +22,9 @@
     <section class="form-c sign-up-form hidden-load" id="container">
         <div class="form-container sign-up-container hidden-load">
             <form action="/Login/signup" class="needs-validation" method="post" novalidate>
-                <h1>Sign Up </h1>
+                <h1>Đăng kí</h1>
                 <!--Icon social-->
                 <div class="social-container">
-                    <a href="" class="social-icon bg1">
-                        <i class="fa fa-facebook"></i>
-                    </a>
-                    <a href="" class="social-icon bg2">
-                        <i class="fa fa-twitter"></i>
-                    </a>
                     <a href="" class="social-icon bg3">
                         <i class="fa fa-google"></i>
                     </a>
@@ -71,15 +67,9 @@
                 <p style="color:green">@TempData["Message2"]</p>
                 <!--Icon social-->
                 <div class="social-container">
-                    <a href="" class="social-icon bg1">
-                        <i class="fa fa-facebook"></i>
-                    </a>
-                    <a href="" class="social-icon bg2">
-                        <i class="fa fa-twitter"></i>
-                    </a>
-                    <a href="" class="social-icon bg3">
+                    <button href="" class="social-icon bg3" data-onsuccess="onSignIn" style="font-size: 15px;">
                         <i class="fa fa-google"></i>
-                    </a>
+                    </button>
                 </div>
                 <!-- <span>Or If you have an account, please Login </span> -->
                 <div class="input-group">
@@ -137,6 +127,45 @@
             });
         }
         document.querySelector('.login-link').classList.add('active');
+    </script>
+    <script>
+        // Callback function for successful Google Sign-In
+        function onSignIn(googleUser) {
+            // Obtain the Google User object
+            var profile = googleUser.getBasicProfile();
+
+            // Access user information
+            console.log('ID: ' + profile.getId());           // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Email: ' + profile.getEmail());
+
+            // Access the ID token
+            var idToken = googleUser.getAuthResponse().id_token;
+
+            // Send the ID token to your backend for server-side validation
+            sendIdTokenToServer(idToken);
+        }
+
+        // Example function to send the ID token to the server
+        function sendIdTokenToServer(idToken) {
+            // Perform an HTTP request to your server
+            // You can use libraries like Axios or the Fetch API
+            // Example using Fetch:
+            fetch('/signin-google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken })
+            })
+            .then(response => {
+                // Handle the server's response
+                console.log('Server response:', response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
     </script>
     <script src="js/LoginAnimation.js"></script>
 </body>

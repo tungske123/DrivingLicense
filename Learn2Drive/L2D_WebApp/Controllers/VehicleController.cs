@@ -15,6 +15,7 @@ namespace L2D_WebApp.Controllers
         public decimal StartPrice { get; set; } = Decimal.MinusOne;
         public decimal EndPrice { get; set; } = Decimal.MinusOne;
     }
+
     public record VehicleFormData
     {
         public string Name { get; set; }
@@ -27,6 +28,7 @@ namespace L2D_WebApp.Controllers
         public decimal RentPrice { get; set; }
         public string Description { get; set; }
     };
+
     public class VehicleController : Controller
     {
         private readonly DrivingLicenseContext _context;
@@ -130,7 +132,7 @@ namespace L2D_WebApp.Controllers
             int RentCount = await _context.Rents.CountAsync();
             if (RentCount == 0)
             {
-                return NotFound();
+                return NoContent();
             }
             var vehicleWithMostRents = await _context.Rents
                 .GroupBy(r => r.VehicleId)

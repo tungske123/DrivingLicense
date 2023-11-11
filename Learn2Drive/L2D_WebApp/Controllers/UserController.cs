@@ -12,7 +12,7 @@ using System;
 
 namespace L2D_WebApp.Controllers
 {
-    [LoginFilter]
+    //[LoginFilter]
     public class UserController : Controller
     {
         private readonly DrivingLicenseContext _context;
@@ -304,7 +304,7 @@ namespace L2D_WebApp.Controllers
                 await transaction.RollbackAsync();
                 return BadRequest("An Error occurred when processing request");
             }
-            
+
             return NoContent();
         }
 
@@ -327,7 +327,7 @@ namespace L2D_WebApp.Controllers
             }
             var hireList = await _context.Hires
                 .Include(hire => hire.Schedules)
-                .Where(hire => hire.UserId.Equals(uid))
+                .Where(hire => hire.UserId.Equals(uid) && !hire.Status.Equals("Chờ duyệt"))
                 .SelectMany(hire => hire.Schedules)
                 .Where(schedule => schedule.Date.Month == month)
                 .OrderBy(schedule => schedule.Date)
@@ -356,7 +356,7 @@ namespace L2D_WebApp.Controllers
             }
             var hireList = await _context.Hires
                .Include(hire => hire.Schedules)
-               .Where(hire => hire.UserId.Equals(uid))
+               .Where(hire => hire.UserId.Equals(uid) && !hire.Status.Equals("Chờ duyệt"))
                .SelectMany(hire => hire.Schedules)
                .Where(schedule => schedule.Date == date)
                .OrderBy(schedule => schedule.Date)
@@ -364,6 +364,54 @@ namespace L2D_WebApp.Controllers
                .AsSplitQuery()
                .ToListAsync();
             return Ok(hireList);
+        }
+
+        [HttpPost]
+        [Route("api/user/examregister/{uid:guid}")]
+        public async Task<IActionResult> RegisterExamProfile([FromRoute] Guid uid, [FromForm] IFormCollection formData)
+        {
+            if (uid == Guid.Empty)
+            {
+                return BadRequest("Invalid user id");
+            }
+
+            if (!await _context.Users.AnyAsync(user => user.UserId.Equals(uid)))
+            {
+                return BadRequest($"Can't find any users with id {uid}");
+            }
+
+            if (formData is null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                string LicenseId = formData["LicenseId"];
+                DateTime ExamDate = Convert.ToDateTime(formData["ExamDate"]);
+                string HealthCondition = formData["HealthCondition"];
+
+                await _context.ExamProfiles.AddAsync(new ExamProfile
+                {
+                    UserId = uid,
+                    LicenseId = LicenseId,
+                    ExamDate = ExamDate,
+                    HealthCondition = HealthCondition,
+                    ExamResult = "...",
+                    Status = "Chờ duyệt"
+                });
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
+
+            return NoContent();
         }
     }
 }

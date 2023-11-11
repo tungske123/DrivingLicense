@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using L2D_DataAccess.Utils;
 using Microsoft.AspNetCore.Authentication.Cookies;
-//using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -53,6 +53,16 @@ builder.Services.AddAuthentication("Cookies").AddCookie();
 //{
 //    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
 //    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+//});
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+//})
+//.AddGoogle(options =>
+//{
+//    options.ClientId = configuration["Authentication:Google:ClientId"];
+//    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+//    options.Scope.Add("email"); // Ensure the "email" scope is requested
 //});
 
 var app = builder.Build();

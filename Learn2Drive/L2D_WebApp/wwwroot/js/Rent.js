@@ -55,7 +55,7 @@ function checkValidPriceOnSliders() {
     const endPrice = Number(endSlider.value);
     return (startPrice < endPrice);
 }
-function getFormattedPrice(price) {
+function getFormattedRentPrice(price) {
     return price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".").toString();
 }
 function updatePriceOnSliders() {
@@ -67,8 +67,8 @@ function updatePriceOnSliders() {
     }
     const startPrice = startSlider.value;
     const endPrice = endSlider.value;
-    minInput.value = getFormattedPrice(Number(startPrice));
-    maxInput.value = getFormattedPrice(Number(endPrice));
+    minInput.value = getFormattedRentPrice(Number(startPrice));
+    maxInput.value = getFormattedRentPrice(Number(endPrice));
 }
 function resetPriceInput() {
     minInput.value = `0`;
@@ -191,7 +191,7 @@ function renderVehiclesData(vehicleList) {
         carItemBox.appendChild(loadDiv);
         // Add a delay before creating and appending vehicle card item
         setTimeout(() => {
-            const vehicleCardItem = createVehicleItem(vehicle.vehicleId, vehicle.name, vehicle.brand, getFormattedPrice(vehicle.rentPrice), vehicle.image);
+            const vehicleCardItem = createVehicleItem(vehicle.vehicleId, vehicle.name, vehicle.brand, getFormattedRentPrice(vehicle.rentPrice), vehicle.image);
             // Replace loading div with actual data
             carItemBox.replaceChild(vehicleCardItem, loadDiv);
         }, 750);
@@ -287,22 +287,24 @@ function fetchTop1VehicleAsync() {
                     'Content-Type': 'application/json'
                 }
             });
-            if (!response.ok) {
+            if (response.status !== 200 && response.status !== 204) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = yield response.json();
-            suggestSection.classList.remove('hide-section');
-            suggestSection.classList.add('show-section');
-            console.log(data);
-            const top1Vehicle = data.vehicle;
-            const rentCount = Number(data.rentCount);
-            toponeVehicleName.textContent = String(top1Vehicle.name);
-            const imageUrl = String(top1Vehicle.image);
-            toponeVehicleImg.src = `/img/vehicle/${imageUrl}`;
-            topOneRentButton.addEventListener('click', () => {
-                const vid = top1Vehicle.vehicleId;
-                location.href = `/Rent/RentDetail?vid=${vid}`;
-            });
+            if (data !== null) {
+                suggestSection.classList.remove('hide-section');
+                suggestSection.classList.add('show-section');
+                console.log(data);
+                const top1Vehicle = data.vehicle;
+                const rentCount = Number(data.rentCount);
+                toponeVehicleName.textContent = String(top1Vehicle.name);
+                const imageUrl = String(top1Vehicle.image);
+                toponeVehicleImg.src = `/img/vehicle/${imageUrl}`;
+                topOneRentButton.addEventListener('click', () => {
+                    const vid = top1Vehicle.vehicleId;
+                    location.href = `/Rent/RentDetail?vid=${vid}`;
+                });
+            }
         }
         catch (error) {
             console.error(`Error; ${error}`);
