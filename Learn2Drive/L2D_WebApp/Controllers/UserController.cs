@@ -48,6 +48,112 @@ namespace L2D_WebApp.Controllers
             };
         }
 
+        [HttpGet]
+        [Route("api/user/info/{uid:guid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetUserInfo([FromRoute] Guid uid)
+        {
+            if (uid == Guid.Empty)
+            {
+                return BadRequest("Invalid user id");
+            }
+            var user = await _context.Users
+            .Include(user => user.Account)
+            .Select(user => new
+            {
+                UserId = user.UserId,
+                Avatar = user.Avatar,
+                Cccd = user.Cccd,
+                Email = user.Email,
+                FullName = user.FullName,
+                BirthDate = user.BirthDate,
+                Nationality = user.Nationality,
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                Password = user.Account.Password
+            }).AsNoTracking().SingleOrDefaultAsync(user => user.UserId.Equals(uid));
+            return (user is not null) ? Ok(user) : NotFound($"Can't find any users with id {uid}");
+        }
+
+
+        private async Task<string> HandleUserAvatar(IFormFile avatarFile, Guid UserId)
+        {
+            string finalPath = string.Empty;
+            var filePath = Path.Combine("wwwroot/img/Avatar", UserId.ToString() + Path.GetExtension(avatarFile.FileName));
+            System.Console.WriteLine($"File path: {filePath}");
+            using var filestream = new FileStream(filePath, FileMode.Create);
+            try
+            {
+                await avatarFile.CopyToAsync(filestream);
+                finalPath = UserId.ToString() + Path.GetExtension(avatarFile.FileName);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Update user avatar error: " + ex.Message);
+            }
+            finally
+            {
+                filestream.Close();
+            }
+            return finalPath;
+        }
+
+        [HttpPut]
+        [Route("api/user/info/update/{uid:guid}")]
+        public async Task<IActionResult> UpdateUserInfo([FromRoute] Guid uid, [FromForm] IFormCollection formData)
+        {
+            if (uid == Guid.Empty)
+            {
+                return BadRequest("Invalid user id");
+            }
+            var user = await _context.Users
+            .Include(user => user.Account)
+            .SingleOrDefaultAsync(user => user.UserId.Equals(uid));
+            if (user is null)
+            {
+                return NotFound($"Can't find any users with id {uid}");
+            }
+            string FullName = formData["FullName"];
+            string Email = formData["Email"];
+            string Nationality = formData["Nationality"];
+            string CCCD = formData["CCCD"];
+            string Address = formData["Address"];
+            string PhoneNumber = formData["PhoneNumber"];
+            string BirthDate = formData["BirthDate"];
+            var avatarFile = formData.Files["Avatar"];
+            string Password = formData["Password"];
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                user.FullName = FullName;
+                user.BirthDate = !string.IsNullOrEmpty(BirthDate) ? Convert.ToDateTime(BirthDate) : DateTime.MinValue;
+                user.Email = Email;
+                user.Nationality = Nationality;
+                user.PhoneNumber = PhoneNumber;
+                user.Address = Address;
+                user.Cccd = CCCD;
+                user.Account.Password = Password;
+                if (avatarFile is not null)
+                {
+                    string avatarPath = await HandleUserAvatar(avatarFile, uid);
+                    user.Avatar = avatarPath;
+                }
+
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (System.Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
+
+            return NoContent();
+        }
+
+
         public async Task<IActionResult> Index()
         {
             const string UserProfileViewPath = "~/Views/UserProfile.cshtml";
@@ -55,9 +161,8 @@ namespace L2D_WebApp.Controllers
             if (accountsession.Role.Equals("user"))
             {
                 var user = await _context.Users
-                    .Include(user => user.Account)
                     .SingleOrDefaultAsync(u => u.AccountId.Equals(accountsession.AccountId));
-                ViewBag.user = user;
+                ViewBag.UserId = user.UserId;
             }
             return View(UserProfileViewPath);
         }
@@ -72,7 +177,6 @@ namespace L2D_WebApp.Controllers
             string Address = form["Address"];
             string PhoneNumber = form["PhoneNumber"];
             string BirthDate = form["BirthDate"];
-            System.Console.WriteLine("User birthdate: " + BirthDate);
             var filesend = form.Files["Avatar"];
             string Password = form["Password"];
             var usersession = System.Text.Json.JsonSerializer.Deserialize<Account>(HttpContext.Session.GetString("usersession"));

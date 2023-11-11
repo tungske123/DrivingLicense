@@ -49,10 +49,12 @@ function renderStaffInfo(staff) {
     const EmailElement = document.getElementById('email');
     const PhoneElement = document.getElementById('phone');
     const PasswordElement = document.getElementById('password');
+    const RepassElement = document.getElementById('repass');
     FullNameInput.value = staff.fullName;
     EmailElement.value = staff.email;
     PhoneElement.value = staff.email;
     PasswordElement.value = staff.password;
+    RepassElement.value = staff.password;
 }
 function fetchStaffInfoData() {
     return __awaiter(this, void 0, void 0, function* () {

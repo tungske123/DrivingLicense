@@ -2,12 +2,6 @@
 @{
     ViewData["Title"] = "L2D - Thông tin người dùng";
     Layout = "~/Views/Shared/UserLayout.cshtml";
-    var user = ViewBag.user as User;
-    bool hasImage = (user is not null && !string.IsNullOrEmpty(user.Avatar));
-    string imagePath = (hasImage) ? $"/img/Avatar/{user.Avatar}" : null;
-    bool hasBirthDate = (user is not null && user.BirthDate != DateTime.MinValue);
-    string FormattedBirthDate = (hasBirthDate) ? string.Format("{0:yyyy-MM-dd}", user.BirthDate) : null;
-    string UserID = user.UserId.ToString();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -188,12 +182,12 @@
         left: 50%;
         transform: translateX(-50%);">
             <img class="rounded-full w-80 h-80" id="previewImage"
-                 src="@((hasImage ? imagePath : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"))"
+                 src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
                  alt="image description">
 
         </div>
-        <form action="/User/EditInfo" id="userInfoForm" method="post" enctype="multipart/form-data">
-            <div hidden id="UserId">@user.UserId.ToString()</div>
+        <form action="" id="userInfoForm" method="post" enctype="multipart/form-data">
+            <div hidden id="UserId">@ViewBag.UserId</div>
             <div class="flex items-center justify-center w-full mb-5">
                 <label for="dropzone-file"
                        class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -220,7 +214,7 @@
                         Họ và
                         tên
                     </label>
-                    <input type="text" id="fullname" name="FullName" value="@user.FullName"
+                    <input type="text" id="fullname" name="FullName" 
                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            placeholder="Nhập họ và tên của bạn" required>
                 </div>
@@ -229,12 +223,12 @@
                 <div>
                     <label for="birthdate"
                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ngày/tháng/năm sinh</label>
-                    <input type="date" id="birthdate" name="BirthDate" value="@FormattedBirthDate"
+                    <input type="date" id="birthdate" name="BirthDate" 
                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            required>
                 </div>
                 <div>
-                    <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Số
                         điện thoại
                     </label>
@@ -247,20 +241,20 @@
                                       d="m16.344 12.168-1.4-1.4a1.98 1.98 0 0 0-2.8 0l-.7.7a1.98 1.98 0 0 1-2.8 0l-2.1-2.1a1.98 1.98 0 0 1 0-2.8l.7-.7a1.981 1.981 0 0 0 0-2.8l-1.4-1.4a1.828 1.828 0 0 0-2.8 0C-.638 5.323 1.1 9.542 4.78 13.22c3.68 3.678 7.9 5.418 11.564 1.752a1.828 1.828 0 0 0 0-2.804Z" />
                             </svg>
                         </div>
-                        <input type="text" id="phone" name="PhoneNumber" value="@user.PhoneNumber"
+                        <input type="text" id="phoneNumber" name="PhoneNumber" 
                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                placeholder="Nhập số điện thoại của bạn (+84)">
                     </div>
                 </div>
             </div>
             <div class="mb-6">
-                <label for="nationality" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label for="Nationality" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     Quốc
                     tịch
                 </label>
-                <input type="text" id="nationality" name="Nationality"
+                <input type="text" id="Nationality" name="Nationality"
                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                       placeholder="Nhập quốc tịch của bạn" value="Việt Nam" disabled>
+                       placeholder="Nhập quốc tịch của bạn">
             </div>
             <div class="mb-6">
                 <label for="cccd" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">CCCD</label>
@@ -272,7 +266,7 @@
                                   d="M3.656 12.115a3 3 0 0 1 5.682-.015M13 5h3m-3 3h3m-3 3h3M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm6.5 4.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
                         </svg>
                     </div>
-                    <input type="text" id="cccd" name="CCCD" value="@user.Cccd"
+                    <input type="text" id="cccd" name="CCCD"
                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            placeholder="Nhập số căn cước công dân của bạn">
                 </div>
@@ -292,7 +286,7 @@
                             </g>
                         </svg>
                     </div>
-                    <input type="text" id="address" name="Address" value="@user.Address"
+                    <input type="text" id="address" name="Address"
                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            placeholder="Nhập địa chỉ của bạn">
                 </div>
@@ -309,7 +303,7 @@
                             <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
                         </svg>
                     </div>
-                    <input type="text" id="email" name="Email" value="@user.Email"
+                    <input type="text" id="email" name="Email" 
                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            placeholder="Nhập email của bạn">
                 </div>
@@ -319,7 +313,7 @@
                     Mật
                     khẩu
                 </label>
-                <input type="password" id="password" name="Password" value="@user.Account.Password"
+                <input type="password" id="password" name="Password"
                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                        placeholder="" required>
 
@@ -329,7 +323,7 @@
                     Xác
                     nhận mật khẩu
                 </label>
-                <input type="password" id="repass" value="@user.Account.Password"
+                <input type="password" id="repass"
                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                        placeholder="" required>
             </div>
@@ -1358,7 +1352,7 @@
             </table>
         </div>
     </section>
-    <script type="module" src="~/js/User.js"></script>
+    <script src="~/js/UserProfileFunctions.js"></script>
 </body>
 
 </html>

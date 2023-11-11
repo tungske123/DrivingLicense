@@ -51,11 +51,13 @@ function renderStaffInfo(staff: Staff) {
     const EmailElement = document.getElementById('email') as HTMLInputElement;
     const PhoneElement = document.getElementById('phone') as HTMLInputElement;
     const PasswordElement = document.getElementById('password') as HTMLInputElement;
+    const RepassElement = document.getElementById('repass') as HTMLInputElement;
 
     FullNameInput.value = staff.fullName;
     EmailElement.value = staff.email;
     PhoneElement.value = staff.email;
     PasswordElement.value = staff.password;
+    RepassElement.value = staff.password;
 }
 async function fetchStaffInfoData() {
     try {
