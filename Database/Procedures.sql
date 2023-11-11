@@ -5,7 +5,6 @@ create or alter procedure proc_signUpAccount(
 	@username nvarchar(100),
 	@password nvarchar(100),
 	@email nvarchar(100),
-	@name nvarchar(100),
 	@roleSet nvarchar(50) = 'user'		--default value
 )
 as
@@ -23,13 +22,13 @@ begin
 	begin
 		-- Get accountID from temp table
 		--select @AccountID = AccountID from @InsertedIDs;
-		insert into dbo.Users(AccountID,FullName,Email)
-		values(@accountID, @name, @email);
+		insert into dbo.Users(AccountID,Email)
+		values(@accountID, @email);
 	end;
 
    if(@roleSet != 'user')
    begin
-		exec proc_changeRole @accountID, @name, @email, null, @roleSet;
+		exec proc_changeRole @accountID, null, @email, null, @roleSet;
 	end
 end;
 go
