@@ -47,7 +47,7 @@ namespace L2D_WebApp.Controllers
                 ControllerName = account.Role.ToLower() switch
                 {
                     "user" => "User",
-                    "teacher" => "Teacher",
+                    "lecturer" => "Teacher",
                     "staff" => "Staff",
                     "admin" => "Admin",
                     _ => string.Empty

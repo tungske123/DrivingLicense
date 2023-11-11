@@ -158,12 +158,17 @@ namespace L2D_WebApp.Controllers
         {
             const string UserProfileViewPath = "~/Views/UserProfile.cshtml";
             var accountsession = System.Text.Json.JsonSerializer.Deserialize<Account>(HttpContext.Session.GetString("usersession"));
-            if (accountsession.Role.Equals("user"))
-            {
-                var user = await _context.Users
-                    .SingleOrDefaultAsync(u => u.AccountId.Equals(accountsession.AccountId));
-                ViewBag.UserId = user.UserId;
-            }
+
+            var userData = await _context.Users
+                .Select(user => new
+                {
+                    UserId = user.UserId,
+                    AccountId = user.AccountId
+                })
+                .AsNoTracking()
+                .SingleOrDefaultAsync(u => u.AccountId.Equals(accountsession.AccountId));
+            ViewBag.UserId = userData.UserId;
+
             return View(UserProfileViewPath);
         }
 

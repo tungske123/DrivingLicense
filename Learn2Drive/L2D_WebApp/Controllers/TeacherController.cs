@@ -20,7 +20,7 @@ namespace L2D_WebApp.Controllers
             if (!string.IsNullOrEmpty(accountsession))
             {
                 var account = JsonSerializer.Deserialize<Account>(accountsession);
-                if (account.Role.ToLower().Equals("teacher"))
+                if (account.Role.ToLower().Equals("lecturer"))
                 {
                     var teacher = await _context.Teachers
                         .AsNoTracking().SingleOrDefaultAsync(t => t.AccountId.Equals(account.AccountId));
