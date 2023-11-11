@@ -24,7 +24,7 @@ namespace L2D_WebApp.Controllers
                 {
                     var teacher = await _context.Teachers
                         .AsNoTracking().SingleOrDefaultAsync(t => t.AccountId.Equals(account.AccountId));
-                    ViewBag.TeacherId = teacher.TeacherId;
+                    ViewBag.TeacherId = teacher.TeacherId;  
                 }
             }
             return View("~/Views/Teacher.cshtml");

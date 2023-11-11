@@ -172,13 +172,13 @@
                                 <div class="outstanding-features__item">
                                     <div class="title">
                                         <p class="sub" style="color: red;"><i class="fa-solid fa-car"></i> Loại Xe</p>
-                                        <p class="main">4 chỗ</p>
+                                        <p class="main">@Model.Type</p>
                                     </div>
                                 </div>
                                 <div class="outstanding-features__item">
                                     <div class="title">
                                         <p class="sub" style="color: red;"><i class="fa-regular fa-copyright"></i> Thương Hiệu</p>
-                                        <p class="main">Honda</p>
+                                        <p class="main">@Model.Brand</p>
                                     </div>
                                 </div>
                                 <div class="outstanding-features__item">
@@ -186,12 +186,6 @@
                                         <p class="sub" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá</p>
                                         <div hidden id="jsPrice">@Model.RentPrice</div>
                                         <p class="main">@formattedPrice VNĐ/Giờ</p>
-                                    </div>
-                                </div>
-                                <div class="outstanding-features__item">
-                                    <div class="title">
-                                        <p class="sub" style="color: red;"><i class="fa-regular fa-id-card"></i> Bằng lái</p>
-                                        <button class="btn btn-danger" style="display: block;">B1</button>
                                     </div>
                                 </div>
                             </div>
