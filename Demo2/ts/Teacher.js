@@ -89,11 +89,6 @@ teacherAvatarElement.addEventListener('change', function (event) {
     // Read the image file as a data URL
     reader.readAsDataURL(file);
 });
-var Account = /** @class */ (function () {
-    function Account() {
-    }
-    return Account;
-}());
 var Teacher = /** @class */ (function () {
     function Teacher() {
     }
@@ -187,12 +182,14 @@ function loadTeacherData(teacher) {
     var emailElement = document.getElementById('email');
     var descriptionElement = document.getElementById('description');
     var passwordElement = document.getElementById('password');
+    var repassElement = document.getElementById('repass');
     fullNameElement.value = teacher.fullName;
-    previewImageElement.src = "/img/avatar/".concat(teacher.avatar);
+    previewImageElement.src = "/img/Avatar/".concat(teacher.avatar);
     phoneNumberElement.value = teacher.contactNumber;
     emailElement.value = teacher.email;
     descriptionElement.textContent = teacher.information;
-    passwordElement.value = teacher.account.password;
+    passwordElement.value = teacher.password;
+    repassElement.value = teacher.password;
 }
 function getCalendarDays(month, year) {
     var date = new Date(year, month - 1, 1);
@@ -561,11 +558,14 @@ document.addEventListener('DOMContentLoaded', function () { return __awaiter(_th
                 currentDate = new Date();
                 currentMonth = currentDate.getMonth() + 1;
                 monthSelect.selectedIndex = currentMonth;
-                return [4 /*yield*/, fetchScheduleData(currentMonth)];
+                return [4 /*yield*/, fetchTeacherInfoData()];
             case 1:
                 _a.sent();
-                return [4 /*yield*/, fetchHireData()];
+                return [4 /*yield*/, fetchScheduleData(currentMonth)];
             case 2:
+                _a.sent();
+                return [4 /*yield*/, fetchHireData()];
+            case 3:
                 _a.sent();
                 return [2 /*return*/];
         }
