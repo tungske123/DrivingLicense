@@ -261,11 +261,17 @@ namespace L2D_WebApp.Controllers
         }
 
         [HttpGet]
-        [Route("api/teachers")]
+        [Route("api/teacherdata")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetAllTeachers()
+        public async Task<IActionResult> GetAllTeachersRegisterData()
         {
-            var teacherList = await _context.Teachers.AsNoTracking().ToListAsync();
+            var teacherList = await _context.Teachers
+                .Select(teacher => new
+                {
+                    TeacherId = teacher.TeacherId,
+                    FullName = teacher.FullName
+                })
+                .AsNoTracking().ToListAsync();
             return Ok(teacherList);
         }
     }

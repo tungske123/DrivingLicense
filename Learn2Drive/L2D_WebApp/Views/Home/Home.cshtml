@@ -389,6 +389,47 @@
             }
             alert(`Đăng kí học thành công!`);
         });
+
+        class Teacher {
+            teacherId;
+            fullName;
+        }
+        async function fetchTeacherData() {
+            try {
+                var url = `https://localhost:7235/api/teacherdata`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Error! status code: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log(data);
+                loadTeacherDataToRegisterForm(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        function loadTeacherDataToRegisterForm(teacherList) {
+            let teacherSelect = document.getElementById('teacherid');
+            //Clear all options
+            while (teacherSelect.options.length > 0){
+                teacherSelect.remove(0);
+            }
+            
+            teacherList.forEach(teacher => {
+                var option = document.createElement('option');
+                option.value = teacher.teacherId;
+                option.text = teacher.fullName;
+                teacherSelect.add(option);
+            });
+        }
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchTeacherData();
+        });
     </script>
 </body>
 

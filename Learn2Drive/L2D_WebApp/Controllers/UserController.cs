@@ -320,7 +320,7 @@ namespace L2D_WebApp.Controllers
             var QuizAttemptData = await QuizRepository.Instance.GetQuizAttemptDataFromUser(uid);
             if (aid == Guid.Empty)
             {
-                return Ok(QuizAttemptData);
+                return Ok(QuizAttemptData.OrderByDescending(att => att.AttemptDate));
             }
             return Ok(QuizAttemptData.SingleOrDefault(q => q.AttemptID.Equals(aid)));
         }
