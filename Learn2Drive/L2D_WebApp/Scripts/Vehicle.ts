@@ -613,6 +613,3 @@ nextButton.addEventListener('click', async () => {
     }
     await fetchVehiclesData();
 });
-
-
-

@@ -901,7 +901,7 @@ function fetchScheduleData(month) {
             console.log(data);
             var scheduleList = data;
             displayCalendar(month, year);
-            renderScheduleData(scheduleList, month);
+            renderUserScheduleData(scheduleList, month);
             const normalDayCells = document.querySelectorAll('td');
             normalDayCells.forEach(normalDayCell => {
                 normalDayCell.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
@@ -911,7 +911,7 @@ function fetchScheduleData(month) {
                         const day = Number(dayTextElement.textContent);
                         const month = Number(monthSelect.value);
                         console.log(`${day}-${month}`);
-                        yield fetchScheduleDataForDay(day, month);
+                        yield fetchUserScheduleDataForDay(day, month);
                     }
                     toggleScheduleDetailsModal();
                 }));
@@ -922,7 +922,7 @@ function fetchScheduleData(month) {
         }
     });
 }
-function fetchScheduleDataForDay(day, month) {
+function fetchUserScheduleDataForDay(day, month) {
     return __awaiter(this, void 0, void 0, function* () {
         const dateParam = `${year}-${month}-${day}`;
         const url = `https://localhost:7235/api/user/schedules/date/${UserId}?date=${dateParam}`;
@@ -941,7 +941,7 @@ function fetchScheduleDataForDay(day, month) {
             const data = yield response.json();
             console.log(data);
             var scheduleList = data;
-            renderSchedulesForDay(scheduleList);
+            renderUserSchedulesForDay(scheduleList);
         }
         catch (error) {
             console.error(error);
@@ -968,7 +968,7 @@ function getFormattedTime(timeString) {
     let formattedTime = timeString.substring(0, 5);
     return formattedTime;
 }
-function renderSchedulesForDay(scheduleList) {
+function renderUserSchedulesForDay(scheduleList) {
     const scheduleDetailsModalContent = document.getElementById('scheduleDetailsModalContent');
     scheduleDetailsModalContent.innerHTML = ``;
     if (scheduleList.length === 0) {
@@ -1000,7 +1000,7 @@ function renderSchedulesForDay(scheduleList) {
         scheduleDetailsModalContent.appendChild(scheduleDetailsElementClone);
     });
 }
-function renderScheduleData(scheduleList, month) {
+function renderUserScheduleData(scheduleList, month) {
     if (scheduleList === null || scheduleList.length === 0) {
         console.log('No schedules data');
         return;

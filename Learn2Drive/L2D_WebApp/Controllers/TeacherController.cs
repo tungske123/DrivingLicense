@@ -20,12 +20,14 @@ namespace L2D_WebApp.Controllers
             if (!string.IsNullOrEmpty(accountsession))
             {
                 var account = JsonSerializer.Deserialize<Account>(accountsession);
-                if (account.Role.ToLower().Equals("lecturer"))
-                {
-                    var teacher = await _context.Teachers
-                        .AsNoTracking().SingleOrDefaultAsync(t => t.AccountId.Equals(account.AccountId));
-                    ViewBag.TeacherId = teacher.TeacherId;  
-                }
+                var teacherData = await _context.Teachers
+                    .Select(teacher => new
+                    {
+                        AccountId = teacher.AccountId,
+                        TeacherId = teacher.TeacherId
+                    })
+                    .AsNoTracking().SingleOrDefaultAsync(t => t.AccountId.Equals(account.AccountId));
+                ViewBag.TeacherId = teacherData.TeacherId;
             }
             return View("~/Views/Teacher.cshtml");
         }

@@ -1011,7 +1011,7 @@ async function fetchScheduleData(month: number) {
         console.log(data);
         var scheduleList: Schedule[] = data;
         displayCalendar(month, year);
-        renderScheduleData(scheduleList, month);
+        renderUserScheduleData(scheduleList, month);
         const normalDayCells = document.querySelectorAll('td') as NodeListOf<HTMLTableCellElement>;
         normalDayCells.forEach(normalDayCell => {
             normalDayCell.addEventListener('click', async () => {
@@ -1021,7 +1021,7 @@ async function fetchScheduleData(month: number) {
                     const day = Number(dayTextElement.textContent);
                     const month: number = Number(monthSelect.value);
                     console.log(`${day}-${month}`);
-                    await fetchScheduleDataForDay(day, month);
+                    await fetchUserScheduleDataForDay(day, month);
                 }
                 toggleScheduleDetailsModal();
             });
@@ -1031,7 +1031,7 @@ async function fetchScheduleData(month: number) {
     }
 }
 
-async function fetchScheduleDataForDay(day: number, month: number) {
+async function fetchUserScheduleDataForDay(day: number, month: number) {
     const dateParam = `${year}-${month}-${day}`;
     const url: string = `https://localhost:7235/api/user/schedules/date/${UserId}?date=${dateParam}`;
     console.log('Date to fetch: ' + dateParam);
@@ -1049,7 +1049,7 @@ async function fetchScheduleDataForDay(day: number, month: number) {
         const data = await response.json();
         console.log(data);
         var scheduleList: Schedule[] = data;
-        renderSchedulesForDay(scheduleList);
+        renderUserSchedulesForDay(scheduleList);
     } catch (error) {
         console.error(error);
     }
@@ -1076,7 +1076,7 @@ function getFormattedTime(timeString: string) {
     return formattedTime;
 }
 
-function renderSchedulesForDay(scheduleList: Schedule[]) {
+function renderUserSchedulesForDay(scheduleList: Schedule[]) {
     const scheduleDetailsModalContent = document.getElementById('scheduleDetailsModalContent') as HTMLOListElement;
     scheduleDetailsModalContent.innerHTML = ``;
     if (scheduleList.length === 0) {
@@ -1113,7 +1113,7 @@ function renderSchedulesForDay(scheduleList: Schedule[]) {
     });
 }
 
-function renderScheduleData(scheduleList: Schedule[], month: number) {
+function renderUserScheduleData(scheduleList: Schedule[], month: number) {
     if (scheduleList === null || scheduleList.length === 0) {
         console.log('No schedules data');
         return;

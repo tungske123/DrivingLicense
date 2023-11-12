@@ -235,10 +235,25 @@ namespace L2D_WebApp.Controllers
             {
                 return NotFound($"Can't find any vehicle with id {vid}");
             }
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                if (await _context.Rents.CountAsync(r => r.VehicleId.Equals(vid)) > 0)
+                {
+                    await _context.Rents.Where(rent => rent.VehicleId.Equals(vid))
+                        .ExecuteDeleteAsync();
+                }
 
-            await _context.Vehicles.Where(vehicle => vehicle.VehicleId.Equals(vid))
-                .ExecuteDeleteAsync();
-            await _context.SaveChangesAsync();
+                await _context.Vehicles.Where(vehicle => vehicle.VehicleId.Equals(vid))
+                    .ExecuteDeleteAsync();
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
             return NoContent();
         }
 
@@ -255,34 +270,44 @@ namespace L2D_WebApp.Controllers
             {
                 return NotFound($"Can't find any vehicle with id {vid}");
             }
-            vehicle.Name = data.Name;
-            if (data.Image is not null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                var vehicleImagePath = await HandleVehicleImage(data);
-                if (!string.IsNullOrEmpty(vehicleImagePath))
+                vehicle.Name = data.Name;
+                if (data.Image is not null)
                 {
-                    vehicle.Image = vehicleImagePath;
+                    var vehicleImagePath = await HandleVehicleImage(data);
+                    if (!string.IsNullOrEmpty(vehicleImagePath))
+                    {
+                        vehicle.Image = vehicleImagePath;
+                    }
                 }
+                //vehicle.Brand = data.Brand switch
+                //{
+                //    "A1" => "Xe máy 50cc - 175cc (Hạng A1)",
+                //    "A2" => "Xe máy > 175cc (Hạng A2)",
+                //    "A3" => "Xe 3 bánh (Hạng A3)",
+                //    "A4" => "Xe máy kéo nhỏ (dưới 1000kg) (Hạng A4)",
+                //    "B1-B2" => "Ô tô 9 chỗ, tải, bán tải (dưới 3500kg) (Hạng B1, B2)",
+                //    "C-D-E" => "Ô tô > 10 chỗ, tải, bán tải (trên 3500kg) (Hạng C, D, E)",
+                //    _ => null
+                //};
+                vehicle.Brand = data.Brand;
+                vehicle.Type = data.Type;
+                vehicle.Years = data.Years;
+                vehicle.Address = data.Address;
+                vehicle.RentPrice = data.RentPrice;
+                vehicle.Description = data.Description;
+                //Update vehicle here
+                _context.Vehicles.Update(vehicle);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
-            //vehicle.Brand = data.Brand switch
-            //{
-            //    "A1" => "Xe máy 50cc - 175cc (Hạng A1)",
-            //    "A2" => "Xe máy > 175cc (Hạng A2)",
-            //    "A3" => "Xe 3 bánh (Hạng A3)",
-            //    "A4" => "Xe máy kéo nhỏ (dưới 1000kg) (Hạng A4)",
-            //    "B1-B2" => "Ô tô 9 chỗ, tải, bán tải (dưới 3500kg) (Hạng B1, B2)",
-            //    "C-D-E" => "Ô tô > 10 chỗ, tải, bán tải (trên 3500kg) (Hạng C, D, E)",
-            //    _ => null
-            //};
-            vehicle.Brand = data.Brand;
-            vehicle.Type = data.Type;
-            vehicle.Years = data.Years;
-            vehicle.Address = data.Address;
-            vehicle.RentPrice = data.RentPrice;
-            vehicle.Description = data.Description;
-            //Update vehicle here
-            _context.Vehicles.Update(vehicle);
-            await _context.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
             return NoContent();
         }
     }
