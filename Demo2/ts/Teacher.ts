@@ -60,12 +60,6 @@ teacherAvatarElement.addEventListener('change', (event: Event) => {
     reader.readAsDataURL(file);
 });
 
-class Account {
-    accountId: string;
-    username: string;
-    password: string;
-    role: string;
-}
 
 class Teacher {
     teacherId: string;
@@ -75,7 +69,7 @@ class Teacher {
     information: string;
     contactNumber: string;
     email: string;
-    account: Account;
+    password: string;
 }
 var teacherId: string = `DAA3024B-DEC1-422F-A070-144253088AD8`;
 const teacherInfoForm = document.getElementById('teacherInfoForm') as HTMLFormElement;
@@ -130,13 +124,14 @@ function loadTeacherData(teacher: Teacher) {
     const emailElement = document.getElementById('email') as HTMLInputElement;
     const descriptionElement = document.getElementById('description') as HTMLTextAreaElement;
     const passwordElement = document.getElementById('password') as HTMLInputElement;
-
+    const repassElement = document.getElementById('repass') as HTMLInputElement;
     fullNameElement.value = teacher.fullName;
-    previewImageElement.src = `/img/avatar/${teacher.avatar}`;
+    previewImageElement.src = `/img/Avatar/${teacher.avatar}`;
     phoneNumberElement.value = teacher.contactNumber;
     emailElement.value = teacher.email;
     descriptionElement.textContent = teacher.information;
-    passwordElement.value = teacher.account.password;
+    passwordElement.value = teacher.password;
+    repassElement.value = teacher.password;
 }
 
 function getCalendarDays(month: number, year: number): (Date | null)[] {
@@ -458,6 +453,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1;
     monthSelect.selectedIndex = currentMonth;
+    await fetchTeacherInfoData();
     await fetchScheduleData(currentMonth);
     await fetchHireData();
 });
