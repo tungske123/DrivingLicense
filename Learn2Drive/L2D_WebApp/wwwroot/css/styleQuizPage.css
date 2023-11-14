@@ -94,6 +94,9 @@
     h4.info {
         display: none;
     }
+    #viewQuestionButton {
+        display: none;
+    }
 }
 
 @media (max-width: 768px) {

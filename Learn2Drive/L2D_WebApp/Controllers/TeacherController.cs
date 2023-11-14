@@ -1,5 +1,6 @@
 ﻿using L2D_DataAccess.Models;
 using L2D_DataAccess.Utils;
+using L2D_WebApp.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -13,7 +14,8 @@ namespace L2D_WebApp.Controllers
         {
             _context = context;
         }
-
+        
+        [LoginFilter]
         public async Task<IActionResult> Index()
         {
             var accountsession = HttpContext.Session.GetString("usersession");

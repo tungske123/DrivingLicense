@@ -727,7 +727,7 @@ function createUserAttemptTableRow(data: QuizAttemptData) {
 
     const attemptDateCell = document.createElement('td');
     attemptDateCell.className = `px-6 py-4`;
-    attemptDateCell.textContent = new Date(data.attemptDate).toLocaleString();
+    attemptDateCell.textContent = new Date(data.attemptDate).toLocaleDateString();
     row.appendChild(attemptDateCell);
 
     const buttonsCell = document.createElement('td');
@@ -755,11 +755,41 @@ function createUserAttemptTableRow(data: QuizAttemptData) {
         window.location.href = `/Quiz?licenseid=${licenseid}`;
     });
     buttonsCell.appendChild(redoButton);
+    const removeButton = document.createElement('button');
+    removeButton.className = `text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900`;
+    removeButton.setAttribute('aid', data.attemptID);
+    removeButton.textContent = `Xóa lịch sử`;
+    removeButton.addEventListener('click', async () => {
+        if (window.confirm('Xác nhận xóa lịch sử làm đề này?')) {
+            const attemptId = removeButton.getAttribute('aid');
+            deleteQuizAttempt(attemptId);
+        }
+    });
+    buttonsCell.appendChild(removeButton);
     row.appendChild(buttonsCell);
 
     quizAttemptHistoryTableBody.appendChild(row);
 }
 
+async function deleteQuizAttempt(attemptId: string) {
+    try {
+        const url = `https://localhost:7235/api/users/quizattempt/delete/${attemptId}`;
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.status !== 204) {
+            throw new Error(`Delete quiz attempt error! ${response.status} - ${response.statusText}`);
+        }
+        alert('Xóa lịch sử thành công');
+        await fetchUserAttemptHistory();
+    } catch (error) {
+        console.error(error);
+    }
+
+}
 //function drawPieChart(correctPercent: number, incorrectPercent: number, unfinishedPercent: number) {
 //    const getChartOptions = () => {
 //        return {

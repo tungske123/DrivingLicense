@@ -153,7 +153,7 @@ namespace L2D_WebApp.Controllers
             return NoContent();
         }
 
-
+        [LoginFilter]
         public async Task<IActionResult> Index()
         {
             const string UserProfileViewPath = "~/Views/UserProfile.cshtml";
@@ -358,6 +358,36 @@ namespace L2D_WebApp.Controllers
                 _ => new TimeData { StartTime = -1, EndTime = -1 }
             };
             return data;
+        }
+
+        [HttpDelete]
+        [Route("api/users/quizattempt/delete/{aid:guid}")]
+        public async Task<IActionResult> DeleteAttempt([FromRoute] Guid aid)
+        {
+            if (aid == Guid.Empty)
+            {
+                return BadRequest("Invalid attempt id");
+            }
+            if (!await _context.Attempts.AnyAsync(attempt => attempt.AttemptId.Equals(aid)))
+            {
+                return NotFound($"Can't find any attempt with id {aid}");
+            }
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.AttemptDetails.Where(attempt => attempt.AttemptId.Equals(aid)).ExecuteDeleteAsync();
+                await _context.Attempts.Where(attempt => attempt.AttemptId.Equals(aid)).ExecuteDeleteAsync();
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"Error: {ex.Message}");
+            }
+
+            return NoContent();
         }
 
         [HttpPost]

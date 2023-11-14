@@ -59,7 +59,7 @@ namespace L2D_WebApp.Controllers
             }
             query = query.OrderBy(question => question.QuestionText);
 
-            const int pageSize = 10;
+            const int pageSize = 20;
             var pageResult = await GetPagedDataAsync<Question>(query, page, pageSize);
             return Ok(pageResult);
         }

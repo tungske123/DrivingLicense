@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-
+using L2D_WebApp.Filters;
 namespace L2D_WebApp.Controllers
 {
     public class StaffController : Controller
@@ -12,6 +12,7 @@ namespace L2D_WebApp.Controllers
         private readonly DrivingLicenseContext _context;
         public StaffController(DrivingLicenseContext context) => _context = context;
 
+        [LoginFilter]
         public async Task<IActionResult> Index()
         {
             var accountsession = HttpContext.Session.GetString("usersession");

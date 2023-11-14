@@ -1,5 +1,6 @@
 ﻿using L2D_DataAccess.Models;
 using L2D_DataAccess.Utils;
+using L2D_DataAccess.ViewModels;
 using L2D_WebApp.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace L2D_WebApp.Controllers
         private readonly DrivingLicenseContext _context;
         public AdminController(DrivingLicenseContext context) => _context = context;
 
+        [LoginFilter]
         public async Task<IActionResult> Index()
         {
             var accountsession = HttpContext.Session.GetString("usersession");
@@ -21,8 +23,34 @@ namespace L2D_WebApp.Controllers
                 var admin = await _context.Admins.AsNoTracking().SingleOrDefaultAsync(ad => ad.AccountId.Equals(account.AccountId));
                 ViewBag.AdminId = admin.AdminId;
             }
-            
+
             return View("~/Views/Admin.cshtml");
+        }
+
+        public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
+        {
+            //Get total number of rows in table
+            int totalCount = await query.CountAsync();
+
+            //Calculate total pages
+            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            int takingNums = pageSize;
+            int skipNums = (page - 1) * pageSize;
+            if (totalCount < pageSize)
+            {
+                takingNums = totalCount;
+            }
+            List<T> items = await query.Skip(skipNums)
+                                       .Take(takingNums)
+                                       .ToListAsync();
+            return new PageResult<T>
+            {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                PageNumber = page,
+                PageSize = pageSize,
+                Items = items
+            };
         }
 
         [HttpGet]
@@ -152,6 +180,26 @@ namespace L2D_WebApp.Controllers
             }
             return NoContent();
         }
+
+        [HttpGet]
+        [Route("api/accounts")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetAccountsPaging(int page = 0)
+        {
+            if (page <= 0)
+            {
+                return BadRequest("Invalid page value");
+            }
+            var query = _context.Accounts.AsQueryable();
+            const int pageSize = 10;
+            var pageResult = await GetPagedDataAsync<Account>(query, page, pageSize);
+
+            return Ok(pageResult);
+        }
+
+       
+
+        
 
     }
 }
