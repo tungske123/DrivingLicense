@@ -9,27 +9,31 @@ create or alter procedure proc_signUpAccount(
 )
 as
 begin
-	-- Declare temporary table
-	declare @InsertedIDs table (AccountID uniqueidentifier);
-
-	insert into dbo.Account (Username, [Password], [Role])
-	output inserted.AccountID into @InsertedIDs(AccountID)
-	values(@username, @password, @roleSet);
+	-- Declare
 	declare @accountID as uniqueidentifier;
-	SET @accountID = (SELECT TOP 1 AccountID FROM @InsertedIDs);
+	declare @Temptable table (accId uniqueidentifier);
+
+	--Create an account and save its id to a temp table
+	insert into dbo.Account (Username, [Password], [Role])
+	output inserted.AccountID into @Temptable(AccId)
+	values(@username, @password, @roleSet);
+	set @accountID = (select top(1) AccId from @Temptable);
 
 	if(@roleSet = 'user')
 	begin
-		-- Get accountID from temp table
-		--select @AccountID = AccountID from @InsertedIDs;
-		insert into dbo.Users(AccountID,Email)
-		values(@accountID, @email);
+		insert into dbo.Users(AccountID,Email) values(@accountID, @email);
 	end;
+	else
+	begin
+		if(@roleSet = 'lecturer' and not exists(select * from dbo.Teacher where AccountID = @accountID))
+		insert into dbo.Teacher(AccountID, Email)values(@accountID,@email);
 
-   if(@roleSet != 'user')
-   begin
-		exec proc_changeRole @accountID, null, @email, null, @roleSet;
-	end
+		else if(@roleSet = 'staff' and not exists(select * from dbo.Staff where AccountID = @accountID))
+		insert into dbo.Staff(AccountID,Email)values(@accountID, @email);
+
+		else if(@roleSet = 'admin'and not exists(select * from dbo.[Admin] where AccountID = @accountID))
+		insert into dbo.[Admin](AccountID,Email)values(@accountID,@email);
+	end;
 end;
 go
 
@@ -47,61 +51,68 @@ create or alter procedure proc_CreateQuiz (
 	@Name nvarchar(100),
 	@LicenseID nvarchar(10),
 	@Description nvarchar(max),
-	@quantity int
+	@QuestQuantity int
 )
 as
 begin
-	--INSERT ANOTHER QUIZ
-	insert into Quiz(LicenseID, [Name], [Description]) values (@LicenseID, @Name, @Description);
+	--QUERY LICENSE FOR TIMER
+	declare @duration int;
+	if (@LicenseID in ('A1', 'A2', 'A3', 'A4', 'B1')) set @duration = 1201;--20 minutes
+	else if (@LicenseID = 'B2') set @duration = 1321;--22 minutes
+	else if (@LicenseID = 'C') set @duration = 1441;--24 minutes
+	else set @duration = 1561;--26 minutes
+
+	--Create a quiz
+	insert into Quiz(LicenseID, [Name], [Description], Timer, TotalDid) values (@LicenseID, @Name, @Description,@duration ,0);
 	declare @QuizID int;
 	set @QuizID = SCOPE_IDENTITY();
 
-	--DECLARE TEMP TABLE FOR SUBQUERY
+	--Declare temp table for subquery
 	declare @NonCritical_table table (RolledID int);
 	declare @Critical_table table (RolledID int);
 	declare @combined_table table (questionid int);
 
-	--INSERT NEW ROLL RESULT SUITABLE CONDITION
+	--Insert new roll result suitable condition
 	insert into @NonCritical_table
-	select top(@quantity-4) QuestionID from Question where (LicenseID = @LicenseID and isCritical=0) order by newid();
+	select top(@QuestQuantity-4) QuestionID from Question where (LicenseID = @LicenseID and isCritical=0) order by newid();
 
 	insert into @Critical_table
 	select top(4) QuestionID from Question where (LicenseID=@LicenseID and isCritical=1) order by newid();
 
-	--COMBINE ROLLED QUESTION
+	--Combine rolled question
 	INSERT INTO @Combined_table
 	select * from @noncritical_table
 	union all
 	select * from @Critical_table;
 
-	--INSERT RESULT
+	--Insert result
 	insert into Have (QuizID, QuestionID)
 	select @QuizID, QuestionID FROM @Combined_table;
 
-	--RESET ROLLED RANDOM
+	--Reset rolled random
 	delete from @combined_table;
 end;
 go
 
---exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1','Mô tả', 25;
+--exec proc_CreateQuiz N'Đề số 2 của hạng A1', 'A1','Mô tả', 25;
 
------------------------------------[ Roll Question Of Quiz]-------------------------------
+-----------------------------------[ ROLL QUESTION OF QUIZ]-------------------------------
 create or alter procedure proc_RollQuestion (
 	@QuizID int,
 	@OldQuestionID int
 )
 as
 begin
-	--DECLARE TEMP TABLE FOR SUBQUERY
+	--Declare temp table for subquery
 	declare @Question_table table (QuestionID int);
 
-	--GET ALL QUESTION NOT IN QUIZ
+	--Get all question not in quiz
 	insert into @Question_table
 	select QuestionID from Question 
 	where QuestionID not in (select QuestionID from Have where QuizID = @QuizID);
 
 
-	--GET NEW RANDOM QUESTION
+	--Get new random question
 	declare @NewQuestionID int;
 	select top 1 @NewQuestionID = QuestionID from @Question_table order by newid();
 
@@ -112,23 +123,9 @@ go
 
 --exec proc_ChangeQuestion 1, 2; (QuizID, QuestionID) in database
 
---==================================================================================
---==================================================================================
------------------------------------[ DELETE SCHEDULE]-------------------------------
-create or alter procedure proc_DeleteSchedule(
-	@ScheduleID uniqueidentifier,
-	@HireID uniqueidentifier,
-	@LicenseID nvarchar(10)
-)
-as
-begin
-	delete from Schedule where ScheduleID = @ScheduleID;
-	delete from Schedule where HireID = @HireID
-	delete from Schedule where LicenseID = @LicenseID;
-end;
-go
-
------------------------------------[ DELETE HIRE]-------------------------------
+--|================================|============|=============================|--
+--|================================|============|=============================|--
+--|--------------------------------[ DELETE HIRE]-----------------------------|--
 create or alter procedure proc_DeleteHire(
 	@HireID uniqueidentifier,
 	@TeacherID uniqueidentifier,
@@ -136,51 +133,33 @@ create or alter procedure proc_DeleteHire(
 )
 as
 begin
-	exec proc_DeleteSchedule null,@HireID,null;		--Remove constain
+	--Declare
+	declare @Tempt table (hireId uniqueidentifier);
 
+	--Case 1:
+	if (@HireID is not null) delete from dbo.Schedule where HireID = @HireID;	--Remove constain
+
+	--Case 2:
+	if @TeacherID is not null
+	begin
+		insert into @Tempt select HireID from Hire where TeacherID = @TeacherID;--Query all hire of teacher
+
+		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+	end
+
+	--Case 3:
+	if (@UserID is not null)
+	begin
+		delete from @Tempt;														--Reset Tempt Table
+		insert into @Tempt select HireID from Hire where UserID = @UserID;		--Query all hire of user
+
+		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+	end
+
+	--Delete after remove constrain
 	delete from Hire where HireID = @HireID;
 	delete from Hire where TeacherID = @TeacherID
 	delete from Hire where UserID = @UserID;
-end;
-go
-
------------------------------------[ DELETE HAVE]-------------------------------
-create or alter procedure proc_DeleteHave(
-	@QuizID int,
-	@QuestionID int
-)
-as
-begin
-	delete from Have where QuizID = @QuizID;
-	delete from Have where QuestionID = @QuestionID;
-end;
-go
-
------------------------------------[ DELETE RENT]-------------------------------
-create or alter procedure proc_DeleteRent(
-	@RentID uniqueidentifier,
-   @VehicleID uniqueidentifier,
-   @UserID uniqueidentifier
-)
-as
-begin
-	delete from Rent where RentID = @RentID;
-	delete from Rent where VehicleID = @VehicleID;
-	delete from Rent where UserID = @UserID;
-end;
-go
-
------------------------------------[ DELETE ATTEMPT DETAIL ]-------------------------------
-create or alter procedure proc_DeleteAttemptdDetail(
-	@AttemptDetailID uniqueidentifier,
-	@AttemptID uniqueidentifier,
-	@QuestionID int
-)
-as
-begin
-	delete from AttemptDetail where AttemptDetailID = @AttemptDetailID;
-	delete from AttemptDetail where AttemptID = @AttemptID;
-	delete from AttemptDetail where QuestionID = @QuestionID;
 end;
 go
 
@@ -192,26 +171,36 @@ create or alter procedure proc_DeleteAttempt(
 )
 as
 begin
-	if @UserID is not null
+	--Declare tempt table
+	declare @Tempt table (attemptId uniqueidentifier);
+	
+	--Case 1:
+	if (@AttemptID is not null) delete from AttemptDetail where AttemptID = @AttemptID;--Remove constrain
+
+	--Case 2:
+	if (@UserID is not null)
 	begin
-		declare @AttmpDetail table (AttmpId uniqueidentifier);
+		--Query all attempt of user
+		insert into @Tempt select AttemptID from Attempt where UserID = @UserID;
 
-		insert into @AttmpDetail (AttmpId)
-		select AttemptID from Attempt where UserID = @UserID;
-
-		delete from AttemptDetail where AttemptID in (select AttmpId from @AttmpDetail);
+		--Remove all constrain of user's attempts
+		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
 	end
 
-	if @QuizID is not null
+	--Case 3:
+	if (@QuizID is not null)
 	begin
-		declare @AttemDetail table (AttemId uniqueidentifier);
+		--Reset Tempt Table
+		delete from @Tempt;
 
-		insert into @AttemDetail (AttemId)
-		select AttemptID from Attempt where QuizID = @QuizID;
+		--Query all attempt of user
+		insert into @Tempt select AttemptID from Attempt where QuizID = @QuizID;
 
-		delete from AttemptDetail where AttemptID in (select AttemId from @AttemDetail);
+		--Remove all constrain of quiz's attempts
+		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
 	end
 
+	--Delete after remove constrain
 	delete from Attempt where AttemptID = @AttemptID;
 	delete from Attempt where UserID = @UserID;
     delete from Attempt where QuizID = @QuizID;
@@ -225,11 +214,13 @@ create or alter procedure proc_DeleteQuiz(
 )
 as 
 begin
-	exec proc_DeleteAttempt null,null,@quizID;		--Remove constain
-	exec proc_DeleteHave @quizID,null;				--Remove constain
+	--Remove constain
+	exec proc_DeleteAttempt null,null,@quizID;
+	delete from Have where QuizID = @quizID;
 
-	delete from Quiz where LicenseID= @LicenseID;
+	--Then delete
 	delete from Quiz where QuizID = @quizID;
+	delete from Quiz where LicenseID= @LicenseID;
 end;
 go
 /*
@@ -244,45 +235,23 @@ begin
 end;
 go
 */
------------------------------------[ Delete Response]-------------------------------
-create or alter procedure proc_DeleteResponse(
-	@ResponseID int,
-	@FeedbackID int,
-	@userID uniqueidentifier,
-	@staffID uniqueidentifier
-)
-as 
-begin
-	delete from Response where ResponseID = @ResponseID;
-	delete from Response where FeedbackID = @FeedbackID;
-	delete from Response where userID = @userID;
-	delete from Response where staffID= @staffID;
-end;
-go
 
 -----------------------------------[ DELETE FEEDBACK ]-------------------------------
 create or alter procedure proc_DeleteFeedback(
-	@FeedbackID int,
+	@FeedbackID uniqueidentifier,
 	@userID uniqueidentifier
 )
 as 
 begin
-	exec proc_DeleteResponse null,@FeedbackID,@userID,null;	--Remove constain
+	--Case 1:--Remove constrain
+	if (@FeedbackID is not null) delete from dbo.Response where FeedbackID = @FeedbackID;
 
+	--Case 2:--Remove constrain
+	if (@UserID is not null)delete from dbo.Response where UserID = @UserID;			
+
+	--Delete after remove constrain
 	delete from Feedback where FeedbackID = @FeedbackID;
 	delete from Feedback where userID = @userID;
-end;
-go
-
------------------------------------[ DELETE STATISTIC ]-------------------------------
-create or alter procedure proc_DeleteStatistic(
-	@StatisticID int,
-	@staffID uniqueidentifier
-)
-as 
-begin
-	delete from Statistic where StatisticID = @StatisticID;
-	delete from Statistic where staffID = @staffID;
 end;
 go
 
@@ -290,17 +259,21 @@ go
 create or alter procedure proc_DeleteUser(
 	@AccountID uniqueidentifier,
 	@UserID uniqueidentifier,
-	@confirm_DeleteAccount varchar(10)
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
 )
 as 
 begin
 	if(@UserID = null or @UserID = '') set @UserID = (select UserID from Users where AccountID = @AccountID);
-	exec proc_DeleteHire null,null,@UserID;				--Remove constain
-	exec proc_DeleteRent null,null,@UserID;				--Remove constain
-	exec proc_DeleteAttempt null,@UserID,null;			--Remove constain
-	exec proc_DeleteFeedback null,@UserID;				--Remove constain
+	
+	--Remove constains
+	delete from dbo.Rent where UserID = @UserID;
+	delete from dbo.ExamProfile where UserID = @UserID;
+	exec proc_DeleteHire null,null,@UserID;
+	exec proc_DeleteAttempt null,@UserID,null;
+	exec proc_DeleteFeedback null,@UserID;
 
-	delete from Users where UserID = @UserID;			--Then delete
+	--Then delete
+	delete from Users where UserID = @UserID;			
 
 	if(@confirm_DeleteAccount = 'yes')
 	begin
@@ -314,7 +287,7 @@ go
 create or alter procedure proc_DeleteLecturer(
 	@AccountID uniqueidentifier,
 	@TeacherID uniqueidentifier,
-	@confirm_DeleteAccount varchar(10)
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
 )
 as 
 begin
@@ -335,13 +308,12 @@ go
 create or alter procedure proc_DeleteStaff(
 	@AccountID uniqueidentifier,
 	@StaffID uniqueidentifier,
-	@confirm_DeleteAccount varchar(10)
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
 )
 as 
 begin
 	if(@StaffID = null or @StaffID = '') set @StaffID = (select StaffID from Staff where AccountID = @AccountID);
-	exec proc_DeleteResponse null,null,null,@StaffID;		--Remove constain
-	exec proc_DeleteStatistic null,@StaffID;				--Remove constain
+	delete from dbo.Response where StaffID = @StaffID;		--Remove constain
 
 	delete from Staff where StaffID = @StaffID;				--Then delete
 
@@ -357,7 +329,7 @@ go
 create or alter procedure proc_DeleteAdmin(
 	@AccountID uniqueidentifier,
 	@AdminID uniqueidentifier,
-	@confirm_DeleteAccount varchar(10)
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
 )
 as 
 begin
@@ -375,96 +347,126 @@ go
 -------------------------------------------[ CHANGE ROLE ]----------------------------------------------
 create or alter procedure proc_changeRole(
 	@accountID nvarchar(50),
-	@fullname nvarchar(100),
-	@email nvarchar(100),
-	@phoneNum nvarchar(20),
-	@roleNew nvarchar(50)
+	@roleNew nvarchar(50),
+	@LicenseSet nvarchar(10) = 'A1'		--default value
 )
 as
 begin
-	declare @roleOld nvarchar(50);
+	--Declare
+	declare @roleOld as nvarchar(50);
+	declare @avatar nvarchar(max);
+	declare @Tempt as table(email nvarchar(100), fullname nvarchar(100), telephone nvarchar(20));
+
 	set @roleOld = (select [Role] from dbo.Account where AccountID = @accountID);
 
-	if(@roleOld = 'lecturer' and not exists(select * from dbo.Teacher where AccountID = @accountID))
-	insert into dbo.Teacher(AccountID, Fullname, Email, ContactNumber)values(@accountID, @fullname, @email, @phoneNum);
+	--Case 1:
+	if(@roleOld = 'user')
+	begin
+		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, PhoneNumber from dbo.Users where AccountID = @accountID;
 
-	else if(@roleOld = 'staff' and not exists(select * from dbo.Staff where AccountID = @accountID))
-	insert into dbo.Staff(AccountID, Fullname ,Email, ContactNumber)values(@accountID, @fullname, @email, @phoneNum);
+		
+		exec proc_DeleteUser @accountID,null,'no';--Delete old record
+	end;
 
-	else if(@roleOld = 'admin'and not exists(select * from dbo.[Admin] where AccountID = @accountID))
-	insert into dbo.[Admin](AccountID, Fullname ,Email, ContactNumber)values(@accountID, @fullname, @email, @phoneNum);
-	
+	--Case 2:
+	else if(@roleOld = 'lecturer')
+	begin
+		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, ContactNumber from dbo.Teacher where AccountID = @accountID;
+
+		exec proc_DeleteLecturer @accountID,null,'no';--Delete old record
+	end;
+
+	--Case 3:
+	else if(@roleOld = 'staff')
+	begin
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, ContactNumber from dbo.Staff where AccountID = @accountID;
+
+		exec proc_DeleteStaff @accountID,null,'no';--Delete old record
+	end;
+
+	--Case 4:
+	else
+	begin
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, ContactNumber from dbo.[Admin] where AccountID = @accountID;
+		
+		exec proc_DeleteAdmin @accountID,null,'no';--Delete old record
+	end;
+
+	--//--//--//--//--//--
 	if(@roleOld!=@roleNew)
 	begin
 		--______________________ Update Role______________________
 		if (@roleNew = 'lecturer') 
 		begin
 			insert into dbo.Teacher(AccountID, Fullname, Email, ContactNumber)	--insert new teacher
-			values(@accountID, @fullname, @email, @phoneNum)
+			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
 		end
 
 		else if (@roleNew = 'staff')
 		begin
 			insert into dbo.Staff(AccountID, Fullname ,Email, ContactNumber)	--insert new teacher
-			values(@accountID, @fullname, @email, @phoneNum);
+			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
 		end
 
 		else if (@roleNew = 'admin')
 		begin
 			insert into dbo.[Admin](AccountID, Fullname ,Email, ContactNumber)--insert new admin
-			values(@accountID, @fullname, @email, @phoneNum);
+			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
 		end
 
 		else if(@roleNew = 'user')
 		begin
 			insert into dbo.Users(AccountID, Fullname, Email, PhoneNumber)		--insert new user
-			values(@accountID, @fullname, @email, @phoneNum);
+			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
 		end
-
-		--______________________ Delete Old Record______________________
-		if(@roleOld = 'lecturer') exec proc_DeleteLecturer @accountID,null,'no';
-		else if (@roleOld = 'staff') exec proc_DeleteStaff @accountID,null,'no';
-		else if (@roleOld = 'admin') exec proc_DeleteAdmin @accountID,null,'no';
-		else if (@roleOld = 'user') exec proc_DeleteUser @accountID,null,'no';
 	end
 end;
 go
 
 -------------------------------------------[ CALCULATE QUIZ RESULT ]----------------------------------------------
-create or alter procedure [dbo].[proc_CalculateQuizResult] @AttemptID uniqueidentifier
+create or alter procedure [dbo].[proc_CalculateQuizResult](
+	@AttemptID uniqueidentifier
+)
 as
-declare @CorrectQuestionCnt as int;
-declare @IncorrectQuestionCnt as int;
-declare @TotalQuestionCnt as int;
-declare @QuizID as int;
-declare @Result as decimal(18, 2);
-declare @RemainingQuestion as int;
-declare @AttemptDate as date;
-set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
-set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
-set @CorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 1);
-set @IncorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 0);
-set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
-set @Result = cast(@CorrectQuestionCnt as decimal(18, 2)) / cast(@TotalQuestionCnt as decimal(18, 2)) * 100.0;
-set @RemainingQuestion = @TotalQuestionCnt - @CorrectQuestionCnt - @IncorrectQuestionCnt;
-select @AttemptID as 'AttemptID',
-(select [Name] from dbo.Quiz where QuizID = @QuizID) as 'QuizName', 
-(select LicenseID from dbo.Quiz where QuizID = @QuizID) as 'License',
-@AttemptDate as 'AttemptDate',
-@TotalQuestionCnt as 'TotalQuestion',
-@CorrectQuestionCnt as 'CorrectQuestion', @IncorrectQuestionCnt as 'IncorrectQuestion', 
-@RemainingQuestion as 'RemainingQuestion',
-@Result as 'Result'
-from dbo.AttemptDetail att
-where att.AttemptID = @AttemptID
-group by att.AttemptID;
-update dbo.Attempt
-set Grade = cast(@Result as decimal(18, 2))
-where AttemptID = @AttemptID;
+begin
+	--DECLARE
+	declare @TotalCorrect as int;
+	declare @TotalIncorrect as int;
+	declare @TotalQuestionCnt as int;
+	declare @QuizID as int;
+	declare @RemainingQuestion as int;
+	declare @AttemptDate as date;
+
+	--SET VALUES
+	set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
+	set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
+	set @TotalCorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'true');
+	set @TotalIncorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'false');
+	set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
+	set @RemainingQuestion = @TotalQuestionCnt - @TotalCorrect - @TotalIncorrect;
+
+	select @AttemptID as 'AttemptID',
+	(select [Name] from dbo.Quiz where QuizID = @QuizID) as 'QuizName', 
+	(select LicenseID from dbo.Quiz where QuizID = @QuizID) as 'License',
+	@AttemptDate as 'AttemptDate',
+	@TotalQuestionCnt as 'TotalQuestion',
+	@TotalCorrect as 'CorrectQuestion',
+	@TotalIncorrect as 'IncorrectQuestion',
+	@RemainingQuestion as 'RemainingQuestion'
+	from dbo.AttemptDetail att
+	where att.AttemptID = @AttemptID
+	group by att.AttemptID;
+end;
 
 
 -----------------------------------------------------------------------------------------------
@@ -480,8 +482,7 @@ create table #AttemptResults (
     TotalQuestion int,
     CorrectQuestion int,
     IncorrectQuestion int,
-    RemainingQuestion int,
-    Result decimal(18, 2)
+    RemainingQuestion int
 );
 
 -- Iterate through each attempt for the user
@@ -497,8 +498,8 @@ fetch next from AttemptCursor into @AttemptID;
 
 while @@fetch_status = 0
 begin
-    declare @CorrectQuestionCnt as int;
-    declare @IncorrectQuestionCnt as int;
+    declare @TotalCorrect as int;
+    declare @TotalIncorrect as int;
     declare @TotalQuestionCnt as int;
     declare @QuizID as int;
     declare @Result as decimal(18, 2);
@@ -507,23 +508,22 @@ begin
 
     set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
     set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
-    set @CorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 1);
-    set @IncorrectQuestionCnt = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and IsCorrect = 0);
+    set @TotalCorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'true');
+    set @TotalIncorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'false');
     set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
-    set @Result = cast(@CorrectQuestionCnt as decimal(18, 2)) / cast(@TotalQuestionCnt as decimal(18, 2)) * 100.0;
-    set @RemainingQuestion = @TotalQuestionCnt - @CorrectQuestionCnt - @IncorrectQuestionCnt;
+    set @RemainingQuestion = @TotalQuestionCnt - @TotalCorrect - @TotalIncorrect;
 
-    insert into #AttemptResults (AttemptID, QuizName, License, AttemptDate, TotalQuestion, CorrectQuestion, IncorrectQuestion, RemainingQuestion, Result)
+    insert into #AttemptResults (AttemptID, QuizName, License, AttemptDate, TotalQuestion, CorrectQuestion, IncorrectQuestion, RemainingQuestion/*, Result*/)
     select
 	    @AttemptID as 'AttemptID',
         (select [Name] from dbo.Quiz where QuizID = @QuizID),
         (select LicenseID from dbo.Quiz where QuizID = @QuizID),
         @AttemptDate,
         @TotalQuestionCnt,
-        @CorrectQuestionCnt,
-        @IncorrectQuestionCnt,
-        @RemainingQuestion,
-        @Result;
+        @TotalCorrect,
+        @TotalIncorrect,
+        @RemainingQuestion--,
+      --@Result;
 
     fetch next from AttemptCursor into @AttemptID;
 end;
@@ -552,7 +552,7 @@ begin
         (select a.AnswerText from dbo.Answer a where a.QuestionID = q.QuestionID and a.isCorrect = 1) as 'CorrectAnswer',
         case
             when att.SelectedAnswerID is null then 0 -- Set IsCorrect to 0 for questions without user answers
-            else att.IsCorrect
+          --else att.IsCorrect
         end as 'IsCorrect'
     from
         dbo.Question q
@@ -564,7 +564,8 @@ begin
             from dbo.Have
             where QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID)
         );
-end
+end;
+go
 /*
 -----------------------------------[ COUNT CORRECT ANSWER ]-------------------------------
 create or alter function fn_CountCorrect (

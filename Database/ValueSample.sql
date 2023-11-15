@@ -1,46 +1,17 @@
 -----------------------------------------[ INSERT VALUES ]-----------------------------------------------------
 /*[QUICK FIND] - Press: Ctrl + G
-User________19
-Manage_____37
-License_____45
-Vehicle_____72
-Quiz________99, 11376
-Question____120
-Have________2762
-Answer______2779
-
-
+License_____19
+User________36
+Other Role_____84
+Quiz________155
+Question____175
+Have________2815
+Answer______2832
+Vehicle_____11425
 */
 
 use DrivingLicense;
 go
---=================
---Insert new user account:
-exec dbo.proc_signUpAccount @username = 'user123', @password = '123', @email = 'user123@example.com', @name=N'Người dùng A';
-exec dbo.proc_signUpAccount @username = 'ok123', @password = '123', @email = 'ok123@ok.com' , @name=N'Người dùng B';
-exec dbo.proc_signUpAccount @username = 'hoangph', @password = 'se172789', @email = 'hoangphse172789@fpt.edu.vn' , @name=N'Phạm Huy Hoàng';
-exec dbo.proc_signUpAccount @username = 'fptu', @password = '123', @email = 'fpt@fe.edu.vn', @name=N'FPT University';
-exec dbo.proc_signUpAccount @username = 'fuihoan123', @password = '123', @email = 'fuihoan@japanese.com', @name= N'フイ　ホアン';
-exec dbo.proc_signUpAccount @username = 'ngocanh', @password = '456', @email = 'ngocanh@vietnam.com', @name=N'Nguyễn Ngọc Anh';
-exec dbo.proc_signUpAccount @username = 'tommy', @password = '789', @email = 'tommy@usa.com', @name=N'Tommy Lee';
-exec dbo.proc_signUpAccount @username = 'liuxin', @password = '1234', @email = 'liuxin@china.com', @name=N'刘欣';
-exec dbo.proc_signUpAccount @username = 'kimchi', @password = '5678', @email = 'kimchi@korea.com', @name=N'김치';
-exec dbo.proc_signUpAccount @username = 'sakura', @password = '9012', @email = 'sakura@japan.com', @name=N'さくら';
-exec dbo.proc_signUpAccount @username = 'maria', @password = '3456', @email = 'maria@spain.com', @name=N'María García';
-exec dbo.proc_signUpAccount @username = 'hans', @password = '7890', @email = 'hans@germany.com', @name=N'Hans Müller';
-exec dbo.proc_signUpAccount @username = 'pierre', @password = '12345', @email = 'pierre@france.com', @name=N'Pierre Dupont';
-exec dbo.proc_signUpAccount @username = 'luca', @password = '67890', @email = 'luca@italy.com', @name=N'Luca Rossi';
-exec dbo.proc_signUpAccount @username = 'david', @password = '13579', @email = 'david@uk.com', @name=N'David Smith';
-
---=================
---Insert other Role account:
-exec dbo.proc_signUpAccount @username = 'admin', @password = '12345', @email = N'Learn2Drive@admin.com', @name=N'Administrator', @roleSet='admin';
-exec dbo.proc_signUpAccount @username = 'staff', @password = '12345', @email = N'Learn2Drive@staff.com', @name=N'Staff', @roleSet='staff';
-exec dbo.proc_signUpAccount @username = 'giaolang', @password = '12345', @email = N'HoangNT20@fe.edu.vn', @name=N'Nguyễn Thế Hoàng', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'nhattq9', @password = '12345', @email = N'nhattq9@fe.edu.vn', @name=N'Trần Quang Nhật', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'sangnm18', @password = '12345', @email = N'sangnm18@fe.edu.vn', @name=N'Nguyễn Minh Sang', @roleSet='lecturer';
-go
-
 --=================
 insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],ExamContent,Tips) values
 ('A1',N'A1 - Xe máy PKN',N'Bằng lái xe A1 là loại giấy phép lái xe cơ bản nhất, cho phép người điều khiển xe mô tô, xe gắn máy có dung tích xi lanh từ <strong>50 cm³</strong> đến dưới <strong>175 cm³</strong> và người khuyết tật điều khiển xe mô tô 3 bánh đặc thù.',N'<li> Đối với người có nhu cầu học và thi bằng lái xe A1, yêu cầu đáp ứng được các điều kiện được đề ra sau đây: <br> </li> <li> Công dân VN hoặc nước ngoài đã đủ trên <strong>18 tuổi</strong>. Đủ trên <strong>18 tuổi</strong> (theo điều kiện ngày & tháng). <br> </li> <li> Đáp ứng được các điều kiện sức khỏe (khám sức khỏe theo danh sách bệnh viện do Sở GTVT quy định). </li>',N'<li> Lệ phí thi lý thuyết A1: <strong>40.000 đồng.</strong> <br> </li> <li> Lệ phí thi thực hành A1: <strong>50.000 đồng.</strong> <br> </li> <li> Phí cấp bằng lái xe hạng A1 nếu thi đỗ: <strong>135.000 đồng.</strong> <br> Ngoài ra, người này có nhu cầu thi thử trước khi thi chính thức thì có thể mua vé tập thử với giá <strong>10.000 - 15.000 đồng/lượt.</strong> </li>',N'<li>Thời hạn bằng lái: <strong>Không có thời hạn</strong></li> <li>Sau khi thi mất khoảng <strong>15 ngày (trừ T7 và CN)</strong> để lấy bằng lái được cấp sau khi thi đậu</li>',N'<p style="text-align: justify;"> Đối với phần bài thi lý thuyết lái xe hạng A1 các bạn sẽ phải thi trên máy tính, 1 bộ đề thi cho từng người sẽ có <strong>20 câu hỏi</strong> trắc nghiệm và thời gian hoàn thành giới hạn trong vòng <strong>15 phút.</strong> Điều kiện để vượt qua bài thi này là phải đúng <strong style="color: red;">16/20 câu.</strong> </p> <br> <p style="text-align: justify;"> Ở phần thi thực hành, chúng ta bắt buộc phải vượt qua và hoàn thành đủ <strong>4 bài thi</strong> cơ bản. <br> Bao gồm: bài thi vòng số 8, bài thi đường thẳng, bài thi đường quanh co và bài cuối cùng là đường gồ ghề. <br> Ngay từ vị trí xuất phát, học viên sẽ có sẵn cho mình <strong>100 điểm</strong> và khi kết thúc tất cả <strong>4 bài thi</strong> trên ở số điểm trên <strong style="color: red;">80/100</strong> là chúng ta sẽ đủ điều kiện đậu. </p>',N'Hiện tại xe thì được sử dụng là wave alpha đời đầu được gắn thiết bị chấm điểm và khi tới nhận xe thi, thông thường xe sẽ để máy nổ sẵn với chế độ là số 3 hoặc 4. <br> <br> Các bạn chỉ cần lên xe và chờ hiệu lệnh để thực hiện bài thi của mình. <br> <br> Bài thi này sẽ không có giới hạn thời gian, vì thế chúng ta không cần phải gấp gáp và chỉ cần hoàn thành thật tốt với những gì mình đã học được. <br><br> <h5 class="text-center"><strong>Chúc các bạn may mắn!!!</strong></h5>'),
@@ -57,65 +28,146 @@ insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],Exam
 ('FD',N'FD - Xe Container nhỏ',N'<p>Bằng lái xe FD là giấy phép lái xe hạng thấp nhất do cơ quan nhà nước có thẩm quyền cấp cho chủ phương tiện theo quy định được nêu rõ tại Thông tư 12/2017/TT-BGTVT. <br> Theo đó, bằng lái xe FD dành cho người điều khiển xe ô tô số tự động và không có mục đích kinh doanh. Bao gồm các loại xe sau:</p> <ul> <li>Xe ô tô số tự động <strong>09 chỗ ngồi</strong> bao gồm cả ghế lái xe</li> <li>Xe ô tô tải số tự động <strong>dưới 3.500 kg</strong></li> <li>Xe kéo thêm rơ mooc tải trọng <strong>dưới 3.500 kg</strong></li> </ul>',N'<p> Điều kiện thi bằng lái xe FD đã được quy định rõ ràng tại Điều 7 Thông tư 12/2017/TT-BGTVT. Theo đó, người thi bằng lái xe FD phải đáp ứng đầy đủ các điều kiện sau: <ul> <li>Người dự thi là công dân Việt Nam</li> <li>Người nước ngoài được phép cư trú hoặc đang làm việc, học tập tại Việt Nam</li> <li>Phải đủ 18 tuổi trở lên tính đến ngày dự thi sát hạch lái xe</li> </ul>',N'<p> Từ ngày 1/8/2023, Mức phí thi sát hạch lái xe ô tô (hạng xe B1, B2, C, D, E, F): <br> mức thu từ <strong>80.000 đồng/lần</strong> đến <strong style="color: red;">350.000 đồng/lần.</strong> </p>',N'<ul> <li>Đối với nữ giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>55 tuổi</strong></li> <li>Đối với nam giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>60 tuổi</strong></li> <li> Trường hợp người lái xe trên 45 tuổi với nữ giới và trên 50 tuổi với nam giới thì giấy phép lái xe hạng FD được cấp có thời hạn <strong>10 năm</strong> kể từ ngày cấp. </li> </ul>',N'<h2>Thi Lý Thuyết</h2> <p style="text-align: justify;"> Hiện nay phần thi lý thuyết lấy bằng FD được thi trực tuyến thông quan mạng internet. Thí sinh chỉ cần đăng nhập thông tin sau đó tiến hành bài thi trên máy tính. Hình thức thi sẽ là <strong>30 câu hỏi</strong> trắc nghiệm trong vòng <strong style="color: red;">20 phút</strong>. Và mọi người sẽ cần phải vượt qua <strong style="color: red;">27 câu</strong> để đậu. <br> Ngoài ra cần chú ý sẽ có các câu điểm liệt mà chỉ cần làm sai một câu này cũng sẽ bị đánh rớt.</strong> </p> <h2>Thi thực hành</h2> <p style="text-align: justify;"> Thi sát hạch lái xe FD gồm những gì không thể không nhắc đến sa hình. Sau khi hoàn thành thi lý thuyết mọi người sẽ được thông báo kết quả liền lúc đó. Nếu đậu các thí sinh sẽ tiếp tục bước vào phần thi sa hình. Đây là thi thực hành lái xe qua nhiều các tình huống mô phỏng thực tế khác nhau. Và thường sẽ có tổng cộng 11 bài thi trong phần thi sa hình. <ul> <li> Bài 1: Khởi động xe xuất phát bắt đầu phần thi. Đây là một trong những nội dung đơn giản mà thí sinh cần thực hiện hoàn chỉnh để lấy điểm. </li> <li>Bài 2: Thực hiện thao tác cho xe dừng ở vạch báo cho người đi bộ.</li> <li>Bài 3: Thi dừng xe dưới dốc và khởi hành xe qua dốc.</li> <li>Bài 4: Bài thi lái xe qua hình vẹt bánh xe và đoạn đường vuông gốc.</li> <l1>Bài 5: Bài thi qua ngã tư đường có tín hiệu đèn giao thông.</l1> <li>Bài 6: Thực hành lái xe qua đoạn đường quanh co.</li> <li>Bài 7: Thực hiện lái xe dọc và chuồng đỗ xe.</li> <li>Bài 8: Thực hiện thao tác dừng trước điểm giao với đường sắt tương tự như bài 2.</li> <li>Bài 9: Thực hiện thao tác tăng tốc và giảm tóc xe trên đoạn đường quy định.</li> <li>Bài 10: Lái xe ghép ngang vào chuồng đỗ.</li> <li>Bài 11: Bài thi kết thúc phần thi sa hình.</li> </ul> </p>',N'<h2 class="mt-2">Mẹo phần thi sa hình</h2> <ul style="text-align: justify;"> <li> Hãy tập luyện thường xuyên tại các trung tâm có sân sa hình để làm quen, tránh không rõ quy tắc khi dự thi. </li> <li>Chú ý đèn tín hiệu xi nhan trái phải trong bài thi đầu tiên và cuối cùng.</li> <li> Xuyên suốt phần thi sa hình mọi người tốt nhất hãy lái xe chậm. Tuy nhiên nếu các đoạn đường thông thoáng có thể tăng tốc độ lên đôi chút để đảm bảo đủ thời gian. </li> <li> Thi sa hình mỗi vị trí đều có các vạch giới hạn, cần chú ý không để bánh xe chạm vào các vạch này. </li> <li>Khi thi tuyệt đối không được chạy quá gần với xe thi phía trước.</li> <li>Luôn thực hiện đúng hướng đường và thứ tự các bài thi nếu không muốn bị loại.</li> </ul> <h2 class="mt-2">Mẹo phần thi đường trường</h2> <ul style="text-align: justify;"> <li>Sau khi có tín hiệu bắt đầu bài thi khoảng <strong>30 giây</strong> mà thí sinh không thể cho xe di chuyển.</li> <li>Lái xe lên vỉa hè.</li> <li>Lái xe vi phạm luật giao thông.</li> <li>Lái xe gây tai nạn trong quá trình tiến hành bài thi.</li> <li>Cùng với đó nếu bị trừ quá nhiều lỗi nhỏ dẫn đến điểm quá thấp cũng không vượt qua phần thi này.</li> </ul> <h5 class="text-center"><strong>Chúc các bạn may mắn!!!</strong></h5>'),
 ('FE',N'FE - Xe Container dài',N'<p>Bằng lái xe FE là giấy phép lái xe hạng thấp nhất do cơ quan nhà nước có thẩm quyền cấp cho chủ phương tiện theo quy định được nêu rõ tại Thông tư 12/2017/TT-BGTVT. <br> Theo đó, bằng lái xe FE dành cho người điều khiển xe ô tô số tự động và không có mục đích kinh doanh. Bao gồm các loại xe sau:</p> <ul> <li>Xe ô tô số tự động <strong>09 chỗ ngồi</strong> bao gồm cả ghế lái xe</li> <li>Xe ô tô tải số tự động <strong>dưới 3.500 kg</strong></li> <li>Xe kéo thêm rơ mooc tải trọng <strong>dưới 3.500 kg</strong></li> </ul>',N'<p> Điều kiện thi bằng lái xe FE đã được quy định rõ ràng tại Điều 7 Thông tư 12/2017/TT-BGTVT. Theo đó, người thi bằng lái xe FE phải đáp ứng đầy đủ các điều kiện sau: <ul> <li>Người dự thi là công dân Việt Nam</li> <li>Người nước ngoài được phép cư trú hoặc đang làm việc, học tập tại Việt Nam</li> <li>Phải đủ 18 tuổi trở lên tính đến ngày dự thi sát hạch lái xe</li> </ul>',N'<p> Từ ngày 1/8/2023, Mức phí thi sát hạch lái xe ô tô (hạng xe B1, B2, C, D, E, F): <br> mức thu từ <strong>80.000 đồng/lần</strong> đến <strong style="color: red;">350.000 đồng/lần.</strong> </p>',N'<ul> <li>Đối với nữ giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>55 tuổi</strong></li> <li>Đối với nam giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>60 tuổi</strong></li> <li> Trường hợp người lái xe trên 45 tuổi với nữ giới và trên 50 tuổi với nam giới thì giấy phép lái xe hạng FE được cấp có thời hạn <strong>10 năm</strong> kể từ ngày cấp. </li> </ul>',N'<h2>Thi Lý Thuyết</h2> <p style="text-align: justify;"> Hiện nay phần thi lý thuyết lấy bằng FE được thi trực tuyến thông quan mạng internet. Thí sinh chỉ cần đăng nhập thông tin sau đó tiến hành bài thi trên máy tính. Hình thức thi sẽ là <strong>30 câu hỏi</strong> trắc nghiệm trong vòng <strong style="color: red;">20 phút</strong>. Và mọi người sẽ cần phải vượt qua <strong style="color: red;">27 câu</strong> để đậu. <br> Ngoài ra cần chú ý sẽ có các câu điểm liệt mà chỉ cần làm sai một câu này cũng sẽ bị đánh rớt.</strong> </p> <h2>Thi thực hành</h2> <p style="text-align: justify;"> Thi sát hạch lái xe FE gồm những gì không thể không nhắc đến sa hình. Sau khi hoàn thành thi lý thuyết mọi người sẽ được thông báo kết quả liền lúc đó. Nếu đậu các thí sinh sẽ tiếp tục bước vào phần thi sa hình. Đây là thi thực hành lái xe qua nhiều các tình huống mô phỏng thực tế khác nhau. Và thường sẽ có tổng cộng 11 bài thi trong phần thi sa hình. <ul> <li> Bài 1: Khởi động xe xuất phát bắt đầu phần thi. Đây là một trong những nội dung đơn giản mà thí sinh cần thực hiện hoàn chỉnh để lấy điểm. </li> <li>Bài 2: Thực hiện thao tác cho xe dừng ở vạch báo cho người đi bộ.</li> <li>Bài 3: Thi dừng xe dưới dốc và khởi hành xe qua dốc.</li> <li>Bài 4: Bài thi lái xe qua hình vẹt bánh xe và đoạn đường vuông gốc.</li> <l1>Bài 5: Bài thi qua ngã tư đường có tín hiệu đèn giao thông.</l1> <li>Bài 6: Thực hành lái xe qua đoạn đường quanh co.</li> <li>Bài 7: Thực hiện lái xe dọc và chuồng đỗ xe.</li> <li>Bài 8: Thực hiện thao tác dừng trước điểm giao với đường sắt tương tự như bài 2.</li> <li>Bài 9: Thực hiện thao tác tăng tốc và giảm tóc xe trên đoạn đường quy định.</li> <li>Bài 10: Lái xe ghép ngang vào chuồng đỗ.</li> <li>Bài 11: Bài thi kết thúc phần thi sa hình.</li> </ul> </p>',N'<h2 class="mt-2">Mẹo phần thi sa hình</h2> <ul style="text-align: justify;"> <li> Hãy tập luyện thường xuyên tại các trung tâm có sân sa hình để làm quen, tránh không rõ quy tắc khi dự thi. </li> <li>Chú ý đèn tín hiệu xi nhan trái phải trong bài thi đầu tiên và cuối cùng.</li> <li> Xuyên suốt phần thi sa hình mọi người tốt nhất hãy lái xe chậm. Tuy nhiên nếu các đoạn đường thông thoáng có thể tăng tốc độ lên đôi chút để đảm bảo đủ thời gian. </li> <li> Thi sa hình mỗi vị trí đều có các vạch giới hạn, cần chú ý không để bánh xe chạm vào các vạch này. </li> <li>Khi thi tuyệt đối không được chạy quá gần với xe thi phía trước.</li> <li>Luôn thực hiện đúng hướng đường và thứ tự các bài thi nếu không muốn bị loại.</li> </ul> <h2 class="mt-2">Mẹo phần thi đường trường</h2> <ul style="text-align: justify;"> <li>Sau khi có tín hiệu bắt đầu bài thi khoảng <strong>30 giây</strong> mà thí sinh không thể cho xe di chuyển.</li> <li>Lái xe lên vỉa hè.</li> <li>Lái xe vi phạm luật giao thông.</li> <li>Lái xe gây tai nạn trong quá trình tiến hành bài thi.</li> <li>Cùng với đó nếu bị trừ quá nhiều lỗi nhỏ dẫn đến điểm quá thấp cũng không vượt qua phần thi này.</li> </ul> <h5 class="text-center"><strong>Chúc các bạn may mắn!!!</strong></h5>');
 go
---select * from License
---=================
---Create schedule formula
-/* CÁCH 1: TRUY ID TỪ NAME,MAIL
-exec dbo.proc_CreateSchedule @nameGV='Giao Lang', @mailGV='giaolang@fe.fpt.edu.vn', @nameUser=N'Nguyễn Văn A', @mailUser='user123@example.com', @licenseid='C', @starttime='10:00', @endtime='15:00', @date='10-10-2023', @address=N'19 Trương Văn Bang, TP.Thủ Đức';
-
-	CÁCH 2: BẮT TRỰC TIẾP ID TỪ WEB
-exec dbo.proc_CreateSchedule @userid='31C2288C-AB94-4DC7-AEFE-2910D2BF2681', @teacherid='50C0B784-ED9F-4C32-9239-FB46CE2D737C', @licenseid='C', @starttime='10:00', @endtime='15:00', @date='10-10-2023', @address=N'19 Trương Văn Bang, TP.Thủ Đức';
-
-*/
 
 --=================
-insert into Vehicle([Name], [Image], Brand, [Type], Years, ContactNumber, [Address], RentPrice, [Status]) values
-('Wave Alpha 110cc' , 'wave2018.png' , 'Honda' , N'Xe số 110cc' , 2018 , '0123456789' , N'Quận Gò Vấp, TP.HCM' , 20000 , 1),
-('Wave Alpha 110cc' , 'wave2023.png' , 'Honda' , N'Xe số 110cc' , 2023 , '0989121878' , N'Quận 2, TP.Thủ Đức' , 50000 , 1),
-('Future 125 FI' , 'future.png' , 'Honda' , N'Xe số 125cc' , 2020 , '0987654321' , N'Quận Tân Bình, TP.HCM' , 50000 , 1),
-('Winner X' , 'winnerX.png' , 'Honda' , N'Xe côn 150cc' , 2020 , '0334217271' , N'Quận 9, TP.Thủ Đức' , 60000 , 1),
-('Sirius 110' , 'sirius.png' , 'Yamaha' , N'Xe số 110cc' , 2021 , '0126623503' , N'Quận Phú Nhuận, TP.HCM' , 40000 , 1),
-('Jupiter Finn 115' , 'jupiter.png' , 'Yamaha' , N'Xe số 115cc' , 2022 , '0786000036' , N'TP.HCM' , 40000 , 1),
-('Exciter 155' , 'exciter155.png' , 'Yamaha' , N'Xe côn 155cc' , 2023 , '0989121878' , N'Quận Phú Nhuận, TP.HCM' , 70000 , 1),
-('Z1000 ABS' , 'z1000.png' , 'Kawasaki' , N'Xe côn 1000cc' , 2022 , '0999888999' , N'Quận 1, TP.HCM' , 111000 , 1),
-('Softail Standard' , 'HarleyDavidson.png' , 'Harley Davidson' , N'Xe côn 1700cc' , 2022 , '0254753345' , N'Quận 1, TP.HCM' , 120000 , 1),
-('BMW R18' , 'BMW_R18.png' , 'BMW' , N'Xe côn 1800cc' , 2020 , '0734238271' , N'Quận 7, TP.HCM' , 120000 , 1),
-('CBR500R' , 'CBR500R.png' , 'Honda' , N'Xe côn 500cc' , 2022 , '0112278987' , N'Quận Bình Thạnh, TP.HCM' , 100000 , 1),
-('YZF-R3' , 'YZF_R3.png' , 'Yamaha' , N'Xe côn 300cc' , 2021 , '0909808707' , N'Quận Phú Nhuận, TP.HCM' , 85000 , 1),
-('Vinfast Fadil' , 'vin_fadil.png' , 'Vinfast' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '1900232389' , N'Quận Bình Thạnh, TP.HCM' , 200000 , 1),
-('Vinfast Lux A 2.0' , 'VinfastLux.png' , 'Vinfast' ,N'Xe ô tô 4 chỗ, số tự động' , 2020 , '0781109029' , N'Quận Phú Nhuận, TP.HCM' , 250000 , 1),
-('Toyota Camry' , 'ToyotaCamry.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2020 , '0692342608' , N'Quận 10, TP.HCM' , 300000 , 1),
-('Toyota Vios' , 'Toyota Vios.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '0427705437' , N'Quận 3, TP.HCM' , 250000 , 1),
-('Honda Civic' , 'HondaCivic.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0970344469' , N'Quận 3, TP.HCM' , 240000 , 1),
-('Honda City' , 'HondaCity.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0314290187' , N'Quận Bình Thạnh, TP.HCM' , 230000 , 1),
-('Ford Ranger XLS' , 'FordRanger_XLS.png' , 'Ford' ,N'Xe bán tải 5 chỗ, số tự động' , 2018 , '0835992700' , N'Quận 10, TP.HCM' , 260000 , 1),
-('Mercedes Mayback S450' , 'MercedesMayback.png' , 'Mercedes' ,N'Xe ô tô 4 chỗ, số tự động' , 2018 , '0573073759' , N'Quận Bình Thạnh, TP.HCM' , 1000000 , 1),
-('Hyundai New Mighty 75s' , 'HyundaiMighty75s.png' , 'Hyundai' ,N'Xe tải 3.5 tấn' , 2018 , '0781109029' , N'TP.HCM' , 300000 , 1),
-('ISUZU VM' , 'IsuzuVM.png' , 'Isuzu' ,N'Xe tải 3.5 tấn thùng 4.4m' , 2018 , '0770333922' , N'TP.HCM' , 300000 , 1),
-('Optimus Prime Truck' , 'OptimusPrime.png' , 'Transformer' ,N'Xe đầu kéo container' , 2009 , '0772389279' , N'TP.HCM' , 1000000 , 0);
+exec dbo.proc_signUpAccount @username = 'thanhnc', @password = '12345', @email = 'thanhncse172947@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'minhtt', @password = '12345', @email = 'minhttse172842@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'phuclnh', @password = '12345', @email = 'phuclnhse172886@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'tungts', @password = '12345', @email = 'tungtsse172875@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'hoangph', @password = '12345', @email = 'hoangphse172789@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'khang12345', @password = '12345', @email = 'khang12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'ngocanh12345', @password = '12345', @email = 'ngocanh12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'hieu12345', @password = '12345', @email = 'hieu12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'huy12345', @password = '12345', @email = 'huy12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'vy12345', @password = '12345', @email = 'vy12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'my12345', @password = '12345', @email = 'my12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'phu12345', @password = '12345', @email = 'phu12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'khoa12345', @password = '12345', @email = 'khoa12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'tuyen12345', @password = '12345', @email = 'tuyen12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'phuong12345', @password = '12345', @email = 'phuong12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'duyen12345', @password = '12345', @email = 'duyen12345@gmail.com';
+go
+
+update dbo.Users set Avatar  = 'none';
+go
+
+update dbo.Users set Nationality  = N'Việt Nam';
+go
+
+update dbo.Users
+set FullName = case 
+	when Email = 'thanhncse172947@fpt.edu.vn' then N'Nguyễn Công Thành'
+	when Email = 'minhttse172842@fpt.edu.vn' then N'Trần Tuấn Minh'
+	when Email = 'phuclnhse172886@fpt.edu.vn' then N'Lê Nguyễn Hoàng Phúc'
+	when Email = 'tungtsse172875@fpt.edu.vn' then N'Trịnh Sơn Tùng'
+	when Email = 'hoangphse172789@fpt.edu.vn' then N'Phạm Huy Hoàng'
+	when Email = 'khang12345@gmail.com' then N'Nguyễn Khang'
+	when Email = 'ngocanh12345@gmail.com' then N'Nguyễn Ngọc Anh'
+	when Email = 'hieu12345@gmail.com' then N'Hiếu Thứ Hai'
+	when Email = 'huy12345@gmail.com' then N'Nguyễn Minh Huy'
+	when Email = 'vy12345@gmail.com' then N'Võ Khánh Vy'
+	when Email = 'my12345@gmail.com' then N'Lê Trần Liễu My'
+	when Email = 'phu12345@gmail.com' then N'Trần Thanh Phú'
+	when Email = 'khoa12345@gmail.com' then N'Trần Đăng Khoa'
+	when Email = 'tuyen12345@gmail.com' then N'Võ Hồng Tuyền'
+	when Email = 'phuong12345@gmail.com' then N'Trần Mai Phương'
+	when Email = 'duyen12345@gmail.com' then N'Lê Thị Mỹ Duyên'
+
+	else FullName	--Default = null
+end;
 go
 
 --=================
+exec dbo.proc_signUpAccount @username = 'admin', @password = '12345', @email = N'admin12345@l2d.vn', @roleSet='admin';
+exec dbo.proc_signUpAccount @username = 'staff', @password = '12345', @email = N'staff12345@l2d.vn', @roleSet='staff';
+exec dbo.proc_signUpAccount @username = 'teacher', @password = '12345', @email = N'teacher12345@l2d.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'giaolang', @password = '12345', @email = N'hoangnt20@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'nhattq9', @password = '12345', @email = N'nhattq9@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'sangnm18', @password = '12345', @email = N'sangnm18@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'chiltq6', @password = '12345', @email = N'chiltq6@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'hungld', @password = '12345', @email = N'hungld5@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'thongnt', @password = '12345', @email = N'thongnt@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'longkh', @password = '12345', @email = N'longkh@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'quynhtvn', @password = '12345', @email = N'quynhtvn@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'namhd9', @password = '12345', @email = N'namhd9@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'tungph4', @password = '12345', @email = N'tungph4@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'phucnt', @password = '12345', @email = N'phucnt40@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'senb', @password = '12345', @email = N'senb@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'dungttm12', @password = '12345', @email = N'dungttm12@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'huynhtt', @password = '12345', @email = N'huynhtt@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'haodd3', @password = '12345', @email = N'haodd3@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'tramdtn6', @password = '12345', @email = N'tramdtn6@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'manhlv12', @password = '12345', @email = N'manhlv12@fpt.edu.vn', @roleSet='lecturer';
+go
+
+update dbo.[Admin] set FullName  = N'Quản Trị Viên';
+update dbo.Staff set FullName  = N'Nhân Viên Quản Lý';
+update dbo.Teacher
+set FullName = case 
+	when Email = 'teacher12345@l2d.edu.vn' then N'Giảng Viên A'
+	when Email = 'hoangnt20@fe.edu.vn' then N'Nguyễn Thế Hoàng'
+	when Email = 'nhattq9@fe.edu.vn' then N'Trần Quang Nhật'
+	when Email = 'sangnm18@fe.edu.vn' then N'Nguyễn Minh Sang'
+	when Email = 'chiltq6@fe.edu.vn' then N'Lê Thị Quỳnh Chi'
+	when Email = 'hungld5@fe.edu.vn' then N'Lại Đức Hùng'
+	when Email = 'thongnt@fpt.edu.vn' then N'Nguyễn Trí Thông'
+	when Email = 'longkh@fpt.edu.vn' then N'Kiều Hoàng Long'
+	when Email = 'quynhtvn@fpt.edu.vn' then N'Trần Vũ Nhật Quỳnh'
+	when Email = 'namhd9@fpt.edu.vn' then N'Huỳnh Đức Nam'
+	when Email = 'tungph4@fpt.edu.vn' then N'Phan Hoàng Tùng'
+	when Email = 'phucnt40@fpt.edu.vn' then N'Nguyễn Tấn Phúc'
+	when Email = 'senb@fpt.edu.vn' then N'Bhaskar Sen'
+	when Email = 'dungttm12@fpt.edu.vn' then N'Trần Trịnh Mạnh Dũng'
+	when Email = 'huynhtt@fpt.edu.vn' then N'Trần Trọng Huỳnh'
+	when Email = 'haodd3@fpt.edu.vn' then N'Đỗ Đức Hào'
+	when Email = 'tramdtn6@fpt.edu.vn' then N'Dương Thị Ngọc Trâm'
+	when Email = 'manhlv12@fpt.edu.vn' then N'Lê Văn Mạnh'
+
+	else FullName	--Default = null
+	end,
+LicenseID = case
+	when Email = 'teacher12345@l2d.edu.vn' then 'A4'
+	when Email = 'hoangnt20@fe.edu.vn' then N'C'
+	when Email = 'nhattq9@fe.edu.vn' then 'B1'
+	when Email = 'sangnm18@fe.edu.vn' then 'C'
+	when Email = 'chiltq6@fe.edu.vn' then 'A1'
+	when Email = 'hungld5@fe.edu.vn' then 'FD'
+	when Email = 'thongnt@fpt.edu.vn' then 'FB2'
+	when Email = 'longkh@fpt.edu.vn' then 'B1'
+	when Email = 'quynhtvn@fpt.edu.vn' then 'A1'
+	when Email = 'namhd9@fpt.edu.vn' then 'FC'
+	when Email = 'tungph4@fpt.edu.vn' then 'D'
+	when Email = 'phucnt40@fpt.edu.vn' then 'B2'
+	when Email = 'senb@fpt.edu.vn' then 'E'
+	when Email = 'dungttm12@fpt.edu.vn' then 'A3'
+	when Email = 'huynhtt@fpt.edu.vn' then 'A2'
+	when Email = 'haodd3@fpt.edu.vn' then 'B2'
+	when Email = 'tramdtn6@fpt.edu.vn' then 'A1'
+	when Email = 'manhlv12@fpt.edu.vn' then 'A4'
+
+	else LicenseID
+end;
+
+--=================
 insert into Quiz(LicenseID, [Name], [Description]) values
-('A1' , N'Bộ đề A1' , N'Bộ đề 200 câu lí thuyết  dành cho thi bằng lái xe máy hạng A1, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong 200 câu này để thi với thời gian làm bài là 19p.'),
-('A2' , N'Bộ đề A2', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng A2, bao gồm cả các câu điểm liệt'),
-('A3' , N'Bộ đề A3', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe ba bánh hạng A3, bao gồm cả các câu điểm liệt'),
-('A4' , N'Bộ đề A4', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng A4, bao gồm cả các câu điểm liệt'),
-('B1' , N'Bộ đề B1', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng B1, bao gồm cả các câu điểm liệt'),
-('B2' , N'Bộ đề B2', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng B2, bao gồm cả các câu điểm liệt'),
-('C' , N'Bộ đề C', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng C, bao gồm cả các câu điểm liệt'),
-('D' , N'Bộ đề D', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng D, bao gồm cả các câu điểm liệt'),
-('E' , N'Bộ đề E', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng E, bao gồm cả các câu điểm liệt'),
-('FB2' , N'Bộ đề FB2', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FB2, bao gồm cả các câu điểm liệt'),
-('FC' , N'Bộ đề FC', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FC, bao gồm cả các câu điểm liệt'),
-('FD' , N'Bộ đề FD', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FD, bao gồm cả các câu điểm liệt'),
-('FE' , N'Bộ đề FE', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FE, bao gồm cả các câu điểm liệt');
+('A1' , N'Bộ đề A1' , N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe máy hạng A1, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('A2' , N'Bộ đề A2', N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe máy hạng A2, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('A3' , N'Bộ đề A3', N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe ba bánh hạng A3, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('A4' , N'Bộ đề A4', N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe máy hạng A4, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('B1' , N'Bộ đề B1', N'Bộ đề 30 câu lí thuyết  dành cho thi bằng lái xe máy hạng B1, bao gồm cả các câu điểm liệt. Đề sẽ chọn 30 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('B2' , N'Bộ đề B2', N'Bộ đề 35 câu lí thuyết  dành cho thi bằng lái xe máy hạng B2, bao gồm cả các câu điểm liệt. Đề sẽ chọn 35 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 22p.'),
+('C' , N'Bộ đề C', N'Bộ đề 40 câu lí thuyết  dành cho thi bằng lái xe máy hạng C, bao gồm cả các câu điểm liệt. Đề sẽ chọn 40 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 24p.'),
+('D' , N'Bộ đề D', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng D, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('E' , N'Bộ đề E', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng E, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FB2' , N'Bộ đề FB2', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FB2, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FC' , N'Bộ đề FC', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FC, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FD' , N'Bộ đề FD', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FD, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FE' , N'Bộ đề FE', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FE, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.');
 go
 
 --=================
 /*
 Source: https://thibanglaixe24h.net/200-cau-hoi-thi-bang-lai-xe-may-a1/
-select * from Question
 */
 insert into Question(LicenseID, isCritical, QuestionImage, QuestionText) values
 ('A1' , 0  , 'none' , N'Phần của đường bộ được sử dụng cho các phương tiện giao thông qua lại là gì?'),
@@ -2756,23 +2808,21 @@ insert into Question(LicenseID, isCritical, QuestionImage, QuestionText) values
 ('FE' , 0  , '200.png' , N'Trong tình huống dưới đây, xa đầu kéo kéo rơ moóc (xe container) đang rẽ phải, xe con màu xanh và xe máy phía sau xe container đi như thế nào để đảm bảo an toàn?');
 go
 
-/*=================
-select * from Have
-*/
+--=================
 insert into Have(QuizID,QuestionID) values
-(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(1,22),(1,23),(1,24),(1,25),
-(2,26),(2,27),(2,28),(2,29),(2,30),(2,31),(2,32),(2,33),(2,34),(2,35),(2,36),(2,37),(2,38),(2,39),(2,40),(2,41),(2,42),(2,43),(2,44),(2,45),(2,46),(2,47),(2,48),(2,49),(2,50),
-(3,51),(3,52),(3,53),(3,54),(3,55),(3,56),(3,57),(3,58),(3,59),(3,60),(3,61),(3,62),(3,63),(3,64),(3,65),(3,66),(3,67),(3,68),(3,69),(3,70),(3,71),(3,72),(3,73),(3,74),(3,75),
-(4,76),(4,77),(4,78),(4,79),(4,80),(4,81),(4,82),(4,83),(4,84),(4,85),(4,86),(4,87),(4,88),(4,89),(4,90),(4,91),(4,92),(4,93),(4,94),(4,95),(4,96),(4,97),(4,98),(4,99),(4,100),
-(5,101),(5,102),(5,103),(5,104),(5,105),(5,106),(5,107),(5,108),(5,109),(5,110),(5,111),(5,112),(5,113),(5,114),(5,115),(5,116),(5,117),(5,118),(5,119),(5,120),(5,121),(5,122),(5,123),(5,124),(5,125),
-(6,126),(6,127),(6,128),(6,129),(6,130),(6,131),(6,132),(6,133),(6,134),(6,135),(6,136),(6,137),(6,138),(6,139),(6,140),(6,141),(6,142),(6,143),(6,144),(6,145),(6,146),(6,147),(6,148),(6,149),(6,150),
-(7,151),(7,152),(7,153),(7,154),(7,155),(7,156),(7,157),(7,158),(7,159),(7,160),(7,161),(7,162),(7,163),(7,164),(7,165),(7,166),(7,167),(7,168),(7,169),(7,170),(7,171),(7,172),(7,173),(7,174),(7,175),
-(8,176),(8,177),(8,178),(8,179),(8,180),(8,181),(8,182),(8,183),(8,184),(8,185),(8,186),(8,187),(8,188),(8,189),(8,190),(8,191),(8,192),(8,193),(8,194),(8,195),(8,196),(8,197),(8,198),(8,199),(8,200),
-(9,201),(9,202),(9,203),(9,204),(9,205),(9,206),(9,207),(9,208),(9,209),(9,210),(9,211),(9,212),(9,213),(9,214),(9,215),(9,216),(9,217),(9,218),(9,219),(9,220),(9,221),(9,222),(9,223),(9,224),(9,225),
-(10,226),(10,227),(10,228),(10,229),(10,230),(10,231),(10,232),(10,233),(10,234),(10,235),(10,236),(10,237),(10,238),(10,239),(10,240),(10,241),(10,242),(10,243),(10,244),(10,245),(10,246),(10,247),(10,248),(10,249),(10,250),
-(11,251),(11,252),(11,253),(11,254),(11,255),(11,256),(11,257),(11,258),(11,259),(11,260),(11,261),(11,262),(11,263),(11,264),(11,265),(11,266),(11,267),(11,268),(11,269),(11,270),(11,271),(11,272),(11,273),(11,274),(11,275),
-(12,276),(12,277),(12,278),(12,279),(12,280),(12,281),(12,282),(12,283),(12,284),(12,285),(12,286),(12,287),(12,288),(12,289),(12,290),(12,291),(12,292),(12,293),(12,294),(12,295),(12,296),(12,297),(12,298),(12,299),(12,300),
-(13,301),(13,302),(13,303),(13,304),(13,305),(13,306),(13,307),(13,308),(13,309),(13,310),(13,311),(13,312),(13,313),(13,314),(13,315),(13,316),(13,317),(13,318),(13,319),(13,320),(13,321),(13,322),(13,323),(13,324),(13,325);
+(1,185),(1,43),(1,9),(1,109),(1,32),(1,91),(1,6),(1,41),(1,54),(1,19),(1,66),(1,190),(1,53),(1,137),(1,13),(1,144),(1,2),(1,5),(1,113),(1,101),(1,118),(1,199),(1,103),(1,56),(1,135),
+(2,324),(2,219),(2,289),(2,218),(2,222),(2,268),(2,205),(2,280),(2,370),(2,308),(2,350),(2,333),(2,257),(2,290),(2,342),(2,252),(2,225),(2,382),(2,348),(2,319),(2,273),(2,359),(2,247),(2,262),(2,391),
+(3,441),(3,569),(3,522),(3,577),(3,519),(3,417),(3,442),(3,461),(3,433),(3,420),(3,506),(3,455),(3,591),(3,463),(3,565),(3,499),(3,573),(3,534),(3,496),(3,599),(3,511),(3,523),(3,477),(3,575),(3,449),
+(4,780),(4,691),(4,616),(4,619),(4,778),(4,770),(4,621),(4,743),(4,625),(4,633),(4,750),(4,728),(4,695),(4,719),(4,742),(4,673),(4,677),(4,712),(4,603),(4,697),(4,669),(4,734),(4,693),(4,631),(4,643),
+(5,941),(5,832),(5,854),(5,980),(5,867),(5,922),(5,939),(5,817),(5,841),(5,981),(5,813),(5,802),(5,937),(5,851),(5,931),(5,958),(5,994),(5,996),(5,857),(5,991),(5,810),(5,956),(5,936),(5,992),(5,966),(5,920),(5,974),(5,806),(5,846),(5,821),
+(6,1114),(6,1154),(6,1064),(6,1055),(6,1134),(6,1068),(6,1183),(6,1052),(6,1132),(6,1093),(6,1139),(6,1192),(6,1089),(6,1151),(6,1155),(6,1127),(6,1009),(6,1002),(6,1014),(6,1005),(6,1004),(6,1107),(6,1060),(6,1010),(6,1062),(6,1145),(6,1167),(6,1020),(6,1170),(6,1058),(6,1197),(6,1006),(6,1036),(6,1135),(6,1061),
+(7,1224),(7,1279),(7,1320),(7,1358),(7,1265),(7,1338),(7,1322),(7,1317),(7,1319),(7,1290),(7,1203),(7,1389),(7,1356),(7,1384),(7,1253),(7,1382),(7,1288),(7,1321),(7,1218),(7,1341),(7,1303),(7,1295),(7,1328),(7,1324),(7,1299),(7,1248),(7,1223),(7,1370),(7,1285),(7,1340),(7,1267),(7,1254),(7,1316),(7,1307),(7,1361),(7,1271),(7,1312),(7,1234),(7,1360),(7,1397),
+(8,1541),(8,1421),(8,1406),(8,1539),(8,1485),(8,1532),(8,1547),(8,1470),(8,1597),(8,1413),(8,1548),(8,1557),(8,1418),(8,1486),(8,1537),(8,1578),(8,1564),(8,1459),(8,1424),(8,1478),(8,1558),(8,1510),(8,1415),(8,1445),(8,1555),(8,1483),(8,1545),(8,1426),(8,1577),(8,1521),(8,1586),(8,1481),(8,1507),(8,1520),(8,1444),(8,1566),(8,1561),(8,1489),(8,1579),(8,1505),(8,1422),(8,1404),(8,1429),(8,1414),(8,1513),
+(9,1690),(9,1738),(9,1797),(9,1725),(9,1744),(9,1659),(9,1779),(9,1624),(9,1698),(9,1795),(9,1662),(9,1741),(9,1660),(9,1644),(9,1798),(9,1649),(9,1703),(9,1762),(9,1696),(9,1604),(9,1608),(9,1607),(9,1601),(9,1717),(9,1635),(9,1787),(9,1789),(9,1681),(9,1626),(9,1645),(9,1792),(9,1707),(9,1772),(9,1763),(9,1714),(9,1616),(9,1642),(9,1796),(9,1790),(9,1686),(9,1788),(9,1743),(9,1655),(9,1683),(9,1700),
+(10,1940),(10,1893),(10,1852),(10,1879),(10,1961),(10,1841),(10,1822),(10,1873),(10,1857),(10,1838),(10,1970),(10,1874),(10,1982),(10,1880),(10,1993),(10,1922),(10,1888),(10,1949),(10,1875),(10,1851),(10,1806),(10,1839),(10,1996),(10,1932),(10,1914),(10,1929),(10,1939),(10,1908),(10,1904),(10,1844),(10,1819),(10,1984),(10,1948),(10,1990),(10,1812),(10,1974),(10,1861),(10,1889),(10,1850),(10,1920),(10,1840),(10,1816),(10,1849),(10,1968),(10,1834),
+(11,2181),(11,2133),(11,2020),(11,2013),(11,2075),(11,2149),(11,2138),(11,2156),(11,2087),(11,2159),(11,2115),(11,2182),(11,2060),(11,2003),(11,2047),(11,2065),(11,2092),(11,2191),(11,2185),(11,2117),(11,2132),(11,2021),(11,2175),(11,2101),(11,2009),(11,2038),(11,2041),(11,2074),(11,2006),(11,2151),(11,2105),(11,2055),(11,2161),(11,2145),(11,2112),(11,2011),(11,2172),(11,2023),(11,2102),(11,2194),(11,2143),(11,2141),(11,2076),(11,2183),(11,2129),
+(12,2202),(12,2285),(12,2227),(12,2277),(12,2219),(12,2283),(12,2318),(12,2329),(12,2303),(12,2290),(12,2330),(12,2280),(12,2279),(12,2216),(12,2247),(12,2239),(12,2209),(12,2362),(12,2347),(12,2218),(12,2246),(12,2248),(12,2367),(12,2363),(12,2287),(12,2373),(12,2389),(12,2312),(12,2210),(12,2222),(12,2296),(12,2324),(12,2281),(12,2371),(12,2358),(12,2276),(12,2225),(12,2325),(12,2322),(12,2286),(12,2224),(12,2385),(12,2370),(12,2386),(12,2392),
+(13,2494),(13,2447),(13,2484),(13,2587),(13,2577),(13,2401),(13,2495),(13,2465),(13,2416),(13,2455),(13,2497),(13,2593),(13,2459),(13,2442),(13,2474),(13,2473),(13,2482),(13,2542),(13,2443),(13,2571),(13,2530),(13,2599),(13,2514),(13,2485),(13,2458),(13,2439),(13,2509),(13,2584),(13,2450),(13,2536),(13,2426),(13,2572),(13,2508),(13,2546),(13,2430),(13,2423),(13,2431),(13,2421),(13,2575),(13,2498),(13,2466),(13,2563),(13,2457),(13,2556),(13,2600);
 go
 
 --=================
@@ -11369,6 +11419,31 @@ insert into Answer(QuestionID, isCorrect, AnswerImage, AnswerText) values
 ('2600' , 0 , 'none' , N'Vượt về phía bên trái để đi tiếp.');
 go
 
+--=================
+insert into Vehicle([Name], [Image], Brand, [Type], Years, ContactNumber, [Address], RentPrice, [Status]) values
+('Wave Alpha 110cc' , 'wave2018.png' , 'Honda' , N'Xe số 110cc' , 2018 , '0123456789' , N'Quận Gò Vấp, TP.HCM' , 20000 , 1),
+('Wave Alpha 110cc' , 'wave2023.png' , 'Honda' , N'Xe số 110cc' , 2023 , '0989121878' , N'Quận 2, TP.Thủ Đức' , 50000 , 1),
+('Future 125 FI' , 'future.png' , 'Honda' , N'Xe số 125cc' , 2020 , '0987654321' , N'Quận Tân Bình, TP.HCM' , 50000 , 1),
+('Winner X' , 'winnerX.png' , 'Honda' , N'Xe côn 150cc' , 2020 , '0334217271' , N'Quận 9, TP.Thủ Đức' , 60000 , 1),
+('Sirius 110' , 'sirius.png' , 'Yamaha' , N'Xe số 110cc' , 2021 , '0126623503' , N'Quận Phú Nhuận, TP.HCM' , 40000 , 1),
+('Jupiter Finn 115' , 'jupiter.png' , 'Yamaha' , N'Xe số 115cc' , 2022 , '0786000036' , N'TP.HCM' , 40000 , 1),
+('Exciter 155' , 'exciter155.png' , 'Yamaha' , N'Xe côn 155cc' , 2023 , '0989121878' , N'Quận Phú Nhuận, TP.HCM' , 70000 , 1),
+('Z1000 ABS' , 'z1000.png' , 'Kawasaki' , N'Xe côn 1000cc' , 2022 , '0999888999' , N'Quận 1, TP.HCM' , 111000 , 1),
+('Softail Standard' , 'HarleyDavidson.png' , 'Harley Davidson' , N'Xe côn 1700cc' , 2022 , '0254753345' , N'Quận 1, TP.HCM' , 120000 , 1),
+('BMW R18' , 'BMW_R18.png' , 'BMW' , N'Xe côn 1800cc' , 2020 , '0734238271' , N'Quận 7, TP.HCM' , 120000 , 1),
+('CBR500R' , 'CBR500R.png' , 'Honda' , N'Xe côn 500cc' , 2022 , '0112278987' , N'Quận Bình Thạnh, TP.HCM' , 100000 , 1),
+('YZF-R3' , 'YZF_R3.png' , 'Yamaha' , N'Xe côn 300cc' , 2021 , '0909808707' , N'Quận Phú Nhuận, TP.HCM' , 85000 , 1),
+('Vinfast Fadil' , 'vin_fadil.png' , 'Vinfast' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '1900232389' , N'Quận Bình Thạnh, TP.HCM' , 200000 , 1),
+('Vinfast Lux A 2.0' , 'VinfastLux.png' , 'Vinfast' ,N'Xe ô tô 4 chỗ, số tự động' , 2020 , '0781109029' , N'Quận Phú Nhuận, TP.HCM' , 250000 , 1),
+('Toyota Camry' , 'ToyotaCamry.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2020 , '0692342608' , N'Quận 10, TP.HCM' , 300000 , 1),
+('Toyota Vios' , 'Toyota Vios.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '0427705437' , N'Quận 3, TP.HCM' , 250000 , 1),
+('Honda Civic' , 'HondaCivic.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0970344469' , N'Quận 3, TP.HCM' , 240000 , 1),
+('Honda City' , 'HondaCity.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0314290187' , N'Quận Bình Thạnh, TP.HCM' , 230000 , 1),
+('Ford Ranger XLS' , 'FordRanger_XLS.png' , 'Ford' ,N'Xe bán tải 5 chỗ, số tự động' , 2018 , '0835992700' , N'Quận 10, TP.HCM' , 260000 , 1),
+('Mercedes Mayback S450' , 'MercedesMayback.png' , 'Mercedes' ,N'Xe ô tô 4 chỗ, số tự động' , 2018 , '0573073759' , N'Quận Bình Thạnh, TP.HCM' , 1000000 , 1),
+('Hyundai New Mighty 75s' , 'HyundaiMighty75s.png' , 'Hyundai' ,N'Xe tải 3.5 tấn' , 2018 , '0781109029' , N'TP.HCM' , 300000 , 1),
+('ISUZU VM' , 'IsuzuVM.png' , 'Isuzu' ,N'Xe tải 3.5 tấn thùng 4.4m' , 2018 , '0770333922' , N'TP.HCM' , 300000 , 1);
+go
 use master;
 
 --Tạo bộ đề của loại bằng nào với random câu hỏi trong loại bằng đó. Hàm này dành cho staff
@@ -11415,49 +11490,40 @@ select * from Quiz;
 select * from Question   order by QuestionID asc;
 select * from Answer     order by QuestionID asc;
 select * from Have;
+select count(*) from Have where QuizID = 1;
 select * from Attempt;
 
 ------------------------------------------
-
+--=============[RESET DATA]=============--
 use DrivingLicense;
-delete from Statistic;
 delete from Response;
 delete from Feedback;
 delete from ExamProfile;
 delete from AttemptDetail;
+delete from Attempt;
 delete from Answer;
 delete from Have;
 delete from Question;
-delete from Attempt;
 delete from Quiz;
 delete from Schedule;
-delete from License;
-delete from Vehicle;
-delete from Rent;
 delete from Hire;
 delete from Teacher;
+delete from License;
+delete from Rent;
+delete from Vehicle;
 delete from Users;
 delete from Staff;
 delete from Admin;
 delete from Account;
 
 --RESET Auto Answer ID:
-dbcc checkident ('Answer', reseed, 1);
+dbcc checkident ('Answer', reseed, 0);
 
 --RESET Auto Question ID:
-dbcc checkident ('Question', reseed, 1);
+dbcc checkident ('Question', reseed, 0);
 
 --RESET Auto Quiz ID:
-dbcc checkident ('Quiz', reseed, 1);
-
---RESET ReportRate ID:
-dbcc checkident ('Feedback', reseed, 1);
-
---RESET RateReply ID:
-dbcc checkident ('Response', reseed, 1);
-
---RESET ReportSystem ID:
-dbcc checkident ('Statistic', reseed, 1);
+dbcc checkident ('Quiz', reseed, 0);
 
 use master;
 */
