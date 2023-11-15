@@ -17,7 +17,7 @@ public partial class User
 
     public string FullName { get; set; }
 
-    public DateTime BirthDate { get; set; } = DateTime.MinValue;
+    public DateTime? BirthDate { get; set; } = DateTime.MinValue;
 
     public string Nationality { get; set; }
 

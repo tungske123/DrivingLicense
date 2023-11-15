@@ -1219,7 +1219,9 @@ function renderUserInfo(user: UserData) {
         userAvatarElement.src = `/img/Avatar/${user.avatar}`;
     }
     fullNameElement.value = user.fullName;
-    birthDateElement.value = user.birthDate.toString().substring(0, 10);
+    if (user.birthDate !== null) {
+        birthDateElement.value = user.birthDate.toString().substring(0, 10);
+    }
     phoneNumberElement.value = user.phoneNumber;
     nationalityElement.value = user.nationality;
     cccdElement.value = user.cccd;

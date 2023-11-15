@@ -72,7 +72,13 @@ namespace L2D_WebApp.Controllers
                 Address = user.Address,
                 Password = user.Account.Password
             }).AsNoTracking().SingleOrDefaultAsync(user => user.UserId.Equals(uid));
-            return (user is not null) ? Ok(user) : NotFound($"Can't find any users with id {uid}");
+            if (user is not null)
+            {
+
+                return Ok(user);
+            }
+
+            return NotFound($"Can't find any users with id {uid}");
         }
 
 
