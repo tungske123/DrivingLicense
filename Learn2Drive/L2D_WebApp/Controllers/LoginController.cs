@@ -170,7 +170,7 @@ namespace L2D_WebApp.Controllers
             password = await Fakepassword(password);
             //await AccountDAO.Instance.SignUp(username, password, email);
             var result = await _context.Database.ExecuteSqlRawAsync("EXEC dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", username, password, email);
-            TempData["Message"] = "Sign Up Success !";
+            TempData["Message"] = "??ng kí tài kho?n thành công !";
             return RedirectToAction("Index", "Login");
         }
 
