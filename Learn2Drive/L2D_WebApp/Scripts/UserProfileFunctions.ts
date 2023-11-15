@@ -599,7 +599,11 @@ tabLinkList.forEach(tabLink => {
         }
         const target: string | null = linkAnchor.getAttribute('href');
         if (target === `/Home`) {
-            window.location.href = `/Home`;
+            window.location.href = target;
+            return;
+        }
+        if (target === `/Login/logout`) {
+            window.location.href = target;
             return;
         }
         //Show the tab

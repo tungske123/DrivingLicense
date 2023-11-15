@@ -137,6 +137,29 @@ namespace L2D_WebApp.Controllers
             return NoContent();
         }
 
+        private async Task DeleteUser(Guid AccountId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var user = await _context.Users.SingleOrDefaultAsync(user => user.AccountId.Equals(AccountId));
+
+                await _context.Rents.Where(rent => rent.UserId.Equals(user.UserId)).ExecuteDeleteAsync();
+                //delete schedules from hire
+                var HireList = await _context.Hires.Where(hire => hire.UserId.Equals(user.UserId)).ToListAsync();
+                await _context.Users.Where(u => u.UserId.Equals(user.UserId)).ExecuteDeleteAsync();
+                await _context.Accounts.Where(acc => acc.AccountId.Equals(AccountId)).ExecuteDeleteAsync();
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex) 
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(ex.Message);
+            }
+        }
+
         [HttpDelete]
         [Route("api/admin/accounts/delete/{aid:guid}")]
         public async Task<IActionResult> DeleteAccount([FromRoute] Guid aid)
@@ -184,7 +207,7 @@ namespace L2D_WebApp.Controllers
         [HttpGet]
         [Route("api/accounts")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetAccountsPaging(int page = 0)
+        public async Task<IActionResult> GetAccountsPaging(int page = 1)
         {
             if (page <= 0)
             {

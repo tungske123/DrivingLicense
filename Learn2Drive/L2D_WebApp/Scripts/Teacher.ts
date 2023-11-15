@@ -28,6 +28,10 @@ teacherTabLinkList.forEach(tabLink => {
             window.location.href = `/Home`;
             return;
         }
+        if (target === `/Login/logout`) {
+            window.location.href = target;
+            return;
+        }
         //Show the tab
         if (target) {
             const tab: HTMLElement | null = document.querySelector(target);
