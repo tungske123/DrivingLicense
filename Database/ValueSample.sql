@@ -16,32 +16,32 @@ use DrivingLicense;
 go
 --=================
 --Insert new user account:
-exec dbo.proc_signUpAccount @username = 'thanhnc', @password = '12345', @email = 'thanhncse172947@fpt.edu.vn', @name=N'Nguyễn Công Thành';
-exec dbo.proc_signUpAccount @username = 'minhtt', @password = '12345', @email = 'minhttse172842@fpt.edu.vn' , @name=N'Trần Tuấn Minh';
-exec dbo.proc_signUpAccount @username = 'phuclnh', @password = '12345', @email = 'phuclnhse172886@fpt.edu.vn' , @name=N'Lê Nguyễn Hoàng Phúc';
-exec dbo.proc_signUpAccount @username = 'tungts', @password = '12345', @email = 'tungtsse172875@fpt.edu.vn' , @name=N'Trịnh Sơn Tùng';
-exec dbo.proc_signUpAccount @username = 'hoangph', @password = '12345', @email = 'hoangphse172789@fpt.edu.vn' , @name=N'Phạm Huy Hoàng';
-exec dbo.proc_signUpAccount @username = 'fptu', @password = '12345', @email = 'fpt@fe.edu.vn', @name=N'FPT University';
-exec dbo.proc_signUpAccount @username = 'fuihoan123', @password = '12345', @email = 'fuihoan@japanese.com', @name= N'フイ　ホアン';
-exec dbo.proc_signUpAccount @username = 'ngocanh', @password = '12345', @email = 'ngocanh@vietnam.com', @name=N'Nguyễn Ngọc Anh';
-exec dbo.proc_signUpAccount @username = 'tommy', @password = '12345', @email = 'tommy@usa.com', @name=N'Tommy Lee';
-exec dbo.proc_signUpAccount @username = 'liuxin', @password = '12345', @email = 'liuxin@china.com', @name=N'刘欣';
-exec dbo.proc_signUpAccount @username = 'kimchi', @password = '12345', @email = 'kimchi@korea.com', @name=N'김치';
-exec dbo.proc_signUpAccount @username = 'sakura', @password = '12345', @email = 'sakura@japan.com', @name=N'さくら';
-exec dbo.proc_signUpAccount @username = 'maria', @password = '12345', @email = 'maria@spain.com', @name=N'María García';
-exec dbo.proc_signUpAccount @username = 'hans', @password = '12345', @email = 'hans@germany.com', @name=N'Hans Müller';
-exec dbo.proc_signUpAccount @username = 'pierre', @password = '12345', @email = 'pierre@france.com', @name=N'Pierre Dupont';
-exec dbo.proc_signUpAccount @username = 'luca', @password = '12345', @email = 'luca@italy.com', @name=N'Luca Rossi';
-exec dbo.proc_signUpAccount @username = 'david', @password = '12345', @email = 'david@uk.com', @name=N'David Smith';
+exec dbo.proc_signUpAccount @username = 'thanhnc', @password = '12345', @email = 'thanhncse172947@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'minhtt', @password = '12345', @email = 'minhttse172842@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'phuclnh', @password = '12345', @email = 'phuclnhse172886@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'tungts', @password = '12345', @email = 'tungtsse172875@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'hoangph', @password = '12345', @email = 'hoangphse172789@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'fptu', @password = '12345', @email = 'fpt@fe.edu.vn';
+exec dbo.proc_signUpAccount @username = 'fuihoan123', @password = '12345', @email = 'fuihoan@japanese.com';
+exec dbo.proc_signUpAccount @username = 'ngocanh', @password = '12345', @email = 'ngocanh@vietnam.com';
+exec dbo.proc_signUpAccount @username = 'tommy', @password = '12345', @email = 'tommy@usa.com';
+exec dbo.proc_signUpAccount @username = 'liuxin', @password = '12345', @email = 'liuxin@china.com';
+exec dbo.proc_signUpAccount @username = 'kimchi', @password = '12345', @email = 'kimchi@korea.com';
+exec dbo.proc_signUpAccount @username = 'sakura', @password = '12345', @email = 'sakura@japan.com';
+exec dbo.proc_signUpAccount @username = 'maria', @password = '12345', @email = 'maria@spain.com';
+exec dbo.proc_signUpAccount @username = 'hans', @password = '12345', @email = 'hans@germany.com';
+exec dbo.proc_signUpAccount @username = 'pierre', @password = '12345', @email = 'pierre@france.com';
+exec dbo.proc_signUpAccount @username = 'luca', @password = '12345', @email = 'luca@italy.com';
+exec dbo.proc_signUpAccount @username = 'david', @password = '12345', @email = 'david@uk.com';
 
 --=================
 --Insert other Role account:
-exec dbo.proc_signUpAccount @username = 'admin', @password = '12345', @email = N'Learn2Drive@admin.com', @name=N'Quản Trị Viên', @roleSet='admin';
-exec dbo.proc_signUpAccount @username = 'staff', @password = '12345', @email = N'Learn2Drive@staff.com', @name=N'Nhân Viên Quản Lý', @roleSet='staff';
-exec dbo.proc_signUpAccount @username = 'teacher', @password = '12345', @email = N'Learn2Drive@teacher.com', @name=N'Giảng Viên', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'giaolang', @password = '12345', @email = N'HoangNT20@fe.edu.vn', @name=N'Nguyễn Thế Hoàng', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'nhattq9', @password = '12345', @email = N'nhattq9@fe.edu.vn', @name=N'Trần Quang Nhật', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'sangnm18', @password = '12345', @email = N'sangnm18@fe.edu.vn', @name=N'Nguyễn Minh Sang', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'admin', @password = '12345', @email = N'Learn2Drive@admin.com', @roleSet='admin';
+exec dbo.proc_signUpAccount @username = 'staff', @password = '12345', @email = N'Learn2Drive@staff.com', @roleSet='staff';
+exec dbo.proc_signUpAccount @username = 'teacher', @password = '12345', @email = N'Learn2Drive@teacher.com', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'giaolang', @password = '12345', @email = N'HoangNT20@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'nhattq9', @password = '12345', @email = N'nhattq9@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'sangnm18', @password = '12345', @email = N'sangnm18@fe.edu.vn', @roleSet='lecturer';
 go
 
 --=================
