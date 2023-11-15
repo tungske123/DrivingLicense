@@ -146,10 +146,10 @@ function renderVehicleTable(vehicleList: Vehicle[]) {
             cells[1].textContent = vehicle.brand;
             cells[2].textContent = vehicle.years.toString();
             cells[3].textContent = vehicle.type;
-            cells[4].textContent = '...';
-            cells[5].textContent = getFormattedPrice(vehicle.rentPrice);
-            const dropdownButton = cells[6].querySelector('.dropdown_button') as HTMLButtonElement;
-            var dropDownContent = cells[6].querySelector('.dropdown_content') as HTMLDivElement;
+           /* cells[4].textContent = '...';*/
+            cells[4].textContent = getFormattedPrice(vehicle.rentPrice);
+            const dropdownButton = cells[5].querySelector('.dropdown_button') as HTMLButtonElement;
+            var dropDownContent = cells[5].querySelector('.dropdown_content') as HTMLDivElement;
             dropdownButton.addEventListener('click', function toggleDropDown() {
                 const hasDropdown: boolean = (!dropDownContent.classList.contains('hidden') && dropDownContent.classList.contains('block'));
                 if (!hasDropdown) {

@@ -1,4 +1,4 @@
-//Events
+﻿//Events
 const formCheckList = document.getElementsByClassName('answer-input');
 for (const formCheck of formCheckList) {
     formCheck.addEventListener('change', function () {
@@ -33,6 +33,11 @@ for (var i = 0; i < modalButtons.length; ++i) {
     button.addEventListener('click', async function () {
         var action = this.getAttribute("btnaction");
         if (action === 'submit') {
+            var sessionList = getSessionList();
+            if (sessionList === null || sessionList.length === 0 || sessionList === []) {
+                alert('Vui lòng làm ít nhất 1 câu');
+                return;
+            }
             console.log('Submit');
             clearInterval(timer);
             await SaveQuestion();
