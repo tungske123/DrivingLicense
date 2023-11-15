@@ -1,10 +1,12 @@
 ﻿//using Driving_License.Models;
 //using Driving_License.Models.Users;
+using L2D_DataAccess.Models;
 using L2D_DataAccess.Utils;
 using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace L2D_WebApp.Controllers
 {
@@ -19,8 +21,18 @@ namespace L2D_WebApp.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var accountsession = HttpContext.Session.GetString("usersession");
+            if (!string.IsNullOrEmpty(accountsession))
+            {
+                var account = JsonSerializer.Deserialize<Account>(accountsession);
+                if (account.Role.Equals("user"))
+                {
+                    var user = await _context.Users.SingleOrDefaultAsync(u => u.AccountId.Equals(account.AccountId));
+                    ViewBag.UserId = user.UserId;
+                }
+            }
             ViewBag.icon_link = "/img/favicon_1.ico";
             return View("~/Views/Home/Home.cshtml");
         }
@@ -93,7 +105,8 @@ namespace L2D_WebApp.Controllers
             return View();
         }
 
-        public IActionResult Error404() {
+        public IActionResult Error404()
+        {
             return View("~/Views/404NotFound.cshtml");
         }
 

@@ -23,6 +23,7 @@
         ViewData["Title"] = "Learn2Drive";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
+    <div hidden id="UserId">@ViewBag.UserId</div>
     <!--modal-->
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -265,7 +266,7 @@
                 <p>Chúng tôi luôn cố gắng mang đến dịch vụ tốt nhất</p>
             </div>
             <button class="btn hidden-load discover-button"
-                    style="position: relative;left: 50%;transform: translateX(-50%);display: none;" data-bs-toggle="modal"
+                    style="position: relative;left: 50%;transform: translateX(-50%);" data-bs-toggle="modal"
                     data-bs-target="#exampleModal" id="registerButton">
                 Đăng kí học
                 ngay
@@ -378,6 +379,7 @@
         var registerForm = document.getElementById('RegisterForm');
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            var UserId = document.getElementById('UserId').textContent;
             var formData = new FormData(registerForm);
             var url = `https://localhost:7235/api/hire/register/${UserId}`;
             var response = await fetch(url, {
