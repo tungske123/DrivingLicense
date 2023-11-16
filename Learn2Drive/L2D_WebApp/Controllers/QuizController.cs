@@ -56,6 +56,7 @@ namespace L2D_WebApp.Controllers
             var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(user => user.AccountId.ToString().Equals(AccountID));
             return (user is not null) ? user.UserId.ToString() : string.Empty;
         }
+
         public async Task<IActionResult> Index(string licenseid, string status, int page = 1, int pageSize = 4)
         {
             bool isValidLicenseID = !string.IsNullOrEmpty(licenseid) && !licenseid.Equals("none");

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using L2D_DataAccess.Utils;
@@ -88,7 +88,7 @@ namespace L2D_WebApp.Controllers
             }
             else
             {
-                TempData["Message"] = "Wrong username or password";
+                TempData["Message"] = "Sai tên tải khoản hoặc mật khẩu";
                 return RedirectToAction("Index", "Login");
             }
         }
@@ -170,7 +170,7 @@ namespace L2D_WebApp.Controllers
             password = await Fakepassword(password);
             //await AccountDAO.Instance.SignUp(username, password, email);
             var result = await _context.Database.ExecuteSqlRawAsync("EXEC dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", username, password, email);
-            TempData["Message"] = "??ng k� t�i kho?n th�nh c�ng !";
+            TempData["Message"] = "??ng kí tài kho?n thành công !";
             return RedirectToAction("Index", "Login");
         }
 
