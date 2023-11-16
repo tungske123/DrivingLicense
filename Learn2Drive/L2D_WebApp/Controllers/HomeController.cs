@@ -65,40 +65,6 @@ namespace L2D_WebApp.Controllers
         }
 
 
-        [HttpGet]
-        [Route("license")]  //https://localhost:7235/license
-        public async Task<IActionResult> GetAllLicense()
-        {
-            try
-            {
-                var licenselist = await _context.Licenses.AsNoTracking().ToListAsync();
-                return Ok(licenselist);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"An error occurred when processing request: {ex.Message}");
-            }
-        }
-
-
-        [HttpGet]
-        [Route("license/{licenseid}")] //https://localhost:7235/license/A2
-        public async Task<IActionResult> GetLicenseById(string licenseid)
-        {
-            try
-            {
-                var license = await _context.Licenses.AsNoTracking().SingleOrDefaultAsync(license => license.LicenseId.Equals(licenseid));
-                if (license is null)
-                {
-                    return NotFound($"Can't find any license with id {licenseid}");
-                }
-                return Ok(license);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"An error occurred when processing request: {ex.Message}");
-            }
-        }
 
         public IActionResult Privacy()
         {
