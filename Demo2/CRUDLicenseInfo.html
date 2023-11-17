@@ -12,6 +12,8 @@
     <!--tiny mce-->
     <script src="https://cdn.tiny.cloud/1/05qy5fs34q5j6pg9pbq9t9qzguswzubbyrytl4iy3nw4i3ko/tinymce/6/tinymce.min.js"
         referrerpolicy="origin"></script>
+    <!--sweetalert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="CSS/styleCRUDLicense.css">
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -21,8 +23,6 @@
                 // toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
             });
         });
-
-
     </script>
     <style>
         .inline-center {
@@ -32,16 +32,18 @@
             transform: translateX(-50%);
         }
     </style>
+
     <title>L2D - Quản lý thông tin bằng lái</title>
 </head>
 
 <body>
-    <div class="wrapper" style="width: 10%;margin-left: 20px;">
+    <div class="wrapper" style="width: 15%;margin-left: 20px;">
         <label for="licenseid" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại bằng
             lái</label>
         <select id="licenseid"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="A1" selected>A1</option>
+            <option value="" selected>Chọn hạng bằng lái</option>
+            <option value="A1">A1</option>
             <option value="A2">A2</option>
             <option value="B2">B2</option>
         </select>
@@ -211,10 +213,14 @@
                     </div>
                 </div>
             </div>
-            <button type="button"
+            <button type="submit"
                 class="inline-center mt-5 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Lưu</button>
         </form>
     </div>
+
+
+
+    <script src="JS/CRUDLicense.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.1.1/flowbite.min.js"></script>
 </body>
 
