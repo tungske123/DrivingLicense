@@ -103,6 +103,18 @@
                     </a>
                 </li>
                 <li class="dashboard-item">
+                    <a href="#manageUser"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5h6M9 8h6m-6 3h6M4.996 5h.01m-.01 3h.01m-.01 3h.01M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
+                        </svg>
+                        <span class="ml-3">Quản lý Người Dùng</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
                     <a href="/Home"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -535,7 +547,7 @@
                     </div>
                     <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
                         aria-label="Table navigation">
-                        
+
                         <ul class="inline-flex items-stretch -space-x-px">
                             <li>
                                 <button id="prevBtn"
@@ -1301,7 +1313,7 @@
                     </div>
                     <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
                         aria-label="Table navigation">
-                        
+
                         <ul class="inline-flex items-stretch -space-x-px">
                             <li>
                                 <button id="prevQuizPageBtn"
@@ -2000,6 +2012,593 @@
         <script src="/Demo2/ts/QuizCRUD.js"></script>
     </section>
 
+    <section class="p-4 sm:ml-64 staff-tab" id="manageUser" style="display: none;">
+
+        <div id="UserDetailModal" tabindex="-1"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-lg max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        Chi tiết Nguời Dùng
+                    </h3>
+                    <button type="button" onclick=""
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6">
+                    <p class="mb-4 text-gray-500 dark:text-gray-400 whitespace-normal" style="text-wrap: balance;"
+                        id="questionText">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium, velit. Dicta aliquid,
+                        animi ducimus minima minus nobis eum fugiat praesentium. Veritatis nihil obcaecati natus ducimus
+                        culpa omnis, error tempora deserunt!
+                    </p>
+                    <img srcset="https://flowbite.com/docs/images/examples/image-1@2x.jpg"
+                        class="w-full h-auto max-w-xl rounded-lg" alt="image description" id="questionImage">
+                    <hr />
+                    <template id="answer-template">
+                        <div class="flex items-center mb-4">
+                            <input id="default-radio-1" type="radio" value="" name="default-radio"
+                                class="answerCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-1"
+                                class="answerLabel ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Anwser
+                                1</label>
+                        </div>
+                    </template>
+                    <!-- <div id="questionModalAnswersSection">
+                    </div> -->
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button type="button" onclick="toggleQuestionDetailsModal();"
+                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+        <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                <div
+                    class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+
+                    <!--SEARRCH-->
+                    <div class="w-full md:w-1/2">
+                        <form class="flex items-center">
+                            <label for="searchUser" class="sr-only">Search</label>
+                            <div class="relative w-full">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                        fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input type="text" id="searchUser"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-500"
+                                    placeholder="Tìm nguời dùng" required="">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 
+                        items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                        <button type="button" id="createUserModalButton" data-modal-target="createUserModal"
+                            data-modal-toggle="createUserModal"
+                            class="flex items-center justify-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                            </svg>
+                            Thêm Người Dùng
+                        </button>
+
+                        <div class="flex items-center space-x-3 w-full md:w-auto">
+                            <button id="filterDropdownUserButton" data-dropdown-toggle="filterUserDropdown"
+                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                    class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Bộ lọc
+                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+
+                            <!--FILTER DROP DOWN-->
+                            <div id="filterUserDropdown"
+                                class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                                <button type="button"
+                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                    data-modal-toggle="select-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                                <a href="" id="clearQuizFilter" class="text-sm text-red-700 underline">Xóa bộ lọc</a>
+                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Loại Người dùng</h6>
+                                <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownUserButton">
+                                    <li class="flex items-center">
+                                        <input id="A1" type="radio" value="A1" name="quizLicense"
+                                            class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <label for="A1"
+                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Sinh
+                                            Viên</label>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <input id="A2" type="radio" value="A2" name="quizLicense"
+                                            class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <label for="A2"
+                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Teacher</label>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <input id="A2" type="radio" value="A2" name="quizLicense"
+                                            class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <label for="A2"
+                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Staff</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Username</th>
+                                <th scope="col" class="px-6 py-3">Password</th>
+                                <th scope="col" class="px-6 py-3">Gmail</th>
+                                <th scope="col" class="px-6 py-3">Role</th>
+                                <th scope="col" class="px-6 py-3">
+                                    <span class="sr-only">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr class="border-b dark:border-gray-700">
+                                <td scope="row" class="px-4 py-3">
+                                    A</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="text-sm mr-3">
+                                            Password
+                                        </div>
+                                        <div class="eye-icon">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="px-5 py-3 whitespace-normal">
+                                    testing138@gmail.com
+                                </td>
+                                <td class="px-5 py-3 whitespace-normal">
+                                    Sinh Viên
+                                </td>
+                                <td class="px-4 py-3 flex items-center justify-end">
+                                    <button id="user-dropdown-choice"
+                                        data-dropdown-toggle="user-dropdow-dropdown"
+                                        class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                        type="button">
+                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                            viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        </svg>
+                                    </button>
+                                    <div id="user-dropdow-dropdown"
+                                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm" aria-labelledby="user-dropdown-choice">
+                                            <li>
+                                                <button type="button" data-modal-target="updateUserModal"
+                                                    data-modal-toggle="updateUserModal"
+                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                        viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path
+                                                            d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                                    </svg>
+                                                    Sửa
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" data-modal-target="readUserModal"
+                                                    data-modal-toggle="readUserModal"
+                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                        viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                    </svg>
+                                                    Xem trước
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" data-modal-target="deleteQuizModal"
+                                                    data-modal-toggle="deleteQuizModal"
+                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
+                                                    <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            fill="currentColor"
+                                                            d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
+                                                    </svg>
+                                                    Xóa
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                    aria-label="Table navigation">
+                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                        Showing
+                        <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                        of
+                        <span class="font-semibold text-gray-900 dark:text-white">1000</span>
+                    </span>
+                    <ul class="inline-flex items-stretch -space-x-px">
+                        <li>
+                            <button id="prevQuizPageBtn"
+                                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">Previous</span>
+                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </li>
+                        <span class="pageBarBody flex">
+                            <li>
+                                <a href=""
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                            </li>
+                            <li>
+                                <a href=""
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                            </li>
+                            <li>
+                                <a href=""
+                                    class="text-red-700 flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
+                            </li>
+                            <li>
+                                <a href=""
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
+                            </li>
+                            <li>
+                                <a href=""
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
+                            </li>
+                        </span>
+                        <li>
+                            <button id="nextQuizPageBtn"
+                                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">Next</span>
+                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+
+    <!--MODAL CREATED HERE-->
+    <div id="createUserModal" tabindex="-1" aria-hidden="true"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-7xl max-h-full">
+            <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+
+                <!-- Modal header -->
+                <div
+                    class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thêm Người Dùng</h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-target="createUserModal" data-modal-toggle="createUserModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns=" http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+
+                <!--BODY-->
+
+                <div id="accordion-color-User" data-accordion="collapse"
+                    data-active-classes="bg-red-100 dark:bg-gray-800 text-red-600 dark:text-white">
+                    <h2 id="accordion-color-heading-1">
+                        <button type="button"
+                            class="flex items-center justify-between w-full p-5 font-bold text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 dark:border-gray-700 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-gray-800"
+                            data-accordion-target="#accordion-color-body-12" aria-expanded="true"
+                            aria-controls="accordion-color-body-12">
+                            <span>Thông tin</span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M9 5 5 1 1 5" />
+                            </svg>
+                        </button>
+                    </h2>
+
+                    <div id="accordion-color-body-12" class="hidden" aria-labelledby="accordion-color-heading-12">
+                        <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+                            <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                                <div>
+                                    <label for="name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên Người
+                                        dùng</label>
+                                    <input type="text" name="name" id="name"
+                                        class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Nhập tên Người Dùng" required="">
+                                </div>
+                                <div>
+                                    <label for="gmail"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Gmail
+                                    </label>
+                                    <input type="text" name="name" id="name"
+                                        class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Nhập Gmail" required="">
+                                </div>
+                                <div>
+                                    <label for="password"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Password
+                                    </label>
+                                    <input type="text" name="name" id="name"
+                                        class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Nhập Gmail" required="">
+                                </div>
+                                <div>
+                                    <label for="Role"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label><select
+                                        id="UserRole" name="license"
+                                        class="quizLicense bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        <option selected="">Chọn loại bằng lái</option>
+                                        <option value="user">Sinh Viên</option>
+                                        <option value="lecturer">Teacher</option>
+                                        <option value="staff">Staff</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END-->
+                <button type="button" id="userAddButton"
+                    class="inline-center text-white mt-10 bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Thêm
+                    User này</button>
+            </div>
+        </div>
+    </div>
+
+    <!--UPDATE MODAl-->
+    <div id="updateUserModal" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                <!-- Modal header -->
+                <div
+                    class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sửa thông tin </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="updateUserModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <form action="#">
+                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                        <div>
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
+                                Người
+                                dùng</label>
+                            <input type="text" name="name" id="name"
+                                class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập tên Người Dùng" required="">
+                        </div>
+                        <div>
+                            <label for="gmail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Gmail
+                            </label>
+                            <input type="text" name="name" id="name"
+                                class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập Gmail" required="">
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Password
+                            </label>
+                            <input type="text" name="name" id="name"
+                                class="quizName bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nhập mật khẩu" required="">
+                        </div>
+                        <div>
+                            <label for="Role"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label><select
+                                id="UserRole" name="license"
+                                class="quizLicense bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option selected="">Chọn loại bằng lái</option>
+                                <option value="user">Sinh Viên</option>
+                                <option value="lecturer">Teacher</option>
+                                <option value="staff">Staff</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4 mt-3">
+                        <button type="submit" id="updateBtn"
+                            class="flex items-center justify-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Lưu</button>
+                        <button type="button"
+                            class="text-red-600 inline-flex items-center  border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                            <svg class="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="readUserModal" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                <!-- Modal header -->
+                <div class="flex justify-between mb-4 rounded-t sm:mb-5">
+                    <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                        <h3 class="font-semibold ">Thông tin Account</h3>
+                    </div>
+                    <div>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-toggle="readUserModal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                </div>
+                <dl>
+                    <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">ID</dt>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400"> 1</dd>
+                    <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Gmail</dt>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400"> cus1@gmail.com</dd>
+                    <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Password</dt>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400"> 123456</dd>
+                    <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Role</dt>
+                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">User</dd>
+                </dl>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <button type="button"
+                            class="text-white inline-flex items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                            <svg aria-hidden="true" class="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                <path fill-rule="evenodd"
+                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Sửa
+                        </button>
+                        <button type="button"
+                            class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Preview</button>
+                    </div>
+                    <button type="button"
+                        class="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                        <svg aria-hidden="true" class="w-5 h-5 mr-1.5 -ml-1" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete modal -->
+    <div id="deleteUserModal" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                <button type="button"
+                    class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-toggle="deleteUserModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
+                    fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                </svg>
+                <p class="mb-4 text-gray-500 dark:text-gray-300">Xác nhận xóa Account</p>
+                <div class="flex justify-center items-center space-x-4">
+                    <button data-modal-toggle="deleteUserModal" type="button"
+                        class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Hủy</button>
+                    <button type="submit"
+                        class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Đồng
+                        ý xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </section>
 
     <script src="/Demo2/ts/Staff.js"></script>
     <!--flowbite js library-->
@@ -2008,6 +2607,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
     <!--chart library-->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        var eyeIcons = document.querySelectorAll('eye-icon');
+        eyeIcons.forEach(eyeIcon => {
+            eyeIcon.addEventListener('click', () => {
+                console.log('clicked');
+                var iconElement = eyeIcon.querySelector('i');
+                var showPassword = (iconElement.classList.contains('fa-eye'));
+                if (showPassword === true) {
+                    iconElement.className = `fa-solid fa-eye-slash`;
+                } else {
+                    iconElement.className = `fa-solid fa-eye`;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
