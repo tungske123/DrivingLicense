@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.1.1/flowbite.min.css" rel="stylesheet" />
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300&display=swap" rel="stylesheet">
+    <!--tiny mce-->
+    <script src="https://cdn.tiny.cloud/1/05qy5fs34q5j6pg9pbq9t9qzguswzubbyrytl4iy3nw4i3ko/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <link rel="stylesheet" href="CSS/styleCRUDLicense.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            tinymce.init({
+                selector: 'textarea',
+                // plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                // toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            });
+        });
+    </script>
+    <style>
+        .inline-center {
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+    <title>L2D - Quản lý thông tin bằng lái</title>
+</head>
+
+<body>
+    <div class="wrapper" style="width: 10%;margin-left: 20px;">
+        <label for="licenseid" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại bằng
+            lái</label>
+        <select id="licenseid"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="A1" selected>A1</option>
+            <option value="A2">A2</option>
+            <option value="B2">B2</option>
+        </select>
+    </div>
+    <div class="license-content">
+        <form action="" method="post" id="licenseInfoForm" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="licenseName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên loại
+                    bằng</label>
+                <textarea id="licenseName" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập đầy đủ tên loại bằng..."></textarea>
+            </div>
+            <div class="input-group">
+                <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô
+                    tả</label>
+                <textarea id="description" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập mô tả bằng lái..."></textarea>
+            </div>
+            <div class="input-group">
+                <label for="condition" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Điều
+                    kiện</label>
+                <textarea id="condition" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập điều kiện thi bằng lái..."></textarea>
+            </div>
+            <div class="input-group">
+                <label for="cost" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chi phí</label>
+                <textarea id="cost" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập thông tin chi phí thi bằng lái..."></textarea>
+            </div>
+            <div class="input-group">
+                <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian</label>
+                <textarea id="time" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập thông tin về thời gian thi, thời hạn của bằng lái..."></textarea>
+            </div>
+            <div class="input-group">
+                <label for="examContent" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nội dung
+                    thi</label>
+                <textarea id="examContent" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập thông tin về kỳ thi, nội dung thi của hạng bằng lái..."></textarea>
+            </div>
+            <div class="input-group">
+                <label for="tips" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mẹo thi</label>
+                <textarea id="tips" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập mẹo thi bằng lái..."></textarea>
+            </div>
+            <button type="button" class="inline-center mt-5 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Lưu</button>
+        </form>
+    </div>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.1.1/flowbite.min.js"></script>
+</body>
+
+</html>
