@@ -1,48 +1,980 @@
------------------------------------------[ INSERT VALUES ]-----------------------------------------------------
-/*[QUICK FIND] - Press: Ctrl + G
-User________19
-Manage_____37
-License_____45
-Vehicle_____72
-Quiz________99, 11376
-Question____120
-Have________2762
-Answer______2779
+﻿use master;
+go
+if exists (select name from sys.databases where name = 'DrivingLicense')
+begin
+	drop database DrivingLicense;
+end;
+go
+create database DrivingLicense;
+go
+use DrivingLicense;
+
+create table Account
+(
+   AccountID uniqueidentifier default newid() primary key,
+   Username nvarchar(100) unique,
+   [Password] nvarchar(100),
+   [Role] nvarchar(50),
+);
+go
+
+create table License
+(
+   LicenseID nvarchar(10) primary key,
+   LicenseName nvarchar(100),
+   Describe nvarchar(max),
+   Condition nvarchar(max),
+   Cost nvarchar(max),
+   [Time] nvarchar(max),
+   ExamContent nvarchar(max),
+   Tips nvarchar(max)
+);
+go
+
+create table Users
+(
+   UserID uniqueidentifier default newid() primary key,
+   AccountID uniqueidentifier unique,
+   Avatar nvarchar(max),
+   CCCD nvarchar(15),
+   Email nvarchar(100),
+   FullName nvarchar(100),
+   BirthDate date,
+   Nationality nvarchar(100),
+   PhoneNumber nvarchar(20),
+   [Address] nvarchar(100),
+
+   foreign key (AccountID) references dbo.Account(AccountID)
+);
+go
+
+create table Teacher
+(
+   TeacherID uniqueidentifier default newid() primary key,
+   AccountID uniqueidentifier unique,
+   LicenseID nvarchar(10),
+   Avatar nvarchar(max),
+   FullName nvarchar(100),
+   Information nvarchar(max),
+   ContactNumber nvarchar(20),
+   Email nvarchar(100),
+
+   foreign key (AccountID) references dbo.Account(AccountID),
+   foreign key (LicenseID) references dbo.License(LicenseID)
+);
+go
+
+create table Staff(
+	StaffID uniqueidentifier default newid() primary key,
+	AccountID uniqueidentifier unique,
+	FullName nvarchar(100),
+	Email nvarchar(100),
+	ContactNumber nvarchar(20),
+
+   foreign key (AccountID) references dbo.Account(AccountID)
+);
+go
+
+create table [Admin](
+	AdminID uniqueidentifier default newid() primary key,
+	AccountID uniqueidentifier unique,
+	FullName nvarchar(100),
+	Email nvarchar(100),
+	ContactNumber nvarchar(20),
+
+   foreign key (AccountID) references dbo.Account(AccountID)
+);
+go
+
+create table Quiz
+(
+   QuizID int identity(1,1) primary key,
+   LicenseID nvarchar(10),
+   [Timer] int,
+   [Name] nvarchar(100),
+   [Description] nvarchar(max),
+   TotalDid int,
+
+   foreign key (LicenseID) references dbo.License(LicenseID)
+);
+go
+
+create table Question
+(
+   QuestionID int identity (1,1) primary key,
+   LicenseID nvarchar(10),
+   QuestionText nvarchar(max),
+   QuestionImage nvarchar(max),
+   isCritical bit,
+
+   foreign key (LicenseID) references License(LicenseID)
+);
+go
+
+create table Have(
+   QuizID int not null,
+   QuestionID int not null,
+
+   primary key (QuizID, QuestionID),
+   foreign key (QuizID) references dbo.Quiz(QuizID),
+   foreign key (QuestionID) references dbo.Question(QuestionID)
+);
+go
+
+create table Answer
+(
+   AnswerID int identity(1,1) primary key,
+   QuestionID int not null,
+   isCorrect bit,
+   AnswerText nvarchar(max),
+   AnswerImage nvarchar(max),
+
+   foreign key (QuestionID) references Question(QuestionID)
+);
+go
+
+create table Attempt (
+    AttemptID uniqueidentifier default newid() primary key,
+	UserID uniqueidentifier,
+	QuizID int not null,
+	AttemptTime time,
+	AttemptDate datetime,
+	TotalQuestion int,
+	TotalAnswered int,
+	Result bit,
+
+	foreign key (UserID) references dbo.Users(UserID),
+	foreign key (QuizID) references dbo.Quiz(QuizID)
+);
+go
+
+create table AttemptDetail (
+   AttemptDetailID uniqueidentifier default newid() primary key,
+   AttemptID uniqueidentifier,
+   SelectedAnswerID int null,
+   QuestionID int not null,
+   [Status] nvarchar(10),
+
+   foreign key (AttemptID) references dbo.Attempt(AttemptID),
+   foreign key (QuestionID) references dbo.Question(QuestionID),
+   foreign key (SelectedAnswerID) references dbo.Answer(AnswerID),
+);
+go
+
+create table Hire
+(
+	HireID uniqueidentifier default newid() primary key,
+	TeacherID uniqueidentifier,
+	UserID uniqueidentifier,
+	HireDate datetime,
+	[Status] nvarchar(50),
+
+	foreign key (TeacherID) references dbo.Teacher(TeacherID),
+	foreign key (UserID) references dbo.Users(UserID),
+);
+go
+
+create table Schedule
+(
+   ScheduleID uniqueidentifier default newid() primary key,
+   HireID uniqueidentifier,
+   LicenseID nvarchar(10),
+   StartTime time,
+   EndTime time,
+   [Date] datetime,
+   [Address] nvarchar(100),
+   [Status] nvarchar(50),
+
+   foreign key (HireID) references dbo.Hire(HireID),
+   foreign key (LicenseID) references dbo.License(LicenseID)
+);
+go
+
+create table ExamProfile
+(
+	ExamProfileID uniqueidentifier default newid() primary key,
+	UserID uniqueidentifier,
+	LicenseID nvarchar(10),
+	ExamDate datetime,
+	ExamResult nvarchar(100),
+	HealthCondition nvarchar(max),
+	[Status] nvarchar(50),
+
+	foreign key (UserID) references dbo.Users(UserID),
+	foreign key (LicenseID) references dbo.License(LicenseID)
+);
+go
+
+create table Vehicle
+(
+   VehicleID uniqueidentifier default newid() primary key,
+   [Name] nvarchar(100),
+   [Image] nvarchar(max),
+   Brand nvarchar(100),
+   [Type] nvarchar(100),
+   Years int,
+   ContactNumber nvarchar(20),
+   [Address] nvarchar(100),
+   RentPrice decimal,
+   [Description] nvarchar(max),
+   [Status] bit,
+);
+go
+
+create table Rent
+(
+   RentID uniqueidentifier default newid() primary key,
+   VehicleID uniqueidentifier,
+   UserID uniqueidentifier,
+   StartDate datetime,
+   EndDate datetime,
+
+   TotalRentPrice decimal,
+   [Status] nvarchar(100),
+
+   foreign key (VehicleID) references dbo.Vehicle(VehicleID),
+   foreign key (UserID) references dbo.Users(UserID)
+);
+go
+
+create table Feedback(
+	FeedbackID uniqueidentifier default newid() primary key,
+	userID uniqueidentifier,
+	FeedbackDate datetime,
+	SenderName nvarchar(100),
+	Title nvarchar(max),
+	[Description] nvarchar(max),
+	[Status] nvarchar(50)
+
+	foreign key (userID) references dbo.Users(UserID),
+);
+go
+
+create table Response(
+	ResponseID uniqueidentifier default newid() primary key,
+	StaffID uniqueidentifier,
+	FeedbackID uniqueidentifier,
+	UserID uniqueidentifier,
+	ResponseDate datetime,
+	ReplierName nvarchar(100),
+	[ReplyContent] nvarchar(max)
+	
+	foreign key (FeedbackID) references dbo.Feedback(FeedbackID),
+	foreign key (userID) references dbo.Users(UserID),
+	foreign key (staffID) references dbo.Staff(StaffID),
+);
+go
 
 
+
+
+
+--======================================[ PROCEDURES ]=====================================================
+-----------------------------------[ CREATE ACCOUNT USER ]-------------------------------
+create or alter procedure proc_signUpAccount(
+	@username nvarchar(100),
+	@password nvarchar(100),
+	@email nvarchar(100),
+	@roleSet nvarchar(50) = 'user'		--default value
+)
+as
+begin
+	-- Declare
+	declare @accountID as uniqueidentifier;
+	declare @Temptable table (accId uniqueidentifier);
+
+	--Create an account and save its id to a temp table
+	insert into dbo.Account (Username, [Password], [Role])
+	output inserted.AccountID into @Temptable(AccId)
+	values(@username, @password, @roleSet);
+	set @accountID = (select top(1) AccId from @Temptable);
+
+	if(@roleSet = 'user')
+	begin
+		insert into dbo.Users(AccountID,Email) values(@accountID, @email);
+	end;
+	else
+	begin
+		if(@roleSet = 'lecturer' and not exists(select * from dbo.Teacher where AccountID = @accountID))
+		insert into dbo.Teacher(AccountID, Email)values(@accountID,@email);
+
+		else if(@roleSet = 'staff' and not exists(select * from dbo.Staff where AccountID = @accountID))
+		insert into dbo.Staff(AccountID,Email)values(@accountID, @email);
+
+		else if(@roleSet = 'admin'and not exists(select * from dbo.[Admin] where AccountID = @accountID))
+		insert into dbo.[Admin](AccountID,Email)values(@accountID,@email);
+	end;
+end;
+go
+
+create or alter view vw_getAllAccountEmails
+as
+select 'user' as 'Role', AccountID, Email
+from dbo.Users
+union all
+select 'teacher' as 'Role', AccountID, Email
+from dbo.Teacher;
+go
+
+-----------------------------------[ GENERATE QUIZ ]-------------------------------
+create or alter procedure proc_CreateQuiz (
+	@Name nvarchar(100),
+	@LicenseID nvarchar(10),
+	@Description nvarchar(max),
+	@QuestQuantity int
+)
+as
+begin
+	--QUERY LICENSE FOR TIMER
+	declare @duration int;
+	if (@LicenseID in ('A1', 'A2', 'A3', 'A4', 'B1')) set @duration = 1201;--20 minutes
+	else if (@LicenseID = 'B2') set @duration = 1321;--22 minutes
+	else if (@LicenseID = 'C') set @duration = 1441;--24 minutes
+	else set @duration = 1561;--26 minutes
+
+	--Create a quiz
+	insert into Quiz(LicenseID, [Name], [Description], Timer, TotalDid) values (@LicenseID, @Name, @Description,@duration ,0);
+	declare @QuizID int;
+	set @QuizID = SCOPE_IDENTITY();
+
+	--Declare temp table for subquery
+	declare @NonCritical_table table (RolledID int);
+	declare @Critical_table table (RolledID int);
+	declare @combined_table table (questionid int);
+
+	--Insert new roll result suitable condition
+	insert into @NonCritical_table
+	select top(@QuestQuantity-4) QuestionID from Question where (LicenseID = @LicenseID and isCritical=0) order by newid();
+
+	insert into @Critical_table
+	select top(4) QuestionID from Question where (LicenseID=@LicenseID and isCritical=1) order by newid();
+
+	--Combine rolled question
+	INSERT INTO @Combined_table
+	select * from @noncritical_table
+	union all
+	select * from @Critical_table;
+
+	--Insert result
+	insert into Have (QuizID, QuestionID)
+	select @QuizID, QuestionID FROM @Combined_table;
+
+	--Reset rolled random
+	delete from @combined_table;
+end;
+go
+
+--exec proc_CreateQuiz N'Đề số 2 của hạng A1', 'A1','Mô tả', 25;
+
+-----------------------------------[ ROLL QUESTION OF QUIZ]-------------------------------
+create or alter procedure proc_RollQuestion (
+	@QuizID int,
+	@OldQuestionID int
+)
+as
+begin
+	--Declare temp table for subquery
+	declare @Question_table table (QuestionID int);
+
+	--Get all question not in quiz
+	insert into @Question_table
+	select QuestionID from Question 
+	where QuestionID not in (select QuestionID from Have where QuizID = @QuizID);
+
+
+	--Get new random question
+	declare @NewQuestionID int;
+	select top 1 @NewQuestionID = QuestionID from @Question_table order by newid();
+
+	--UPDATE QUESTION IN QUIZ
+	update Have set QuestionID = @NewQuestionID where QuizID = @QuizID and QuestionID = @OldQuestionID;
+end;
+go
+
+--exec proc_ChangeQuestion 1, 2; (QuizID, QuestionID) in database
+
+--|================================|============|=============================|--
+--|================================|============|=============================|--
+--|--------------------------------[ DELETE HIRE]-----------------------------|--
+create or alter procedure proc_DeleteHire(
+	@HireID uniqueidentifier,
+	@TeacherID uniqueidentifier,
+	@UserID uniqueidentifier
+)
+as
+begin
+	--Declare
+	declare @Tempt table (hireId uniqueidentifier);
+
+	--Case 1:
+	if (@HireID is not null) delete from dbo.Schedule where HireID = @HireID;	--Remove constain
+
+	--Case 2:
+	if @TeacherID is not null
+	begin
+		insert into @Tempt select HireID from Hire where TeacherID = @TeacherID;--Query all hire of teacher
+
+		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+	end
+
+	--Case 3:
+	if (@UserID is not null)
+	begin
+		delete from @Tempt;														--Reset Tempt Table
+		insert into @Tempt select HireID from Hire where UserID = @UserID;		--Query all hire of user
+
+		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+	end
+
+	--Delete after remove constrain
+	delete from Hire where HireID = @HireID;
+	delete from Hire where TeacherID = @TeacherID
+	delete from Hire where UserID = @UserID;
+end;
+go
+
+-----------------------------------[ DELETE ATTEMPT ]-------------------------------
+create or alter procedure proc_DeleteAttempt(
+	@AttemptID uniqueidentifier,
+	@UserID uniqueidentifier,
+	@QuizID int
+)
+as
+begin
+	--Declare tempt table
+	declare @Tempt table (attemptId uniqueidentifier);
+	
+	--Case 1:
+	if (@AttemptID is not null) delete from AttemptDetail where AttemptID = @AttemptID;--Remove constrain
+
+	--Case 2:
+	if (@UserID is not null)
+	begin
+		--Query all attempt of user
+		insert into @Tempt select AttemptID from Attempt where UserID = @UserID;
+
+		--Remove all constrain of user's attempts
+		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
+	end
+
+	--Case 3:
+	if (@QuizID is not null)
+	begin
+		--Reset Tempt Table
+		delete from @Tempt;
+
+		--Query all attempt of user
+		insert into @Tempt select AttemptID from Attempt where QuizID = @QuizID;
+
+		--Remove all constrain of quiz's attempts
+		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
+	end
+
+	--Delete after remove constrain
+	delete from Attempt where AttemptID = @AttemptID;
+	delete from Attempt where UserID = @UserID;
+    delete from Attempt where QuizID = @QuizID;
+end;
+go
+
+-----------------------------------[ DELETE QUIZ ]-------------------------------
+create or alter procedure proc_DeleteQuiz(
+	@quizID int,
+	@LicenseID nvarchar(10)
+)
+as 
+begin
+	--Remove constain
+	exec proc_DeleteAttempt null,null,@quizID;
+	delete from Have where QuizID = @quizID;
+
+	--Then delete
+	delete from Quiz where QuizID = @quizID;
+	delete from Quiz where LicenseID= @LicenseID;
+end;
+go
+/*
+-----------------------------------[ Delete Quiz Question]-------------------------------
+create or alter procedure proc_DeleteQuizQuest(
+	@quizID int,
+	@questID int
+)
+as 
+begin
+	delete from Have where QuizID = @quizID and QuestionID = @questID;
+end;
+go
 */
 
-use DrivingLicense;
-go
---=================
---Insert new user account:
-exec dbo.proc_signUpAccount @username = 'thanhnc', @password = '12345', @email = 'thanhncse172947@fpt.edu.vn';
-exec dbo.proc_signUpAccount @username = 'minhtt', @password = '12345', @email = 'minhttse172842@fpt.edu.vn';
-exec dbo.proc_signUpAccount @username = 'phuclnh', @password = '12345', @email = 'phuclnhse172886@fpt.edu.vn';
-exec dbo.proc_signUpAccount @username = 'tungts', @password = '12345', @email = 'tungtsse172875@fpt.edu.vn';
-exec dbo.proc_signUpAccount @username = 'hoangph', @password = '12345', @email = 'hoangphse172789@fpt.edu.vn';
-exec dbo.proc_signUpAccount @username = 'fptu', @password = '12345', @email = 'fpt@fe.edu.vn';
-exec dbo.proc_signUpAccount @username = 'fuihoan123', @password = '12345', @email = 'fuihoan@japanese.com';
-exec dbo.proc_signUpAccount @username = 'ngocanh', @password = '12345', @email = 'ngocanh@vietnam.com';
-exec dbo.proc_signUpAccount @username = 'tommy', @password = '12345', @email = 'tommy@usa.com';
-exec dbo.proc_signUpAccount @username = 'liuxin', @password = '12345', @email = 'liuxin@china.com';
-exec dbo.proc_signUpAccount @username = 'kimchi', @password = '12345', @email = 'kimchi@korea.com';
-exec dbo.proc_signUpAccount @username = 'sakura', @password = '12345', @email = 'sakura@japan.com';
-exec dbo.proc_signUpAccount @username = 'maria', @password = '12345', @email = 'maria@spain.com';
-exec dbo.proc_signUpAccount @username = 'hans', @password = '12345', @email = 'hans@germany.com';
-exec dbo.proc_signUpAccount @username = 'pierre', @password = '12345', @email = 'pierre@france.com';
-exec dbo.proc_signUpAccount @username = 'luca', @password = '12345', @email = 'luca@italy.com';
-exec dbo.proc_signUpAccount @username = 'david', @password = '12345', @email = 'david@uk.com';
+-----------------------------------[ DELETE FEEDBACK ]-------------------------------
+create or alter procedure proc_DeleteFeedback(
+	@FeedbackID uniqueidentifier,
+	@userID uniqueidentifier
+)
+as 
+begin
+	--Case 1:--Remove constrain
+	if (@FeedbackID is not null) delete from dbo.Response where FeedbackID = @FeedbackID;
 
---=================
---Insert other Role account:
-exec dbo.proc_signUpAccount @username = 'admin', @password = '12345', @email = N'Learn2Drive@admin.com', @roleSet='admin';
-exec dbo.proc_signUpAccount @username = 'staff', @password = '12345', @email = N'Learn2Drive@staff.com', @roleSet='staff';
-exec dbo.proc_signUpAccount @username = 'teacher', @password = '12345', @email = N'Learn2Drive@teacher.com', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'giaolang', @password = '12345', @email = N'HoangNT20@fe.edu.vn', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'nhattq9', @password = '12345', @email = N'nhattq9@fe.edu.vn', @roleSet='lecturer';
-exec dbo.proc_signUpAccount @username = 'sangnm18', @password = '12345', @email = N'sangnm18@fe.edu.vn', @roleSet='lecturer';
+	--Case 2:--Remove constrain
+	if (@UserID is not null)delete from dbo.Response where UserID = @UserID;			
+
+	--Delete after remove constrain
+	delete from Feedback where FeedbackID = @FeedbackID;
+	delete from Feedback where userID = @userID;
+end;
 go
+
+-----------------------------------[ DELETE USER ]-------------------------------
+create or alter procedure proc_DeleteUser(
+	@AccountID uniqueidentifier,
+	@UserID uniqueidentifier,
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
+)
+as
+begin
+	if (@UserID is null) set @UserID = (select UserID from Users where AccountID = @AccountID);
+	
+	--Remove constains
+	delete from dbo.Rent where UserID = @UserID;
+	delete from dbo.ExamProfile where UserID = @UserID;
+	exec proc_DeleteHire null,null,@UserID;
+	exec proc_DeleteAttempt null,@UserID,null;
+	exec proc_DeleteFeedback null,@UserID;
+
+	--Then delete
+	delete from Users where UserID = @UserID;			
+
+	if(@confirm_DeleteAccount = 'yes')
+	begin
+		if(@AccountID is null) set @AccountID = (select AccountID from Users where UserID = @UserID);
+		delete from Account where AccountID = @AccountID and [Role] = 'user';
+	end
+end;
+go
+
+-----------------------------------[ DELETE TEACHER ]-------------------------------
+create or alter procedure proc_DeleteLecturer(
+	@AccountID uniqueidentifier,
+	@TeacherID uniqueidentifier,
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
+)
+as 
+begin
+	if(@TeacherID is null) set @TeacherID = (select TeacherID from Teacher where AccountID = @AccountID);
+	exec proc_DeleteHire null,@TeacherID,null;				--Remove constain
+
+	delete from Teacher where TeacherID = @TeacherID;		--Then delete
+
+	if(@confirm_DeleteAccount = 'yes')
+	begin
+		if(@AccountID is null) set @AccountID = (select AccountID from Teacher where TeacherID = @TeacherID);
+		delete from Account where AccountID = @AccountID and [Role] = 'lecturer';
+	end
+end;
+go
+
+-----------------------------------[ DELETE STAFF ]-------------------------------
+create or alter procedure proc_DeleteStaff(
+	@AccountID uniqueidentifier,
+	@StaffID uniqueidentifier,
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
+)
+as 
+begin
+	if(@StaffID is null) set @StaffID = (select StaffID from Staff where AccountID = @AccountID);
+	delete from dbo.Response where StaffID = @StaffID;		--Remove constain
+
+	delete from Staff where StaffID = @StaffID;				--Then delete
+
+	if(@confirm_DeleteAccount = 'yes')
+	begin
+		if(@AccountID is null) set @AccountID = (select AccountID from Staff where StaffID = @StaffID);
+		delete from Account where AccountID = @AccountID and [Role] = 'staff';
+	end
+end;
+go
+
+-----------------------------------[ DELETE ADMIN ]-------------------------------
+create or alter procedure proc_DeleteAdmin(
+	@AccountID uniqueidentifier,
+	@AdminID uniqueidentifier,
+	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
+)
+as 
+begin
+	if(@AdminID is null) set @AdminID = (select AdminID from [Admin] where AccountID = @AccountID);
+	delete from [Admin] where AdminID = @AdminID;
+
+	if(@confirm_DeleteAccount = 'yes')
+	begin
+		if(@AccountID is null) set @AccountID = (select AccountID from [Admin] where AdminID = @AdminID);
+		delete from Account where AccountID = @AccountID and [Role] = 'admin';
+	end
+end;
+go
+
+/*
+delete from Teacher
+delete from Users
+delete from Account
+
+select * from Account
+select * from Users
+select * from Teacher
+
+insert into Account(Username,[Password],[Role]) values ('ok123','123','user');
+insert into Users(AccountID,FullName) values ('6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'test role');
+exec proc_changeRole '6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'lecturer';
+go
+
+*/
+-------------------------------------------[ CHANGE ROLE ]----------------------------------------------
+create or alter procedure proc_changeRole(
+	@accountID uniqueidentifier,
+	@roleNew nvarchar(50),
+	@LicenseSet nvarchar(10) = 'A1'		--default value
+)
+as
+begin
+	--Declare
+	declare @roleOld as nvarchar(50);
+	declare @avatar nvarchar(max);
+	declare @Tempt as table(email nvarchar(100), fullname nvarchar(100), telephone nvarchar(20));
+
+	set @roleOld = (select [Role] from dbo.Account where AccountID = @accountID);
+
+	--Case 1:
+	if(@roleOld = 'user')
+	begin
+		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, PhoneNumber from dbo.Users where AccountID = @accountID;
+
+		exec proc_DeleteUser @accountID,null,'no';--Delete old record
+	end;
+
+	--Case 2:
+	else if(@roleOld = 'lecturer')
+	begin
+		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, ContactNumber from dbo.Teacher where AccountID = @accountID;
+
+		exec proc_DeleteLecturer @accountID,null,'no';--Delete old record
+	end;
+
+	--Case 3:
+	else if(@roleOld = 'staff')
+	begin
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, ContactNumber from dbo.Staff where AccountID = @accountID;
+
+		exec proc_DeleteStaff @accountID,null,'no';--Delete old record
+	end;
+
+	--Case 4:
+	else
+	begin
+		insert into @Tempt(email, fullname, telephone)
+		select Email, FullName, ContactNumber from dbo.[Admin] where AccountID = @accountID;
+		
+		exec proc_DeleteAdmin @accountID,null,'no';--Delete old record
+	end;
+
+	--//--//--//--//--//--
+	if(@roleOld!=@roleNew)
+	begin
+		--______________________ Update Role______________________
+		if (@roleNew = 'lecturer') 
+		begin
+			insert into dbo.Teacher(AccountID, Fullname, Email, ContactNumber)	--insert new teacher
+			select @accountID, fullname, email, telephone from @Tempt;
+			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		end
+
+		else if (@roleNew = 'staff')
+		begin
+			insert into dbo.Staff(AccountID, Fullname ,Email, ContactNumber)	--insert new teacher
+			select @accountID, fullname, email, telephone from @Tempt;
+			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		end
+
+		else if (@roleNew = 'admin')
+		begin
+			insert into dbo.[Admin](AccountID, Fullname ,Email, ContactNumber)--insert new admin
+			select @accountID, fullname, email, telephone from @Tempt;
+			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		end
+
+		else if(@roleNew = 'user')
+		begin
+			insert into dbo.Users(AccountID, Fullname, Email, PhoneNumber)		--insert new user
+			select @accountID, fullname, email, telephone from @Tempt;
+			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		end
+	end
+end;
+go
+
+-------------------------------------------[ CALCULATE QUIZ RESULT ]----------------------------------------------
+create or alter procedure [dbo].[proc_CalculateQuizResult](
+	@AttemptID uniqueidentifier
+)
+as
+begin
+	--DECLARE
+	declare @TotalCorrect as int;
+	declare @TotalIncorrect as int;
+	declare @TotalQuestionCnt as int;
+	declare @QuizID as int;
+	declare @RemainingQuestion as int;
+	declare @AttemptDate as date;
+
+	--SET VALUES
+	set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
+	set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
+	set @TotalCorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'true');
+	set @TotalIncorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'false');
+	set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
+	set @RemainingQuestion = @TotalQuestionCnt - @TotalCorrect - @TotalIncorrect;
+
+	select @AttemptID as 'AttemptID',
+	(select [Name] from dbo.Quiz where QuizID = @QuizID) as 'QuizName', 
+	(select LicenseID from dbo.Quiz where QuizID = @QuizID) as 'License',
+	@AttemptDate as 'AttemptDate',
+	@TotalQuestionCnt as 'TotalQuestion',
+	@TotalCorrect as 'CorrectQuestion',
+	@TotalIncorrect as 'IncorrectQuestion',
+	@RemainingQuestion as 'RemainingQuestion'
+	from dbo.AttemptDetail att
+	where att.AttemptID = @AttemptID
+	group by att.AttemptID;
+end;
+
+
+-----------------------------------------------------------------------------------------------
+go
+create or alter procedure [dbo].[proc_getAllAttemptsDataFromUsers] @UserId uniqueidentifier
+as
+-- Create a temporary table to store results
+create table #AttemptResults (
+    AttemptID uniqueidentifier,
+    QuizName nvarchar(max),
+    License nvarchar(max),
+    AttemptDate date,
+    TotalQuestion int,
+    CorrectQuestion int,
+    IncorrectQuestion int,
+    RemainingQuestion int
+);
+
+-- Iterate through each attempt for the user
+declare @AttemptID uniqueidentifier;
+
+declare AttemptCursor cursor for
+select AttemptID
+from dbo.Attempt
+where UserId = @UserId;  -- Replace with the actual column name that represents the user's ID
+
+open AttemptCursor;
+fetch next from AttemptCursor into @AttemptID;
+
+while @@fetch_status = 0
+begin
+    declare @TotalCorrect as int;
+    declare @TotalIncorrect as int;
+    declare @TotalQuestionCnt as int;
+    declare @QuizID as int;
+    declare @Result as decimal(18, 2);
+    declare @RemainingQuestion as int;
+    declare @AttemptDate as date;
+
+    set @AttemptDate = (select AttemptDate from dbo.Attempt where AttemptID = @AttemptID);
+    set @QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID);
+    set @TotalCorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'true');
+    set @TotalIncorrect = (select count(*) from dbo.AttemptDetail where AttemptID = @AttemptID and [Status] = 'false');
+    set @TotalQuestionCnt = (select count(*) from dbo.Have where QuizID = @QuizID);
+    set @RemainingQuestion = @TotalQuestionCnt - @TotalCorrect - @TotalIncorrect;
+
+    insert into #AttemptResults (AttemptID, QuizName, License, AttemptDate, TotalQuestion, CorrectQuestion, IncorrectQuestion, RemainingQuestion/*, Result*/)
+    select
+	    @AttemptID as 'AttemptID',
+        (select [Name] from dbo.Quiz where QuizID = @QuizID),
+        (select LicenseID from dbo.Quiz where QuizID = @QuizID),
+        @AttemptDate,
+        @TotalQuestionCnt,
+        @TotalCorrect,
+        @TotalIncorrect,
+        @RemainingQuestion--,
+      --@Result;
+
+    fetch next from AttemptCursor into @AttemptID;
+end;
+
+close AttemptCursor;
+deallocate AttemptCursor;
+
+-- Select the results from the temporary table
+select * from #AttemptResults;
+
+-- Drop the temporary table
+drop table #AttemptResults;
+
+
+-----------------------------------------------------------------------------------------------
+go
+create or alter procedure [dbo].[proc_GetQuizAttempStats] @AttemptID uniqueidentifier
+as
+begin
+    select
+        q.QuestionText,
+        case
+            when att.SelectedAnswerID is not null then (select AnswerText from dbo.Answer where AnswerID = att.SelectedAnswerID)
+            else null -- UserAnswer is NULL for questions without user answers
+        end AS 'UserAnswer',
+        (select a.AnswerText from dbo.Answer a where a.QuestionID = q.QuestionID and a.isCorrect = 1) as 'CorrectAnswer',
+        case
+            when att.SelectedAnswerID is null then 0 -- Set IsCorrect to 0 for questions without user answers
+          --else att.IsCorrect
+        end as 'IsCorrect'
+    from
+        dbo.Question q
+    left join
+        dbo.AttemptDetail att on q.QuestionID = att.QuestionID and att.AttemptID = @AttemptID
+    where
+        q.QuestionID IN (
+            select QuestionID
+            from dbo.Have
+            where QuizID = (select QuizID from dbo.Attempt where AttemptID = @AttemptID)
+        );
+end;
+go
+/*
+-----------------------------------[ COUNT CORRECT ANSWER ]-------------------------------
+create or alter function fn_CountCorrect (
+	@QuestionID int,
+	@SelectedAnsID int,
+
+)
+returns int
+as 
+begin
+	
+end;
+go
+
+-----------------------------------[ CALCULATE MONEY / TIME ]-------------------------------
+create or alter function fn_TotalTime (@start time, @end time)
+returns int
+as
+begin
+	return DATEDIFF(hour, @start, @end);
+end;
+go
+
+-----------------------------------[ create schedule ]-------------------------------
+create or alter function fn_GetUserID (@email nvarchar(100), @fullname nvarchar(100))
+returns nvarchar(50)
+as
+begin
+   declare @UserID as nvarchar(50);
+   select @UserID = convert(nvarchar(50), UserID)
+   from dbo.Users
+   where Email = @email and FullName = @fullname;
+   return @UserID;
+end;
+go
+
+create or alter function fn_GetTeacherID (@email nvarchar(100), @fullname nvarchar(100))
+returns nvarchar(50)
+as
+begin
+   declare @TeacherID as nvarchar(50);
+   select @TeacherID = convert(nvarchar(50), TeacherID)
+   from dbo.Teacher
+   where Email = @email and FullName = @fullname;
+   return @TeacherID;
+end;
+go
+
+create or alter procedure proc_CreateSchedule
+(
+	@userid nvarchar(50),
+	@teacherid nvarchar(50),
+    @licenseid nvarchar(10),
+    @starttime time,
+    @endtime time,
+    @date date,
+	@address nvarchar(100)
+)
+as
+begin
+	--CÁCH 1
+	--declare @userid as nvarchar(50);
+	--set @userid = dbo.fn_GetUserID(@mailUser, @nameUser);
+
+	--declare @teacherid as nvarchar(50);
+	--set @teacherid = dbo.fn_GetTeacherID(@mailGV, @nameGV);
+	
+	
+	declare @giaTien decimal;
+	set @giaTien = (select Price from dbo.Teacher where TeacherID=@teacherid);
+
+	declare @thoiGian int;
+	set @thoiGian = dbo.fn_TotalTime(@starttime, @endtime);
+
+	declare @priceTotal decimal;
+	set @priceTotal = @giaTien * @thoiGian;
+
+	--INSERT NEW SCHEDULE
+    insert into dbo.Schedule (UserID, TeacherID, LicenseID, StartTime, EndTime, [Date], PriceTotal, [Address], [Status]) values
+	(@userid, @teacherid, @licenseid, @starttime, @endtime, @date, @priceTotal, @address, 'Pending')
+end;
+go
+*/
+
+-----------------------------------------[ INSERT VALUES ]-----------------------------------------------------
+/*[QUICK FIND] - Press: Ctrl + G
+License_____45
+User________62
+Other Role_____110
+Quiz________181
+Question____201
+Have________2841
+Answer______2858
+Vehicle_____11451
+*/
+
+--=============[RESET DATA]=============--
+delete from Response;
+delete from Feedback;
+delete from ExamProfile;
+delete from AttemptDetail;
+delete from Attempt;
+delete from Answer;
+delete from Have;
+delete from Question;
+delete from Quiz;
+delete from Schedule;
+delete from Hire;
+delete from Teacher;
+delete from License;
+delete from Rent;
+delete from Vehicle;
+delete from Users;
+delete from Staff;
+delete from [Admin];
+delete from Account;
+
+--RESET Auto Answer ID:
+dbcc checkident ('Answer', reseed, 0);
+
+--RESET Auto Question ID:
+dbcc checkident ('Question', reseed, 0);
+
+--RESET Auto Quiz ID:
+dbcc checkident ('Quiz', reseed, 0);
 
 --=================
 insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],ExamContent,Tips) values
@@ -60,65 +992,146 @@ insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],Exam
 ('FD',N'FD - Xe Container nhỏ',N'<p>Bằng lái xe FD là giấy phép lái xe hạng thấp nhất do cơ quan nhà nước có thẩm quyền cấp cho chủ phương tiện theo quy định được nêu rõ tại Thông tư 12/2017/TT-BGTVT. <br> Theo đó, bằng lái xe FD dành cho người điều khiển xe ô tô số tự động và không có mục đích kinh doanh. Bao gồm các loại xe sau:</p> <ul> <li>Xe ô tô số tự động <strong>09 chỗ ngồi</strong> bao gồm cả ghế lái xe</li> <li>Xe ô tô tải số tự động <strong>dưới 3.500 kg</strong></li> <li>Xe kéo thêm rơ mooc tải trọng <strong>dưới 3.500 kg</strong></li> </ul>',N'<p> Điều kiện thi bằng lái xe FD đã được quy định rõ ràng tại Điều 7 Thông tư 12/2017/TT-BGTVT. Theo đó, người thi bằng lái xe FD phải đáp ứng đầy đủ các điều kiện sau: <ul> <li>Người dự thi là công dân Việt Nam</li> <li>Người nước ngoài được phép cư trú hoặc đang làm việc, học tập tại Việt Nam</li> <li>Phải đủ 18 tuổi trở lên tính đến ngày dự thi sát hạch lái xe</li> </ul>',N'<p> Từ ngày 1/8/2023, Mức phí thi sát hạch lái xe ô tô (hạng xe B1, B2, C, D, E, F): <br> mức thu từ <strong>80.000 đồng/lần</strong> đến <strong style="color: red;">350.000 đồng/lần.</strong> </p>',N'<ul> <li>Đối với nữ giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>55 tuổi</strong></li> <li>Đối với nam giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>60 tuổi</strong></li> <li> Trường hợp người lái xe trên 45 tuổi với nữ giới và trên 50 tuổi với nam giới thì giấy phép lái xe hạng FD được cấp có thời hạn <strong>10 năm</strong> kể từ ngày cấp. </li> </ul>',N'<h2>Thi Lý Thuyết</h2> <p style="text-align: justify;"> Hiện nay phần thi lý thuyết lấy bằng FD được thi trực tuyến thông quan mạng internet. Thí sinh chỉ cần đăng nhập thông tin sau đó tiến hành bài thi trên máy tính. Hình thức thi sẽ là <strong>30 câu hỏi</strong> trắc nghiệm trong vòng <strong style="color: red;">20 phút</strong>. Và mọi người sẽ cần phải vượt qua <strong style="color: red;">27 câu</strong> để đậu. <br> Ngoài ra cần chú ý sẽ có các câu điểm liệt mà chỉ cần làm sai một câu này cũng sẽ bị đánh rớt.</strong> </p> <h2>Thi thực hành</h2> <p style="text-align: justify;"> Thi sát hạch lái xe FD gồm những gì không thể không nhắc đến sa hình. Sau khi hoàn thành thi lý thuyết mọi người sẽ được thông báo kết quả liền lúc đó. Nếu đậu các thí sinh sẽ tiếp tục bước vào phần thi sa hình. Đây là thi thực hành lái xe qua nhiều các tình huống mô phỏng thực tế khác nhau. Và thường sẽ có tổng cộng 11 bài thi trong phần thi sa hình. <ul> <li> Bài 1: Khởi động xe xuất phát bắt đầu phần thi. Đây là một trong những nội dung đơn giản mà thí sinh cần thực hiện hoàn chỉnh để lấy điểm. </li> <li>Bài 2: Thực hiện thao tác cho xe dừng ở vạch báo cho người đi bộ.</li> <li>Bài 3: Thi dừng xe dưới dốc và khởi hành xe qua dốc.</li> <li>Bài 4: Bài thi lái xe qua hình vẹt bánh xe và đoạn đường vuông gốc.</li> <l1>Bài 5: Bài thi qua ngã tư đường có tín hiệu đèn giao thông.</l1> <li>Bài 6: Thực hành lái xe qua đoạn đường quanh co.</li> <li>Bài 7: Thực hiện lái xe dọc và chuồng đỗ xe.</li> <li>Bài 8: Thực hiện thao tác dừng trước điểm giao với đường sắt tương tự như bài 2.</li> <li>Bài 9: Thực hiện thao tác tăng tốc và giảm tóc xe trên đoạn đường quy định.</li> <li>Bài 10: Lái xe ghép ngang vào chuồng đỗ.</li> <li>Bài 11: Bài thi kết thúc phần thi sa hình.</li> </ul> </p>',N'<h2 class="mt-2">Mẹo phần thi sa hình</h2> <ul style="text-align: justify;"> <li> Hãy tập luyện thường xuyên tại các trung tâm có sân sa hình để làm quen, tránh không rõ quy tắc khi dự thi. </li> <li>Chú ý đèn tín hiệu xi nhan trái phải trong bài thi đầu tiên và cuối cùng.</li> <li> Xuyên suốt phần thi sa hình mọi người tốt nhất hãy lái xe chậm. Tuy nhiên nếu các đoạn đường thông thoáng có thể tăng tốc độ lên đôi chút để đảm bảo đủ thời gian. </li> <li> Thi sa hình mỗi vị trí đều có các vạch giới hạn, cần chú ý không để bánh xe chạm vào các vạch này. </li> <li>Khi thi tuyệt đối không được chạy quá gần với xe thi phía trước.</li> <li>Luôn thực hiện đúng hướng đường và thứ tự các bài thi nếu không muốn bị loại.</li> </ul> <h2 class="mt-2">Mẹo phần thi đường trường</h2> <ul style="text-align: justify;"> <li>Sau khi có tín hiệu bắt đầu bài thi khoảng <strong>30 giây</strong> mà thí sinh không thể cho xe di chuyển.</li> <li>Lái xe lên vỉa hè.</li> <li>Lái xe vi phạm luật giao thông.</li> <li>Lái xe gây tai nạn trong quá trình tiến hành bài thi.</li> <li>Cùng với đó nếu bị trừ quá nhiều lỗi nhỏ dẫn đến điểm quá thấp cũng không vượt qua phần thi này.</li> </ul> <h5 class="text-center"><strong>Chúc các bạn may mắn!!!</strong></h5>'),
 ('FE',N'FE - Xe Container dài',N'<p>Bằng lái xe FE là giấy phép lái xe hạng thấp nhất do cơ quan nhà nước có thẩm quyền cấp cho chủ phương tiện theo quy định được nêu rõ tại Thông tư 12/2017/TT-BGTVT. <br> Theo đó, bằng lái xe FE dành cho người điều khiển xe ô tô số tự động và không có mục đích kinh doanh. Bao gồm các loại xe sau:</p> <ul> <li>Xe ô tô số tự động <strong>09 chỗ ngồi</strong> bao gồm cả ghế lái xe</li> <li>Xe ô tô tải số tự động <strong>dưới 3.500 kg</strong></li> <li>Xe kéo thêm rơ mooc tải trọng <strong>dưới 3.500 kg</strong></li> </ul>',N'<p> Điều kiện thi bằng lái xe FE đã được quy định rõ ràng tại Điều 7 Thông tư 12/2017/TT-BGTVT. Theo đó, người thi bằng lái xe FE phải đáp ứng đầy đủ các điều kiện sau: <ul> <li>Người dự thi là công dân Việt Nam</li> <li>Người nước ngoài được phép cư trú hoặc đang làm việc, học tập tại Việt Nam</li> <li>Phải đủ 18 tuổi trở lên tính đến ngày dự thi sát hạch lái xe</li> </ul>',N'<p> Từ ngày 1/8/2023, Mức phí thi sát hạch lái xe ô tô (hạng xe B1, B2, C, D, E, F): <br> mức thu từ <strong>80.000 đồng/lần</strong> đến <strong style="color: red;">350.000 đồng/lần.</strong> </p>',N'<ul> <li>Đối với nữ giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>55 tuổi</strong></li> <li>Đối với nam giới, thời hạn sử dụng được tính đến khi chủ giấy tờ đến đủ <strong>60 tuổi</strong></li> <li> Trường hợp người lái xe trên 45 tuổi với nữ giới và trên 50 tuổi với nam giới thì giấy phép lái xe hạng FE được cấp có thời hạn <strong>10 năm</strong> kể từ ngày cấp. </li> </ul>',N'<h2>Thi Lý Thuyết</h2> <p style="text-align: justify;"> Hiện nay phần thi lý thuyết lấy bằng FE được thi trực tuyến thông quan mạng internet. Thí sinh chỉ cần đăng nhập thông tin sau đó tiến hành bài thi trên máy tính. Hình thức thi sẽ là <strong>30 câu hỏi</strong> trắc nghiệm trong vòng <strong style="color: red;">20 phút</strong>. Và mọi người sẽ cần phải vượt qua <strong style="color: red;">27 câu</strong> để đậu. <br> Ngoài ra cần chú ý sẽ có các câu điểm liệt mà chỉ cần làm sai một câu này cũng sẽ bị đánh rớt.</strong> </p> <h2>Thi thực hành</h2> <p style="text-align: justify;"> Thi sát hạch lái xe FE gồm những gì không thể không nhắc đến sa hình. Sau khi hoàn thành thi lý thuyết mọi người sẽ được thông báo kết quả liền lúc đó. Nếu đậu các thí sinh sẽ tiếp tục bước vào phần thi sa hình. Đây là thi thực hành lái xe qua nhiều các tình huống mô phỏng thực tế khác nhau. Và thường sẽ có tổng cộng 11 bài thi trong phần thi sa hình. <ul> <li> Bài 1: Khởi động xe xuất phát bắt đầu phần thi. Đây là một trong những nội dung đơn giản mà thí sinh cần thực hiện hoàn chỉnh để lấy điểm. </li> <li>Bài 2: Thực hiện thao tác cho xe dừng ở vạch báo cho người đi bộ.</li> <li>Bài 3: Thi dừng xe dưới dốc và khởi hành xe qua dốc.</li> <li>Bài 4: Bài thi lái xe qua hình vẹt bánh xe và đoạn đường vuông gốc.</li> <l1>Bài 5: Bài thi qua ngã tư đường có tín hiệu đèn giao thông.</l1> <li>Bài 6: Thực hành lái xe qua đoạn đường quanh co.</li> <li>Bài 7: Thực hiện lái xe dọc và chuồng đỗ xe.</li> <li>Bài 8: Thực hiện thao tác dừng trước điểm giao với đường sắt tương tự như bài 2.</li> <li>Bài 9: Thực hiện thao tác tăng tốc và giảm tóc xe trên đoạn đường quy định.</li> <li>Bài 10: Lái xe ghép ngang vào chuồng đỗ.</li> <li>Bài 11: Bài thi kết thúc phần thi sa hình.</li> </ul> </p>',N'<h2 class="mt-2">Mẹo phần thi sa hình</h2> <ul style="text-align: justify;"> <li> Hãy tập luyện thường xuyên tại các trung tâm có sân sa hình để làm quen, tránh không rõ quy tắc khi dự thi. </li> <li>Chú ý đèn tín hiệu xi nhan trái phải trong bài thi đầu tiên và cuối cùng.</li> <li> Xuyên suốt phần thi sa hình mọi người tốt nhất hãy lái xe chậm. Tuy nhiên nếu các đoạn đường thông thoáng có thể tăng tốc độ lên đôi chút để đảm bảo đủ thời gian. </li> <li> Thi sa hình mỗi vị trí đều có các vạch giới hạn, cần chú ý không để bánh xe chạm vào các vạch này. </li> <li>Khi thi tuyệt đối không được chạy quá gần với xe thi phía trước.</li> <li>Luôn thực hiện đúng hướng đường và thứ tự các bài thi nếu không muốn bị loại.</li> </ul> <h2 class="mt-2">Mẹo phần thi đường trường</h2> <ul style="text-align: justify;"> <li>Sau khi có tín hiệu bắt đầu bài thi khoảng <strong>30 giây</strong> mà thí sinh không thể cho xe di chuyển.</li> <li>Lái xe lên vỉa hè.</li> <li>Lái xe vi phạm luật giao thông.</li> <li>Lái xe gây tai nạn trong quá trình tiến hành bài thi.</li> <li>Cùng với đó nếu bị trừ quá nhiều lỗi nhỏ dẫn đến điểm quá thấp cũng không vượt qua phần thi này.</li> </ul> <h5 class="text-center"><strong>Chúc các bạn may mắn!!!</strong></h5>');
 go
---select * from License
---=================
---Create schedule formula
-/* CÁCH 1: TRUY ID TỪ NAME,MAIL
-exec dbo.proc_CreateSchedule @nameGV='Giao Lang', @mailGV='giaolang@fe.fpt.edu.vn', @nameUser=N'Nguyễn Văn A', @mailUser='user123@example.com', @licenseid='C', @starttime='10:00', @endtime='15:00', @date='10-10-2023', @address=N'19 Trương Văn Bang, TP.Thủ Đức';
-
-	CÁCH 2: BẮT TRỰC TIẾP ID TỪ WEB
-exec dbo.proc_CreateSchedule @userid='31C2288C-AB94-4DC7-AEFE-2910D2BF2681', @teacherid='50C0B784-ED9F-4C32-9239-FB46CE2D737C', @licenseid='C', @starttime='10:00', @endtime='15:00', @date='10-10-2023', @address=N'19 Trương Văn Bang, TP.Thủ Đức';
-
-*/
 
 --=================
-insert into Vehicle([Name], [Image], Brand, [Type], Years, ContactNumber, [Address], RentPrice, [Status]) values
-('Wave Alpha 110cc' , 'wave2018.png' , 'Honda' , N'Xe số 110cc' , 2018 , '0123456789' , N'Quận Gò Vấp, TP.HCM' , 20000 , 1),
-('Wave Alpha 110cc' , 'wave2023.png' , 'Honda' , N'Xe số 110cc' , 2023 , '0989121878' , N'Quận 2, TP.Thủ Đức' , 50000 , 1),
-('Future 125 FI' , 'future.png' , 'Honda' , N'Xe số 125cc' , 2020 , '0987654321' , N'Quận Tân Bình, TP.HCM' , 50000 , 1),
-('Winner X' , 'winnerX.png' , 'Honda' , N'Xe côn 150cc' , 2020 , '0334217271' , N'Quận 9, TP.Thủ Đức' , 60000 , 1),
-('Sirius 110' , 'sirius.png' , 'Yamaha' , N'Xe số 110cc' , 2021 , '0126623503' , N'Quận Phú Nhuận, TP.HCM' , 40000 , 1),
-('Jupiter Finn 115' , 'jupiter.png' , 'Yamaha' , N'Xe số 115cc' , 2022 , '0786000036' , N'TP.HCM' , 40000 , 1),
-('Exciter 155' , 'exciter155.png' , 'Yamaha' , N'Xe côn 155cc' , 2023 , '0989121878' , N'Quận Phú Nhuận, TP.HCM' , 70000 , 1),
-('Z1000 ABS' , 'z1000.png' , 'Kawasaki' , N'Xe côn 1000cc' , 2022 , '0999888999' , N'Quận 1, TP.HCM' , 111000 , 1),
-('Softail Standard' , 'HarleyDavidson.png' , 'Harley Davidson' , N'Xe côn 1700cc' , 2022 , '0254753345' , N'Quận 1, TP.HCM' , 120000 , 1),
-('BMW R18' , 'BMW_R18.png' , 'BMW' , N'Xe côn 1800cc' , 2020 , '0734238271' , N'Quận 7, TP.HCM' , 120000 , 1),
-('CBR500R' , 'CBR500R.png' , 'Honda' , N'Xe côn 500cc' , 2022 , '0112278987' , N'Quận Bình Thạnh, TP.HCM' , 100000 , 1),
-('YZF-R3' , 'YZF_R3.png' , 'Yamaha' , N'Xe côn 300cc' , 2021 , '0909808707' , N'Quận Phú Nhuận, TP.HCM' , 85000 , 1),
-('Vinfast Fadil' , 'vin_fadil.png' , 'Vinfast' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '1900232389' , N'Quận Bình Thạnh, TP.HCM' , 200000 , 1),
-('Vinfast Lux A 2.0' , 'VinfastLux.png' , 'Vinfast' ,N'Xe ô tô 4 chỗ, số tự động' , 2020 , '0781109029' , N'Quận Phú Nhuận, TP.HCM' , 250000 , 1),
-('Toyota Camry' , 'ToyotaCamry.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2020 , '0692342608' , N'Quận 10, TP.HCM' , 300000 , 1),
-('Toyota Vios' , 'Toyota Vios.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '0427705437' , N'Quận 3, TP.HCM' , 250000 , 1),
-('Honda Civic' , 'HondaCivic.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0970344469' , N'Quận 3, TP.HCM' , 240000 , 1),
-('Honda City' , 'HondaCity.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0314290187' , N'Quận Bình Thạnh, TP.HCM' , 230000 , 1),
-('Ford Ranger XLS' , 'FordRanger_XLS.png' , 'Ford' ,N'Xe bán tải 5 chỗ, số tự động' , 2018 , '0835992700' , N'Quận 10, TP.HCM' , 260000 , 1),
-('Mercedes Mayback S450' , 'MercedesMayback.png' , 'Mercedes' ,N'Xe ô tô 4 chỗ, số tự động' , 2018 , '0573073759' , N'Quận Bình Thạnh, TP.HCM' , 1000000 , 1),
-('Hyundai New Mighty 75s' , 'HyundaiMighty75s.png' , 'Hyundai' ,N'Xe tải 3.5 tấn' , 2018 , '0781109029' , N'TP.HCM' , 300000 , 1),
-('ISUZU VM' , 'IsuzuVM.png' , 'Isuzu' ,N'Xe tải 3.5 tấn thùng 4.4m' , 2018 , '0770333922' , N'TP.HCM' , 300000 , 1),
-('Optimus Prime Truck' , 'OptimusPrime.png' , 'Transformer' ,N'Xe đầu kéo container' , 2009 , '0772389279' , N'TP.HCM' , 1000000 , 0);
+exec dbo.proc_signUpAccount @username = 'thanhnc', @password = '12345', @email = 'thanhncse172947@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'minhtt', @password = '12345', @email = 'minhttse172842@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'phuclnh', @password = '12345', @email = 'phuclnhse172886@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'tungts', @password = '12345', @email = 'tungtsse172875@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'hoangph', @password = '12345', @email = 'hoangphse172789@fpt.edu.vn';
+exec dbo.proc_signUpAccount @username = 'khang12345', @password = '12345', @email = 'khang12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'ngocanh12345', @password = '12345', @email = 'ngocanh12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'hieu12345', @password = '12345', @email = 'hieu12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'huy12345', @password = '12345', @email = 'huy12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'vy12345', @password = '12345', @email = 'vy12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'my12345', @password = '12345', @email = 'my12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'phu12345', @password = '12345', @email = 'phu12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'khoa12345', @password = '12345', @email = 'khoa12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'tuyen12345', @password = '12345', @email = 'tuyen12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'phuong12345', @password = '12345', @email = 'phuong12345@gmail.com';
+exec dbo.proc_signUpAccount @username = 'duyen12345', @password = '12345', @email = 'duyen12345@gmail.com';
+go
+
+update dbo.Users set Avatar  = 'none';
+go
+
+update dbo.Users set Nationality  = N'Việt Nam';
+go
+
+update dbo.Users
+set FullName = case 
+	when Email = 'thanhncse172947@fpt.edu.vn' then N'Nguyễn Công Thành'
+	when Email = 'minhttse172842@fpt.edu.vn' then N'Trần Tuấn Minh'
+	when Email = 'phuclnhse172886@fpt.edu.vn' then N'Lê Nguyễn Hoàng Phúc'
+	when Email = 'tungtsse172875@fpt.edu.vn' then N'Trịnh Sơn Tùng'
+	when Email = 'hoangphse172789@fpt.edu.vn' then N'Phạm Huy Hoàng'
+	when Email = 'khang12345@gmail.com' then N'Nguyễn Khang'
+	when Email = 'ngocanh12345@gmail.com' then N'Nguyễn Ngọc Anh'
+	when Email = 'hieu12345@gmail.com' then N'Hiếu Thứ Hai'
+	when Email = 'huy12345@gmail.com' then N'Nguyễn Minh Huy'
+	when Email = 'vy12345@gmail.com' then N'Võ Khánh Vy'
+	when Email = 'my12345@gmail.com' then N'Lê Trần Liễu My'
+	when Email = 'phu12345@gmail.com' then N'Trần Thanh Phú'
+	when Email = 'khoa12345@gmail.com' then N'Trần Đăng Khoa'
+	when Email = 'tuyen12345@gmail.com' then N'Võ Hồng Tuyền'
+	when Email = 'phuong12345@gmail.com' then N'Trần Mai Phương'
+	when Email = 'duyen12345@gmail.com' then N'Lê Thị Mỹ Duyên'
+
+	else FullName	--Default = null
+end;
 go
 
 --=================
+exec dbo.proc_signUpAccount @username = 'admin', @password = '12345', @email = N'admin12345@l2d.vn', @roleSet='admin';
+exec dbo.proc_signUpAccount @username = 'staff', @password = '12345', @email = N'staff12345@l2d.vn', @roleSet='staff';
+exec dbo.proc_signUpAccount @username = 'teacher', @password = '12345', @email = N'teacher12345@l2d.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'giaolang', @password = '12345', @email = N'hoangnt20@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'nhattq9', @password = '12345', @email = N'nhattq9@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'sangnm18', @password = '12345', @email = N'sangnm18@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'chiltq6', @password = '12345', @email = N'chiltq6@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'hungld', @password = '12345', @email = N'hungld5@fe.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'thongnt', @password = '12345', @email = N'thongnt@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'longkh', @password = '12345', @email = N'longkh@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'quynhtvn', @password = '12345', @email = N'quynhtvn@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'namhd9', @password = '12345', @email = N'namhd9@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'tungph4', @password = '12345', @email = N'tungph4@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'phucnt', @password = '12345', @email = N'phucnt40@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'senb', @password = '12345', @email = N'senb@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'dungttm12', @password = '12345', @email = N'dungttm12@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'huynhtt', @password = '12345', @email = N'huynhtt@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'haodd3', @password = '12345', @email = N'haodd3@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'tramdtn6', @password = '12345', @email = N'tramdtn6@fpt.edu.vn', @roleSet='lecturer';
+exec dbo.proc_signUpAccount @username = 'manhlv12', @password = '12345', @email = N'manhlv12@fpt.edu.vn', @roleSet='lecturer';
+go
+
+update dbo.[Admin] set FullName  = N'Quản Trị Viên';
+update dbo.Staff set FullName  = N'Nhân Viên Quản Lý';
+update dbo.Teacher
+set FullName = case 
+	when Email = 'teacher12345@l2d.edu.vn' then N'Giảng Viên A'
+	when Email = 'hoangnt20@fe.edu.vn' then N'Nguyễn Thế Hoàng'
+	when Email = 'nhattq9@fe.edu.vn' then N'Trần Quang Nhật'
+	when Email = 'sangnm18@fe.edu.vn' then N'Nguyễn Minh Sang'
+	when Email = 'chiltq6@fe.edu.vn' then N'Lê Thị Quỳnh Chi'
+	when Email = 'hungld5@fe.edu.vn' then N'Lại Đức Hùng'
+	when Email = 'thongnt@fpt.edu.vn' then N'Nguyễn Trí Thông'
+	when Email = 'longkh@fpt.edu.vn' then N'Kiều Hoàng Long'
+	when Email = 'quynhtvn@fpt.edu.vn' then N'Trần Vũ Nhật Quỳnh'
+	when Email = 'namhd9@fpt.edu.vn' then N'Huỳnh Đức Nam'
+	when Email = 'tungph4@fpt.edu.vn' then N'Phan Hoàng Tùng'
+	when Email = 'phucnt40@fpt.edu.vn' then N'Nguyễn Tấn Phúc'
+	when Email = 'senb@fpt.edu.vn' then N'Bhaskar Sen'
+	when Email = 'dungttm12@fpt.edu.vn' then N'Trần Trịnh Mạnh Dũng'
+	when Email = 'huynhtt@fpt.edu.vn' then N'Trần Trọng Huỳnh'
+	when Email = 'haodd3@fpt.edu.vn' then N'Đỗ Đức Hào'
+	when Email = 'tramdtn6@fpt.edu.vn' then N'Dương Thị Ngọc Trâm'
+	when Email = 'manhlv12@fpt.edu.vn' then N'Lê Văn Mạnh'
+
+	else FullName	--Default = null
+	end,
+LicenseID = case
+	when Email = 'teacher12345@l2d.edu.vn' then 'A4'
+	when Email = 'hoangnt20@fe.edu.vn' then N'C'
+	when Email = 'nhattq9@fe.edu.vn' then 'B1'
+	when Email = 'sangnm18@fe.edu.vn' then 'C'
+	when Email = 'chiltq6@fe.edu.vn' then 'A1'
+	when Email = 'hungld5@fe.edu.vn' then 'FD'
+	when Email = 'thongnt@fpt.edu.vn' then 'FB2'
+	when Email = 'longkh@fpt.edu.vn' then 'B1'
+	when Email = 'quynhtvn@fpt.edu.vn' then 'A1'
+	when Email = 'namhd9@fpt.edu.vn' then 'FC'
+	when Email = 'tungph4@fpt.edu.vn' then 'D'
+	when Email = 'phucnt40@fpt.edu.vn' then 'B2'
+	when Email = 'senb@fpt.edu.vn' then 'E'
+	when Email = 'dungttm12@fpt.edu.vn' then 'A3'
+	when Email = 'huynhtt@fpt.edu.vn' then 'A2'
+	when Email = 'haodd3@fpt.edu.vn' then 'B2'
+	when Email = 'tramdtn6@fpt.edu.vn' then 'A1'
+	when Email = 'manhlv12@fpt.edu.vn' then 'A4'
+
+	else LicenseID
+end;
+
+--=================
 insert into Quiz(LicenseID, [Name], [Description]) values
-('A1' , N'Bộ đề A1' , N'Bộ đề 200 câu lí thuyết  dành cho thi bằng lái xe máy hạng A1, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong 200 câu này để thi với thời gian làm bài là 19p.'),
-('A2' , N'Bộ đề A2', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng A2, bao gồm cả các câu điểm liệt'),
-('A3' , N'Bộ đề A3', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe ba bánh hạng A3, bao gồm cả các câu điểm liệt'),
-('A4' , N'Bộ đề A4', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng A4, bao gồm cả các câu điểm liệt'),
-('B1' , N'Bộ đề B1', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng B1, bao gồm cả các câu điểm liệt'),
-('B2' , N'Bộ đề B2', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng B2, bao gồm cả các câu điểm liệt'),
-('C' , N'Bộ đề C', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng C, bao gồm cả các câu điểm liệt'),
-('D' , N'Bộ đề D', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng D, bao gồm cả các câu điểm liệt'),
-('E' , N'Bộ đề E', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng E, bao gồm cả các câu điểm liệt'),
-('FB2' , N'Bộ đề FB2', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FB2, bao gồm cả các câu điểm liệt'),
-('FC' , N'Bộ đề FC', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FC, bao gồm cả các câu điểm liệt'),
-('FD' , N'Bộ đề FD', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FD, bao gồm cả các câu điểm liệt'),
-('FE' , N'Bộ đề FE', N'Bộ đề ... câu lí thuyết  dành cho thi bằng lái xe máy hạng FE, bao gồm cả các câu điểm liệt');
+('A1' , N'Bộ đề A1' , N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe máy hạng A1, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('A2' , N'Bộ đề A2', N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe máy hạng A2, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('A3' , N'Bộ đề A3', N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe ba bánh hạng A3, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('A4' , N'Bộ đề A4', N'Bộ đề 25 câu lí thuyết  dành cho thi bằng lái xe máy hạng A4, bao gồm cả các câu điểm liệt. Đề sẽ chọn 25 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('B1' , N'Bộ đề B1', N'Bộ đề 30 câu lí thuyết  dành cho thi bằng lái xe máy hạng B1, bao gồm cả các câu điểm liệt. Đề sẽ chọn 30 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 20p.'),
+('B2' , N'Bộ đề B2', N'Bộ đề 35 câu lí thuyết  dành cho thi bằng lái xe máy hạng B2, bao gồm cả các câu điểm liệt. Đề sẽ chọn 35 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 22p.'),
+('C' , N'Bộ đề C', N'Bộ đề 40 câu lí thuyết  dành cho thi bằng lái xe máy hạng C, bao gồm cả các câu điểm liệt. Đề sẽ chọn 40 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 24p.'),
+('D' , N'Bộ đề D', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng D, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('E' , N'Bộ đề E', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng E, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FB2' , N'Bộ đề FB2', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FB2, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FC' , N'Bộ đề FC', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FC, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FD' , N'Bộ đề FD', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FD, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.'),
+('FE' , N'Bộ đề FE', N'Bộ đề 45 câu lí thuyết  dành cho thi bằng lái xe máy hạng FE, bao gồm cả các câu điểm liệt. Đề sẽ chọn 45 câu ngẫu nhiên trong ngân hàng 200 câu hỏi để thi với thời gian làm bài là 26p.');
 go
 
 --=================
 /*
 Source: https://thibanglaixe24h.net/200-cau-hoi-thi-bang-lai-xe-may-a1/
-select * from Question
 */
 insert into Question(LicenseID, isCritical, QuestionImage, QuestionText) values
 ('A1' , 0  , 'none' , N'Phần của đường bộ được sử dụng cho các phương tiện giao thông qua lại là gì?'),
@@ -2759,9 +3772,7 @@ insert into Question(LicenseID, isCritical, QuestionImage, QuestionText) values
 ('FE' , 0  , '200.png' , N'Trong tình huống dưới đây, xa đầu kéo kéo rơ moóc (xe container) đang rẽ phải, xe con màu xanh và xe máy phía sau xe container đi như thế nào để đảm bảo an toàn?');
 go
 
-/*=================
-select * from Have
-*/
+--=================
 insert into Have(QuizID,QuestionID) values
 (1,185),(1,43),(1,9),(1,109),(1,32),(1,91),(1,6),(1,41),(1,54),(1,19),(1,66),(1,190),(1,53),(1,137),(1,13),(1,144),(1,2),(1,5),(1,113),(1,101),(1,118),(1,199),(1,103),(1,56),(1,135),
 (2,324),(2,219),(2,289),(2,218),(2,222),(2,268),(2,205),(2,280),(2,370),(2,308),(2,350),(2,333),(2,257),(2,290),(2,342),(2,252),(2,225),(2,382),(2,348),(2,319),(2,273),(2,359),(2,247),(2,262),(2,391),
@@ -11372,7 +12383,31 @@ insert into Answer(QuestionID, isCorrect, AnswerImage, AnswerText) values
 ('2600' , 0 , 'none' , N'Vượt về phía bên trái để đi tiếp.');
 go
 
-use master;
+--=================
+insert into Vehicle([Name], [Image], Brand, [Type], Years, ContactNumber, [Address], RentPrice, [Status]) values
+('Wave Alpha 110cc' , 'wave2018.png' , 'Honda' , N'Xe số 110cc' , 2018 , '0123456789' , N'Quận Gò Vấp, TP.HCM' , 20000 , 1),
+('Wave Alpha 110cc' , 'wave2023.png' , 'Honda' , N'Xe số 110cc' , 2023 , '0989121878' , N'Quận 2, TP.Thủ Đức' , 50000 , 1),
+('Future 125 FI' , 'future.png' , 'Honda' , N'Xe số 125cc' , 2020 , '0987654321' , N'Quận Tân Bình, TP.HCM' , 50000 , 1),
+('Winner X' , 'winnerX.png' , 'Honda' , N'Xe côn 150cc' , 2020 , '0334217271' , N'Quận 9, TP.Thủ Đức' , 60000 , 1),
+('Sirius 110' , 'sirius.png' , 'Yamaha' , N'Xe số 110cc' , 2021 , '0126623503' , N'Quận Phú Nhuận, TP.HCM' , 40000 , 1),
+('Jupiter Finn 115' , 'jupiter.png' , 'Yamaha' , N'Xe số 115cc' , 2022 , '0786000036' , N'TP.HCM' , 40000 , 1),
+('Exciter 155' , 'exciter155.png' , 'Yamaha' , N'Xe côn 155cc' , 2023 , '0989121878' , N'Quận Phú Nhuận, TP.HCM' , 70000 , 1),
+('Z1000 ABS' , 'z1000.png' , 'Kawasaki' , N'Xe côn 1000cc' , 2022 , '0999888999' , N'Quận 1, TP.HCM' , 111000 , 1),
+('Softail Standard' , 'HarleyDavidson.png' , 'Harley Davidson' , N'Xe côn 1700cc' , 2022 , '0254753345' , N'Quận 1, TP.HCM' , 120000 , 1),
+('BMW R18' , 'BMW_R18.png' , 'BMW' , N'Xe côn 1800cc' , 2020 , '0734238271' , N'Quận 7, TP.HCM' , 120000 , 1),
+('CBR500R' , 'CBR500R.png' , 'Honda' , N'Xe côn 500cc' , 2022 , '0112278987' , N'Quận Bình Thạnh, TP.HCM' , 100000 , 1),
+('YZF-R3' , 'YZF_R3.png' , 'Yamaha' , N'Xe côn 300cc' , 2021 , '0909808707' , N'Quận Phú Nhuận, TP.HCM' , 85000 , 1),
+('Vinfast Fadil' , 'vin_fadil.png' , 'Vinfast' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '1900232389' , N'Quận Bình Thạnh, TP.HCM' , 200000 , 1),
+('Vinfast Lux A 2.0' , 'VinfastLux.png' , 'Vinfast' ,N'Xe ô tô 4 chỗ, số tự động' , 2020 , '0781109029' , N'Quận Phú Nhuận, TP.HCM' , 250000 , 1),
+('Toyota Camry' , 'ToyotaCamry.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2020 , '0692342608' , N'Quận 10, TP.HCM' , 300000 , 1),
+('Toyota Vios' , 'Toyota Vios.png' , 'Toyota' ,N'Xe ô tô 5 chỗ, số tự động' , 2019 , '0427705437' , N'Quận 3, TP.HCM' , 250000 , 1),
+('Honda Civic' , 'HondaCivic.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0970344469' , N'Quận 3, TP.HCM' , 240000 , 1),
+('Honda City' , 'HondaCity.png' , 'Honda' ,N'Xe ô tô 4 chỗ, số tự động' , 2019 , '0314290187' , N'Quận Bình Thạnh, TP.HCM' , 230000 , 1),
+('Ford Ranger XLS' , 'FordRanger_XLS.png' , 'Ford' ,N'Xe bán tải 5 chỗ, số tự động' , 2018 , '0835992700' , N'Quận 10, TP.HCM' , 260000 , 1),
+('Mercedes Mayback S450' , 'MercedesMayback.png' , 'Mercedes' ,N'Xe ô tô 4 chỗ, số tự động' , 2018 , '0573073759' , N'Quận Bình Thạnh, TP.HCM' , 1000000 , 1),
+('Hyundai New Mighty 75s' , 'HyundaiMighty75s.png' , 'Hyundai' ,N'Xe tải 3.5 tấn' , 2018 , '0781109029' , N'TP.HCM' , 300000 , 1),
+('ISUZU VM' , 'IsuzuVM.png' , 'Isuzu' ,N'Xe tải 3.5 tấn thùng 4.4m' , 2018 , '0770333922' , N'TP.HCM' , 300000 , 1);
+go
 
 --Tạo bộ đề của loại bằng nào với random câu hỏi trong loại bằng đó. Hàm này dành cho staff
 /*
@@ -11380,29 +12415,8 @@ use master;
 exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1', N'Mô tả', 25;
 */
 
-
-
-
-
-/*
-insert into Attempt (UserID, QuizID, AttemptDate) values
-('4BB57CD4-97AA-4BC5-B267-244D41BCB3D0' , 1 , GETDATE());
-
-insert into AttemptDetail( AttemptID, QuestionID, SelectedAnswerID)
-
-create table AttemptDetail (
-   AttemptDetailID uniqueidentifier default newid() primary key,
-   AttemptID uniqueidentifier,
-   QuestionID int not null,
-   SelectedAnswerID int null,
-   IsCorrect bit,
-
-   foreign key (AttemptID) references dbo.Attempt(AttemptID),
-   foreign key (QuestionID) references dbo.Question(QuestionID),
-   foreign key (SelectedAnswerID) references dbo.Answer(AnswerID),
-
 -----------------------------------------[ QUERY TEST ]-----------------------------------------------------
-
+/*
 use DrivingLicense;
 use master;
 select * from Account;
@@ -11418,49 +12432,8 @@ select * from Quiz;
 select * from Question   order by QuestionID asc;
 select * from Answer     order by QuestionID asc;
 select * from Have;
+select count(*) from Have where QuizID = 1;
 select * from Attempt;
 
 ------------------------------------------
-
-use DrivingLicense;
-delete from Statistic;
-delete from Response;
-delete from Feedback;
-delete from ExamProfile;
-delete from AttemptDetail;
-delete from Answer;
-delete from Have;
-delete from Question;
-delete from Attempt;
-delete from Quiz;
-delete from Schedule;
-delete from License;
-delete from Vehicle;
-delete from Rent;
-delete from Hire;
-delete from Teacher;
-delete from Users;
-delete from Staff;
-delete from Admin;
-delete from Account;
-
---RESET Auto Answer ID:
-dbcc checkident ('Answer', reseed, 0);
-
---RESET Auto Question ID:
-dbcc checkident ('Question', reseed, 0);
-
---RESET Auto Quiz ID:
-dbcc checkident ('Quiz', reseed, 0);
-
---RESET ReportRate ID:
-dbcc checkident ('Feedback', reseed, 0);
-
---RESET RateReply ID:
-dbcc checkident ('Response', reseed, 0);
-
---RESET ReportSystem ID:
-dbcc checkident ('Statistic', reseed, 0);
-
-use master;
 */
