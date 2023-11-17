@@ -1,17 +1,47 @@
 -----------------------------------------[ INSERT VALUES ]-----------------------------------------------------
 /*[QUICK FIND] - Press: Ctrl + G
-License_____19
-User________36
-Other Role_____84
-Quiz________155
-Question____175
-Have________2815
-Answer______2832
-Vehicle_____11425
+License_____45
+User________62
+Other Role_____110
+Quiz________181
+Question____201
+Have________2841
+Answer______2858
+Vehicle_____11451
 */
 
 use DrivingLicense;
 go
+--=============[RESET DATA]=============--
+delete from Response;
+delete from Feedback;
+delete from ExamProfile;
+delete from AttemptDetail;
+delete from Attempt;
+delete from Answer;
+delete from Have;
+delete from Question;
+delete from Quiz;
+delete from Schedule;
+delete from Hire;
+delete from Teacher;
+delete from License;
+delete from Rent;
+delete from Vehicle;
+delete from Users;
+delete from Staff;
+delete from [Admin];
+delete from Account;
+
+--RESET Auto Answer ID:
+dbcc checkident ('Answer', reseed, 0);
+
+--RESET Auto Question ID:
+dbcc checkident ('Question', reseed, 0);
+
+--RESET Auto Quiz ID:
+dbcc checkident ('Quiz', reseed, 0);
+
 --=================
 insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],ExamContent,Tips) values
 ('A1',N'A1 - Xe máy PKN',N'Bằng lái xe A1 là loại giấy phép lái xe cơ bản nhất, cho phép người điều khiển xe mô tô, xe gắn máy có dung tích xi lanh từ <strong>50 cm³</strong> đến dưới <strong>175 cm³</strong> và người khuyết tật điều khiển xe mô tô 3 bánh đặc thù.',N'<li> Đối với người có nhu cầu học và thi bằng lái xe A1, yêu cầu đáp ứng được các điều kiện được đề ra sau đây: <br> </li> <li> Công dân VN hoặc nước ngoài đã đủ trên <strong>18 tuổi</strong>. Đủ trên <strong>18 tuổi</strong> (theo điều kiện ngày & tháng). <br> </li> <li> Đáp ứng được các điều kiện sức khỏe (khám sức khỏe theo danh sách bệnh viện do Sở GTVT quy định). </li>',N'<li> Lệ phí thi lý thuyết A1: <strong>40.000 đồng.</strong> <br> </li> <li> Lệ phí thi thực hành A1: <strong>50.000 đồng.</strong> <br> </li> <li> Phí cấp bằng lái xe hạng A1 nếu thi đỗ: <strong>135.000 đồng.</strong> <br> Ngoài ra, người này có nhu cầu thi thử trước khi thi chính thức thì có thể mua vé tập thử với giá <strong>10.000 - 15.000 đồng/lượt.</strong> </li>',N'<li>Thời hạn bằng lái: <strong>Không có thời hạn</strong></li> <li>Sau khi thi mất khoảng <strong>15 ngày (trừ T7 và CN)</strong> để lấy bằng lái được cấp sau khi thi đậu</li>',N'<p style="text-align: justify;"> Đối với phần bài thi lý thuyết lái xe hạng A1 các bạn sẽ phải thi trên máy tính, 1 bộ đề thi cho từng người sẽ có <strong>20 câu hỏi</strong> trắc nghiệm và thời gian hoàn thành giới hạn trong vòng <strong>15 phút.</strong> Điều kiện để vượt qua bài thi này là phải đúng <strong style="color: red;">16/20 câu.</strong> </p> <br> <p style="text-align: justify;"> Ở phần thi thực hành, chúng ta bắt buộc phải vượt qua và hoàn thành đủ <strong>4 bài thi</strong> cơ bản. <br> Bao gồm: bài thi vòng số 8, bài thi đường thẳng, bài thi đường quanh co và bài cuối cùng là đường gồ ghề. <br> Ngay từ vị trí xuất phát, học viên sẽ có sẵn cho mình <strong>100 điểm</strong> và khi kết thúc tất cả <strong>4 bài thi</strong> trên ở số điểm trên <strong style="color: red;">80/100</strong> là chúng ta sẽ đủ điều kiện đậu. </p>',N'Hiện tại xe thì được sử dụng là wave alpha đời đầu được gắn thiết bị chấm điểm và khi tới nhận xe thi, thông thường xe sẽ để máy nổ sẵn với chế độ là số 3 hoặc 4. <br> <br> Các bạn chỉ cần lên xe và chờ hiệu lệnh để thực hiện bài thi của mình. <br> <br> Bài thi này sẽ không có giới hạn thời gian, vì thế chúng ta không cần phải gấp gáp và chỉ cần hoàn thành thật tốt với những gì mình đã học được. <br><br> <h5 class="text-center"><strong>Chúc các bạn may mắn!!!</strong></h5>'),
@@ -11494,36 +11524,4 @@ select count(*) from Have where QuizID = 1;
 select * from Attempt;
 
 ------------------------------------------
---=============[RESET DATA]=============--
-use DrivingLicense;
-delete from Response;
-delete from Feedback;
-delete from ExamProfile;
-delete from AttemptDetail;
-delete from Attempt;
-delete from Answer;
-delete from Have;
-delete from Question;
-delete from Quiz;
-delete from Schedule;
-delete from Hire;
-delete from Teacher;
-delete from License;
-delete from Rent;
-delete from Vehicle;
-delete from Users;
-delete from Staff;
-delete from Admin;
-delete from Account;
-
---RESET Auto Answer ID:
-dbcc checkident ('Answer', reseed, 0);
-
---RESET Auto Question ID:
-dbcc checkident ('Question', reseed, 0);
-
---RESET Auto Quiz ID:
-dbcc checkident ('Quiz', reseed, 0);
-
-use master;
 */

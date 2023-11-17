@@ -261,9 +261,9 @@ create or alter procedure proc_DeleteUser(
 	@UserID uniqueidentifier,
 	@confirm_DeleteAccount varchar(10)--'yes' || 'no'
 )
-as 
+as
 begin
-	if(@UserID = null or @UserID = '') set @UserID = (select UserID from Users where AccountID = @AccountID);
+	if (@UserID is null) set @UserID = (select UserID from Users where AccountID = @AccountID);
 	
 	--Remove constains
 	delete from dbo.Rent where UserID = @UserID;
@@ -277,7 +277,7 @@ begin
 
 	if(@confirm_DeleteAccount = 'yes')
 	begin
-		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from Users where UserID = @UserID);
+		if(@AccountID is null) set @AccountID = (select AccountID from Users where UserID = @UserID);
 		delete from Account where AccountID = @AccountID and [Role] = 'user';
 	end
 end;
@@ -291,14 +291,14 @@ create or alter procedure proc_DeleteLecturer(
 )
 as 
 begin
-	if(@TeacherID = null or @TeacherID = '') set @TeacherID = (select TeacherID from Teacher where AccountID = @AccountID);
+	if(@TeacherID is null) set @TeacherID = (select TeacherID from Teacher where AccountID = @AccountID);
 	exec proc_DeleteHire null,@TeacherID,null;				--Remove constain
 
 	delete from Teacher where TeacherID = @TeacherID;		--Then delete
 
 	if(@confirm_DeleteAccount = 'yes')
 	begin
-		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from Teacher where TeacherID = @TeacherID);
+		if(@AccountID is null) set @AccountID = (select AccountID from Teacher where TeacherID = @TeacherID);
 		delete from Account where AccountID = @AccountID and [Role] = 'lecturer';
 	end
 end;
@@ -312,14 +312,14 @@ create or alter procedure proc_DeleteStaff(
 )
 as 
 begin
-	if(@StaffID = null or @StaffID = '') set @StaffID = (select StaffID from Staff where AccountID = @AccountID);
+	if(@StaffID is null) set @StaffID = (select StaffID from Staff where AccountID = @AccountID);
 	delete from dbo.Response where StaffID = @StaffID;		--Remove constain
 
 	delete from Staff where StaffID = @StaffID;				--Then delete
 
 	if(@confirm_DeleteAccount = 'yes')
 	begin
-		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from Staff where StaffID = @StaffID);
+		if(@AccountID is null) set @AccountID = (select AccountID from Staff where StaffID = @StaffID);
 		delete from Account where AccountID = @AccountID and [Role] = 'staff';
 	end
 end;
@@ -333,20 +333,35 @@ create or alter procedure proc_DeleteAdmin(
 )
 as 
 begin
-	if(@AdminID = null or @AdminID = '') set @AdminID = (select AdminID from [Admin] where AccountID = @AccountID);
+	if(@AdminID is null) set @AdminID = (select AdminID from [Admin] where AccountID = @AccountID);
 	delete from [Admin] where AdminID = @AdminID;
 
 	if(@confirm_DeleteAccount = 'yes')
 	begin
-		if(@AccountID = null or @AccountID = '') set @AccountID = (select AccountID from [Admin] where AdminID = @AdminID);
+		if(@AccountID is null) set @AccountID = (select AccountID from [Admin] where AdminID = @AdminID);
 		delete from Account where AccountID = @AccountID and [Role] = 'admin';
 	end
 end;
 go
 
+/*
+delete from Teacher
+delete from Users
+delete from Account
+
+select * from Account
+select * from Users
+select * from Teacher
+
+insert into Account(Username,[Password],[Role]) values ('ok123','123','user');
+insert into Users(AccountID,FullName) values ('6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'test role');
+exec proc_changeRole '6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'lecturer';
+go
+
+*/
 -------------------------------------------[ CHANGE ROLE ]----------------------------------------------
 create or alter procedure proc_changeRole(
-	@accountID nvarchar(50),
+	@accountID uniqueidentifier,
 	@roleNew nvarchar(50),
 	@LicenseSet nvarchar(10) = 'A1'		--default value
 )
@@ -366,7 +381,6 @@ begin
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, PhoneNumber from dbo.Users where AccountID = @accountID;
 
-		
 		exec proc_DeleteUser @accountID,null,'no';--Delete old record
 	end;
 
