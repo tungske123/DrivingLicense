@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--font css files-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--style css-->
+    <link rel="stylesheet" href="/css/styleLogin.css">
+    <!--google login library-->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <title>Login Page</title>
+</head>
+
+<body>
+    @{
+        ViewData["Title"] = "L2D - Đăng Nhập";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <!--Form Sign up-->
+    <section class="form-c sign-up-form hidden-load" id="container">
+        <div class="form-container sign-up-container hidden-load">
+            <form action="/Login/signup" class="needs-validation" method="post" novalidate>
+                <h1>Đăng kí</h1>
+                <!--Icon social-->
+                <div class="social-container">
+                    @* <a href="" class="social-icon bg3">
+                        <i class="fa fa-google"></i>
+                    </a> *@
+                </div>
+                <span>Tạo tài khoản</span>
+                <div class="input-group">
+                    <input type="text" name="Username" id="username" placeholder="Nhập tên tài khoản (tên hiển thị)"
+                           required>
+                    <div class="invalid-feedback">
+                        Nhập tên tài khoản (tên hiển thị)
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" id="password" placeholder="Nhập mật khẩu của bạn"
+                           required>
+                    <div class="invalid-feedback">
+                        Nhập mật khẩu
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="repass" id="repass" placeholder="Xác nhận mật khẩu" required>
+                    <div class="invalid-feedback">
+                        Xác nhận mật khẩu
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" id="email" placeholder="Nhập email của bạn" required>
+                    <div class="invalid-feedback">
+                        Nhập email của bạn
+                    </div>
+                </div>
+                <button class="primary mt-3" type="submit">Đăng kí</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container hidden-load">
+            <form action="/Login/login" method="post" novalidate>
+                <h1>Đăng nhập</h1>
+                <p style="color:red">@TempData["Message"]</p>
+                <p style="color:red">@TempData["Message1"]</p>
+                <p style="color:green">@TempData["Message2"]</p>
+                <!--Icon social-->
+                <div class="social-container">
+                    @* <button href="" class="social-icon bg3" data-onsuccess="onSignIn" style="font-size: 15px;">
+                        <i class="fa fa-google"></i>
+                    </button> *@
+                </div>
+                <!-- <span>Or If you have an account, please Login </span> -->
+                <div class="input-group">
+                    <input type="text" name="username" id="username" placeholder="Tên tài khoản" required>
+                    <div class="invalid-feedback">
+                        Tên tài khoản
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Mật khẩu" required />
+                    <div class="invalid-feedback">
+                        Mật khẩu
+                    </div>
+                </div>
+                <button class="primary">Đăng nhập</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Tạo tài khoản ngay</h1>
+                    <p>Hoặc nếu bạn có tài khoản thì hãy</p>
+                    <button class="ghost" id="SignIn">Đăng nhập</button>
+                </div>
+
+                <div class="overlay-panel overlay-right">
+                    <h1>Welcome to L2D</h1>
+                    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem tempora facere repudiandae
+                        mollitia quo quis a recusandae odio totam accusamus sint rem dolore repellat modi blanditiis,
+                        consectetur, quam reiciendis velit.</p> -->
+                    <button class="ghost mt-5" id="SignUp">Đăng kí</button>
+                </div>
+            </div>
+        </div>
+        <div class="pop-up">
+            <dialog id="dialog">
+                <h2>Hello.</h2>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi omnis nihil nostrum impedit sequi eum,
+                    odit ipsa amet, atque ut labore et quia qui repellat aperiam consequuntur tempore corporis numquam?
+                </p>
+                <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
+            </dialog>
+        </div>
+    </section>
+    <script>
+        var forms = document.getElementsByTagName('form');
+        for (var i = 0; i < forms.length; ++i) {
+            var form = forms[i];
+            form.addEventListener('submit', function (event) {
+                if (!this.checkValidity()) {
+                    event.preventDefault(); // Prevent form submission
+                }
+                this.classList.add('was-validated');
+            });
+        }
+        document.querySelector('.login-link').classList.add('active');
+    </script>
+    <script>
+        // Callback function for successful Google Sign-In
+        function onSignIn(googleUser) {
+            // Obtain the Google User object
+            var profile = googleUser.getBasicProfile();
+
+            // Access user information
+            console.log('ID: ' + profile.getId());           // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Email: ' + profile.getEmail());
+
+            // Access the ID token
+            var idToken = googleUser.getAuthResponse().id_token;
+
+            // Send the ID token to your backend for server-side validation
+            sendIdTokenToServer(idToken);
+        }
+
+        // Example function to send the ID token to the server
+        function sendIdTokenToServer(idToken) {
+            // Perform an HTTP request to your server
+            // You can use libraries like Axios or the Fetch API
+            // Example using Fetch:
+            fetch('/signin-google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken })
+            })
+            .then(response => {
+                // Handle the server's response
+                console.log('Server response:', response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+    <script src="js/LoginAnimation.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+﻿@model L2D_DataAccess.Models.Vehicle;
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
+    var nfi = cultureInfo.NumberFormat;
+    nfi.CurrencySymbol = "";
+    string formattedPrice = @Model.RentPrice.ToString("N0", nfi);
+    string ImagePath = @$"/img/vehicle/{Model.Image}";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--icon library file-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--custom css file-->
+    <link rel="stylesheet" href="~/css/styleRentDetail.css" />
+    <link rel="stylesheet" href="~/css/styleModal.css" />
+    <!--icon file-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4763/4763167.png">
+    <title>RentDetail</title>
+</head>
+
+<body>
+    <div class="modal">
+        <article class="modal-container">
+            <div class="modal-container-header">
+                <h6 class="modal-container-title">
+                    <i class="fa-regular fa-circle-question"></i> <span class="modal-title">Xác nhận thuê xe</span>
+                </h6>
+                <button class="icon-button btn btn-outline-danger" onclick="closeModal();">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <section class="modal-container-body rtf">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <th><i class="fa-solid fa-car"></i> Xe</th>
+                        <th><i class="fa-solid fa-calendar-days"></i> Ngày thuê</th>
+                        <th><i class="fa-solid fa-calendar-days"></i> Ngày hết hạn</th>
+                        <th><i class="fa-solid fa-money-bill"></i>  Tổng chi phí</th>
+                    </tr>
+                    <tr>
+                        <td id="modalName">Honda City</td>
+                        <td id="modalStartDate">01/09/2023 lúc 19:00</td>
+                        <td id="modalEndDate">02/09/2023 lúc 20:00</td>
+                        <td id="modalPrice">950.000 VNĐ</td>
+                    </tr>
+                </table>
+            </section>
+            <footer class="modal-container-footer">
+                <button class="modal-button is-cancel" onclick="closeModal();">Hủy</button>
+                <button class="modal-button is-confirm">Ok</button>
+            </footer>
+        </article>
+    </div>
+    <div class="rent-body hidden-load">
+        <div class="detail-car hidden-load">
+            <div class="cover-car-modal">
+                <div class="m-container">
+                    <div class="cover-car-container">
+                        <div class="main-img">
+                            <div class="cover-car-item">
+                                <img loading="lazy"
+                                     src="@ImagePath"
+                                     alt="Cho thuê xe tự lái">
+                            </div>
+                        </div>
+                        <div class="sub-img">
+                            <div class="cover-car-item">
+                                <img loading="lazy"
+                                     src="@ImagePath"
+                                     alt="Cho thuê xe tự lái">
+                            </div>
+                            <div class="cover-car-item">
+                                <img loading="lazy"
+                                     src="@ImagePath"
+                                     alt="Cho thuê xe tự lái">
+                            </div>
+                            <div class="cover-car-item">
+                                <img loading="lazy"
+                                     src="@ImagePath"
+                                     alt="Cho thuê xe tự lái">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="content-detail hidden-load">
+                <div class="info-car-basic">
+                    <div class="group-name">
+                        <div hidden id="VehicleID">@Model.VehicleId</div>
+                        <h3 id="vehicleName">@Model.Name</h3>
+                        <div class="group-action d-flex-center-btw">
+                            <div class="back d-flex-center"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="m-container hidden-load">
+                <div class="detail-container">
+                    <div class="sidebar-detail mt-3 hidden-load">
+                        <div class="rent-box shadow-lg p-3 mb-5 bg-body-tertiary rounded" id="cardetail"
+                             style="position: relative;">
+                            <div class="form-floating">
+                                <input id="startdate" type="datetime-local" class="form-control mb-2 mt-1 start-date" name="startdate" />
+                                <label for="startdate" class="form-label"><i class="fa-solid fa-calendar-days"></i> Ngày bắt đầu thuê</label>
+                            </div>
+                            <div class="form-floating">
+                                <input id="enddate" type="datetime-local" class="form-control mb-2 end-date" name="enddate" />
+                                <label for="enddate" class="form-label"><i class="fa-solid fa-calendar-days"></i> Ngày kết thúc thuê</label>
+                            </div>
+                            <div class="dropdown-form">
+                                <label><i class="fa-solid fa-location-dot"></i> Địa điểm thanh toán và giao nhận xe</label>
+                                <div class="wrap-form has-arrow"><span class="value">@Model.Address</span></div>
+                            </div>
+                            <div class="line-page"></div>
+                            <div class="price-container">
+                                <div class="line-page"></div>
+                                <div class="line-page"></div>
+                                <div class="price-item total">
+                                    <p><i class="fa-solid fa-money-bill"></i> Tổng cộng</p>
+                                    <p class="finalcost">Chưa có thông tin</p>
+                                </div>
+                                <button class="btn btn-outline-danger width-100" onclick="openSubmitForm();">
+                                    CHỌN THUÊ
+                                </button>
+                            </div>
+                            <div class="daterangepicker dropdown-menu home ltr show-calendar opensleft">
+                                <p class="c-title">Chọn ngày</p>
+                                <div class="calendar left">
+                                    <div class="calendar-table" style="min-height: 321px"></div>
+                                    <div class="daterangepicker_input">
+                                        <div class="line"></div>
+                                        <p class="c-title">Chọn giờ</p>
+                                        <div class="calendar-time">
+                                            <p class="pickup">
+                                                Giờ nhận xe: <span class="text-primary"
+                                                                   style="font-weight: 600"></span>
+                                            </p>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="calendar right">
+                                    <div class="calendar-table" style="min-height: 321px"></div>
+                                    <div class="daterangepicker_input">
+                                        <div class="line"></div>
+                                        <p class="c-title" style="height: 24px;"></p>
+                                        <div class="calendar-time">
+                                            <p class="pickup">
+                                                Giờ trả xe: <span class="text-primary"
+                                                                  style="font-weight: 600"></span>
+                                            </p>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-detail shadow-lg p-3 mb-5 bg-body-tertiary rounded hidden-load">
+                        <div class="line-page"></div>
+                        <div class="info-car-desc" id="outsfeatures">
+                            <div class="outstanding-features">
+                                <div class="outstanding-features__item">
+                                    <div class="title">
+                                        <p class="sub" style="color: red;"><i class="fa-solid fa-car"></i> Loại Xe</p>
+                                        <p class="main">@Model.Type</p>
+                                    </div>
+                                </div>
+                                <div class="outstanding-features__item">
+                                    <div class="title">
+                                        <p class="sub" style="color: red;"><i class="fa-regular fa-copyright"></i> Thương Hiệu</p>
+                                        <p class="main">@Model.Brand</p>
+                                    </div>
+                                </div>
+                                <div class="outstanding-features__item">
+                                    <div class="title">
+                                        <p class="sub" style="color: red;"><i class="fa-solid fa-money-bill"></i> Giá</p>
+                                        <div hidden id="jsPrice">@Model.RentPrice</div>
+                                        <p class="main">@formattedPrice VNĐ/Giờ</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line-page"></div>
+                        <div class="info-car-desc">
+                            <h6 style="color: red;">Mô tả</h6>
+                            <p class="info-text shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                                @Model.Description
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/RentDetailFunctions.js"></script>
+</body>
+</html>

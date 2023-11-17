@@ -1,0 +1,131 @@
+@model L2D_DataAccess.ViewModels.QuizResult;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Kết quả thi thử";
+    int QuizID = (int)ViewBag.QuizID;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--custom css file-->
+    <link rel="stylesheet" href="~/css/styleQuizResult.css">
+    <!--icon-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4832/4832401.png">
+    <title>Quiz Result</title>
+</head>
+
+<body>
+    <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded" style="margin-top: 100px;">
+        <h1 class="title hidden-load" style="text-align: center;display: block;">Kết quả</h1>
+        <table class="table table-hover table-light text-center table-responsive hidden-load">
+            <thead class="hidden-load">
+                <tr>
+                    <th>Tên bộ đề</th>
+                    <th>Loại bằng thi</th>
+                    <th>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="mb-1 bi bi-calendar2-check" viewBox="0 0 16 16">
+                            <path
+                                d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                            <path
+                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                            <path
+                                d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                        </svg> Ngày làm
+                    </th>
+                    <th>Tổng số câu</th>
+                    <th>
+                        <svg style="color: green;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="mb-1 bi bi-check-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path
+                                d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                        </svg> Số câu đúng
+                    </th>
+                    <th>
+                        <svg style="color: red;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="mb-1 bi bi-x-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg> Số câu sai
+                    </th>
+                    <th>Số câu chưa làm</th>
+                    <th>Tỉ lệ đúng</th>
+                </tr>
+            </thead>
+            <tbody class="hidden-load">
+                <tr>
+                    <td>@Model.QuizName</td>
+                    <td>@Model.License</td>
+                    <td>@Model.AttemptDate</td>
+                    <td>@Model.TotalQuestion</td>
+                    <td>@Model.CorrectQuestion</td>
+                    <td>@Model.IncorrectQuestion</td>
+                    <td>@Model.RemainingQuestion</td>
+                    <td>@Model.Result%</td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-outline-primary mb-3" data-bs-toggle="collapse"
+            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+            style="display: block;width: 100%;">Chi Tiết</button>
+        <div class="collapse" id="collapseExample">
+            <table class="table table-hover table-light table-responsive hidden-load">
+                <thead class="hidden-load">
+                    <tr>
+                        <th>Số thứ tự câu hỏi</th>
+                        <th>Nội dung câu hỏi</th>
+                        <th>Câu trả lời của bạn</th>
+                        <th>Câu trả lời đúng</th>
+                        <th>Kết quả</th>
+                    </tr>
+                </thead>
+                <tbody class="hidden-load">
+                    @{
+                        int cnt = 1;
+                    }
+                    @foreach (var question in @Model.QuestionDataList)
+                    {
+                        <tr>
+                            <td>@cnt</td>
+                            <td>@question.QuestionText</td>
+                            <td>@question.UserAnswer</td>
+                            <td>@question.CorrectAnswer</td>
+                            <td class="result">
+                                @if (@question.IsCorrect == 1)
+                                {
+                                    <svg style="color: green;display: block;padding: 5px;" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path
+                                            d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                    </svg>
+                                }
+                                else
+                                {
+                                    <svg style="color: red;display: block;padding: 5px;" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" class="mb-1 bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path
+                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                }
+                            </td>
+                        </tr>
+                        ++@cnt;
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="buttons hidden-load" style="display: flex;justify-content: space-between;">
+            <button type="button" class="btn btn-outline-danger" onclick="location.href='/Quiz/StartQuiz?quizid=@QuizID';">Làm lại</button>
+            <button type="button" class="btn btn-outline-success" onclick="location.href='/Home'">Về trang chủ</button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,1368 @@
+@using L2D_DataAccess.Models;
+@{
+    ViewData["Title"] = "L2D - Thông tin người dùng";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--custom css files-->
+    <link rel="stylesheet" href="~/css/styleUserProfile.css">
+    <!--icon file-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5087/5087579.png">
+    <style>
+        .blur-background {
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Black with 60% opacity */
+        }
+    </style>
+    <title>User page</title>
+</head>
+
+<body>
+    <!--Hidden modal-->
+
+    <div id="delete-modal" tabindex="-1" aria-hidden="true"
+         class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <button type="button" action="cancel"
+                        class="deleteModalButton absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-6 text-center">
+                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                        Bạn có chắc chắn muốn hủy đơn
+                        thuê này?
+                    </h3>
+                    <button type="button" action="confirm"
+                            class="deleteModalButton text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                        Có, tôi chắc chắn
+                    </button>
+                    <button type="button" action="cancel"
+                            class="deleteModalButton text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                        Không
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+            type="button"
+            class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        <span class="sr-only">Open sidebar</span>
+        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+             xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+                  d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+            </path>
+        </svg>
+    </button>
+
+    <aside id="logo-sidebar"
+           class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+           aria-label="Sidebar">
+        <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 hidden-load">
+            <a href="/Home" class="flex items-center pl-2.5 mb-5">
+                <img src="https://cdn-icons-png.flaticon.com/512/3721/3721600.png" class="h-6 mr-3 sm:h-7"
+                     alt="Learn2Drive" />
+                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+                    Learn<span class="text-red-700">2</span>Drive
+                </span>
+            </a>
+            <ul class="space-y-2 font-medium hidden-load" id="sidebar-content">
+                <li class="dashboard-item">
+                    <a href="#userInfo"
+                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "
+                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                             viewBox="0 0 20 20">
+                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
+                        </svg>
+                        <span class="ml-3">Thông tin</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="#rentInfo"
+                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                             viewBox="0 0 20 14">
+                            <path d="M18 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM9 6v2H2V6h7Zm2 0h7v2h-7V6Zm-9 4h7v2H2v-2Zm9 2v-2h7v2h-7Z" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Lịch sử thuê xe</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="#timetableSection"
+                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                             viewBox="0 0 20 14">
+                            <path d="M18 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM9 6v2H2V6h7Zm2 0h7v2h-7V6Zm-9 4h7v2H2v-2Zm9 2v-2h7v2h-7Z" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Thời khóa biểu</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="#quizAttemptInfo"
+                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                             viewBox="0 0 18 18">
+                            <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Lịch sử thi lý thuyết thử</span>
+
+                    </a>
+                </li>
+                @* <li class="dashboard-item">
+                <a href="#"
+                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100
+                dark:hover:bg-gray-700 group">
+                <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400
+                group-hover:text-gray-900 dark:group-hover:text-white"
+                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977
+                6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0
+                1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
+                </svg>
+                <span class="flex-1 ml-3 whitespace-nowrap">Inbox</span>
+                <span
+                class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800
+                bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
+                </a>
+                </li> *@
+                <li class="dashboard-item">
+                    <a href="/Home"
+                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3 8v10a1 1 0 0 0 1 1h4v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5h4a1 1 0 0 0 1-1V8M1 10l9-9 9 9" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Về trang chủ</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="/Login/logout"
+                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#6B7280" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
+                            <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Đăng xuất</span>
+                    </a>
+                </li>
+                @* <li class="dashboard-item">
+                <a href="#"
+                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100
+                dark:hover:bg-gray-700 group">
+                <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400
+                group-hover:text-gray-900 dark:group-hover:text-white"
+                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3" />
+                </svg>
+                <span class="flex-1 ml-3 whitespace-nowrap">Đăng xuất</span>
+                </a>
+                </li> *@
+            </ul>
+        </div>
+    </aside>
+    @* User Info Section *@
+    <section class="p-4 sm:ml-64 user-tab" id="userInfo" style="display: none;">
+        <div class="avatar" style="display: inline-block;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);">
+            <img class="rounded-full w-80 h-80" id="previewImage"
+                 src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+                 alt="image description">
+
+        </div>
+        <form action="" id="userInfoForm" method="post" enctype="multipart/form-data">
+            <div hidden id="UserId">@ViewBag.UserId</div>
+            <div class="flex items-center justify-center w-full mb-5">
+                <label for="dropzone-file"
+                       class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span class="font-semibold">
+                                Click để
+                                upload
+                            </span>
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                    </div>
+                    <input id="dropzone-file" type="file" name="Avatar" accept="image/*" class="hidden" />
+                </label>
+            </div>
+            <div class="mb-6">
+                <div>
+                    <label for="fullname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Họ và
+                        tên
+                    </label>
+                    <input type="text" id="fullname" name="FullName"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Nhập họ và tên của bạn" required>
+                </div>
+            </div>
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
+                <div>
+                    <label for="birthdate"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ngày/tháng/năm sinh</label>
+                    <input type="date" id="birthdate" name="BirthDate"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           required>
+                </div>
+                <div>
+                    <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Số
+                        điện thoại
+                    </label>
+                    <div class="relative mb-6">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="m16.344 12.168-1.4-1.4a1.98 1.98 0 0 0-2.8 0l-.7.7a1.98 1.98 0 0 1-2.8 0l-2.1-2.1a1.98 1.98 0 0 1 0-2.8l.7-.7a1.981 1.981 0 0 0 0-2.8l-1.4-1.4a1.828 1.828 0 0 0-2.8 0C-.638 5.323 1.1 9.542 4.78 13.22c3.68 3.678 7.9 5.418 11.564 1.752a1.828 1.828 0 0 0 0-2.804Z" />
+                            </svg>
+                        </div>
+                        <input type="text" id="phoneNumber" name="PhoneNumber"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                               placeholder="Nhập số điện thoại của bạn (+84)">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-6">
+                <label for="Nationality" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Quốc
+                    tịch
+                </label>
+                <input type="text" id="Nationality" name="Nationality"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       placeholder="Nhập quốc tịch của bạn">
+            </div>
+            <div class="mb-6">
+                <label for="cccd" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">CCCD</label>
+                <div class="relative mb-6">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3.656 12.115a3 3 0 0 1 5.682-.015M13 5h3m-3 3h3m-3 3h3M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm6.5 4.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="cccd" name="CCCD"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Nhập số căn cước công dân của bạn">
+                </div>
+            </div>
+            <div>
+                <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Địa
+                    chỉ
+                </label>
+                <div class="relative mb-6">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 21">
+                            <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M8 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                <path d="M13.8 12.938h-.01a7 7 0 1 0-11.465.144h-.016l.141.17c.1.128.2.252.3.372L8 20l5.13-6.248c.193-.209.373-.429.54-.66l.13-.154Z" />
+                            </g>
+                        </svg>
+                    </div>
+                    <input type="text" id="address" name="Address"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Nhập địa chỉ của bạn">
+                </div>
+            </div>
+            <div class="mb-6">
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Email
+                </label>
+                <div class="relative mb-6">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                            <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
+                            <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="email" name="Email"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Nhập email của bạn">
+                </div>
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Mật
+                    khẩu
+                </label>
+                <input type="password" id="password" name="Password"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       placeholder="" required>
+
+            </div>
+            <div class="mb-6">
+                <label for="repass" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Xác
+                    nhận mật khẩu
+                </label>
+                <input type="password" id="repass"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       placeholder="" required>
+            </div>
+            <button type="submit"
+                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                    id="submitButton">
+                Lưu
+            </button>
+        </form>
+    </section>
+
+    <!--Rent Info Section-->
+    <section class="p-4 sm:ml-64 user-tab" id="rentInfo">
+        <!--Edit modal-->
+        <div id="editModal" tabindex="-1" aria-hidden="true"
+             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-4xl max-h-full">
+                <!-- Modal content -->
+                <form action="#" class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Thông tin đơn thuê
+                        </h3>
+                        <button type="button"
+                                class="closeRentEditModalButton text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-6 space-y-6">
+                        <div class="current-vehicle">
+                            <h4 class="text-2xl font-bold text-red-700 mb-3">Thông tin xe</h4>
+                            <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                <a href="">
+                                    <img class="rounded-t-lg" id="vehicleImage"
+                                         src="https://i2-vnexpress.vnecdn.net/2023/05/10/Vios-2023-10_1683690128.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=LPsTjgivZ2T5xKJYQiVjHg&t=image"
+                                         alt="vehicle image" />
+                                </a>
+                                <div class="" style="padding: 5px;">
+                                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white"
+                                        id="vehicleName">
+                                        Toyota Vios
+                                    </h5>
+                                </div>
+                            </div>
+                            <hr>
+                            <h5 class="text-xl font-bold dark:text-white">
+                                Hãng: <span class="text-red-700" id="brand">Toyota</span>
+                            </h5><br>
+                            <h5 class="text-xl font-bold dark:text-white">
+                                Loại: <span class="text-red-700" id="type">
+                                    Xe ô tô 5
+                                    chỗ, số tự động
+                                </span>
+                            </h5> <br>
+                            <h5 class="text-xl font-bold dark:text-white flex gap-1">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+                                </svg> Giá: <span class="text-red-700" id="vehiclePrice">250.000 VNĐ/ Giờ</span>
+                            </h5> <br>
+                            <h5 class="text-xl font-bold dark:text-white flex gap-1">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 21">
+                                    <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                       stroke-width="2">
+                                        <path d="M8 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                        <path d="M13.8 12.938h-.01a7 7 0 1 0-11.465.144h-.016l.141.17c.1.128.2.252.3.372L8 20l5.13-6.248c.193-.209.373-.429.54-.66l.13-.154Z" />
+                                    </g>
+                                </svg> Địa chỉ nhận và tập xe: <span class="text-red-700" id="address">
+                                    Quận 3,
+                                    TP.HCM
+                                </span>
+                            </h5> <br>
+                            <h5 class="text-xl font-bold dark:text-white flex gap-1">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="m16.344 12.168-1.4-1.4a1.98 1.98 0 0 0-2.8 0l-.7.7a1.98 1.98 0 0 1-2.8 0l-2.1-2.1a1.98 1.98 0 0 1 0-2.8l.7-.7a1.981 1.981 0 0 0 0-2.8l-1.4-1.4a1.828 1.828 0 0 0-2.8 0C-.638 5.323 1.1 9.542 4.78 13.22c3.68 3.678 7.9 5.418 11.564 1.752a1.828 1.828 0 0 0 0-2.804Z" />
+                                </svg> Số điện thoại: <span class="text-red-700" id="contactNumber">1234567890</span>
+                            </h5>
+                        </div>
+
+                        <div class="date-wrapper">
+                            <div>
+                                <label for="startdate"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Thời gian bắt
+                                    đầu
+                                    thuê
+                                </label>
+                                <input type="datetime-local" id="startdate"
+                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                       required>
+                            </div>
+                            <div>
+                                <label for="enddate"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Thời gian kết
+                                    thúc
+                                    thuê
+                                </label>
+                                <input type="datetime-local" id="enddate"
+                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                       placeholder="Doe" required>
+                            </div>
+                        </div>
+                        <h6 class="text-lg font-bold dark:text-white">
+                            Số giờ thuê: <span class="text-red-700" id="rentHours">
+                                1 giờ
+                            </span>
+                        </h6>
+                        <hr />
+                        <p>Tổng giá thuê: <span class="text-red-700" id="totalPrice">250.000 VNĐ</span></p>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        <button type="button" class="submit-button" id="rentSubmitBtn">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--Rent history content here-->
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full" id="rentHistoryContent">
+            <table class="w-full text-left text-gray-500 dark:text-gray-400">
+                <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                    Lịch sử thuê xe
+                    <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                        Xem lịch sử thuê xe tập lái của
+                        bạn ở đây
+                    </p>
+                    <div class="flex items-center justify-between pb-4 mt-5">
+                        <div>
+                            <button id="dropdownRadioButton" data-dropdown-toggle="dropdownRadio"
+                                    class="date-option-button" type="button">
+                                <svg class="w-3 h-3 text-gray-500 dark:text-gray-400 mr-2.5" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+                                </svg>
+                                <span class="date-filter-content">Tất cả</span>
+                                <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2" d="m1 1 4 4 4-4" />
+                                </svg>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="dropdownRadio"
+                                 class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                                 data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"
+                                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 3847.5px, 0px);">
+                                <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="dropdownRadioButton">
+                                    <li>
+                                        <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <input id="all" type="radio" value="Tất cả" day="-1" name="filter-radio"
+                                                   class="filter-date-option" checked>
+                                            <label for="all"
+                                                   class="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                                                Tất
+                                                cả
+                                            </label>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <input id="yesterday" type="radio" value="Ngày hôm qua" day="1"
+                                                   name="filter-radio" class="filter-date-option">
+                                            <label for="yesterday"
+                                                   class="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                                                Ngày
+                                                hôm qua
+                                            </label>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <input id="prevweek" type="radio" day="7" value="Tuần vừa qua"
+                                                   name="filter-radio" class="filter-date-option">
+                                            <label for="prevweek"
+                                                   class="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                                                Tuần
+                                                vừa qua
+                                            </label>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <input id="lastmonth" type="radio" value="30 ngày vừa qua" day="30"
+                                                   name="filter-radio" class="filter-date-option">
+                                            <label for="lastmonth"
+                                                   class="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                                                30
+                                                ngày vừa qua
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <label for="table-search" class="sr-only">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                     fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                          clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <input type="text" id="rentTableSearch"
+                                   class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="Tìm theo tên xe">
+                        </div>
+                    </div>
+
+                </caption>
+                <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Ảnh xe
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Xe thuê
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Ngày bắt đầu thuê
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Ngày kết thúc thuê
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Giá thuê
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Trạng thái
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center"></th>
+                    </tr>
+                </thead>
+                <tbody id="rentTableBody">
+                    <!--Load animation element-->
+                    <tr class="row">
+                        <td class="w-32 p-4">
+                            <img class="rounded-lg"
+                                 src="https://i2-vnexpress.vnecdn.net/2023/05/10/Vios-2023-10_1683690128.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=LPsTjgivZ2T5xKJYQiVjHg&t=image"
+                                 alt="">
+                        </td>
+                        <td class="key-cell">
+                            Toyoyta Vios
+                        </td>
+                        <td class="normal-cell">
+                            2-9-2023 vào lúc 15:00
+                        </td>
+                        <td class="normal-cell">
+                            3-9-2023 vào lúc 16:00
+                        </td>
+                        <td class="normal-cell">
+                            450.000 VNĐ
+                        </td>
+                        <td class="normal-cell" style="color: green;">
+                            Còn hạn
+                        </td>
+                        <td class="normal-cell">
+                            <button type="button" class="edit-button" onclick="openEditModal();">Sửa</button>
+                            <button type="button" class="cancel-button">Hủy đơn thuê</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h1 class="no-result" style="display: none;">Không có kết quả</h1>
+            <nav class="text-center mt-4" id="rentPagination">
+                <ul class="ul">
+                </ul>
+            </nav>
+        </div>
+    </section>
+    <section class="p-4 sm:ml-64 user-tab" id="quizAttemptInfo">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Tên bộ đề
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Thời gian làm
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="quizAttemptHistoryTableBody">
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            Đề số 1
+                        </th>
+                        <td class="px-6 py-4">
+                            19/10/2023
+                        </td>
+                        <td class="px-6 py-4">
+                            <button class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                Chi
+                                tiết
+                            </button>
+                            <button type="button"
+                                    class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                Làm
+                                lại
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="statModal" tabindex="-1"
+             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-7xl max-h-full">
+                <div hidden id="correctPercent">70</div>
+                <div hidden id="incorrectPercent">20</div>
+                <div hidden id="unfinishedPercent">10</div>
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                            Thống kê
+                        </h3>
+                        <button type="button"
+                                class="statDetailsModalCloseButton text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="flex justify-between items-start w-full">
+                            <div class="flex-col items-center">
+                                <div class="ml-2 mt-2 flex items-center mb-1">
+                                    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mr-1">
+                                        Chi tiết kết quả
+                                    </h5>
+                                    <svg data-popover-target="chart-info" data-popover-placement="bottom"
+                                         class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ml-1"
+                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                         viewBox="0 0 20 20">
+                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z" />
+                                    </svg>
+                                    <div data-popover id="chart-info" role="tooltip"
+                                         class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                        <div class="p-3 space-y-2">
+                                            <p>
+                                                Tổng số câu: <span class="text-red-700" id="totalQuestion">25</span>
+                                            </p>
+                                            <p>
+                                                Số câu đúng: <span class="text-red-700" id="correctQuestion">20</span>
+                                            </p>
+                                            <p>
+                                                Số câu sai: <span class="text-red-700" id="incorrectQuestion">5</span>
+                                            </p>
+                                            <p>
+                                                Số câu chưa làm: <span class="text-red-700"
+                                                                       id="unfinishQuestion">3</span>
+                                            </p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                </div>
+                                <div id="dateRangeDropdown"
+                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-80 lg:w-96 dark:bg-gray-700 dark:divide-gray-600">
+                                    <div class="p-3" aria-labelledby="dateRangeButton">
+                                        <div date-rangepicker datepicker-autohide class="flex items-center">
+                                            <div class="relative">
+                                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                         fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                                    </svg>
+                                                </div>
+                                                <input name="start" type="text"
+                                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                       placeholder="Start date">
+                                            </div>
+                                            <span class="mx-2 text-gray-500 dark:text-gray-400">to</span>
+                                            <div class="relative">
+                                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                         fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                                    </svg>
+                                                </div>
+                                                <input name="end" type="text"
+                                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                       placeholder="End date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Line Chart -->
+                        <div class="py-6" id="pie-chart">
+                        </div>
+                        <!--Details question table-->
+                        <table class="w-full md\:text-sm text-gray-500 dark:text-gray-400">
+                            <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Câu hỏi
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Câu trả lời của bạn
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Câu trả lời đúng
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Kết quả
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="questionDataContent">
+                                <tr class="bg-white text-justify border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td scope="row" class="text-gray-900 dark:text-white">
+                                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Placeat, minus
+                                        voluptas odit beatae, distinctio ipsa fuga a dolor cumque enim corporis labore
+                                        nesciunt. Neque iusto ducimus velit id, corporis qui?
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        Biển A
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        Biển A
+                                    </td>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span class="text-green-700">Đúng</span>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        <button type="button" style="margin: 0 auto;"
+                                class="statDetailsModalCloseButton text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                            Ok
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <template id="scheduleDetailsTemplate">
+        <li class="mb-10 ml-6">
+            <span class="absolute flex items-center justify-center w-6 h-6 bg-red-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-red-900">
+                <svg class="w-2.5 h-2.5 text-red-800 dark:text-red-300" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                </svg>
+            </span>
+            <h3 class="mb-3 mt-3 flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                <span class="courseName">Khóa A1</span>
+                <span class="courseStatus ">
+                    Đã
+                    xong
+                </span>
+            </h3>
+            <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                <span class="courseDate">28/10/2023</span> vào lúc <span class="courseTime text-red-700">16:00~18:00</span>
+            </time>
+            <p class="courseDescription mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                Lorem ipsum dolor sit
+                amet consectetur, adipisicing elit. Tenetur dolor maxime, laudantium quaerat dolore
+                soluta, sit neque molestias ea, laboriosam labore! Quis aspernatur, saepe laudantium
+                quos tenetur sint rem officiis?
+            </p>
+        </li>
+    </template>
+    <!--Event modal-->
+    <div id="detailsScheduleModal" tabindex="-1" aria-hidden="true"
+         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Chi tiết
+                    </h3>
+                    <button type="button"
+                            class="scheduleDetailsCloseButton text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <ol class="relative border-l border-gray-200 dark:border-gray-700" id="scheduleDetailsModalContent">
+                        <li class="mb-10 ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-red-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-red-900">
+                                <svg class="w-2.5 h-2.5 text-red-800 dark:text-red-300" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </span>
+                            <h3 class="mb-3 mt-3 flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                                Khóa A1<span class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 ml-3">
+                                    Sắp
+                                    tới
+                                </span>
+                            </h3>
+                            <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                28/10/2023 vào lúc <span class="text-red-700">14:00~16:00</span>
+                            </time>
+                            <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                                Lorem ipsum dolor sit
+                                amet consectetur, adipisicing elit. Tenetur dolor maxime, laudantium quaerat dolore
+                                soluta, sit neque molestias ea, laboriosam labore! Quis aspernatur, saepe laudantium
+                                quos tenetur sint rem officiis?
+                            </p>
+                        </li>
+                        <li class="mb-10 ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-red-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-red-900">
+                                <svg class="w-2.5 h-2.5 text-red-800 dark:text-red-300" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </span>
+                            <h3 class="mb-3 mt-3 flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                                <span class="courseName">Khóa A1</span>
+                                <span class="cousreStatus bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 ml-3">
+                                    Đã
+                                    xong
+                                </span>
+                            </h3>
+                            <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                <span class="courseDate">28/10/2023</span> vào lúc <span class="time text-red-700">16:00~18:00</span>
+                            </time>
+                            <p class="courseDescription mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                                Lorem ipsum dolor sit
+                                amet consectetur, adipisicing elit. Tenetur dolor maxime, laudantium quaerat dolore
+                                soluta, sit neque molestias ea, laboriosam labore! Quis aspernatur, saepe laudantium
+                                quos tenetur sint rem officiis?
+                            </p>
+                        </li>
+                    </ol>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button type="button" id="submitButton"
+                            class="scheduleDetailsCloseButton text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                        Ok
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="timetableSection" class="user-tab" style="display: none;width: 82%;float: right;">
+        <div class="wrapper bg-white rounded shadow w-full ">
+            <div class="header flex justify-between border-b p-2">
+                <span class="text-lg">
+                    <select id="monthSelect"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Chọn tháng</option>
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+
+                </span>
+                <div class="buttons">
+                    <button class="p-1">
+                        <svg width="1em" fill="gray" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left-circle"
+                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path fill-rule="evenodd"
+                                  d="M8.354 11.354a.5.5 0 0 0 0-.708L5.707 8l2.647-2.646a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708 0z" />
+                            <path fill-rule="evenodd"
+                                  d="M11.5 8a.5.5 0 0 0-.5-.5H6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5z" />
+                        </svg>
+                    </button>
+                    <button class="p-1">
+                        <svg width="1em" fill="gray" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle"
+                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path fill-rule="evenodd"
+                                  d="M7.646 11.354a.5.5 0 0 1 0-.708L10.293 8 7.646 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z" />
+                            <path fill-rule="evenodd"
+                                  d="M4.5 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                            <span class="xl:block lg:block md:block sm:block hidden">Chủ Nhật</span>
+                            <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Sun</span>
+                        </th>
+                        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                            <span class="xl:block lg:block md:block sm:block hidden">Thứ hai</span>
+                            <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Mon</span>
+                        </th>
+                        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                            <span class="xl:block lg:block md:block sm:block hidden">Thứ ba</span>
+                            <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Tue</span>
+                        </th>
+                        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                            <span class="xl:block lg:block md:block sm:block hidden">Thứ tư</span>
+                            <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Wed</span>
+                        </th>
+                        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                            <span class="xl:block lg:block md:block sm:block hidden">Thứ năm</span>
+                            <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Thu</span>
+                        </th>
+                        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                            <span class="xl:block lg:block md:block sm:block hidden">Thứ sáu</span>
+                            <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Fri</span>
+                        </th>
+                        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                            <span class="xl:block lg:block md:block sm:block hidden">Thứ bảy</span>
+                            <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Sat</span>
+                        </th>
+                    </tr>
+                </thead>
+                <template id="normalDayCellTemplate">
+                    <td class="normalDay border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                        <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                            <div class="top h-5 w-full">
+                                <span class="dayText text-gray-500">3</span>
+                            </div>
+                            <div class="eventsContainer bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                        </div>
+                    </td>
+                </template>
+                <template id="missingDayCellTemplate">
+                    <td class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                        <div class="flex flex-col h-40 mx-auto xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto overflow-hidden">
+                            <div class="top h-5 w-full">
+                                <span class="text-gray-500 text-sm"></span>
+                            </div>
+                            <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                        </div>
+                    </td>
+                </template>
+                <template id="event-template">
+                    <div class="event bg-red-500 text-white rounded p-1 text-sm mb-1">
+                        <span class="event-name">
+                            Khóa A1
+                        </span>
+                        <br />
+                        <time>
+                            12:00~14:00
+                        </time>
+                    </div>
+                </template>
+                <tbody id="userTimetable">
+                    <tr class="text-center h-20">
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300 ">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">1</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
+                                    <div class="event bg-red-500 text-white rounded p-1 text-sm mb-1">
+                                        <span class="event-name">
+                                            Khóa A1
+                                        </span>
+                                        <time>
+                                            12:00~14:00
+                                        </time>
+                                    </div>
+                                    <div class="event bg-red-500 text-white rounded p-1 text-sm mb-1">
+                                        <span class="event-name">
+                                            Khóa A1
+                                        </span>
+                                        <time>
+                                            18:00~20:00
+                                        </time>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">2</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">3</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">4</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">6</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-hidden transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">7</span>
+                                </div>
+                                <!-- <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
+                                    <div class="event bg-blue-400 text-white rounded p-1 text-sm mb-1">
+                                        <span class="event-name">
+                                            Thi thực hành
+                                        </span>
+                                        <span class="time">
+                                            12:00~14:00
+                                        </span>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500 text-sm">8</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!--         line 1 -->
+                    <tr class="text-center h-20">
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">9</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">10</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">12</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">13</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">14</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">15</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500 text-sm">16</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--         line 1 -->
+                    <!--         line 2 -->
+                    <tr class="text-center h-20">
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">16</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">17</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">18</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">19</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">20</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">21</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500 text-sm">22</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--         line 2 -->
+                    <!--         line 3 -->
+                    <tr class="text-center h-20">
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">23</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">24</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">25</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">26</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">27</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">28</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500 text-sm">29</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--         line 3 -->
+                    <!--         line 4 -->
+                    <tr class="text-center h-20">
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">30</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">31</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                                <div class="event bg-red-500 text-white rounded p-1 text-sm mb-1">
+                                    <span class="event-name">
+                                        Khóa A1
+                                    </span>
+                                    <time>
+                                        12:00~14:00
+                                    </time>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">1</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">2</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">3</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500">4</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                        <td class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                            <div class="flex flex-col h-40 mx-auto overflow-hidden" style="width: 80%;">
+                                <div class="top h-5 w-full">
+                                    <span class="text-gray-500 text-sm">5</span>
+                                </div>
+                                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--         line 4 -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <script src="~/js/UserProfileFunctions.js"></script>
+</body>
+
+</html>

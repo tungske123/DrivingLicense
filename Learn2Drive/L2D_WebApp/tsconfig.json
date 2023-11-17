@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "lib": [ "DOM", "ES2016" ],
+    "target": "es2016",
+    "strict": false,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "wwwroot/js"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ],
+  "include": [ "Scripts/**/*" ],
+  "compileOnSave": true
+}

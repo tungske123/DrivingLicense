@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34018.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2D_DataAccess", "L2D_DataAccess\L2D_DataAccess.csproj", "{645503D3-A571-4819-B71E-34C1085D5A02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2D_WebApp", "L2D_WebApp\L2D_WebApp.csproj", "{C348B82C-6DC3-42C9-ADF5-3697EBF7A406}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{645503D3-A571-4819-B71E-34C1085D5A02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645503D3-A571-4819-B71E-34C1085D5A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645503D3-A571-4819-B71E-34C1085D5A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645503D3-A571-4819-B71E-34C1085D5A02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C348B82C-6DC3-42C9-ADF5-3697EBF7A406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C348B82C-6DC3-42C9-ADF5-3697EBF7A406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C348B82C-6DC3-42C9-ADF5-3697EBF7A406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C348B82C-6DC3-42C9-ADF5-3697EBF7A406}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1376A37A-5BCB-4727-B6EA-BAED8A1ED83A}
+	EndGlobalSection
+EndGlobal

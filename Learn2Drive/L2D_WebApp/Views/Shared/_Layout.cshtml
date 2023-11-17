@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--bootstrap css file-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!--font css files-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300&display=swap" rel="stylesheet">
+    <!--custom css file-->
+
+    <link rel="stylesheet" href="/css/styleHome.css">
+    @if (!string.IsNullOrEmpty(@ViewBag.icon_link))
+    {
+        <link rel="icon" href="@ViewBag.icon_link">
+    }
+    else
+    {
+        <link rel="icon" href="/img/favicon_1.ico">
+    }
+    <title>@ViewData["Title"]</title>
+</head>
+
+<body>
+    @using L2D_DataAccess.Models;
+    @using System.Text.Json;
+    @{
+        Account account = null;
+        if (!string.IsNullOrEmpty(Context.Session.GetString("usersession")))
+        {
+            var usersession = Context.Session.GetString("usersession");
+            account = JsonSerializer.Deserialize<Account>(usersession);
+        }
+    }
+    <header>
+        <!--Nav Container-->
+        <div class="nav container hidden-load">
+            <!--Menu Icon-->
+            <i class='bx bx-menu' id="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                </svg>
+            </i>
+            <!--Logo-->
+            <a href="" class="logo">Learn<span>2</span>Drive</a>
+            <!--Navbar List-->
+            <ul class="navbar">
+                <li> <a href="/Home" class="home-link">Home</a></li>
+                <li> <a href="/Home/Intro" class="intro_link">Giới thiệu </a></li>
+                <li class="dropdown-toggle">
+                    <a class="navbar-link license_list" href="#" id="dropdown">Đào tạo lái xe</a>
+                    <ul class="dropdown_menu dropdown_menu--animated dropdown_menu-1 dropdown-menu">
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A1';">Bằng A1</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A2';">Bằng A2</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A3';">Bằng A3</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=A4';">Bằng A4</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=B1';">Bằng B1</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=B2';">Bằng B2</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=C';">Bằng C</li>
+                        <li class="dropdown-item" onclick="location.href='/Home/License?licenseid=D-E';">Bằng D-E</li>
+                    </ul>
+                </li>
+                <li> <a href="/Quiz" class="quizLink">Thi thử</a></li>
+                <li> <a href="/Rent" class="rentLink">Thuê xe</a></li>
+                @if (@account is not null)
+                {
+                    <li><a href="/Login/Authorize">@account.Username</a></li>
+                   @*  <li><a href="/Login/logout">Đăng Xuất</a></li> *@
+                }
+                else
+                {
+                    <li> <a href="/Login" class="login-link">Đăng Nhập</a></li>
+                }
+            </ul>
+            <!--search Icon-->
+            <i class='bx bx-search' id="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg>
+            </i>
+            <!--search box hidden-load-->
+            <form class="search-box hidden-load container" action="">
+                <input type="search" name="keyword" placeholder="Search here..." class="search-bar">
+            </form>
+        </div>
+    </header>
+
+
+    @RenderBody();
+
+
+    <div class="footer hidden-load container-fluid pt-2">
+        <div class="footer-container container">
+            <div class="footer-box hidden-load">
+                <a href="" class="logo">Learn<span>2</span>Drive</a>
+                <div class="social">
+                    <a href=""><i class='bx bxl-facebook'></i></a>
+                    <a href=""><i class='bx bxl-twitter'></i></a>
+                    <a href=""><i class='bx bxl-instagram'></i></a>
+                    <a href=""><i class='bx bxl-youtube'></i></a>
+                </div>
+            </div>
+            <div class="footer-box hidden-load">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="mb-1 bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                    </svg> Mục lục</h3>
+                <a href="/Home">Home</a>
+                <a href="">Giới thiệu</a>
+                <a href="">Đào tạo lái xe</a>
+                <a href="">Tài liệu</a>
+                <a href="/Quiz">Thi thử lý thuyết</a>
+                <a href="/Rent">Thuê xe</a>
+            </div>
+
+            <div class="footer-box hidden-load">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="mb-1 bi bi-geo-alt" viewBox="0 0 16 16">
+                        <path
+                            d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    </svg> Địa chỉ</h3>
+                <a href="">Cơ sở 1: Quận 9, Thành phố Thủ Đức</a>
+                <a href="">Cơ sở 2: Quận 12, Thành phố Thủ Đức</a>
+            </div>
+
+            <div class="footer-box hidden-load">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="mb-1 bi bi-telephone" viewBox="0 0 16 16">
+                        <path
+                            d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                    </svg> Liên hệ</h3>
+                <a href="">SĐT1: 1234567890</a>
+                <a href="">SĐT2: 9876543210</a>
+            </div>
+        </div>
+    </div>
+    <script src="/js/HomeFunctions.js"></script>
+    <script src="/js/LoadAnimations.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

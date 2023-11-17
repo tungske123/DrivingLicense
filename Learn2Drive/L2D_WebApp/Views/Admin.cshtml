@@ -1,0 +1,338 @@
+﻿@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+    ViewData["Title"] = "L2D - Admin";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--custom css files-->
+    <link rel="stylesheet" href="~/css/styleAdminPage.css">
+    <!--icon css file-->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/324/324125.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .inline-center {
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+    <title>Admin Page</title>
+</head>
+
+<body>
+    <!-- <div id="marketing-banner" tabindex="-1" class="fixed z-50 flex flex-col md:flex-row justify-between w-[calc(100%-2rem)] p-4 -translate-x-1/2 bg-white border border-gray-100 rounded-lg shadow-sm lg:max-w-7xl left-1/2 top-6 dark:bg-gray-700 dark:border-gray-600">
+        <div class="flex flex-col items-start mb-3 mr-4 md:items-center md:flex-row md:mb-0">
+            <div class="flex items-center mb-2 border-gray-200 md:pr-4 md:mr-4 md:border-r md:mb-0 dark:border-gray-600">
+                <img src="img/favicon_1.ico" class="h-6 mr-2" alt="Flowbite Logo">
+                <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">Learn<span class="text-red-700">2</span>Drive</span>
+            </div>
+            <p class="flex items-center text-xl font-normal text-red-700 dark:text-gray-400">Welcome, admin!</p>
+        </div>
+        <div class="flex items-center flex-shrink-0">
+            <button data-dismiss-target="#marketing-banner" type="button" class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 dark:hover:bg-gray-600 dark:hover:text-white">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close banner</span>
+            </button>
+        </div>
+    </div> -->
+
+    <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+        type="button"
+        class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        <span class="sr-only">Open sidebar</span>
+        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+            </path>
+        </svg>
+    </button>
+
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        aria-label="Sidebar">
+        <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+            <a href="" class="flex items-center pl-2.5 mb-5">
+                <img src="https://cdn-icons-png.flaticon.com/512/3721/3721600.png" class="h-6 mr-3 sm:h-7"
+                    alt="Learn2Drive" />
+                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+                    Learn<span class="text-red-700">2</span>Drive
+                </span>
+            </a>
+            <ul class="pt-2 mt-5 space-y-2 font-medium border-b border-gray-400 dark:border-gray-700">
+                <li class="dashboard-item">
+                    <a href="#dashboardSection"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                            viewBox="0 0 22 21">
+                            <path
+                                d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
+                            <path
+                                d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
+                        </svg>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="space-y-2 font-medium" id="sidebar-content">
+
+                <li class="dashboard-item">
+                    <a href="#adminInfo"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white "
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
+                        </svg>
+                        <span class="ml-3">Thông tin</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="#manageAccount"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                            viewBox="0 0 20 19">
+                            <path
+                                d="M7.324 9.917A2.479 2.479 0 0 1 7.99 7.7l.71-.71a2.484 2.484 0 0 1 2.222-.688 4.538 4.538 0 1 0-3.6 3.615h.002ZM7.99 18.3a2.5 2.5 0 0 1-.6-2.564A2.5 2.5 0 0 1 6 13.5v-1c.005-.544.19-1.072.526-1.5H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h7.687l-.697-.7ZM19.5 12h-1.12a4.441 4.441 0 0 0-.579-1.387l.8-.795a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.795.8A4.443 4.443 0 0 0 15 8.62V7.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.12c-.492.113-.96.309-1.387.579l-.795-.795a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.8.8c-.272.424-.47.891-.584 1.382H8.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1.12c.113.492.309.96.579 1.387l-.795.795a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.8-.8c.424.272.892.47 1.382.584v1.12a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1.12c.492-.113.96-.309 1.387-.579l.795.8a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.8-.795c.273-.427.47-.898.584-1.392h1.12a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5ZM14 15.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
+                        </svg>
+                        <span class="ml-3">Quản lý tài khoản</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="/Home"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8v10a1 1 0 0 0 1 1h4v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5h4a1 1 0 0 0 1-1V8M1 10l9-9 9 9" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Về trang chủ</span>
+                    </a>
+                </li>
+                <li class="dashboard-item">
+                    <a href="/Login/logout"
+                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#6B7280" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
+                            <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Đăng xuất</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <section class="p-4 sm:ml-64 admin-tab" id="dashboardSection" style="display: none;">
+        <!--graph-->
+        <div class="wrapper" style="display: flex;column-gap: 30px;">
+            <aside class="left-dashboard-content">
+                <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                    <h4 class="text-2xl font-bold dark:text-white">Thống kê doanh thu thuê xe</h4>
+                    <div class="flex justify-between">
+                        <div>
+                            <h6 class="text-lg font-bold dark:text-white">Tổng: <span style="color: #d90429;"
+                                    id="totalMoney">5.000.000 VNĐ</span></h6>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">Năm 2023</p>
+                        </div>
+                    </div>
+                    <div id="area-chart"></div>
+                    <div
+                        class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                        <div class="flex justify-between items-center pt-5">
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="mt-5 block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Thống kê người dùng</h5>
+                    <p class="font-normal text-gray-700 dark:text-gray-400">
+                        <span><i class="fa-solid fa-user" style="color: #cd1313;"></i> 500 người dùng</span>
+                    </p>
+                </div>
+                <div
+                    class="mt-5 block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Lượt đăng kí thi</h5>
+                    <p class="font-normal text-gray-700 dark:text-gray-400">
+                        <span><i class="fa-solid fa-file-invoice" style="color: #cd1313;"></i> 300 hồ sơ</span>
+                    </p>
+                </div>
+                
+            </aside>
+            <aside class="right-dashboard-content">
+                <div
+                    class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                    <div class="flex flex-col justify-between p-4 leading-normal">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy
+                            technology acquisitions 2021</h5>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise
+                            technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+    <ul hidden id="chartdatalist">
+        <li hidden class="chartdata">200000</li>
+        <li hidden class="chartdata">300000</li>
+        <li hidden class="chartdata">400000</li>
+        <li hidden class="chartdata">300000</li>
+        <li hidden class="chartdata">200000</li>
+        <li hidden class="chartdata">200000</li>
+        <li hidden class="chartdata">200000</li>
+    </ul>
+    <ul hidden id="chartdatelist">
+        <li hidden class="chartdate"></li>
+        <li hidden class="chartdate"></li>
+        <li hidden class="chartdate"></li>
+    </ul>
+    <section class="p-4 sm:ml-64 admin-tab" style="display: none;" id="adminInfo">
+        <div hidden id="adminId">@ViewBag.AdminId</div>
+        <form method="post" id="adminInfoForm">
+            <div class="mb-6">
+                <label for="fullname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Họ và
+                    tên</label>
+                <input type="text" id="fullname" name="FullName"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập họ và tên" required>
+            </div>
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
+                <div class="mb-6">
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ
+                        email</label>
+                    <input type="email" id="email" name="Email"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Nhập địa chỉ email" required>
+                </div>
+                <div class="mb-6">
+                    <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện
+                        thoại</label>
+                    <input type="tel" id="phone" name="Phone"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Nhập số điện thoại">
+                </div>
+            </div>
+            <div class="mb-6">
+                <label for="password"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <input type="password" id="password" name="Password"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Nhập mật khẩu" required>
+            </div>
+            <div class="mb-6">
+                <label for="repass" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
+                    password</label>
+                <input type="password" id="repass"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Xác nhận mật khẩu" required>
+            </div>
+            <button type="submit"
+                class="inline-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                Lưu
+            </button>
+        </form>
+    </section>
+    <section class="p-4 sm:ml-64 admin-tab" id="manageAccount" style="display: none;">
+
+    </section>
+    <script src="/js/Admin.js"></script>
+    <script>
+        // ApexCharts options and config
+        //[6500, 6418, 6456, 6526, 6356, 6456]
+        //['01 February', '02 February', '03 February', '04 February', '05 February', '06 February', '07 February']
+        window.addEventListener("load", function () {
+            const chartDataElements = document.querySelectorAll('.chartdata');
+            let chartDatas = [];
+            chartDataElements.forEach(element => {
+                chartDatas.push(Number(element.textContent));
+            });
+            const chartDateElements = document.querySelectorAll('.chartdate');
+            let chartDates = [];
+            chartDateElements.forEach(element => {
+                chartDates.push(element.textContent);
+            });
+            let options = {
+                chart: {
+                    height: "100%",
+                    maxWidth: "100%",
+                    type: "area",
+                    fontFamily: "Inter, sans-serif",
+                    dropShadow: {
+                        enabled: false,
+                    },
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    x: {
+                        show: false,
+                    },
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        opacityFrom: 0.55,
+                        opacityTo: 0,
+                        shade: "#d90429",
+                        gradientToColors: ["#d90429"],
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    width: 6,
+                },
+                grid: {
+                    show: false,
+                    strokeDashArray: 4,
+                    padding: {
+                        left: 2,
+                        right: 2,
+                        top: 0
+                    },
+                },
+                series: [
+                    {
+                        name: "",
+                        data: chartDatas,
+                        color: "#d90429",
+                    },
+                ],
+                xaxis: {
+                    categories: chartDates,
+                    labels: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    show: false,
+                },
+            }
+
+            if (document.getElementById("area-chart") && typeof ApexCharts !== 'undefined') {
+                const chart = new ApexCharts(document.getElementById("area-chart"), options);
+                chart.render();
+            }
+        });
+    </script>
+</body>
+
+</html>
