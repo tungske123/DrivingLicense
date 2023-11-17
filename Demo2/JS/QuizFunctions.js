@@ -1,38 +1,204 @@
+let UserId = `AFB98A94-D245-4075-8B5D-9B309BCE96F3`;
 //For the timer
 let timer;
-var totalTime = 1100;
+var totalTime = 1200;
+let quizDuration = 1200;
 var questionCnt = 0;
 const savedTimeLeft = sessionStorage.getItem("quizTimer");
 let timeLeft = savedTimeLeft ? parseInt(savedTimeLeft) : totalTime;
-
+let startTime = 0;
+let attemptDateTime;
 function saveTimerState() {
     sessionStorage.setItem("quizTimer", timeLeft.toString());
 }
 function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
+
+function secondsToHMS(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+  
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+  
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
+  
+  // Example usage:
+  const totalSeconds = 3661; // Example seconds
+  const formattedTime = secondsToHMS(totalSeconds);
+  console.log(formattedTime); // Output: "01:01:01"
+  
+
+function secondsToTimeSpan(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    var minutes = Math.floor(seconds / 60);
+    seconds %= 60;
+
+    return 'PT' + hours + 'H' + minutes + 'M' + seconds + 'S';
+}
+
+
+
 function startTimer() {
     // Clear the interval if it's already running
     if (timer) {
         clearInterval(timer);
     }
-    timer = setInterval(() => {
+    timer = setInterval(async () => {
         const timeElement = document.getElementById("time");
         timeElement.textContent = formatTime(timeLeft);
         timeLeft--;
         if (timeLeft < 0) {
             clearInterval(timer);
-            submitQuiz();
+            await submitQuiz();
         }
         saveTimerState();
     }, 1000);
 }
-function submitQuiz() {
-    // sessionStorage.clear();
-    alert('Nộp bài thành công!');
+
+class Attempt {
+    quizId = 0;
+    attemptTime;
+    attemptDate;
+    totalQuestion = 0;
+    totalAnswered = 0;
+    result = 0;
 }
+
+class AttemptDetail {
+
+}
+
+function calculateResult() {
+    let questionList = quiz.questions;
+    let totalQuestionCnt = questionList.length;
+    let correctQuestionCnt = 0;
+    let incorrectQuestionCnt = 0;
+    let failedImportantQuestion = false;
+    attemptDataList.forEach(attemptData => {
+        let question = questionList.find(q => parseInt(q.questionId) === parseInt(attemptData.questionId));
+        console.log(`Question: ` + question);
+        if (question !== undefined) {
+            let attemptAnswerId = attemptData.answerId;
+            console.log('Attempt answer id: ' + attemptAnswerId);
+            let correctAnswer = question.answers.find(ans => parseInt(ans.answerId) === parseInt(attemptAnswerId) && ans.isCorrect === true);
+            console.log('Correct answer: ' + correctAnswer);
+            if (correctAnswer !== undefined) {
+                ++correctQuestionCnt;
+            } else {
+                if (question.isCritical === true && failedImportantQuestion === false) {
+                    failedImportantQuestion = true;
+                }
+                ++incorrectQuestionCnt;
+            }
+        }
+    });
+    let remainingQuestionCnt = totalQuestionCnt - correctQuestionCnt - incorrectQuestionCnt;
+    let isPassed = (failedImportantQuestion === false && (incorrectQuestionCnt + remainingQuestionCnt <= 3));
+    let remainingTime = document.getElementById('time').textContent;
+
+    var attempt = {
+        userId: UserId,
+        quizId: quiz.quizId,
+        attemptTime: `${secondsToHMS(quizDuration - timeLeft)}`,
+        attemptDate: attemptDateTime,
+        totalQuestion: totalQuestionCnt,
+        totalAnswered: correctQuestionCnt,
+        result: isPassed
+    };
+    console.log(`Nộp bài thành công!
+    \nThời gian bắt đầu làm: ${attemptDateTime}
+    \nThời gian làm bài: ${remainingTime}
+    \nTổng số câu hỏi trong đề: ${totalQuestionCnt}
+    \nTổng số câu đã làm: ${attemptDataList.length}
+    \nSố câu đúng: ${correctQuestionCnt}\nSố câu sai: ${incorrectQuestionCnt}
+    \nKết quả: ${isPassed ? 'Đậu' : 'Rớt'}`);
+    return attempt;
+}
+
+async function submitQuiz() {
+    // sessionStorage.clear();
+    var attempt = await submitQuizAttempt();
+    let attemptDetailList = [];
+    var questionList = quiz.questions;
+    questionList.forEach(question => {
+        let attemptData = attemptDataList.find(att => parseInt(att.questionId) === parseInt(question.questionId));
+        console.log(`Attempt data:` + attemptData);
+        let isAnswered = (attemptData !== undefined);
+        let status = `notdone`;
+        if (attemptData !== undefined) {
+            let currentAnswer = question.answers.find(ans => parseInt(ans.answerId) === parseInt(attemptData.answerId));
+            let hasCorrectAnswer = currentAnswer.isCorrect;
+            if (!isAnswered) {
+                status = `notdone`;
+            } else {
+                status = (hasCorrectAnswer) ? `correct` : `incorrect`;
+            }
+        }
+        let attemptDetail = {
+            attemptId: attempt.attemptId,
+            selectedAnswerId: (isAnswered === true) ? attemptData.answerId : null,
+            questionId: question.questionId,
+            status: status
+        };
+        attemptDetailList.push(attemptDetail);
+    });
+    await submitQuizAttemptDetail(attempt.attemptId, attemptDetailList);
+    alert('Nộp bài thành công');
+}
+
+async function submitQuizAttemptDetail(attemptId, attemptDetailList) {
+    try {
+        const url = `https://localhost:7235/api/quiz/submitattemptdetails/${attemptId}`;
+        console.log(`Submit quiz attempt details url: ${url}`);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(attemptDetailList)
+        });
+        if (response.status !== 204) {
+            console.error(`Error! ${response.status} - ${response.statusText}`);
+            return;
+        }
+        console.log('Submit quiz attempt details sucessfully');
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+}
+
+async function submitQuizAttempt() {
+    var attempt = calculateResult();
+    try {
+        const url = `https://localhost:7235/api/quiz/submitattempt/${parseInt(quiz.quizId)}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(attempt)
+        });
+        if (!response.ok) {
+            console.error(`Error: ${response.status} - ${response.statusText}`);
+            return;
+        }
+        var newAttempt = await response.json();
+        console.log(`Submit quiz attempt success!Attempt: ${newAttempt}`);
+        return newAttempt;
+    } catch (error) {
+        console.error('Submit quiz error:' + error);
+    }
+    return null;
+}
+
 
 // startTimer();
 if (savedTimeLeft) {
@@ -213,9 +379,12 @@ function renderInitialQuizData(quiz) {
     }
     var quizNameElement = document.querySelector('.quiz-name');
 
-    if (quiz.timer !== null) {
-        totalTime = quiz.timer;
+    if (quiz.timer != null) {
+        totalTime = parseInt(quiz.timer) * 60;
+        timeLeft = parseInt(quiz.timer) * 60;
+        quizDuration = parseInt(quiz.timer) * 60;
     }
+
     quizNameElement.textContent = quiz.name;
     var question = quiz.questions[0];
     currentQuestionId = question.questionId;
@@ -247,15 +416,33 @@ clearAnswerLink.addEventListener('click', (e) => {
 
 let submitModalButtons = document.querySelectorAll('.submit-btn');
 submitModalButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
         let action = btn.getAttribute('action');
         if (action === `submit`) {
-            submitQuiz();
+            await submitQuiz();
         }
     });
 });
 
+function getVietnamDateTime() {
+    const utcDate = new Date();
+
+    // Convert to Vietnam timezone (Indochina Time - ICT)
+    const vietnamTime = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    }).format(utcDate);
+    return vietnamTime;
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
+    attemptDateTime = getVietnamDateTime();
+    console.log(`Attempt date time: ${attemptDateTime}`);
     await fetchQuizData();
-    //startTimer();
+    startTimer();
 });
