@@ -18,7 +18,8 @@ namespace L2D_WebApp.Controllers
         }
 
         [HttpGet]
-        [Route("api/license")]  //https://localhost:7235/license
+        [Route("api/licenses")]  //https://localhost:7235/licenses
+        [Produces("application/json")]
         public async Task<IActionResult> GetAllLicense()
         {
             try
@@ -35,7 +36,8 @@ namespace L2D_WebApp.Controllers
 
         [HttpGet]
         [Route("api/license/{licenseid}")] //https://localhost:7235/license/A2
-        public async Task<IActionResult> GetLicenseById(string licenseid)
+        [Produces("application/json")]
+        public async Task<IActionResult> GetLicenseById([FromRoute] string licenseid)
         {
             try
             {
@@ -57,14 +59,22 @@ namespace L2D_WebApp.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> AddLicense([FromBody] License license)
         {
+            if (license is null)
+            {
+                return BadRequest("Can't find any license data to insert");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 await _context.Licenses.AddAsync(license);
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
                 return Ok("Them bang lai thanh cong");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 return BadRequest($"An error occurred when processing request: {ex.Message}");
             }
         }
@@ -74,29 +84,46 @@ namespace L2D_WebApp.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> UpdateLicense([FromRoute] string lid, [FromBody] License license)
         {
-            if (lid == string.Empty || license is null)
+            if (string.IsNullOrEmpty(lid))
             {
                 return BadRequest();
             }
+
             var findlicense = await _context.Licenses.SingleOrDefaultAsync(license => license.LicenseId.Equals(lid));
+
             if (findlicense is null)
             {
                 return NotFound("Can't find any license");
             }
+
             if (!lid.Equals(license.LicenseId))
             {
                 return BadRequest("licenseid do not match");
             }
-            findlicense.Condition = license.Condition;
-            findlicense.Cost = license.Cost;
-            findlicense.Describe = license.Describe;
-            findlicense.LicenseId = lid;
-            findlicense.Time = license.Time;
-            findlicense.ExamContent = license.ExamContent;
-            findlicense.LicenseName = license.LicenseName;
-            findlicense.Tips = license.Tips;
 
-            await _context.SaveChangesAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.Licenses.Where(l => l.LicenseId.Equals(lid))
+                    .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(l => l.Condition, license.Condition)
+                    .SetProperty(l => l.Cost, license.Cost)
+                    .SetProperty(l => l.Describe, license.Describe)
+                    .SetProperty(l => l.Time, license.Time)
+                    .SetProperty(l => l.ExamContent, license.ExamContent)
+                    .SetProperty(l => l.LicenseName, license.LicenseName)
+                    .SetProperty(l => l.Tips, license.Tips));
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
+
             return Ok();
         }
 
@@ -105,13 +132,25 @@ namespace L2D_WebApp.Controllers
         [Route("api/license/delete/{lid}")]
         public async Task<IActionResult> DeleteRent([FromRoute] string lid)
         {
-            License findlicense = await _context.Licenses.SingleOrDefaultAsync(license => license.LicenseId.Equals( lid));
-            if(findlicense is null)
+            License findlicense = await _context.Licenses.SingleOrDefaultAsync(license => license.LicenseId.Equals(lid));
+
+            if (findlicense is null)
             {
-                return NotFound("Khong tim thay bang lai");
+                return NotFound($"Can't find any license with id {lid}");
             }
-            _context.Licenses.Remove(findlicense);
-            await _context.SaveChangesAsync();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.Licenses.Where(l => l.LicenseId.Equals(lid)).ExecuteDeleteAsync();
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
             return Ok();
         }
     }

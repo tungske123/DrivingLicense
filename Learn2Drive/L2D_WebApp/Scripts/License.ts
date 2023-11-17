@@ -21,7 +21,7 @@ class License {
 
 function fetchData() {
 
-    const fetchAPI = `https://localhost:7235/license/${LicenseId}`;
+    const fetchAPI = `https://localhost:7235/api/license/${LicenseId}`;
 
     fetch(fetchAPI, {
         method: 'GET',
