@@ -9,9 +9,13 @@ public partial class Quiz
 
     public string LicenseId { get; set; }
 
+    public int? Timer { get; set; }
+
     public string Name { get; set; }
 
     public string Description { get; set; }
+
+    public int? TotalDid { get; set; }
 
     public virtual ICollection<Attempt> Attempts { get; set; } = new List<Attempt>();
 

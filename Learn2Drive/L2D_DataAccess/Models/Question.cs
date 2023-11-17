@@ -13,7 +13,7 @@ public partial class Question
 
     public string QuestionImage { get; set; }
 
-    public bool IsCritical { get; set; }
+    public bool? IsCritical { get; set; }
 
     public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 

@@ -190,7 +190,7 @@ namespace L2D_WebApp.Controllers
                     AttemptId = Guid.Parse(AttemptSessionID),
                     QuestionId = data.CurrentQuestionID,
                     SelectedAnswerId = data.AnswerId,
-                    IsCorrect = ChosenAnswer.IsCorrect
+                    //IsCorrect = ChosenAnswer.IsCorrect
                 });
             }
             else
@@ -283,11 +283,28 @@ namespace L2D_WebApp.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> GetQuizByID([FromRoute] int qid)
         {
-            var quiz = await _context.Quizzes
-                .Include(q => q.Questions)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(q => q.QuizId == qid);
-            return (quiz is not null) ? Ok(quiz) : NotFound($"Can't find any quiz with id {qid}");
+            try
+            {
+                var quiz = await _context.Quizzes
+                    .SingleOrDefaultAsync(q => q.QuizId == qid);
+                if (quiz is null)
+                {
+                    return NotFound($"Can't find any quiz with id {qid}");
+                }
+                if (quiz.Questions is not null)
+                {
+                    await _context.Entry(quiz).Collection(quiz => quiz.Questions).LoadAsync();
+                    foreach (var question in quiz.Questions)
+                    {
+                        await _context.Entry(question).Collection(question => question.Answers).LoadAsync();
+                    }
+                }
+                return Ok(quiz);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public record QuizFormData
@@ -417,5 +434,89 @@ namespace L2D_WebApp.Controllers
 
             return NoContent();
         }
+
+        [HttpPost]
+        [Route("api/quiz/submitattempt/{qid:int}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> SubmitQuizAttempt([FromRoute] int? qid, [FromBody] Attempt attempt)
+        {
+            if (qid is null || qid <= 0)
+            {
+                return BadRequest($"Invalid quiz id: {qid}");
+            }
+
+            if (!await _context.Quizzes.AnyAsync(quiz => quiz.QuizId == qid))
+            {
+                return BadRequest($"Can't find any quiz with id = {qid}");
+            }
+
+            if (attempt is null)
+            {
+                return BadRequest("No attempt data!");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.Attempts.AddAsync(attempt);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
+
+            return Ok(attempt);
+        }
+
+        [HttpPost]
+        [Route("api/quiz/submitattemptdetails/{aid:guid}")]
+        public async Task<IActionResult> SubmitAttemptDetails([FromRoute] Guid aid, [FromBody] List<AttemptDetail> attemptDataList)
+        {
+            if (aid == Guid.Empty)
+            {
+                return BadRequest("Invalid attempt id");
+            }
+
+            var attempt = await _context.Attempts
+                .Include(att => att.AttemptDetails)
+                .SingleOrDefaultAsync(att => att.AttemptId.Equals(aid));
+
+            if (attempt is null)
+            {
+                return BadRequest($"Can't find any attempts with id {aid}");
+            }
+
+            if (attemptDataList is null || attemptDataList.Count == 0)
+            {
+                return BadRequest("Empty data list");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                //Add attempt details to database
+                await _context.AttemptDetails.AddRangeAsync(attemptDataList);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
+            return NoContent();
+        }
+
+        //[HttpPost]
+        //[Route("api/quiz/submit/{qid:guid}")]
+        //public async Task<IActionResult> SubmitQuiz([FromRoute] Guid qid)
+        //{
+
+        //    return View("");
+        //}
     }
 }

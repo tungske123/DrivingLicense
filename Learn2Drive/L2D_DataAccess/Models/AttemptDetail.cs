@@ -7,13 +7,13 @@ public partial class AttemptDetail
 {
     public Guid AttemptDetailId { get; set; }
 
-    public Guid AttemptId { get; set; }
+    public Guid? AttemptId { get; set; }
+
+    public int? SelectedAnswerId { get; set; }
 
     public int QuestionId { get; set; }
 
-    public int SelectedAnswerId { get; set; }
-
-    public bool IsCorrect { get; set; }
+    public string Status { get; set; }
 
     public virtual Attempt Attempt { get; set; }
 

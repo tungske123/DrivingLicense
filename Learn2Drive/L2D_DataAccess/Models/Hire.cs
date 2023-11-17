@@ -7,11 +7,11 @@ public partial class Hire
 {
     public Guid HireId { get; set; }
 
-    public Guid TeacherId { get; set; }
+    public Guid? TeacherId { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public DateTime HireDate { get; set; }
+    public DateTime? HireDate { get; set; }
 
     public string Status { get; set; }
 

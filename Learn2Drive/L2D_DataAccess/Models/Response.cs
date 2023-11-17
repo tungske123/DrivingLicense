@@ -5,15 +5,15 @@ namespace L2D_DataAccess.Models;
 
 public partial class Response
 {
-    public int ResponseId { get; set; }
+    public Guid ResponseId { get; set; }
 
-    public int FeedbackId { get; set; }
+    public Guid? StaffId { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid? FeedbackId { get; set; }
 
-    public Guid StaffId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public DateTime ResponseDate { get; set; }
+    public DateTime? ResponseDate { get; set; }
 
     public string ReplierName { get; set; }
 

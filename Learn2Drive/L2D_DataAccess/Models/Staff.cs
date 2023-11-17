@@ -7,7 +7,7 @@ public partial class Staff
 {
     public Guid StaffId { get; set; }
 
-    public Guid AccountId { get; set; }
+    public Guid? AccountId { get; set; }
 
     public string FullName { get; set; }
 
@@ -18,6 +18,4 @@ public partial class Staff
     public virtual Account Account { get; set; }
 
     public virtual ICollection<Response> Responses { get; set; } = new List<Response>();
-
-    public virtual ICollection<Statistic> Statistics { get; set; } = new List<Statistic>();
 }

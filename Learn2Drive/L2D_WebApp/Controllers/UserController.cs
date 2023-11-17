@@ -56,10 +56,38 @@ namespace L2D_WebApp.Controllers
             if (uid == Guid.Empty)
             {
                 return BadRequest("Invalid user id");
+                
             }
+
+            //var user = await _context.Users
+            //.Include(user => user.Account)
+            //.Select(user => new
+            //{
+            //    UserId = user.UserId,
+            //    Avatar = user.Avatar,
+            //    Cccd = user.Cccd,
+            //    Email = user.Email,
+            //    FullName = user.FullName,
+            //    BirthDate = user.BirthDate,
+            //    Nationality = user.Nationality,
+            //    PhoneNumber = user.PhoneNumber,
+            //    Address = user.Address,
+            //    Password = user.Account.Password
+            //}).AsNoTracking().SingleOrDefaultAsync(user => user.UserId.Equals(uid));
+
+
+            // First, retrieve the user
             var user = await _context.Users
-            .Include(user => user.Account)
-            .Select(user => new
+                .SingleOrDefaultAsync(u => u.UserId.Equals(uid));
+            if (user is null)
+            {
+                return NotFound($"Can't find any users with id {uid}");
+            }
+            // Then, load the related Account explicitly
+            await _context.Entry(user).Reference(u => u.Account).LoadAsync();
+
+            // Now, you can access the properties of the user and the related Account
+            var userDetails = new
             {
                 UserId = user.UserId,
                 Avatar = user.Avatar,
@@ -71,14 +99,10 @@ namespace L2D_WebApp.Controllers
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
                 Password = user.Account.Password
-            }).AsNoTracking().SingleOrDefaultAsync(user => user.UserId.Equals(uid));
-            if (user is not null)
-            {
+            };
 
-                return Ok(user);
-            }
+            return Ok(userDetails);
 
-            return NotFound($"Can't find any users with id {uid}");
         }
 
 

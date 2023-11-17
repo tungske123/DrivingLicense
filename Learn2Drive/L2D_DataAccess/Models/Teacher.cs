@@ -7,7 +7,9 @@ public partial class Teacher
 {
     public Guid TeacherId { get; set; }
 
-    public Guid AccountId { get; set; }
+    public Guid? AccountId { get; set; }
+
+    public string LicenseId { get; set; }
 
     public string Avatar { get; set; }
 
@@ -22,4 +24,6 @@ public partial class Teacher
     public virtual Account Account { get; set; }
 
     public virtual ICollection<Hire> Hires { get; set; } = new List<Hire>();
+
+    public virtual License License { get; set; }
 }

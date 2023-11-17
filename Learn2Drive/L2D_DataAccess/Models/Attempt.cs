@@ -7,13 +7,19 @@ public partial class Attempt
 {
     public Guid AttemptId { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     public int QuizId { get; set; }
 
-    public DateTime AttemptDate { get; set; }
+    public TimeSpan? AttemptTime { get; set; }
 
-    public decimal Grade { get; set; }
+    public DateTime? AttemptDate { get; set; }
+
+    public int? TotalQuestion { get; set; }
+
+    public int? TotalAnswered { get; set; }
+
+    public bool? Result { get; set; }
 
     public virtual ICollection<AttemptDetail> AttemptDetails { get; set; } = new List<AttemptDetail>();
 

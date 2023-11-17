@@ -7,7 +7,7 @@ public partial class User
 {
     public Guid UserId { get; set; }
 
-    public Guid AccountId { get; set; }
+    public Guid? AccountId { get; set; }
 
     public string Avatar { get; set; }
 
@@ -17,7 +17,7 @@ public partial class User
 
     public string FullName { get; set; }
 
-    public DateTime? BirthDate { get; set; } = DateTime.MinValue;
+    public DateTime? BirthDate { get; set; }
 
     public string Nationality { get; set; }
 

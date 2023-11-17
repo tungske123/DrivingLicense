@@ -28,4 +28,6 @@ public partial class License
     public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+
+    public virtual ICollection<Teacher> Teachers { get; set; } = new List<Teacher>();
 }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
 using L2D_DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 namespace L2D_DataAccess.Utils;
 
 public partial class DrivingLicenseContext : DbContext
@@ -46,8 +47,6 @@ public partial class DrivingLicenseContext : DbContext
 
     public virtual DbSet<Staff> Staff { get; set; }
 
-    public virtual DbSet<Statistic> Statistics { get; set; }
-
     public virtual DbSet<Teacher> Teachers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -56,18 +55,26 @@ public partial class DrivingLicenseContext : DbContext
 
     public virtual DbSet<VwGetAllAccountEmail> VwGetAllAccountEmails { get; set; }
 
+    private string GetConnectionString()
+    {
+        IConfiguration configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", true, true).Build();
+        return configuration["ConnectionStrings:DrivingLicenseDB"];
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=12345;database=DrivingLicense;TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer(GetConnectionString());
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.AccountId).HasName("PK__Account__349DA5867A6DD8EE");
+            entity.HasKey(e => e.AccountId).HasName("PK__Account__349DA586DC44118F");
 
             entity.ToTable("Account");
 
-            entity.HasIndex(e => e.Username, "UQ__Account__536C85E4971EF8CE").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Account__536C85E4F56B0501").IsUnique();
 
             entity.Property(e => e.AccountId)
                 .HasDefaultValueSql("(newid())")
@@ -79,30 +86,28 @@ public partial class DrivingLicenseContext : DbContext
 
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E8CA8ED3AA");
+            entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E821710ED0");
 
             entity.ToTable("Admin");
 
-            entity.HasIndex(e => e.AccountId, "UQ__Admin__349DA587B852A7B4").IsUnique();
+            entity.HasIndex(e => e.AccountId, "UQ__Admin__349DA587E3F17799").IsUnique();
 
             entity.Property(e => e.AdminId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("AdminID");
-            entity.Property(e => e.AccountId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("AccountID");
+            entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.ContactNumber).HasMaxLength(20);
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FullName).HasMaxLength(100);
 
             entity.HasOne(d => d.Account).WithOne(p => p.Admin)
                 .HasForeignKey<Admin>(d => d.AccountId)
-                .HasConstraintName("FK__Admin__AccountID__06CD04F7");
+                .HasConstraintName("FK__Admin__AccountID__4E88ABD4");
         });
 
         modelBuilder.Entity<Answer>(entity =>
         {
-            entity.HasKey(e => e.AnswerId).HasName("PK__Answer__D48250245677163A");
+            entity.HasKey(e => e.AnswerId).HasName("PK__Answer__D4825024324ACF98");
 
             entity.ToTable("Answer");
 
@@ -113,67 +118,63 @@ public partial class DrivingLicenseContext : DbContext
             entity.HasOne(d => d.Question).WithMany(p => p.Answers)
                 .HasForeignKey(d => d.QuestionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Answer__Question__6EF57B66");
+                .HasConstraintName("FK__Answer__Question__5AEE82B9");
         });
 
         modelBuilder.Entity<Attempt>(entity =>
         {
-            entity.HasKey(e => e.AttemptId).HasName("PK__Attempt__891A6886B4EF8744");
+            entity.HasKey(e => e.AttemptId).HasName("PK__Attempt__891A6886AA1E0501");
 
             entity.ToTable("Attempt");
 
             entity.Property(e => e.AttemptId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("AttemptID");
-            entity.Property(e => e.AttemptDate).HasColumnType("date");
-            entity.Property(e => e.Grade).HasColumnType("decimal(18, 0)");
+            entity.Property(e => e.AttemptDate).HasColumnType("datetime");
             entity.Property(e => e.QuizId).HasColumnName("QuizID");
-            entity.Property(e => e.UserId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("UserID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Quiz).WithMany(p => p.Attempts)
                 .HasForeignKey(d => d.QuizId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Attempt__QuizID__74AE54BC");
+                .HasConstraintName("FK__Attempt__QuizID__5FB337D6");
 
             entity.HasOne(d => d.User).WithMany(p => p.Attempts)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Attempt__UserID__73BA3083");
+                .HasConstraintName("FK__Attempt__UserID__5EBF139D");
         });
 
         modelBuilder.Entity<AttemptDetail>(entity =>
         {
-            entity.HasKey(e => e.AttemptDetailId).HasName("PK__AttemptD__D271E13033E17065");
+            entity.HasKey(e => e.AttemptDetailId).HasName("PK__AttemptD__D271E13017F80399");
 
             entity.ToTable("AttemptDetail");
 
             entity.Property(e => e.AttemptDetailId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("AttemptDetailID");
-            entity.Property(e => e.AttemptId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("AttemptID");
+            entity.Property(e => e.AttemptId).HasColumnName("AttemptID");
             entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
             entity.Property(e => e.SelectedAnswerId).HasColumnName("SelectedAnswerID");
+            entity.Property(e => e.Status).HasMaxLength(10);
 
             entity.HasOne(d => d.Attempt).WithMany(p => p.AttemptDetails)
                 .HasForeignKey(d => d.AttemptId)
-                .HasConstraintName("FK__AttemptDe__Attem__797309D9");
+                .HasConstraintName("FK__AttemptDe__Attem__6383C8BA");
 
             entity.HasOne(d => d.Question).WithMany(p => p.AttemptDetails)
                 .HasForeignKey(d => d.QuestionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AttemptDe__Quest__7A672E12");
+                .HasConstraintName("FK__AttemptDe__Quest__6477ECF3");
 
             entity.HasOne(d => d.SelectedAnswer).WithMany(p => p.AttemptDetails)
                 .HasForeignKey(d => d.SelectedAnswerId)
-                .HasConstraintName("FK__AttemptDe__Selec__7B5B524B");
+                .HasConstraintName("FK__AttemptDe__Selec__656C112C");
         });
 
         modelBuilder.Entity<ExamProfile>(entity =>
         {
-            entity.HasKey(e => e.ExamProfileId).HasName("PK__ExamProf__9CEFA301C9EBBB75");
+            entity.HasKey(e => e.ExamProfileId).HasName("PK__ExamProf__9CEFA301FACBBDCF");
 
             entity.ToTable("ExamProfile");
 
@@ -184,44 +185,41 @@ public partial class DrivingLicenseContext : DbContext
             entity.Property(e => e.ExamResult).HasMaxLength(100);
             entity.Property(e => e.LicenseId)
                 .HasMaxLength(10)
-                .HasDefaultValueSql("(newid())")
                 .HasColumnName("LicenseID");
             entity.Property(e => e.Status).HasMaxLength(50);
-            entity.Property(e => e.UserId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("UserID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.License).WithMany(p => p.ExamProfiles)
                 .HasForeignKey(d => d.LicenseId)
-                .HasConstraintName("FK__ExamProfi__Licen__49C3F6B7");
+                .HasConstraintName("FK__ExamProfi__Licen__73BA3083");
 
             entity.HasOne(d => d.User).WithMany(p => p.ExamProfiles)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__ExamProfi__UserI__48CFD27E");
+                .HasConstraintName("FK__ExamProfi__UserI__72C60C4A");
         });
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF6BB2BF246");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF68B2786E3");
 
             entity.ToTable("Feedback");
 
-            entity.Property(e => e.FeedbackId).HasColumnName("FeedbackID");
-            entity.Property(e => e.FeedbackDate).HasColumnType("date");
+            entity.Property(e => e.FeedbackId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("FeedbackID");
+            entity.Property(e => e.FeedbackDate).HasColumnType("datetime");
             entity.Property(e => e.SenderName).HasMaxLength(100);
             entity.Property(e => e.Status).HasMaxLength(50);
-            entity.Property(e => e.UserId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("userID");
+            entity.Property(e => e.UserId).HasColumnName("userID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Feedback__Status__0A9D95DB");
+                .HasConstraintName("FK__Feedback__Status__7F2BE32F");
         });
 
         modelBuilder.Entity<Hire>(entity =>
         {
-            entity.HasKey(e => e.HireId).HasName("PK__Hire__FC3D8FF826D122A5");
+            entity.HasKey(e => e.HireId).HasName("PK__Hire__FC3D8FF835C1C533");
 
             entity.ToTable("Hire");
 
@@ -230,25 +228,21 @@ public partial class DrivingLicenseContext : DbContext
                 .HasColumnName("HireID");
             entity.Property(e => e.HireDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(50);
-            entity.Property(e => e.TeacherId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("TeacherID");
-            entity.Property(e => e.UserId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("UserID");
+            entity.Property(e => e.TeacherId).HasColumnName("TeacherID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Teacher).WithMany(p => p.Hires)
                 .HasForeignKey(d => d.TeacherId)
-                .HasConstraintName("FK__Hire__TeacherID__5BE2A6F2");
+                .HasConstraintName("FK__Hire__TeacherID__693CA210");
 
             entity.HasOne(d => d.User).WithMany(p => p.Hires)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Hire__UserID__5CD6CB2B");
+                .HasConstraintName("FK__Hire__UserID__6A30C649");
         });
 
         modelBuilder.Entity<License>(entity =>
         {
-            entity.HasKey(e => e.LicenseId).HasName("PK__License__72D600A222DFB711");
+            entity.HasKey(e => e.LicenseId).HasName("PK__License__72D600A2A87AF0C6");
 
             entity.ToTable("License");
 
@@ -260,7 +254,7 @@ public partial class DrivingLicenseContext : DbContext
 
         modelBuilder.Entity<Question>(entity =>
         {
-            entity.HasKey(e => e.QuestionId).HasName("PK__Question__0DC06F8CA6B3BB56");
+            entity.HasKey(e => e.QuestionId).HasName("PK__Question__0DC06F8C9023B406");
 
             entity.ToTable("Question");
 
@@ -272,12 +266,12 @@ public partial class DrivingLicenseContext : DbContext
 
             entity.HasOne(d => d.License).WithMany(p => p.Questions)
                 .HasForeignKey(d => d.LicenseId)
-                .HasConstraintName("FK__Question__Licens__68487DD7");
+                .HasConstraintName("FK__Question__Licens__5441852A");
         });
 
         modelBuilder.Entity<Quiz>(entity =>
         {
-            entity.HasKey(e => e.QuizId).HasName("PK__Quiz__8B42AE6ECBD5A3C8");
+            entity.HasKey(e => e.QuizId).HasName("PK__Quiz__8B42AE6E66CCCA2A");
 
             entity.ToTable("Quiz");
 
@@ -289,7 +283,7 @@ public partial class DrivingLicenseContext : DbContext
 
             entity.HasOne(d => d.License).WithMany(p => p.Quizzes)
                 .HasForeignKey(d => d.LicenseId)
-                .HasConstraintName("FK__Quiz__LicenseID__656C112C");
+                .HasConstraintName("FK__Quiz__LicenseID__5165187F");
 
             entity.HasMany(d => d.Questions).WithMany(p => p.Quizzes)
                 .UsingEntity<Dictionary<string, object>>(
@@ -297,14 +291,14 @@ public partial class DrivingLicenseContext : DbContext
                     r => r.HasOne<Question>().WithMany()
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Have__QuestionID__6C190EBB"),
+                        .HasConstraintName("FK__Have__QuestionID__5812160E"),
                     l => l.HasOne<Quiz>().WithMany()
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Have__QuizID__6B24EA82"),
+                        .HasConstraintName("FK__Have__QuizID__571DF1D5"),
                     j =>
                     {
-                        j.HasKey("QuizId", "QuestionId").HasName("PK__Have__5B9EA8965B715DA9");
+                        j.HasKey("QuizId", "QuestionId").HasName("PK__Have__5B9EA896F53D022A");
                         j.ToTable("Have");
                         j.IndexerProperty<int>("QuizId").HasColumnName("QuizID");
                         j.IndexerProperty<int>("QuestionId").HasColumnName("QuestionID");
@@ -313,7 +307,7 @@ public partial class DrivingLicenseContext : DbContext
 
         modelBuilder.Entity<Rent>(entity =>
         {
-            entity.HasKey(e => e.RentId).HasName("PK__Rent__783D4015C5545E09");
+            entity.HasKey(e => e.RentId).HasName("PK__Rent__783D4015DE50098D");
 
             entity.ToTable("Rent");
 
@@ -322,59 +316,51 @@ public partial class DrivingLicenseContext : DbContext
                 .HasColumnName("RentID");
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
-            entity.Property(e => e.Status)
-                .HasMaxLength(100)
-                .HasColumnName("status");
+            entity.Property(e => e.Status).HasMaxLength(100);
             entity.Property(e => e.TotalRentPrice).HasColumnType("decimal(18, 0)");
-            entity.Property(e => e.UserId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("UserID");
-            entity.Property(e => e.VehicleId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("VehicleID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.VehicleId).HasColumnName("VehicleID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Rents)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Rent__UserID__5070F446");
+                .HasConstraintName("FK__Rent__UserID__7B5B524B");
 
             entity.HasOne(d => d.Vehicle).WithMany(p => p.Rents)
                 .HasForeignKey(d => d.VehicleId)
-                .HasConstraintName("FK__Rent__VehicleID__4F7CD00D");
+                .HasConstraintName("FK__Rent__VehicleID__7A672E12");
         });
 
         modelBuilder.Entity<Response>(entity =>
         {
-            entity.HasKey(e => e.ResponseId).HasName("PK__Response__1AAA640C4A18ED2E");
+            entity.HasKey(e => e.ResponseId).HasName("PK__Response__1AAA640CA85BFDA6");
 
             entity.ToTable("Response");
 
-            entity.Property(e => e.ResponseId).HasColumnName("ResponseID");
+            entity.Property(e => e.ResponseId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("ResponseID");
             entity.Property(e => e.FeedbackId).HasColumnName("FeedbackID");
             entity.Property(e => e.ReplierName).HasMaxLength(100);
-            entity.Property(e => e.ResponseDate).HasColumnType("date");
-            entity.Property(e => e.StaffId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("StaffID");
-            entity.Property(e => e.UserId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("UserID");
+            entity.Property(e => e.ResponseDate).HasColumnType("datetime");
+            entity.Property(e => e.StaffId).HasColumnName("StaffID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Feedback).WithMany(p => p.Responses)
                 .HasForeignKey(d => d.FeedbackId)
-                .HasConstraintName("FK__Response__ReplyC__0F624AF8");
+                .HasConstraintName("FK__Response__ReplyC__02FC7413");
 
             entity.HasOne(d => d.Staff).WithMany(p => p.Responses)
                 .HasForeignKey(d => d.StaffId)
-                .HasConstraintName("FK__Response__StaffI__114A936A");
+                .HasConstraintName("FK__Response__StaffI__04E4BC85");
 
             entity.HasOne(d => d.User).WithMany(p => p.Responses)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Response__UserID__10566F31");
+                .HasConstraintName("FK__Response__UserID__03F0984C");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B69423364C8");
+            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B6994843D95");
 
             entity.ToTable("Schedule");
 
@@ -383,9 +369,7 @@ public partial class DrivingLicenseContext : DbContext
                 .HasColumnName("ScheduleID");
             entity.Property(e => e.Address).HasMaxLength(100);
             entity.Property(e => e.Date).HasColumnType("datetime");
-            entity.Property(e => e.HireId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("HireID");
+            entity.Property(e => e.HireId).HasColumnName("HireID");
             entity.Property(e => e.LicenseId)
                 .HasMaxLength(10)
                 .HasColumnName("LicenseID");
@@ -393,86 +377,70 @@ public partial class DrivingLicenseContext : DbContext
 
             entity.HasOne(d => d.Hire).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.HireId)
-                .HasConstraintName("FK__Schedule__HireID__619B8048");
+                .HasConstraintName("FK__Schedule__HireID__6E01572D");
 
             entity.HasOne(d => d.License).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.LicenseId)
-                .HasConstraintName("FK__Schedule__Licens__628FA481");
+                .HasConstraintName("FK__Schedule__Licens__6EF57B66");
         });
 
         modelBuilder.Entity<Staff>(entity =>
         {
-            entity.HasKey(e => e.StaffId).HasName("PK__Staff__96D4AAF7C09CDBAC");
+            entity.HasKey(e => e.StaffId).HasName("PK__Staff__96D4AAF7AA456DC1");
 
-            entity.HasIndex(e => e.AccountId, "UQ__Staff__349DA587931B8A5E").IsUnique();
+            entity.HasIndex(e => e.AccountId, "UQ__Staff__349DA5871C412EAD").IsUnique();
 
             entity.Property(e => e.StaffId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("StaffID");
-            entity.Property(e => e.AccountId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("AccountID");
+            entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.ContactNumber).HasMaxLength(20);
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FullName).HasMaxLength(100);
 
             entity.HasOne(d => d.Account).WithOne(p => p.Staff)
                 .HasForeignKey<Staff>(d => d.AccountId)
-                .HasConstraintName("FK__Staff__AccountID__01142BA1");
-        });
-
-        modelBuilder.Entity<Statistic>(entity =>
-        {
-            entity.HasKey(e => e.StatisticId).HasName("PK__Statisti__367DEB3719876E24");
-
-            entity.ToTable("Statistic");
-
-            entity.Property(e => e.StatisticId).HasColumnName("StatisticID");
-            entity.Property(e => e.StaffId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("StaffID");
-            entity.Property(e => e.StatisticDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Staff).WithMany(p => p.Statistics)
-                .HasForeignKey(d => d.StaffId)
-                .HasConstraintName("FK__Statistic__Total__151B244E");
+                .HasConstraintName("FK__Staff__AccountID__49C3F6B7");
         });
 
         modelBuilder.Entity<Teacher>(entity =>
         {
-            entity.HasKey(e => e.TeacherId).HasName("PK__Teacher__EDF259445B281B46");
+            entity.HasKey(e => e.TeacherId).HasName("PK__Teacher__EDF25944E2DA3F24");
 
             entity.ToTable("Teacher");
 
-            entity.HasIndex(e => e.AccountId, "UQ__Teacher__349DA58792AC52B6").IsUnique();
+            entity.HasIndex(e => e.AccountId, "UQ__Teacher__349DA587FFC8EFB5").IsUnique();
 
             entity.Property(e => e.TeacherId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("TeacherID");
-            entity.Property(e => e.AccountId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("AccountID");
+            entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.ContactNumber).HasMaxLength(20);
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FullName).HasMaxLength(100);
+            entity.Property(e => e.LicenseId)
+                .HasMaxLength(10)
+                .HasColumnName("LicenseID");
 
             entity.HasOne(d => d.Account).WithOne(p => p.Teacher)
                 .HasForeignKey<Teacher>(d => d.AccountId)
-                .HasConstraintName("FK__Teacher__Account__5629CD9C");
+                .HasConstraintName("FK__Teacher__Account__440B1D61");
+
+            entity.HasOne(d => d.License).WithMany(p => p.Teachers)
+                .HasForeignKey(d => d.LicenseId)
+                .HasConstraintName("FK__Teacher__License__44FF419A");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC83D03F5A");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC84DA6CD2");
 
-            entity.HasIndex(e => e.AccountId, "UQ__Users__349DA5870DD2BF88").IsUnique();
+            entity.HasIndex(e => e.AccountId, "UQ__Users__349DA587E65558FB").IsUnique();
 
             entity.Property(e => e.UserId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("UserID");
-            entity.Property(e => e.AccountId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("AccountID");
+            entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.Address).HasMaxLength(100);
             entity.Property(e => e.BirthDate).HasColumnType("date");
             entity.Property(e => e.Cccd)
@@ -485,12 +453,12 @@ public partial class DrivingLicenseContext : DbContext
 
             entity.HasOne(d => d.Account).WithOne(p => p.User)
                 .HasForeignKey<User>(d => d.AccountId)
-                .HasConstraintName("FK__Users__AccountID__4316F928");
+                .HasConstraintName("FK__Users__AccountID__3F466844");
         });
 
         modelBuilder.Entity<Vehicle>(entity =>
         {
-            entity.HasKey(e => e.VehicleId).HasName("PK__Vehicle__476B54B2BA93674A");
+            entity.HasKey(e => e.VehicleId).HasName("PK__Vehicle__476B54B2C42F0450");
 
             entity.ToTable("Vehicle");
 

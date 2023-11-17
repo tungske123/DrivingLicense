@@ -88,7 +88,7 @@ namespace L2D_WebApp.Controllers
             }
             else
             {
-                TempData["Message"] = "Sai tên tải khoản hoặc mật khẩu";
+                TempData["Message"] = "Sai tên tài khoản hoặc mật khẩu";
                 return RedirectToAction("Index", "Login");
             }
         }

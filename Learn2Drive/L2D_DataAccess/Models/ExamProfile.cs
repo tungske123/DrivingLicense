@@ -7,11 +7,11 @@ public partial class ExamProfile
 {
     public Guid ExamProfileId { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     public string LicenseId { get; set; }
 
-    public DateTime ExamDate { get; set; }
+    public DateTime? ExamDate { get; set; }
 
     public string ExamResult { get; set; }
 

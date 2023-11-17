@@ -7,7 +7,7 @@ public partial class Admin
 {
     public Guid AdminId { get; set; }
 
-    public Guid AccountId { get; set; }
+    public Guid? AccountId { get; set; }
 
     public string FullName { get; set; }
 
