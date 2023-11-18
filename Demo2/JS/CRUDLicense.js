@@ -22,28 +22,49 @@ async function fetchAllLicensesData() {
 }
 
 async function saveLicenseInfo(licenseid) {
-    Swal.fire({
-        title: "Lưu thành công",
-        text: `Dữ liệu của bài viết ở hạng bằng ${licenseid} đã được cập nhật!`,
-        icon: "success",
-        confirmButtonColor: "#d90429"
-    });
-    // try {
-    //     const url = `${baseUrl}/api/license/update/${licenseid}`;
-    //     let licenseForm = document.getElementById('licenseInfoForm');
-    //     let formData = new FormData(licenseForm);
-    //     const response = await fetch(url, {
-    //         method: 'POST',
-    //         body: formData
-    //     });
-    //     if (!response.ok) {
-    //         console.error(`Error! ${response.status} - ${response.statusText}`);
-    //         return;
-    //     }
+    try {
+        const url = `${baseUrl}/api/license/update/${licenseid}`;
+        let licenseNameElement = tinymce.get('licenseName');
+        let descriptionElement = tinymce.get('description');
+        let conditionElement = tinymce.get('condition');
+        let costElement = tinymce.get('cost');
+        let timeElement = tinymce.get('time');
+        let examContentElement = tinymce.get('examContent');
+        let tipsElement = tinymce.get('tips');
+
+        let license = {
+            licenseId: licenseid,
+            licenseName: licenseNameElement.getContent(),
+            describe: descriptionElement.getContent(),
+            condition: conditionElement.getContent(),
+            cost: costElement.getContent(),
+            time: timeElement.getContent(),
+            examContent: examContentElement.getContent(),
+            tips: tipsElement.getContent()
+        };
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(license)
+        });
+
+        if (!response.ok) {
+            console.error(`Error! ${response.status} - ${response.statusText}`);
+            return;
+        }
         
-    // } catch (error) {
-    //     console.error(`Error: ${error}`);
-    // }
+        Swal.fire({
+            title: "Lưu thành công",
+            text: `Dữ liệu của bài viết ở hạng bằng ${licenseid} đã được cập nhật!`,
+            icon: "success",
+            confirmButtonColor: "#d90429"
+        });
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
 }
 
 let licenseList;
@@ -108,6 +129,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     licenseForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         let licenseId = licenseSelect.value;
+        if (licenseId === null || licenseId === ``) {
+            Swal.fire({
+                icon: "error",
+                title: "Không thể lưu thông tin bằng lái",
+                text: "Vui lòng chọn loại bằng lái",
+              });
+            return;
+        } 
         await saveLicenseInfo(licenseId);
     });
 });
