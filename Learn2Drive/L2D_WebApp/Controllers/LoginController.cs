@@ -159,12 +159,12 @@ namespace L2D_WebApp.Controllers
             var account = await _context.Accounts.AsNoTracking().FirstOrDefaultAsync(acc => acc.Username.Equals(username));
             if (!password.Equals(repass))
             {
-                TempData["Message"] = "repasword doesn't match";
+                TempData["Message"] = "Mật khẩu nhập lại không khớp";
                 return RedirectToAction("Index", "Login");
             }
             if (account is not null)
             {
-                TempData["Message"] = "Username already exist !";
+                TempData["Message"] = "Tài khoản đã tồn tại !";
                 return RedirectToAction("Index", "Login");
             }
             password = await Fakepassword(password);
