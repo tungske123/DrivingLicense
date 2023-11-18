@@ -268,8 +268,7 @@ go
 
 
 
-
---======================================[ PROCEDURES ]=====================================================
+--===========================================================================================================
 -----------------------------------[ CREATE ACCOUNT USER ]-------------------------------
 create or alter procedure proc_signUpAccount(
 	@username nvarchar(100),
@@ -617,6 +616,8 @@ go
 /*
 delete from Teacher
 delete from Users
+delete from Admin
+delete from Staff
 delete from Account
 
 select * from Account
@@ -624,8 +625,8 @@ select * from Users
 select * from Teacher
 
 insert into Account(Username,[Password],[Role]) values ('ok123','123','user');
-insert into Users(AccountID,FullName) values ('6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'test role');
-exec proc_changeRole '6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'lecturer';
+insert into Users(AccountID,FullName) values ('AB4AB5DF-7D40-4BEA-B6C8-B441DBB9C8A2', 'test role');
+exec proc_changeRole 'AB4AB5DF-7D40-4BEA-B6C8-B441DBB9C8A2', 'lecturer';
 go
 
 */
@@ -688,8 +689,8 @@ begin
 		--______________________ Update Role______________________
 		if (@roleNew = 'lecturer') 
 		begin
-			insert into dbo.Teacher(AccountID, Fullname, Email, ContactNumber)	--insert new teacher
-			select @accountID, fullname, email, telephone from @Tempt;
+			insert into dbo.Teacher(AccountID, LicenseID ,Fullname, Email, ContactNumber)	--insert new teacher
+			select @accountID, @LicenseSet, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
 		end
 
@@ -934,18 +935,11 @@ end;
 go
 */
 
------------------------------------------[ INSERT VALUES ]-----------------------------------------------------
-/*[QUICK FIND] - Press: Ctrl + G
-License_____45
-User________62
-Other Role_____110
-Quiz________181
-Question____201
-Have________2841
-Answer______2858
-Vehicle_____11451
-*/
 
+
+
+--===========================================================================================================
+-----------------------------------------[ INSERT VALUES ]-----------------------------------------------------
 --=============[RESET DATA]=============--
 delete from Response;
 delete from Feedback;
@@ -12415,8 +12409,29 @@ go
 exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1', N'Mô tả', 25;
 */
 
------------------------------------------[ QUERY TEST ]-----------------------------------------------------
+
+
+
+
 /*
+insert into Attempt (UserID, QuizID, AttemptDate) values
+('4BB57CD4-97AA-4BC5-B267-244D41BCB3D0' , 1 , GETDATE());
+
+insert into AttemptDetail( AttemptID, QuestionID, SelectedAnswerID)
+
+create table AttemptDetail (
+   AttemptDetailID uniqueidentifier default newid() primary key,
+   AttemptID uniqueidentifier,
+   QuestionID int not null,
+   SelectedAnswerID int null,
+   IsCorrect bit,
+
+   foreign key (AttemptID) references dbo.Attempt(AttemptID),
+   foreign key (QuestionID) references dbo.Question(QuestionID),
+   foreign key (SelectedAnswerID) references dbo.Answer(AnswerID),
+
+-----------------------------------------[ QUERY TEST ]-----------------------------------------------------
+
 use DrivingLicense;
 use master;
 select * from Account;
