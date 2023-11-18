@@ -129,6 +129,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     licenseForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         let licenseId = licenseSelect.value;
+        if (licenseId === null || licenseId === ``) {
+            Swal.fire({
+                icon: "error",
+                title: "Không thể lưu thông tin bằng lái",
+                text: "Vui lòng chọn loại bằng lái",
+              });
+            return;
+        } 
         await saveLicenseInfo(licenseId);
     });
 });

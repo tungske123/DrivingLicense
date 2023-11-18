@@ -1,4 +1,5 @@
 let UserId = `AFB98A94-D245-4075-8B5D-9B309BCE96F3`;
+var quizId = 1;
 //For the timer
 let timer;
 var totalTime = 1200;
@@ -43,8 +44,6 @@ function secondsToTimeSpan(seconds) {
 
     return 'PT' + hours + 'H' + minutes + 'M' + seconds + 'S';
 }
-
-
 
 function startTimer() {
     // Clear the interval if it's already running
@@ -110,7 +109,7 @@ function calculateResult() {
         attemptTime: `${secondsToHMS(quizDuration - timeLeft)}`,
         attemptDate: attemptDateTime,
         totalQuestion: totalQuestionCnt,
-        totalAnswered: correctQuestionCnt,
+        totalAnswered: correctQuestionCnt + incorrectQuestionCnt,
         result: isPassed
     };
     console.log(`Nộp bài thành công!
@@ -239,7 +238,7 @@ class AttemptData {
 
 let attemptDataList = [];
 
-var quizId = 1;
+
 var currentQuestionId = 1;
 let quiz;
 async function fetchQuizData() {
