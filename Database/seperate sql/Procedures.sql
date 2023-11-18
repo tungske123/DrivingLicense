@@ -121,7 +121,7 @@ begin
 end;
 go
 
---exec proc_ChangeQuestion 1, 2; (QuizID, QuestionID) in database
+--exec proc_RollQuestion 1, 2;		(QuizID, QuestionID) in database
 
 --|================================|============|=============================|--
 --|================================|============|=============================|--
@@ -137,14 +137,14 @@ begin
 	declare @Tempt table (hireId uniqueidentifier);
 
 	--Case 1:
-	if (@HireID is not null) delete from dbo.Schedule where HireID = @HireID;	--Remove constain
+	if (@HireID is not null) delete from dbo.Schedule where HireID = @HireID;	--Remove constaint
 
 	--Case 2:
 	if @TeacherID is not null
 	begin
 		insert into @Tempt select HireID from Hire where TeacherID = @TeacherID;--Query all hire of teacher
 
-		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constaint
 	end
 
 	--Case 3:
@@ -153,10 +153,10 @@ begin
 		delete from @Tempt;														--Reset Tempt Table
 		insert into @Tempt select HireID from Hire where UserID = @UserID;		--Query all hire of user
 
-		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constaint
 	end
 
-	--Delete after remove constrain
+	--Delete after remove constraint
 	delete from Hire where HireID = @HireID;
 	delete from Hire where TeacherID = @TeacherID
 	delete from Hire where UserID = @UserID;
@@ -175,7 +175,7 @@ begin
 	declare @Tempt table (attemptId uniqueidentifier);
 	
 	--Case 1:
-	if (@AttemptID is not null) delete from AttemptDetail where AttemptID = @AttemptID;--Remove constrain
+	if (@AttemptID is not null) delete from AttemptDetail where AttemptID = @AttemptID;--Remove constraint
 
 	--Case 2:
 	if (@UserID is not null)
@@ -183,7 +183,7 @@ begin
 		--Query all attempt of user
 		insert into @Tempt select AttemptID from Attempt where UserID = @UserID;
 
-		--Remove all constrain of user's attempts
+		--Remove all constraint of user's attempts
 		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
 	end
 
@@ -196,11 +196,11 @@ begin
 		--Query all attempt of user
 		insert into @Tempt select AttemptID from Attempt where QuizID = @QuizID;
 
-		--Remove all constrain of quiz's attempts
+		--Remove all constraint of quiz's attempts
 		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
 	end
 
-	--Delete after remove constrain
+	--Delete after remove constraints
 	delete from Attempt where AttemptID = @AttemptID;
 	delete from Attempt where UserID = @UserID;
     delete from Attempt where QuizID = @QuizID;
@@ -214,7 +214,7 @@ create or alter procedure proc_DeleteQuiz(
 )
 as 
 begin
-	--Remove constain
+	--Remove constaints
 	exec proc_DeleteAttempt null,null,@quizID;
 	delete from Have where QuizID = @quizID;
 
@@ -223,18 +223,22 @@ begin
 	delete from Quiz where LicenseID= @LicenseID;
 end;
 go
-/*
------------------------------------[ Delete Quiz Question]-------------------------------
-create or alter procedure proc_DeleteQuizQuest(
-	@quizID int,
+
+-----------------------------------[ DELETE QUESTION ]-------------------------------
+create or alter procedure proc_DeleteQuestion(
 	@questID int
 )
 as 
 begin
-	delete from Have where QuizID = @quizID and QuestionID = @questID;
+	--Remove constaints
+	delete from Have where QuestionID = @questID;
+	delete from AttemptDetail where QuestionID = @questID;
+	delete from Answer where QuestionID = @questID;
+
+	--Then delete question
+	delete from Question where QuestionID = @questID;
 end;
 go
-*/
 
 -----------------------------------[ DELETE FEEDBACK ]-------------------------------
 create or alter procedure proc_DeleteFeedback(
@@ -243,13 +247,13 @@ create or alter procedure proc_DeleteFeedback(
 )
 as 
 begin
-	--Case 1:--Remove constrain
+	--Case 1:--Remove constraint
 	if (@FeedbackID is not null) delete from dbo.Response where FeedbackID = @FeedbackID;
 
-	--Case 2:--Remove constrain
+	--Case 2:--Remove constraint
 	if (@UserID is not null)delete from dbo.Response where UserID = @UserID;			
 
-	--Delete after remove constrain
+	--Delete after remove constraint
 	delete from Feedback where FeedbackID = @FeedbackID;
 	delete from Feedback where userID = @userID;
 end;
@@ -265,7 +269,7 @@ as
 begin
 	if (@UserID is null) set @UserID = (select UserID from Users where AccountID = @AccountID);
 	
-	--Remove constains
+	--Remove constaints
 	delete from dbo.Rent where UserID = @UserID;
 	delete from dbo.ExamProfile where UserID = @UserID;
 	exec proc_DeleteHire null,null,@UserID;
@@ -292,7 +296,7 @@ create or alter procedure proc_DeleteLecturer(
 as 
 begin
 	if(@TeacherID is null) set @TeacherID = (select TeacherID from Teacher where AccountID = @AccountID);
-	exec proc_DeleteHire null,@TeacherID,null;				--Remove constain
+	exec proc_DeleteHire null,@TeacherID,null;				--Remove constaint
 
 	delete from Teacher where TeacherID = @TeacherID;		--Then delete
 
@@ -313,7 +317,7 @@ create or alter procedure proc_DeleteStaff(
 as 
 begin
 	if(@StaffID is null) set @StaffID = (select StaffID from Staff where AccountID = @AccountID);
-	delete from dbo.Response where StaffID = @StaffID;		--Remove constain
+	delete from dbo.Response where StaffID = @StaffID;		--Remove constaint
 
 	delete from Staff where StaffID = @StaffID;				--Then delete
 
