@@ -1,94 +1,183 @@
-﻿using Driving_License.ViewModels;
+﻿using L2D_DataAccess.Models;
+using L2D_DataAccess.Utils;
+using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
-using System.Data;
-using Driving_License.Models;
-using Driving_License.Utils;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Driving_License.Controllers
+namespace L2D_WebApp.Controllers
 {
-    [Route("api-controller-question")]
-    [ApiController]
     public class QuestionController : Controller
     {
         private readonly DrivingLicenseContext _context;
+        public QuestionController(DrivingLicenseContext context) => _context = context;
 
-        public QuestionController(DrivingLicenseContext context)
+        public record QuestionFilterData
         {
-            _context = context;
+            public string Keyword { get; set; }
+            public string LicenseID { get; set; }
         }
-        public IActionResult Index()
+
+        public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
         {
-            return View();
+            //Get total number of rows in table
+            int totalCount = await query.CountAsync();
+
+            //Calculate total pages
+            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            int takingNums = pageSize;
+            int skipNums = (page - 1) * pageSize;
+            if (totalCount < pageSize)
+            {
+                takingNums = totalCount;
+            }
+            List<T> items = await query.Skip(skipNums)
+                                       .Take(takingNums)
+                                       .ToListAsync();
+            return new PageResult<T>
+            {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                PageNumber = page,
+                PageSize = pageSize,
+                Items = items
+            };
         }
-        //==========================================================================================================
+
+        [HttpPost]
+        [Route("api/questions/{page}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetQuestionsPaging([FromBody] QuestionFilterData data, [FromRoute] int page = 1)
+        {
+            var query = _context.Questions.AsQueryable();
+            if (!string.IsNullOrEmpty(data.Keyword))
+            {
+                query = query.Where(question => question.QuestionText.ToLower().Contains(data.Keyword.ToLower()));
+            }
+            if (!string.IsNullOrEmpty(data.LicenseID))
+            {
+                query = query.Where(question => question.LicenseId.Equals(data.LicenseID));
+            }
+            query = query.OrderBy(question => question.QuestionText);
+
+            const int pageSize = 20;
+            var pageResult = await GetPagedDataAsync<Question>(query, page, pageSize);
+            return Ok(pageResult);
+        }
+
         [HttpGet]
-        [Route("getQuestion/{questionid}")]
-        public async Task<ActionResult> GetQuestion(int questionid)
+        [Route("api/questions/{qid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetQuestionByID(int qid)
         {
-            var question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questionid);
+            if (qid <= 0)
+            {
+                return BadRequest();
+            }
+            var question = await _context.Questions
+                .Include(question => question.Answers)
+                .AsNoTracking().SingleOrDefaultAsync(q => q.QuestionId == qid);
+            if (question is null)
+            {
+                return NotFound($"Can't find any questions with id {qid}");
+            }
+            return Ok(question);
+        }
+        //=========================================================[ CRUD ]========================================================
+
+        [HttpGet]
+        [Route("api/question/get/{questid}")]
+        public async Task<ActionResult> GetQuestion([FromRoute] int questid)
+        {
+            var question = await _context.Questions
+                .Include(quest => quest.Answers)
+                .FirstOrDefaultAsync(quest => quest.QuestionId == questid);
             if (question == null)
             {
-                return Problem("Mã id không trùng với câu hỏi nào!");
+                return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này!");
             }
             return Ok(question);
         }
 
-        //==========================================================================================================
-        [HttpPost]
-        [Route("create")]
-        public async Task<IActionResult> Create([FromBody] Question new_question)
+        //===================================================================
+        [HttpGet]
+        [Route("api/question/list/{licenseid}")]
+        public async Task<ActionResult> GetQuestionList([FromRoute] string licenseid)
         {
-            var existQuestion = _context.Questions.Any(que => que.QuestionText.Equals(new_question.QuestionText));
-            if (existQuestion)
+            var questionList = await _context.Questions
+                .Where(quest => quest.LicenseId.Equals(licenseid))
+                .ToListAsync();
+            if (questionList == null)
             {
-                return Problem("Câu hỏi đã tồn tại!");
+                return BadRequest($"Mã bằng lái sai hoặc bằng lái này không có câu hỏi nào!");
             }
-            else
-            {
-                if (new_question.LicenseId.IsNullOrEmpty())
-                {
-                    return Problem("Không được để trống loại bằng của câu hỏi!");
-                }
-                if (new_question.QuestionText.IsNullOrEmpty())
-                {
-                    return Problem("Không được tạo câu hỏi trống!");
-                }
-                if (new_question.QuestionImage.IsNullOrEmpty())
-                {
-                    new_question.QuestionImage = "none";
-                }
-
-                _context.Questions.Add(new_question);
-                await _context.SaveChangesAsync();
-                return Ok("Created!");
-            }
-
-
+            return Ok(questionList);
         }
 
-        //==========================================================================================================
-        [HttpPatch]
-        [Route("edit/{questionid}")]
-        public async Task<IActionResult> Edit(int questionid, [FromBody] Question edited_question)
+        //===================================================================
+        [HttpGet]
+        [Route("api/question/search")]
+        public async Task<ActionResult> SearchQuestion([FromBody] QuestionFilterData data)
         {
-            //Compare edited_User with old_User
-            if (edited_question == null)
+            var questionList = await _context.Questions.Where(
+                    quest => quest.LicenseId.Equals(data.LicenseID)
+                    && quest.QuestionText.ToLower().Contains(data.Keyword.ToLower())
+                ).ToListAsync();
+            if (questionList == null)
             {
-                return NotFound("Không có câu hỏi hoặc không nhận được câu hỏi truyền vào server");
+                return BadRequest($"Không tìm thấy câu hỏi nào khớp với bộ lọc!");
+            }
+            return Ok(questionList);
+        }
+
+        //===================================================================
+        [HttpPost]
+        [Route("api/question/add")]
+        public async Task<IActionResult> Create([FromBody] Question new_question)
+        {
+            if (new_question.LicenseId.IsNullOrEmpty())
+            {
+                return BadRequest("Không được để trống loại bằng của câu hỏi!");
+            }
+            if (new_question.QuestionText.IsNullOrEmpty())
+            {
+                return BadRequest("Không được tạo câu hỏi trống!");
             }
 
-            var old_question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questionid);
-
-            if (old_question == null)
+            var existQuestion = _context.Questions.Any(que => que.LicenseId.Equals(new_question.LicenseId) && que.QuestionText.Equals(new_question.QuestionText));
+            if (existQuestion)
             {
-                return NotFound("Mã câu hỏi sai hoặc không có câu hỏi nào với mã này");
+                return BadRequest("Câu hỏi đã tồn tại!");
             }
-            else
+            if (new_question.QuestionImage.IsNullOrEmpty())
             {
+                new_question.QuestionImage = "none";
+            }
+
+            _context.Questions.Add(new_question);
+            await _context.SaveChangesAsync();
+            return Ok("Thêm thành công!");
+        }
+
+        //===================================================================
+        [HttpPatch]
+        [Route("api/question/edit/{questid}")]
+        public async Task<IActionResult> Edit([FromRoute] int questid, [FromBody] Question edited_question)
+        {
+            try
+            {
+                //Compare edited_Question with old_Question
+                if (edited_question == null)
+                {
+                    return BadRequest($"Không có câu hỏi hoặc không nhận được câu hỏi truyền vào server");
+                }
+
+                var old_question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
+                if (old_question == null)
+                {
+                    return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này");
+                }
+
                 if (!edited_question.LicenseId.IsNullOrEmpty())
                 {
                     old_question.LicenseId = edited_question.LicenseId;
@@ -102,31 +191,41 @@ namespace Driving_License.Controllers
                     old_question.QuestionImage = edited_question.QuestionImage;
                 }
                 old_question.IsCritical = edited_question.IsCritical;
-                old_question.License = edited_question.License;
+
                 await _context.SaveChangesAsync();
                 return Ok(old_question);
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        //==========================================================================================================
+        //===================================================================
         [HttpDelete]
-        [Route("delete/{questionid}")]
-        public async Task<IActionResult> Delete(int questionid)
+        [Route("api/question/delete/{questid}")]
+        public async Task<ActionResult> Delete([FromRoute] int questid)
         {
-            if (_context.Users == null)
+            try
             {
-                return Problem("Entity set 'DrivingLicenseContext.Questions'  is null.");
-            }
+                if (_context.Questions == null)
+                {
+                    return BadRequest($"Không có câu hỏi nào trong ngân hàng câu hỏi.");
+                }
 
-            var question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questionid);
-            if (question != null)
+                var question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
+                if (question != null)
+                {
+                    await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_DeleteQuestion @questID = @p0", questid);
+                    await _context.SaveChangesAsync();
+                    return Ok("Đã xóa!");
+                }
+                return BadRequest("Mã câu hỏi sai hoặc không có câu hỏi nào với mã này!");
+            }
+            catch (Exception ex)
             {
-                _context.Questions.Remove(question);
-                await _context.SaveChangesAsync();
-                return Ok("Delete!");
+                return BadRequest(ex.Message);
             }
-
-            return Problem("Cannot found or the id is not match!");
         }
     }
 }
