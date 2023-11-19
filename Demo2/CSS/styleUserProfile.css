@@ -1,0 +1,373 @@
+* {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --main-color: #d90429;
+    --text-color: #020102;
+    --bg-color: #fff;
+}
+
+#submitButton {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cancel-button {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    border-width: 1px;
+    border-color: #B91C1C;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    text-align: center;
+    color: #B91C1C;
+    &:hover
+
+{
+    color: #ffffff;
+    background-color: #991B1B;
+}
+
+}
+
+.edit-button {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    border-width: 1px;
+    border-color: #1D4ED8;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    text-align: center;
+    color: #1D4ED8;
+    &:hover
+
+{
+    color: #ffffff;
+    background-color: #1E40AF;
+}
+
+}
+
+.date-option-button {
+    display: inline-flex;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    border-width: 1px;
+    border-color: #D1D5DB;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: #6B7280;
+    background-color: #ffffff;
+    &:hover
+
+{
+    background-color: #F3F4F6;
+}
+
+}
+
+@keyframes pulse {
+
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
+}
+
+#rentTableLoader {
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.25rem;
+    border-width: 1px;
+    border-color: #E5E7EB;
+    border-top-width: 1px;
+    border-color: #E5E7EB;
+    max-width: 28rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+#rentHistoryContent {
+    .key-cell
+
+{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    /* padding-left: 1.5rem;
+        padding-right: 1.5rem; */
+    font-weight: 500;
+    color: #111827;
+    white-space: nowrap;
+    text-align: center;
+}
+
+
+
+.normal-cell {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    /* padding-left: 1.5rem;
+        padding-right: 1.5rem; */
+    text-align: center;
+}
+
+.no-result {
+    color: #374151;
+    text-transform: uppercase;
+    background-color: #F9FAFB;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ul {
+    display: inline-flex;
+    margin-left: -1px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+}
+
+.row {
+    border-bottom-width: 1px;
+    background-color: #ffffff;
+}
+
+.prev-button {
+    display: flex;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    margin-left: 0;
+    justify-content: center;
+    align-items: center;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-width: 1px;
+    border-color: #D1D5DB;
+    height: 2rem;
+    line-height: 1.25;
+    color: #6B7280;
+    background-color: #ffffff;
+    &:hover
+
+{
+    /* color: #374151; */
+    color: var(--main-color);
+    background-color: #F3F4F6;
+}
+
+}
+
+.next-button {
+    display: flex;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-width: 1px;
+    border-color: #D1D5DB;
+    height: 2rem;
+    line-height: 1.25;
+    color: #6B7280;
+    background-color: #ffffff;
+    &:hover
+
+{
+    /* color: #374151; */
+    color: var(--main-color);
+    background-color: #F3F4F6;
+}
+
+}
+
+.page {
+    display: flex;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    border-width: 1px;
+    border-color: #D1D5DB;
+    height: 2rem;
+    line-height: 1.25;
+    color: #6B7280;
+    background-color: #ffffff;
+    &:hover
+
+{
+    /* color: #374151; */
+    color: var(--main-color);
+    background-color: #F3F4F6;
+}
+
+}
+
+.is-active-page {
+    display: flex;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    border-width: 1px;
+    border-color: #D1D5DB;
+    height: 2rem;
+    font-weight: bolder;
+    /* color: #2563EB; */
+    color: var(--main-color);
+    /* background-color: #EFF6FF; */
+
+    &:hover
+
+{
+    /* color: #1D4ED8; */
+    color: var(--main-color);
+    background-color: #DBEAFE;
+}
+
+}
+
+#vehiclePageBar {
+    display: inline-flex;
+    margin-left: -1px;
+    height: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin: 0 auto;
+}
+
+.is-active :is(*, svg) {
+    color: var(--main-color);
+    font-weight: bold;
+}
+
+.search-button {
+    position: absolute;
+    right: 0.625rem;
+    bottom: 0.625rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #C81E1E;
+    &:hover
+
+{
+    background-color: #9B1C1C;
+}
+
+}
+
+.submit-button {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    text-align: center;
+    color: #ffffff;
+    background-color: #B91C1C;
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    &:hover
+
+{
+    background-color: #991B1B;
+}
+
+}
+
+.date-wrapper {
+    display: flex;
+    column-gap: 50px;
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+    border-width: 0;
+    width: 100%;
+    height: 0.25rem;
+    background-color: var(--main-color);
+}
+
+@media (min-width: 768px) {
+    hr {
+        margin-top: 2.5rem;
+        margin-bottom: 2.5rem;
+    }
+}
+
+.hide-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 50px;
+    /* Adjust this value according to your needs */
+}
+
+
+/*load animations*/
+.hidden-load {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(-10vw);
+    transition: all 1s;
+}
+
+.show-load {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+}
+
+.current-playlist-name {
+    font-weight: bold;
+}
+
+@media(prefers-reduced-motion) {
+    .hidden-load {
+        transition: none;
+    }
+}
