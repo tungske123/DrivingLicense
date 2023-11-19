@@ -86,7 +86,7 @@ namespace L2D_WebApp.Controllers
         //=========================================================[ CRUD ]========================================================
 
         [HttpGet]
-        [Route("api/get-question/{questid}")]
+        [Route("api/question/get/{questid}")]
         public async Task<ActionResult> GetQuestion([FromRoute] int questid)
         {
             var question = await _context.Questions
@@ -101,7 +101,7 @@ namespace L2D_WebApp.Controllers
 
         //===================================================================
         [HttpGet]
-        [Route("api/get-questions/{licenseid}")]
+        [Route("api/question/list/{licenseid}")]
         public async Task<ActionResult> GetQuestionList([FromRoute] string licenseid)
         {
             var questionList = await _context.Questions
@@ -115,15 +115,26 @@ namespace L2D_WebApp.Controllers
         }
 
         //===================================================================
+        [HttpGet]
+        [Route("api/question/search")]
+        public async Task<ActionResult> SearchQuestion([FromBody] QuestionFilterData data)
+        {
+            var questionList = await _context.Questions.Where(
+                    quest => quest.LicenseId.Equals(data.LicenseID)
+                    && quest.QuestionText.ToLower().Contains(data.Keyword.ToLower())
+                ).ToListAsync();
+            if (questionList == null)
+            {
+                return BadRequest($"Không tìm thấy câu hỏi nào khớp với bộ lọc!");
+            }
+            return Ok(questionList);
+        }
+
+        //===================================================================
         [HttpPost]
-        [Route("api/add-question")]
+        [Route("api/question/add")]
         public async Task<IActionResult> Create([FromBody] Question new_question)
         {
-            var existQuestion = _context.Questions.Any(que => que.QuestionText.Equals(new_question.QuestionText));
-            if (existQuestion)
-            {
-                return BadRequest("Câu hỏi đã tồn tại!");
-            }
             if (new_question.LicenseId.IsNullOrEmpty())
             {
                 return BadRequest("Không được để trống loại bằng của câu hỏi!");
@@ -133,6 +144,11 @@ namespace L2D_WebApp.Controllers
                 return BadRequest("Không được tạo câu hỏi trống!");
             }
 
+            var existQuestion = _context.Questions.Any(que => que.LicenseId.Equals(new_question.LicenseId) && que.QuestionText.Equals(new_question.QuestionText));
+            if (existQuestion)
+            {
+                return BadRequest("Câu hỏi đã tồn tại!");
+            }
             if (new_question.QuestionImage.IsNullOrEmpty())
             {
                 new_question.QuestionImage = "none";
@@ -141,57 +157,60 @@ namespace L2D_WebApp.Controllers
             _context.Questions.Add(new_question);
             await _context.SaveChangesAsync();
             return Ok("Thêm thành công!");
-
-
         }
 
         //===================================================================
         [HttpPatch]
-        [Route("api/edit-question/{questid}")]
+        [Route("api/question/edit/{questid}")]
         public async Task<IActionResult> Edit([FromRoute] int questid, [FromBody] Question edited_question)
         {
-            //Compare edited_User with old_User
-            if (edited_question == null)
+            try
             {
-                return NotFound($"Không có câu hỏi hoặc không nhận được câu hỏi truyền vào server");
-            }
+                //Compare edited_Question with old_Question
+                if (edited_question == null)
+                {
+                    return BadRequest($"Không có câu hỏi hoặc không nhận được câu hỏi truyền vào server");
+                }
 
-            var old_question = await _context.Questions.Include(q => q.License).FirstOrDefaultAsync(quest => quest.QuestionId == questid);
+                var old_question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
+                if (old_question == null)
+                {
+                    return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này");
+                }
 
-            if (old_question == null)
-            {
-                return NotFound($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này");
-            }
+                if (!edited_question.LicenseId.IsNullOrEmpty())
+                {
+                    old_question.LicenseId = edited_question.LicenseId;
+                }
+                if (!edited_question.QuestionText.IsNullOrEmpty())
+                {
+                    old_question.QuestionText = edited_question.QuestionText;
+                }
+                if (!edited_question.QuestionImage.IsNullOrEmpty())
+                {
+                    old_question.QuestionImage = edited_question.QuestionImage;
+                }
+                old_question.IsCritical = edited_question.IsCritical;
 
-            if (!edited_question.LicenseId.IsNullOrEmpty())
-            {
-                old_question.LicenseId = edited_question.LicenseId;
-                old_question.License = edited_question.License;
+                await _context.SaveChangesAsync();
+                return Ok(old_question);
             }
-            if (!edited_question.QuestionText.IsNullOrEmpty())
+            catch (Exception ex)
             {
-                old_question.QuestionText = edited_question.QuestionText;
+                return BadRequest(ex.Message);
             }
-            if (!edited_question.QuestionImage.IsNullOrEmpty())
-            {
-                old_question.QuestionImage = edited_question.QuestionImage;
-            }
-            old_question.IsCritical = edited_question.IsCritical;
-
-            await _context.SaveChangesAsync();
-            return Ok(old_question);
         }
 
         //===================================================================
         [HttpDelete]
-        [Route("api/delete-question/{questid}")]
+        [Route("api/question/delete/{questid}")]
         public async Task<ActionResult> Delete([FromRoute] int questid)
         {
             try
             {
                 if (_context.Questions == null)
                 {
-                    return BadRequest($"Không có câu hỏi nào trong ngân hàng đề.");
+                    return BadRequest($"Không có câu hỏi nào trong ngân hàng câu hỏi.");
                 }
 
                 var question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
