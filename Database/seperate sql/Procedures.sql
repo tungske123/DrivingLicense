@@ -373,6 +373,7 @@ create or alter procedure proc_changeRole(
 )
 as
 begin
+	begin transaction;
 	--Declare
 	declare @roleOld as nvarchar(50);
 	declare @avatar nvarchar(max);
@@ -386,8 +387,6 @@ begin
 		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, PhoneNumber from dbo.Users where AccountID = @accountID;
-
-		exec proc_DeleteUser @accountID,null,'no';--Delete old record
 	end;
 
 	--Case 2:
@@ -396,8 +395,6 @@ begin
 		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, ContactNumber from dbo.Teacher where AccountID = @accountID;
-
-		exec proc_DeleteLecturer @accountID,null,'no';--Delete old record
 	end;
 
 	--Case 3:
@@ -405,8 +402,6 @@ begin
 	begin
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, ContactNumber from dbo.Staff where AccountID = @accountID;
-
-		exec proc_DeleteStaff @accountID,null,'no';--Delete old record
 	end;
 
 	--Case 4:
@@ -414,19 +409,19 @@ begin
 	begin
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, ContactNumber from dbo.[Admin] where AccountID = @accountID;
-		
-		exec proc_DeleteAdmin @accountID,null,'no';--Delete old record
 	end;
-
-	--//--//--//--//--//--
-	if(@roleOld!=@roleNew)
-	begin
-		--______________________ Update Role______________________
+	
+		--______________________ Update Role______________________--
 		if (@roleNew = 'lecturer') 
 		begin
 			insert into dbo.Teacher(AccountID, LicenseID ,Fullname, Email, ContactNumber)	--insert new teacher
 			select @accountID, @LicenseSet, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		
+			--Delete old record
+			exec proc_DeleteUser @accountID,null,'no';
+			exec proc_DeleteStaff @accountID,null,'no';
+			exec proc_DeleteAdmin @accountID,null,'no';
 		end
 
 		else if (@roleNew = 'staff')
@@ -434,6 +429,11 @@ begin
 			insert into dbo.Staff(AccountID, Fullname ,Email, ContactNumber)	--insert new teacher
 			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		
+			--Delete old record
+			exec proc_DeleteUser @accountID,null,'no';
+			exec proc_DeleteLecturer @accountID,null,'no';
+			exec proc_DeleteAdmin @accountID,null,'no';
 		end
 
 		else if (@roleNew = 'admin')
@@ -441,6 +441,11 @@ begin
 			insert into dbo.[Admin](AccountID, Fullname ,Email, ContactNumber)--insert new admin
 			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		
+			--Delete old record
+			exec proc_DeleteUser @accountID,null,'no';
+			exec proc_DeleteLecturer @accountID,null,'no';
+			exec proc_DeleteStaff @accountID,null,'no';
 		end
 
 		else if(@roleNew = 'user')
@@ -448,8 +453,16 @@ begin
 			insert into dbo.Users(AccountID, Fullname, Email, PhoneNumber)		--insert new user
 			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
-		end
-	end
+			
+			--Delete old record
+			exec proc_DeleteLecturer @accountID,null,'no';
+			exec proc_DeleteStaff @accountID,null,'no';
+			exec proc_DeleteAdmin @accountID,null,'no';
+		end;
+	if @@error = 0
+		commit;
+	else
+		rollback;
 end;
 go
 

@@ -21,16 +21,14 @@ namespace L2D_WebApp.Controllers
         }
 
         //=========================================================[ CRUD ]========================================================
-
         [HttpGet]
         [Route("api/answer/get/{answerid}")]
         public async Task<ActionResult> GetAnswer([FromRoute] int answerid)
         {
-            var answer = await _context.Answers
-                .FirstOrDefaultAsync(ans => ans.AnswerId == answerid);
+            var answer = await _context.Answers.FirstOrDefaultAsync(ans => ans.AnswerId == answerid);
             if (answer == null)
             {
-                return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này!");
+                return NotFound("Mã câu trả lời này không khớp với câu trả lời nào!");
             }
             return Ok(answer);
         }
@@ -45,7 +43,7 @@ namespace L2D_WebApp.Controllers
                 .ToListAsync();
             if (answerList == null)
             {
-                return BadRequest($"Mã câu hỏi sai hoặc mã câu hỏi này không có câu trả lời nào!");
+                return NotFound("Mã câu hỏi này không có câu trả lời nào!");
             }
             return Ok(answerList);
         }
@@ -62,7 +60,7 @@ namespace L2D_WebApp.Controllers
                 ).ToListAsync();
             if (answerList == null)
             {
-                return BadRequest($"Không tìm thấy câu trả lời nào khớp với bộ lọc!");
+                return NotFound("Không tìm thấy câu trả lời nào khớp với bộ lọc!");
             }
             return Ok(answerList);
         }
@@ -76,7 +74,7 @@ namespace L2D_WebApp.Controllers
             {
                 if (new_answer == null)
                 {
-                    return BadRequest("Không thể tạo câu trả lời!");
+                    return BadRequest("Không có câu trả lời với tham số hợp lệ truyền vào server!");
                 }
                 if (new_answer.AnswerText.IsNullOrEmpty())
                 {
@@ -114,21 +112,21 @@ namespace L2D_WebApp.Controllers
                 //Compare edited_answer with old_answer
                 if (edited_answer == null)
                 {
-                    return BadRequest($"Không có câu trả lời hoặc không nhận được câu trả lời truyền vào server");
+                    return BadRequest("Không nhận được câu trả lời với tham số hợp lệ truyền vào server");
                 }
 
                 var old_answer = await _context.Answers.FirstOrDefaultAsync(ans => ans.AnswerId == answerid);
 
                 if (old_answer == null)
                 {
-                    return BadRequest($"Mã câu trả lời cần sửa sai hoặc mã này không khớp câu trả lời nào");
+                    return NotFound("Mã câu trả lời đã chọn không khớp với câu trả lời nào");
                 }
 
-                if (!edited_answer.AnswerText.IsNullOrEmpty())
+                if (!edited_answer.AnswerText.ToLower().Equals(old_answer.AnswerText.ToLower()))
                 {
                     old_answer.AnswerText = edited_answer.AnswerText;
                 }
-                if (!edited_answer.AnswerImage.IsNullOrEmpty() || !edited_answer.AnswerImage.Equals("none"))
+                if (!edited_answer.AnswerImage.ToLower().Equals(old_answer.AnswerImage.ToLower()))
                 {
                     old_answer.AnswerImage = edited_answer.AnswerImage;
                 }
@@ -152,7 +150,7 @@ namespace L2D_WebApp.Controllers
             {
                 if (_context.Answers == null)
                 {
-                    return BadRequest($"Không có câu trả lời nào trong ngân hàng câu trả lời.");
+                    return NotFound("Không có câu trả lời nào trong ngân hàng câu trả lời.");
                 }
 
                 var answer = await _context.Answers.FirstOrDefaultAsync(ans => ans.AnswerId == answerid);
@@ -168,7 +166,7 @@ namespace L2D_WebApp.Controllers
                     await _context.SaveChangesAsync();
                     return Ok("Đã xóa!");
                 }
-                return BadRequest("Mã câu trả lời sai hoặc mã này không khớp câu trả lời nào!");
+                return NotFound("Mã câu trả lời này không khớp câu trả lời nào!");
             }
             catch (Exception ex)
             {
