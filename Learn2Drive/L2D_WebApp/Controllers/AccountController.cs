@@ -24,7 +24,7 @@ namespace Driving_License.Controllers
         //=========================================================[ CRUD ]========================================================
         [HttpGet]
         [Route("api/account/list")]
-        public async Task<IActionResult> GetAccountList()
+        public async Task<ActionResult> GetAccountList()
         {
             var accounts = await _context.Accounts.ToListAsync();
             if (accounts == null)
@@ -37,7 +37,7 @@ namespace Driving_License.Controllers
         //===================================================================
         [HttpGet]
         [Route("api/account/list/{role}")]
-        public async Task<IActionResult> GetAccountList([FromRoute] string role)
+        public async Task<ActionResult> GetAccountList([FromRoute] string role)
         {
             var accounts = await _context.Accounts.Where(acc => acc.Role.Equals(role)).ToListAsync();
             if (accounts == null || accounts.Count == 0)
@@ -58,6 +58,30 @@ namespace Driving_License.Controllers
                 return NotFound("Mã tài khoản này không khớp tài khoản nào!");
             }
             return Ok(acc);
+        }
+
+        //===================================================================
+        [HttpGet]
+        [Route("api/account/detail/{accountid}")]
+        public async Task<ActionResult> GetAccountDetail(Guid accountid)
+        {
+            Account acc = await _context.Accounts.SingleOrDefaultAsync(acc => acc.AccountId == accountid);
+            if (acc == null)
+            {
+                return NotFound("Mã tài khoản này không khớp tài khoản nào!");
+            }
+            switch (acc.Role)
+            {
+                case "user":
+                    return Ok(await _context.Users.SingleOrDefaultAsync(usr => usr.AccountId.Equals(acc.AccountId)));
+                case "lecturer":
+                    return Ok(await _context.Teachers.SingleOrDefaultAsync(tch => tch.AccountId.Equals(acc.AccountId)));
+                case "staff":
+                    return Ok(await _context.Staff.SingleOrDefaultAsync(stf => stf.AccountId.Equals(acc.AccountId)));
+                case "admin":
+                    return Ok(await _context.Admins.SingleOrDefaultAsync(adm => adm.AccountId.Equals(acc.AccountId)));
+            }
+            return NotFound("Không có thông tin chi tiết của tài khoản này!");
         }
 
         //===================================================================
