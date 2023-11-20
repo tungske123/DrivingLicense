@@ -79,7 +79,7 @@ namespace L2D_WebApp.Controllers
                 .AsNoTracking().SingleOrDefaultAsync(q => q.QuestionId == qid);
             if (question is null)
             {
-                return NotFound($"Can't find any questions with id {qid}");
+                return NotFound("Can't find any questions with id {qid}");
             }
             return Ok(question);
         }
@@ -94,7 +94,7 @@ namespace L2D_WebApp.Controllers
                 .FirstOrDefaultAsync(quest => quest.QuestionId == questid);
             if (question == null)
             {
-                return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này!");
+                return NotFound("Mã câu hỏi này không khớp với câu hỏi nào!");
             }
             return Ok(question);
         }
@@ -109,7 +109,7 @@ namespace L2D_WebApp.Controllers
                 .ToListAsync();
             if (questionList == null)
             {
-                return BadRequest($"Mã bằng lái sai hoặc bằng lái này không có câu hỏi nào!");
+                return NotFound("Mã bằng lái này không có câu hỏi nào!");
             }
             return Ok(questionList);
         }
@@ -125,7 +125,7 @@ namespace L2D_WebApp.Controllers
                 ).ToListAsync();
             if (questionList == null)
             {
-                return BadRequest($"Không tìm thấy câu hỏi nào khớp với bộ lọc!");
+                return NotFound("Không tìm thấy câu hỏi nào khớp với bộ lọc!");
             }
             return Ok(questionList);
         }
@@ -167,26 +167,26 @@ namespace L2D_WebApp.Controllers
             try
             {
                 //Compare edited_Question with old_Question
-                if (edited_question == null)
+                if (edited_question == null || edited_question.LicenseId.IsNullOrEmpty())
                 {
-                    return BadRequest($"Không có câu hỏi hoặc không nhận được câu hỏi truyền vào server");
+                    return BadRequest("Không có câu hỏi với tham số hợp lệ truyền vào server");
                 }
 
                 var old_question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
                 if (old_question == null)
                 {
-                    return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này");
+                    return NotFound("Mã câu hỏi này không khớp câu hỏi nào!");
                 }
 
-                if (!edited_question.LicenseId.IsNullOrEmpty())
+                if (!edited_question.LicenseId.Equals(old_question.LicenseId))
                 {
                     old_question.LicenseId = edited_question.LicenseId;
                 }
-                if (!edited_question.QuestionText.IsNullOrEmpty())
+                if (!edited_question.QuestionText.ToLower().Equals(old_question.QuestionText.ToLower()))
                 {
                     old_question.QuestionText = edited_question.QuestionText;
                 }
-                if (!edited_question.QuestionImage.IsNullOrEmpty())
+                if (!edited_question.QuestionImage.ToLower().Equals(old_question.QuestionImage.ToLower()))
                 {
                     old_question.QuestionImage = edited_question.QuestionImage;
                 }
@@ -210,7 +210,7 @@ namespace L2D_WebApp.Controllers
             {
                 if (_context.Questions == null)
                 {
-                    return BadRequest($"Không có câu hỏi nào trong ngân hàng câu hỏi.");
+                    return NotFound("Không có câu hỏi nào trong ngân hàng câu hỏi.");
                 }
 
                 var question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
@@ -220,7 +220,7 @@ namespace L2D_WebApp.Controllers
                     await _context.SaveChangesAsync();
                     return Ok("Đã xóa!");
                 }
-                return BadRequest("Mã câu hỏi sai hoặc không có câu hỏi nào với mã này!");
+                return NotFound("Mã câu hỏi này không khớp với câu hỏi nào!");
             }
             catch (Exception ex)
             {
