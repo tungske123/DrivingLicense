@@ -6,6 +6,8 @@ using System.Data;
 using L2D_DataAccess.Models;
 using L2D_DataAccess.Utils;
 using Microsoft.IdentityModel.Tokens;
+using L2D_DataAccess.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Driving_License.Controllers
 {
@@ -24,35 +26,31 @@ namespace Driving_License.Controllers
         //=========================================================[ CRUD ]========================================================
         [HttpGet]
         [Route("api/account/list")]
-        public async Task<ActionResult> GetAccountList()
+        public async Task<ActionResult> GetAccountList(string keyword = "", string role = "", int page = 1)
         {
-            var accounts = await _context.Accounts.ToListAsync();
-            if (accounts == null)
+
+            var accounts = _context.Accounts.Include(x => x.User).AsQueryable();
+            if (!string.IsNullOrEmpty(keyword))
             {
-                return NotFound("Không tìm thấy bất kỳ tài khoản nào!");
+                accounts = accounts.Where(acc => acc.Username.ToLower().Contains(keyword.ToLower()));
             }
-            return Ok(accounts);
+            if (!string.IsNullOrEmpty(role))
+            {
+                accounts = accounts.Where(acc => acc.Role.Equals(role));
+            }
+            accounts = accounts.OrderBy(acc => acc.Username);
+            int pageSize = 10;
+            var pageResult = await GetPagedDataAsync<Account>(accounts, page, pageSize);
+            return Ok(pageResult);
         }
 
-        //===================================================================
-        [HttpGet]
-        [Route("api/account/list/{role}")]
-        public async Task<ActionResult> GetAccountList([FromRoute] string role)
-        {
-            var accounts = await _context.Accounts.Where(acc => acc.Role.Equals(role)).ToListAsync();
-            if (accounts == null || accounts.Count == 0)
-            {
-                return NotFound("Không tìm thấy bất kỳ tài khoản nào thuộc vai trò này!");
-            }
-            return Ok(accounts);
-        }
 
         //===================================================================
         [HttpGet]
         [Route("api/account/get/{accountid}")]
         public async Task<ActionResult> GetAccount(Guid accountid)
         {
-            var acc = await _context.Accounts.FirstOrDefaultAsync(acc => acc.AccountId == accountid);
+            var acc = await _context.Accounts.Include(x => x.User).FirstOrDefaultAsync(acc => acc.AccountId == accountid);
             if (acc == null)
             {
                 return NotFound("Mã tài khoản này không khớp tài khoản nào!");
@@ -189,7 +187,7 @@ namespace Driving_License.Controllers
                 }
                 await _context.SaveChangesAsync();
                 return Ok(edited_account);
-                
+
             }
             catch (Exception ex)
             {
@@ -221,6 +219,32 @@ namespace Driving_License.Controllers
                 default:
                     return BadRequest("Xóa thất bại hoặc đã có lỗi xảy ra!");
             }
+        }
+
+        public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
+        {
+            //Get total number of rows in table
+            int totalCount = await query.CountAsync();
+
+            //Calculate total pages
+            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            int takingNums = pageSize;
+            int skipNums = (page - 1) * pageSize;
+            if (totalCount < pageSize)
+            {
+                takingNums = totalCount;
+            }
+            List<T> items = await query.Skip(skipNums)
+                                       .Take(takingNums)
+                                       .ToListAsync();
+            return new PageResult<T>
+            {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                PageNumber = page,
+                PageSize = pageSize,
+                Items = items
+            };
         }
     }
 }
