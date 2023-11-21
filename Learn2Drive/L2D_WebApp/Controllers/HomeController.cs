@@ -91,7 +91,7 @@ namespace L2D_WebApp.Controllers
 
         //===================================================================
         [HttpGet]
-        [Route("api/dashboad")]
+        [Route("api/dashboard")]
         public async Task<ActionResult> ViewStatistic()
         {
             int user, teacher, staff, examProfile, passExam, quiz, passAttempt;
