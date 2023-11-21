@@ -5,6 +5,7 @@ using L2D_DataAccess.Utils;
 using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -86,6 +87,36 @@ namespace L2D_WebApp.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        //===================================================================
+        [HttpGet]
+        [Route("api/dashboad")]
+        public async Task<ActionResult> ViewStatistic()
+        {
+            int user, teacher, staff, examProfile, passExam, quiz, passAttempt;
+
+            user = await _context.Users.CountAsync();
+            teacher = await _context.Teachers.CountAsync();
+            staff = await _context.Staff.CountAsync();
+            examProfile = await _context.ExamProfiles.CountAsync();
+            passExam = await _context.ExamProfiles.Where(ex => ex.ExamResult.Equals("pass")).CountAsync();
+            quiz = await _context.Quizzes.CountAsync();
+            passAttempt = await _context.Attempts.Where(atm => atm.Result == true).CountAsync();
+            List<Quiz> quizList = await _context.Quizzes.ToListAsync();
+
+            var json = new
+            {
+                TotalUser = user,
+                TotalTeacher = teacher,
+                TotalStaff = staff,
+                TotalExProfile = examProfile,
+                TotalPassEx = passExam,
+                TotalQuiz = quiz,
+                TotalPassAttempt = passAttempt,
+                TotalDoneQuiz = quizList
+            };
+            return Ok(json);
         }
     }
 }
