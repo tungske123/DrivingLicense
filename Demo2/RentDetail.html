@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=<div class=" modal-content" role="document">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--bootstrap css file-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -116,6 +116,13 @@
                                 <label><i class="fa-solid fa-location-dot"></i> Địa điểm giao nhận xe</label>
                                 <div class="wrap-form has-arrow"><span class="value">TP. Hồ Chí Minh</span></div>
                             </div>
+                            <div>
+                                <select class="form-select p-3" aria-label="">
+                                    <option selected>Chọn Phương thức thuê</option>
+                                    <option value="date">Thuê theo ngày</option>
+                                    <option value="hour">Thuê theo giờ</option>
+                                  </select>
+                            </div>
                             <div class="line-page"></div>
                             <div class="price-container">
                                 <div class="line-page"></div>
@@ -218,7 +225,8 @@
                                 <ul class="list-group text-secondary" style="margin-block: 10px;">
                                     <li class="list-group-item text-secondary">
                                         <div class="form-check">
-                                            <input class="form-check-input" value="morning" type="radio" name="slot" id="slot1" checked>
+                                            <input class="form-check-input" value="morning" type="radio" name="slot"
+                                                id="slot1" checked>
                                             <label class="form-check-label" for="slot1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-brightness-high"
@@ -233,7 +241,8 @@
                                     </li>
                                     <li class="list-group-item text-secondary">
                                         <div class="form-check">
-                                            <input class="form-check-input" value="afternoon" type="radio" name="slot" id="slot2">
+                                            <input class="form-check-input" value="afternoon" type="radio" name="slot"
+                                                id="slot2">
                                             <label class="form-check-label" for="slot2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-sunset" viewBox="0 0 16 16">
@@ -246,7 +255,8 @@
                                     </li>
                                     <li class="list-group-item text-secondary">
                                         <div class="form-check">
-                                            <input class="form-check-input" value="evening" type="radio" name="slot" id="slot3">
+                                            <input class="form-check-input" value="evening" type="radio" name="slot"
+                                                id="slot3">
                                             <label class="form-check-label" for="slot3">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-moon" viewBox="0 0 16 16">
@@ -312,14 +322,16 @@
                                         <option value="DAA3024B-DEC1-422F-A070-144253088AD8">Nguyễn Văn A</option>
                                     </select>
                                     <label for="teacherid" class="form-label">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mb-1 bi bi-person-fill" viewBox="0 0 16 16">
-                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-                                          </svg> Giáo viên</label>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="mb-1 bi bi-person-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                        </svg> Giáo viên</label>
                                 </div>
                                 <p class="text-secondary mb-2">Sau khi đăng kí, bạn sẽ học tại đây</p>
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="address" name="address" value="Quận 9, TP.HCM" class="form-control"
-                                        readonly>
+                                    <input type="text" id="address" name="address" value="Quận 9, TP.HCM"
+                                        class="form-control" readonly>
                                     <label for="address" class="form-label">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="mb-1 bi bi-geo-alt" viewBox="0 0 16 16">
@@ -356,7 +368,7 @@
         </div>
     </div>
     </div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
