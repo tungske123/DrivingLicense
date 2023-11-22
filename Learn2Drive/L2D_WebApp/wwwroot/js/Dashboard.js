@@ -1,7 +1,7 @@
 ﻿let totalPage = 1;
 let page = 1;
 let pageSize = 7;
-let totalDoneQuiz;
+let quizStatList;
 function fetchDashboardData() {
 
     const fetchDashboardAPI = `https://localhost:7235/api/dashboard`;
@@ -17,12 +17,12 @@ function fetchDashboardData() {
         }
         return response.json();
     }).then(data => {
-        const dashboard = data;
-        console.log(dashboard);
-        renderDashBoardData(dashboard);
-        totalDoneQuiz = dashboard.totalDoneQuiz;
-        totalPage = calculateTotalPage(totalDoneQuiz, pageSize);
-        renderQuizTable(paginateArray(totalDoneQuiz, pageSize, page));
+        const dashboardData = data;
+        console.log(dashboardData);
+        renderDashBoardData(dashboardData);
+        quizStatList = dashboardData.quizStatData;
+        totalPage = calculateTotalPage(quizStatList, pageSize);
+        renderQuizTable(paginateArray(quizStatList, pageSize, page));
         renderPagingBar();
     }).then(error => {
         console.error(error);
@@ -42,8 +42,8 @@ function calculateTotalPage(array, pageSize) {
 }
 
 function goToPage(page) {
-    renderQuizTable(paginateArray(totalDoneQuiz, pageSize, page));
-    totalPage = calculateTotalPage(totalDoneQuiz, pageSize);
+    renderQuizTable(paginateArray(quizStatList, pageSize, page));
+    totalPage = calculateTotalPage(quizStatList, pageSize);
     renderPagingBar();
 }
 
@@ -113,34 +113,39 @@ nextPageBtn.addEventListener('click', (e) => {
 
 function renderDashBoardData(dashboard) {
     const User = document.getElementById("total_user");
-    User.innerHTML = ` <strong>${dashboard.totalUser} Học viên</strong>`;
+    User.innerHTML = ` <strong>Số lượng Học viên: ${dashboard.totalUser}</strong>`;
     const Teacher = document.getElementById("total_teacher");
-    Teacher.innerHTML = ` <strong>${dashboard.totalTeacher} Giáo viên</strong>`;
+    Teacher.innerHTML = ` <strong>Số lượng Giáo viên: ${dashboard.totalTeacher}</strong>`;
     const Staff = document.getElementById("total_staff");
-    Staff.innerHTML = ` <strong>${dashboard.totalStaff} Nhân viên</strong>`;
+    Staff.innerHTML = ` <strong>Số lượng Nhân viên: ${dashboard.totalStaff}</strong>`;
     const Examprofile = document.getElementById("totalExProfile");
     Examprofile.innerHTML = ` <strong>Số lượt đăng ký thi: ${dashboard.totalExProfile}</strong>`;
     const PassExam = document.getElementById("totalPassEx");
-    PassExam.innerHTML = ` <strong>Tổng điểm thi đậu: ${dashboard.totalPassEx}</strong>`;
+    PassExam.innerHTML = ` <strong>Số lượt thi thành công : ${dashboard.totalPassEx}</strong>`;
     const Quizz = document.getElementById("totalQuiz");
-    Quizz.innerHTML = ` <strong>Số lượng đề thi: ${dashboard.totalQuiz}</strong>`;
+    Quizz.innerHTML = ` <strong>Số lượng đề thi thử: ${dashboard.totalQuiz}</strong>`;
     const PassAttempt = document.getElementById("totalPassAttempt");
-    PassAttempt.innerHTML = ` <strong>Số lượt thi đạt: ${dashboard.totalPassAttempt}</strong>`;
+    PassAttempt.innerHTML = ` <strong>Số lượng đậu thi thử: ${dashboard.totalPassAttempt}</strong>`;
 }
 
-function renderQuizTable(totaldidquiz) {
+function renderQuizTable(attempts) {
     const quizTableBody = document.getElementById('quizTableBody');
     quizTableBody.innerHTML = '';
     let quizTableRowTemplate = document.getElementById('quizTableRowTemplate');
-    totaldidquiz.forEach(x => {
-        console.log(totaldidquiz.name);
+    attempts.forEach(quizStat => {
+        // console.log(totaldidquiz.name);
 
         let clone = document.importNode(quizTableRowTemplate.content, true);
         let cells = clone.querySelectorAll('td');
-        cells[0].textContent = x.name;
-        cells[1].textContent = x.licenseId;
-        cells[2].textContent = x.totalDid;
-        cells[3].textContent = x.description
+        cells[0].textContent = quizStat.quizName;
+        cells[1].textContent = quizStat.licenseId;
+        cells[2].textContent = (quizStat.totalDoneCnt !== null) ? quizStat.totalDoneCnt.toString() : ``;
+        let totalAttemptCnt = quizStat.attempts.length;
+        console.log(`Total attempt cnt: ${totalAttemptCnt}`);
+        let passAttemptCnt = quizStat.attempts.filter(att => att.result === true).length;
+        console.log(`Total pass attempt cnt: ${passAttemptCnt}`);
+        let passRate = (parseInt(totalAttemptCnt) !== 0) ? (parseInt(passAttemptCnt) * 100 / parseInt(totalAttemptCnt)).toFixed(2) : 0;
+        cells[3].textContent = `${passRate}%`; 
         quizTableBody.appendChild(clone);
     });
 }

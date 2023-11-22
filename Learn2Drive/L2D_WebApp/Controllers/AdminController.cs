@@ -4,6 +4,7 @@ using L2D_DataAccess.ViewModels;
 using L2D_WebApp.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace L2D_WebApp.Controllers
@@ -153,7 +154,7 @@ namespace L2D_WebApp.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 throw new Exception(ex.Message);
@@ -219,10 +220,54 @@ namespace L2D_WebApp.Controllers
 
             return Ok(pageResult);
         }
+        //===================================================================
+        [HttpGet]
+        [Route("api/dashboard")]
+        public async Task<ActionResult> ViewStatistic()
+        {
+            int user, teacher, staff, examProfile, passExam, quiz, passAttempt, Passrate;
 
-       
+            user = await _context.Users.CountAsync();
+            teacher = await _context.Teachers.CountAsync();
+            staff = await _context.Staff.CountAsync();
+            examProfile = await _context.ExamProfiles.CountAsync();
+            passExam = await _context.ExamProfiles.Where(ex => ex.ExamResult.Equals("pass")).CountAsync();
+            quiz = await _context.Quizzes.CountAsync();
+            passAttempt = await _context.Attempts.Where(atm => atm.Result == true).CountAsync();
+            try
+            {
+                var quizStatData = await _context.Quizzes
+                                        .Include(quiz => quiz.Attempts)
+                                        .Select(quiz => new
+                                        {
+                                            QuizId = quiz.QuizId,
+                                            LicenseId = quiz.LicenseId,
+                                            QuizName = quiz.Name,
+                                            TotalDoneCnt = quiz.TotalDid,
+                                            Attempts = quiz.Attempts
+                                        }).ToListAsync();
+                var dashboardData = new
+                {
+                    TotalUser = user,
+                    TotalTeacher = teacher,
+                    TotalStaff = staff,
+                    TotalExProfile = examProfile,
+                    TotalPassEx = passExam,
+                    TotalQuiz = quiz,
+                    TotalPassAttempt = passAttempt,
+                    quizStatData = quizStatData
+                };
+                // tên , giấy phép , số người làm , tỉ lệ pass 
+                //   select count(*) from Attempt         where QuizID = 1;
 
-        
+                return Ok(dashboardData);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest($"An error occurred!{ex.Message}");
+
+            }
+        }
 
     }
 }

@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const adminId = document.getElementById('adminId').textContent;
 const adminTabLinkList = document.querySelectorAll('.dashboard-item');
 adminTabLinkList.forEach(tabLink => {
     tabLink.addEventListener('click', (e) => {
@@ -121,7 +122,6 @@ function fetchAdminInfo() {
     });
 }
 const adminInfoForm = document.getElementById('adminInfoForm');
-const adminId = document.getElementById('AdminId').textContent;
 adminInfoForm.addEventListener('submit', (e) => __awaiter(this, void 0, void 0, function* () {
     e.preventDefault();
     const password = document.getElementById('password').value;

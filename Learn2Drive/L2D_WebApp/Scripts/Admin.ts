@@ -1,4 +1,5 @@
-﻿const adminTabLinkList: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('.dashboard-item');
+﻿const adminId = (document.getElementById('adminId') as HTMLDivElement).textContent;
+const adminTabLinkList: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('.dashboard-item');
 adminTabLinkList.forEach(tabLink => {
     tabLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -126,7 +127,7 @@ async function fetchAdminInfo() {
     }
 }
 const adminInfoForm = document.getElementById('adminInfoForm') as HTMLFormElement;
-const adminId = (document.getElementById('AdminId') as HTMLDivElement).textContent;
+
 adminInfoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const password = (document.getElementById('password') as HTMLInputElement).value;
