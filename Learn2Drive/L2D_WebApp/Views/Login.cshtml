@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/styleLogin.css">
     <!--google login library-->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script><!--Hoang-->
     <title>Login Page</title>
 </head>
 
@@ -26,9 +27,13 @@
                 <!--Icon social-->
                 <div class="social-container">
                     @* <a href="" class="social-icon bg3">
-                        <i class="fa fa-google"></i>
+                    <i class="fa fa-google"></i>
                     </a> *@
+                    <a href="/Login/GoogleLogin" class="social-icon bg3">
+                        <i class="fa fa-google"></i>
+                    </a>
                 </div>
+
                 <span>Tạo tài khoản</span>
                 <div class="input-group">
                     <input type="text" name="Username" id="username" placeholder="Nhập tên tài khoản (tên hiển thị)"
@@ -65,12 +70,20 @@
                 <p style="color:red">@TempData["Message"]</p>
                 <p style="color:red">@TempData["Message1"]</p>
                 <p style="color:green">@TempData["Message2"]</p>
+
                 <!--Icon social-->
                 <div class="social-container">
-                    @* <button href="" class="social-icon bg3" data-onsuccess="onSignIn" style="font-size: 15px;">
+                    <a href="/Login/GoogleLogin" class="social-icon bg3" data-onsuccess="onSignIn" style="font-size: 15px;">
                         <i class="fa fa-google"></i>
-                    </button> *@
+                    </a>
                 </div>
+
+                <div id="g_id_onload"
+                     data-client_id="440308111376-ko6ebr0ke6ikk5edk2eljlnda5jqnf4o.apps.googleusercontent.com"
+                     data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin"></div>
+
                 <!-- <span>Or If you have an account, please Login </span> -->
                 <div class="input-group">
                     <input type="text" name="username" id="username" placeholder="Tên tài khoản" required>
@@ -127,44 +140,25 @@
             });
         }
         document.querySelector('.login-link').classList.add('active');
-    </script>
-    <script>
-        // Callback function for successful Google Sign-In
-        function onSignIn(googleUser) {
-            // Obtain the Google User object
-            var profile = googleUser.getBasicProfile();
-
-            // Access user information
-            console.log('ID: ' + profile.getId());           // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName());
-            console.log('Email: ' + profile.getEmail());
-
-            // Access the ID token
-            var idToken = googleUser.getAuthResponse().id_token;
-
-            // Send the ID token to your backend for server-side validation
-            sendIdTokenToServer(idToken);
-        }
-
-        // Example function to send the ID token to the server
-        function sendIdTokenToServer(idToken) {
-            // Perform an HTTP request to your server
-            // You can use libraries like Axios or the Fetch API
-            // Example using Fetch:
-            fetch('/signin-google', {
+        function handleCredentialResponse(response) {
+            // Send the ID token to your server
+            console.log(response.credential);
+            const url = `https://localhost:7235/api/login/google`;
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ idToken: idToken })
-            })
-            .then(response => {
-                // Handle the server's response
-                console.log('Server response:', response);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                body: JSON.stringify(response.credential)
+            }).then(response => {
+                if (response.ok) {
+                    // If the login was successful, redirect the user to your home page
+                    window.location.href = '/Home';
+                } else {
+                    // If there was an error, display it to the user
+                    alert('There was an error logging in. Please try again.');
+                }
+            });;
         }
     </script>
     <script src="js/LoginAnimation.js"></script>

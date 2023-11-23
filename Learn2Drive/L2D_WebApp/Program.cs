@@ -46,24 +46,23 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
-builder.Services.AddAuthentication("Cookies").AddCookie();
-////Add google authentication
-//builder.Services.AddAuthentication().AddGoogle(googleOptions =>
-//{
-//    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-//    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-//});
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//})
-//.AddGoogle(options =>
-//{
-//    options.ClientId = configuration["Authentication:Google:ClientId"];
-//    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-//    options.Scope.Add("email"); // Ensure the "email" scope is requested
-//});
+//============================================================================================
+//                  Hoang demo google login
+//
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+    .AddCookie()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    });
+
+//============================================================================================
 
 var app = builder.Build();
 app.UseCors("AllowMyOrigin"); // use the CORS policy
