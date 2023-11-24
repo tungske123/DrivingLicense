@@ -43,13 +43,12 @@
                 PHÉP LÁI XE</h2>
 
             <div class="border border-gray-900 rounded px-2">
-                <form action="#">
+                <form action="" id="examRegisterForm">
                     <div class="gap-4 ">
-
                         <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
 
                             <div class="mb-6">
-                                <img src="img/profile_icon_2.png" style="width: 75%;">
+                                <img id="avatar" src="img/profile_icon_2.png" style="width: 75%;">
                                 <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" style="margin-left: 6rem;">
                                     Ảnh Màu cỡ 3 x 4
                                 </div>
@@ -76,7 +75,7 @@
                                                 d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
                                         </svg>
                                     </span>
-                                    <input type="text" name="name" id="name"
+                                    <input type="text" name="name" id="fullname"
                                         class="rounded-none rounded-e-lg w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="Nhập đầy đủ họ tên" required="">
                                 </div>
@@ -123,7 +122,7 @@
                                             d="M5 1v3m5-3v3m5-3v3M1 7h18M5 11h10M2 3h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
                                     </svg>
                                 </span>
-                                <input type="date" name="date" id="date"
+                                <input type="date" name="date" id="birthdate"
                                     class="rounded-none rounded-e-lg w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="Nhập ngày tháng năm sinh" required="">
                             </div>
@@ -131,35 +130,14 @@
                         <div class="mb-6">
                             <label for="que_goc" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">
                                 <div class="font-bold">
-                                    Nguyên
-                                    quán
+                                    Địa chỉ
                                 </div>
                             </label>
-                            <input type="number" name="que_goc" id="que_goc"
+                            <input type="text" name="address" id="address"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Nhập nguyên quán" required="">
+                                placeholder="Nhập địa chỉ hộ khẩu thường trú" required="">
                         </div>
-                        <div class="mb-6">
-                            <label for="address" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">
-                                <div class="font-bold">
-                                    Nơi cư
-                                    trú
-                                </div>
-                            </label>
-                            <div class="flex">
-                                <span
-                                    class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                    <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                                        <path
-                                            d="M16 0H4a2 2 0 0 0-2 2v1H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM13.929 17H7.071a.5.5 0 0 1-.5-.5 3.935 3.935 0 1 1 7.858 0 .5.5 0 0 1-.5.5Z" />
-                                    </svg>
-                                </span>
-                                <input type="number" name="address" id="address"
-                                    class="rounded-none rounded-e-lg w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Nhập nguyên quán" required="">
-                            </div>
-                        </div>
+                        
                         <div class="mb-6">
                             <label for="cccd" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">
                                 <div class="font-bold">
@@ -177,13 +155,29 @@
                                             d="M0 64C0 28.7 28.7 0 64 0H384c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM183 278.8c-27.9-13.2-48.4-39.4-53.7-70.8h39.1c1.6 30.4 7.7 53.8 14.6 70.8zm41.3 9.2l-.3 0-.3 0c-2.4-3.5-5.7-8.9-9.1-16.5c-6-13.6-12.4-34.3-14.2-63.5h47.1c-1.8 29.2-8.1 49.9-14.2 63.5c-3.4 7.6-6.7 13-9.1 16.5zm40.7-9.2c6.8-17.1 12.9-40.4 14.6-70.8h39.1c-5.3 31.4-25.8 57.6-53.7 70.8zM279.6 176c-1.6-30.4-7.7-53.8-14.6-70.8c27.9 13.2 48.4 39.4 53.7 70.8H279.6zM223.7 96l.3 0 .3 0c2.4 3.5 5.7 8.9 9.1 16.5c6 13.6 12.4 34.3 14.2 63.5H200.5c1.8-29.2 8.1-49.9 14.2-63.5c3.4-7.6 6.7-13 9.1-16.5zM183 105.2c-6.8 17.1-12.9 40.4-14.6 70.8H129.3c5.3-31.4 25.8-57.6 53.7-70.8zM352 192A128 128 0 1 0 96 192a128 128 0 1 0 256 0zM112 384c-8.8 0-16 7.2-16 16s7.2 16 16 16H336c8.8 0 16-7.2 16-16s-7.2-16-16-16H112z" />
                                     </svg>
                                 </span>
-                                <input type="date" name="cccd" id="cccd"
+                                <input type="text" name="cccd" id="cccd"
                                     class="rounded-none rounded-e-lg w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    required="">
+                                    required="" placeholder="Căn cước công dân">
                             </div>
-                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Nhập
-                                Ngày cấp
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Nhập đầy đủ số căn cước công dân
                             </p>
+                        </div>
+                        <div class="mb-6">
+                            <label for="cccd" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">
+                                <div class="font-bold">
+                                    Số điện thoại
+                                </div>
+                            </label>
+                            <div class="flex">
+                                <span
+                                    class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
+                                </span>
+                                <input type="tel" name="phone" id="phone"
+                                    class="rounded-none rounded-e-lg w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    required="" placeholder="Nhập số điện thoại liên hệ">
+                            </div>
+                            
                         </div>
                         <!-- <div>
                             <label for="category"
@@ -207,7 +201,7 @@
                                 </label>
                                 <div class="sm:col-span-2 mb-2">
                                     <select id="license"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
                                         <option selected="">
                                             Chọn hạng bằng lái
                                         </option>
@@ -254,7 +248,7 @@
         </div>
     </section>
 
-
+    <script src="JS/ExamRegister.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.1.1/flowbite.min.js"></script>
 </body>
 

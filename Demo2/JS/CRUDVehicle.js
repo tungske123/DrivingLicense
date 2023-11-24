@@ -11,6 +11,7 @@ class Vehicle {
     status;
     description;
 }
+
 class VehicleRequestData {
     keyword;
     types = [];
@@ -26,6 +27,7 @@ class VehicleRequestData {
         this.endPrice = -1;
     }
 }
+
 let vehicleTableBody = document.getElementById('vehicleTableBody');
 const vehicleSearch = document.getElementById('vehicleSearch');
 const tableLoader = document.getElementById('tableLoader');
@@ -144,10 +146,9 @@ function renderVehicleTable(vehicleList) {
             cells[1].textContent = vehicle.brand;
             cells[2].textContent = vehicle.years.toString();
             cells[3].textContent = vehicle.type;
-            cells[4].textContent = '...';
-            cells[5].textContent = getFormattedPrice(vehicle.rentPrice);
-            const dropdownButton = cells[6].querySelector('.dropdown_button');
-            var dropDownContent = cells[6].querySelector('.dropdown_content');
+            cells[4].textContent = getFormattedPrice(vehicle.rentPrice);
+            const dropdownButton = cells[5].querySelector('.dropdown_button');
+            var dropDownContent = cells[5].querySelector('.dropdown_content');
             dropdownButton.addEventListener('click', function toggleDropDown() {
                 const hasDropdown = (!dropDownContent.classList.contains('hidden') && dropDownContent.classList.contains('block'));
                 if (!hasDropdown) {
@@ -226,21 +227,6 @@ function toggleDetailsModal() {
         detailsModal.classList.remove('blur-background');
     }
 }
-
-// function toggleDeleteModal() {
-//     const deleteModal = document.getElementById('deleteModal');
-//     const openedDeleteModal = (!deleteModal.classList.contains('hidden') && deleteModal.classList.contains('flex') && deleteModal.classList.contains('blur-background'));
-//     if (!openedDeleteModal) {
-//         deleteModal.classList.remove('hidden');
-//         deleteModal.classList.add('flex');
-//         deleteModal.classList.add('blur-background');
-//     } else {
-//         deleteModal.classList.add('hidden');
-//         deleteModal.classList.remove('flex');
-//         deleteModal.classList.remove('blur-background');
-//     }
-// }
-
 
 function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");

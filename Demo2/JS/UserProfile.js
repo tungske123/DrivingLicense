@@ -108,11 +108,27 @@ function renderRentDataRow(data) {
     cancelButton.className = 'cancel-button';
     cancelButton.setAttribute('rid', data.rentId);
     cancelButton.textContent = 'Hủy đơn thuê';
-    cancelButton.addEventListener('click', () => {
+    cancelButton.addEventListener('click', async () => {
         console.log('Clicked delete button');
         const newRentId = cancelButton.getAttribute('rid');
         rentId = newRentId;
-        openDeleteModal();
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: "Xác nhận hủy đơn thuê này?",
+            showCancelButton: true,
+            confirmButtonText: "Hủy đơn này",
+            confirmButtonColor: `#d90429`,
+            cancelButtonText: `Không hủy`
+        });
+        if (result.isConfirmed) {
+            await deleteRent();
+            Swal.fire({
+                icon: `success`,
+                title: `Hủy đơn thuê thành công!`,
+                confirmButtonColor: `#d90429`
+            });
+            await fetchRentData();
+        }
     });
     buttonsCell.appendChild(cancelButton);
     newRow.appendChild(buttonsCell);
@@ -121,27 +137,6 @@ function renderRentDataRow(data) {
 }
 
 //For modals
-
-function openDeleteModal() {
-    if (!openedDeleteModal) {
-        deleteModal.style.display = 'flex';
-        openedDeleteModal = true;
-        deleteModal.style.justifyContent = `center`;
-        deleteModal.style.alignItems = `center`;
-        deleteModal.style.backdropFilter = `blur(2px)`;
-    }
-}
-
-async function closeDeleteModal(button) {
-    if (openedDeleteModal) {
-        deleteModal.style.display = 'none';
-        openedDeleteModal = false;
-        const action = String(button.getAttribute('action'));
-        if (action === `confirm`) {
-            await deleteRent();
-        }
-    }
-}
 
 async function openEditModal() {
     if (!openedEditModal) {
@@ -245,24 +240,24 @@ function createRentPageItemElement(text, className) {
         li.innerHTML = `<button class="${className}">${text}</button>`;
         li.addEventListener('click', async () => {
             if (li.classList.contains(`prev-button`)) {
-                --page;
-                if (page <= 0) {
-                    page = totalPages;
+                --rentPage;
+                if (rentPage <= 0) {
+                    rentPage = totalPages;
                 }
             } else {
-                ++page;
-                if (page > totalPages) {
-                    page = 1;
+                ++rentPage;
+                if (rentPage > totalPages) {
+                    rentPage = 1;
                 }
             }
-            console.log(`Current page: ${page}`);
+            console.log(`Current page: ${rentPage}`);
             await fetchRentDataPagingAsync();
         });
     } else {
         li.innerHTML = `<button class="${className}" page="${text}">${text}</button>`;
         li.addEventListener('click', async () => {
             const newPage = Number(li.getAttribute("page"));
-            page = newPage;
+            rentPage = newPage;
             await fetchRentDataPagingAsync();
         });
     }
@@ -273,7 +268,7 @@ function renderRentPagingBar() {
     rentPagingContent.innerHTML = '';
     createRentPageItemElement(`&lt;`, `prev-button`);
     for (var pageCount = 1; pageCount <= totalPages; ++pageCount) {
-        if (pageCount === page) {
+        if (pageCount === rentPage) {
             createRentPageItemElement(pageCount.toString(), `is-active-page`);
         } else {
             createRentPageItemElement(pageCount.toString(), `page`);
@@ -312,7 +307,7 @@ function fetchRentData() {
 }
 
 function fetchRentDataPaging() {
-    const fetchUrl = `https://localhost:7235/api/rent/filter/page/${UserId}?page=${page}`;
+    const fetchUrl = `https://localhost:7235/api/rent/filter/page/${UserId}?page=${rentPage}`;
     const sendData = {
         keyword: keyword,
         dayRangeValue: dayRangeValue
@@ -343,7 +338,7 @@ function fetchRentDataPaging() {
         })
 }
 async function fetchRentDataPagingAsync() {
-    const fetchUrl = `https://localhost:7235/api/rent/filter/page/${UserId}?page=${page}`;
+    const fetchUrl = `https://localhost:7235/api/rent/filter/page/${UserId}?page=${rentPage}`;
     const sendData = {
         keyword: keyword,
         dayRangeValue: dayRangeValue
@@ -456,7 +451,11 @@ function CheckValidRentDate() {
 
 function UpdateRentPrice() {
     if (!CheckValidRentDate()) {
-        alert('Vui lòng chọn ngày và giờ phù hợp');
+        Swal.fire({
+            icon: 'error',
+            title: 'Vui lòng chọn ngày và giờ thuê phù hợp!',
+            confirmButtonColor: '#d90429'
+        });
         return;
     }
     const totalPrice = GetFinalCalculatedPrice();
@@ -498,7 +497,12 @@ async function saveRentData() {
         if (!response || response.status !== 204) {
             throw new Error(`Http Error! Status code: ${response.status}`);
         }
-        alert(`Lưu thành công!`);
+        Swal.fire({
+            icon: 'success',
+            title: 'Lưu thông tin đơn thuê thành công!',
+            text: 'Vui lòng kiểm tra trong phần lịch sử thuê xe',
+            confirmButtonColor: '#d90429'
+        });
         await fetchRentDataForEditModal();
     } catch (error) {
         console.error(`Error: ${error}`);
@@ -507,12 +511,6 @@ async function saveRentData() {
 }
 
 //Events
-
-deleteModalButtons.forEach(btn => {
-    btn.addEventListener('click', async () => {
-        await closeDeleteModal(btn);
-    });
-});
 
 tabLinkList.forEach(tabLink => {
     tabLink.addEventListener('click', (e) => {
@@ -723,7 +721,7 @@ function renderUserAttemptTable(attemptList) {
         cells[0].textContent = attempt.quizName;
         cells[1].textContent = attempt.licenseId;
         cells[2].textContent = getVietnamDateTime(attempt.attemptDate);
-        cells[3].textContent = getFormattedTime(attempt.attemptTime);
+        cells[3].textContent = attempt.attemptTime;
         cells[4].innerHTML = (attempt.result === true) ? `<span class="text-green-700 font-bold">Đậu</span>` : `<span class="text-red-700 font-bold">Rớt</span>`;
         let detailsBtn = cells[5].querySelector('.attemptDetailsBtn');
 
@@ -934,7 +932,7 @@ function renderUserSchedulesForDay(scheduleList) {
         return;
     }
     scheduleList.forEach(schedule => {
-        const scheduleDetailsTemplate = document.getElementById('scheduleDetailsTemplate')
+        const scheduleDetailsTemplate = document.getElementById('scheduleDetailsTemplate');
         let scheduleDetailsElementClone = document.importNode(scheduleDetailsTemplate.content, true);
         let courseNameElement = scheduleDetailsElementClone.querySelector('.courseName');
         let courseStatusElement = scheduleDetailsElementClone.querySelector('.courseStatus');
@@ -965,19 +963,19 @@ function renderUserScheduleData(scheduleList, month) {
         console.log('No schedules data');
         return;
     }
-    const normalDayElements = document.querySelectorAll('.normalDay')
+    const normalDayElements = document.querySelectorAll('.normalDay');
     scheduleList.forEach(schedule => {
         const scheduleDate = new Date(schedule.date);
         const index = scheduleDate.getDate() - 1;
         const normalDayCell = normalDayElements[index];
         const eventsContainer = normalDayCell.querySelector('.eventsContainer');
-        let eventTemplate = document.getElementById('event-template')
+        let eventTemplate = document.getElementById('event-template');
         let eventElementClone = document.importNode(eventTemplate.content, true);
 
         var eventNameElement = eventElementClone.querySelector('.event-name');
         eventNameElement.textContent = `Khóa ${schedule.licenseId}`;
 
-        var timeElement = eventElementClone.querySelector('time')
+        var timeElement = eventElementClone.querySelector('time');
         // timeElement.textContent = `${schedule.startTime}~${schedule.endTime}`;
         timeElement.textContent = `${getFormattedTime(schedule.startTime)}~${getFormattedTime(schedule.endTime)}`;
 
@@ -1066,8 +1064,23 @@ async function saveUserInfo() {
 
 userInfoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    await saveUserInfo();
-    alert('Lưu thành công');
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Xác nhận lưu thông tin?',
+        showCancelButton: true,
+        confirmButtonText: 'Lưu',
+        confirmButtonColor: '#d90429',
+        cancelButtonText: 'Hủy',
+    });
+    
+    if (result.isConfirmed) {
+        await saveUserInfo();
+        Swal.fire({
+            icon: 'success',
+            title: 'Lưu thông tin thành công!',
+            confirmButtonColor: '#d90429'
+        });
+    }
 });
 
 //For closing buttons
