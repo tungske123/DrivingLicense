@@ -56,7 +56,7 @@ function getVietnamDateTime(dateString) {
     return vietnamTime;
 }
 
-function paginateArray(array, pageSize, pageNumber) {
+function paginateRentArray(array, pageSize, pageNumber) {
     // calculate the start index
     let startIndex = (pageNumber - 1) * pageSize;
     // startItemCnt = startIndex + 1;
@@ -64,11 +64,11 @@ function paginateArray(array, pageSize, pageNumber) {
     return array.slice(startIndex, startIndex + pageSize);
 }
 
-function calculateTotalPage(array, pageSize) {
+function calculateRentTotalPage(array, pageSize) {
     return Math.ceil(array.length / pageSize);
 }
 
-function renderPagingBar() {
+function renderRentPagingBar() {
     let rentPageBarContent = document.querySelector('.rentPageBarContent');
     rentPageBarContent.innerHTML = ``;
     let pageItemTemplate = document.getElementById('rentPageItemTemplate');
@@ -92,16 +92,16 @@ function renderPagingBar() {
 }
 
 function renderRentContent() {
-    let data = paginateArray(rentData, rentPageSize, rentPage);
+    let data = paginateRentArray(rentData, rentPageSize, rentPage);
     renderRentTable(data);
-    totalRentPage = calculateTotalPage(rentData, rentPageSize);
-    renderPagingBar();
+    totalRentPage = calculateRentTotalPage(rentData, rentPageSize);
+    renderRentPagingBar();
 }
 
-let prevBtn = document.querySelector('.prevRentBtn');
-let nextBtn = document.querySelector('.nextRentBtn');
+let prevRentBtn = document.querySelector('.prevRentBtn');
+let nextRentBtn = document.querySelector('.nextRentBtn');
 
-prevBtn.addEventListener('click', () => {
+prevRentBtn.addEventListener('click', () => {
     --rentPage;
     if (rentPage <= 0) {
         rentPage = totalRentPage;
@@ -110,7 +110,7 @@ prevBtn.addEventListener('click', () => {
 });
 
 
-nextBtn.addEventListener('click', () => {
+nextRentBtn.addEventListener('click', () => {
     ++rentPage;
     if (rentPage > totalRentPage) {
         rentPage = 1;
@@ -154,11 +154,12 @@ function renderRentDetailsData(rent) {
     let startDateInput = document.querySelector('.rentStartDate');
     let endDateInput = document.querySelector('.rentEndDate');
     let totalPriceElement = document.querySelector('.rentTotalPrice');
+    // let rentHoursElement = document.querySelector('.rentHours');
 
     if (rent.vehicle.image !== null && rent.vehicle.image !== `` && rent.vehicle.image !== `none`) {
         image.src = `/img/rent/${rent.vehicle.image}`;
     }
-
+    
     nameElement.textContent = rent.vehicle.name;
     descriptionElement.innerHTML = rent.vehicle.description;
     brandElement.textContent = rent.vehicle.brand;
@@ -170,6 +171,7 @@ function renderRentDetailsData(rent) {
     contactNumberElement.textContent = rent.vehicle.contactNumber;
     startDateInput.value = rent.startDate;
     endDateInput.value = rent.endDate;
+    updateRentPrice();
     totalPriceElement.textContent = formatMoney(rent.totalRentPrice);
     document.querySelector('.rentTotalPriceValue').textContent = rent.totalRentPrice.toString();
 }
@@ -240,7 +242,14 @@ async function updateRent(data, rentId) {
     }
 }
 
+let rentHours = 0;
 function calculateRentPrice(pricePerHour) {
+    let rentHoursElement = document.querySelector('.rentHours');
+    if (!checkValidRentDate()) {
+        rentHours = 0;
+        rentHoursElement.textContent = 'Chưa có dữ liệu';
+        return -1;
+    }
     let startDateInput = document.querySelector('.rentStartDate');
     let endDateInput = document.querySelector('.rentEndDate');
     let startTime = new Date(startDateInput.value).getTime();
@@ -253,8 +262,8 @@ function calculateRentPrice(pricePerHour) {
     } else {
         totalPrice = pricePerHour * hourDifferences * 0.8;
     }
-    let rentHoursElement = document.querySelector('.rentHours');
     rentHoursElement.textContent = `${hourDifferences.toFixed(1)} Giờ`;
+    totalPriceElement.textContent = (hourDifferences >= 24) ? `${formatMoney(totalPrice)}(-20%)` : `${formatMoney(totalPrice)}`;
     return totalPrice;
 }
 
@@ -271,7 +280,7 @@ function updateRentPrice() {
         totalPriceElement.textContent = 'Chưa có dữ liệu';
         return;
     }
-    totalPriceElement.textContent = formatMoney(totalPrice);
+   
     document.querySelector('.rentTotalPriceValue').textContent = totalPrice.toString();
 }
 
@@ -425,6 +434,7 @@ updateRentForm.addEventListener('submit', async (e) => {
         }
     ];
     await updateRent(sendData, rentId);
+    await fetchRentData();
 });
 
 let closeRentEditModalButton = document.querySelector('.closeRentEditModalButton');

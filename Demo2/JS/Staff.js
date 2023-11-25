@@ -55,7 +55,7 @@ function renderStaffInfo(staff) {
 
     FullNameInput.value = staff.fullName;
     EmailElement.value = staff.email;
-    PhoneElement.value = staff.email;
+    PhoneElement.value = staff.contactNumber;
     PasswordElement.value = staff.password;
     RepassElement.value = staff.password;
 }
