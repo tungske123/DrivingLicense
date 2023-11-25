@@ -134,9 +134,23 @@ window.addEventListener('DOMContentLoaded', async () => {
                 icon: "error",
                 title: "Không thể lưu thông tin bằng lái",
                 text: "Vui lòng chọn loại bằng lái",
+                confirmButtonColor: '#d90429'
               });
             return;
         } 
+
+        const result = await Swal.fire({
+            icon: 'question',
+            title: `Xác nhận cập nhật thông tin cho bằng lái ${licenseId}?`,
+            showCancelButton: true,
+            cancelButtonText: 'Hủy',
+            confirmButtonText: 'Cập nhật',
+            confirmButtonColor: '#d90429'
+        });
+
+        if (!result.isConfirmed) {
+            return;
+        }
         await saveLicenseInfo(licenseId);
     });
 });

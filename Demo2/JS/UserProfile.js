@@ -127,7 +127,7 @@ function renderRentDataRow(data) {
                 title: `Hủy đơn thuê thành công!`,
                 confirmButtonColor: `#d90429`
             });
-            await fetchRentData();
+            await fetchRentDataPagingAsync();
         }
     });
     buttonsCell.appendChild(cancelButton);
@@ -158,7 +158,7 @@ function closeEditModal() {
 }
 
 async function deleteRent() {
-    const fetchUrl = `https://localhost:7235/api/rent/delete/${UserId}?rid=${rentId}`;
+    const fetchUrl = `https://localhost:7235/api/rent/delete/${rentId}`;
     try {
         const response = await fetch(fetchUrl, {
             method: 'DELETE',
@@ -183,55 +183,11 @@ function renderRentData(data) {
         return;
     }
     noResultHeading.style.display = 'none';
-    rentTableBody.innerHTML = '';
-    const loader = `<div role="status" id="rentTableLoader"
-    class="p-4 space-y-4 w-full border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 dark:border-gray-700">
-    <div class="flex items-center justify-between">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <span class="sr-only">Loading...</span>
-</div>`;
-    rentTableBody.innerHTML = loader;
-    setTimeout(() => {
-
-        rentTableBody.innerHTML = ``;
-        //Render the content
-        data.forEach(rentData => {
-            renderRentDataRow(rentData);
-        });
-    }, 1000);
+    rentTableBody.innerHTML = ``;
+    //Render the content
+    data.forEach(rentData => {
+        renderRentDataRow(rentData);
+    });
 }
 
 function createRentPageItemElement(text, className) {
@@ -240,24 +196,24 @@ function createRentPageItemElement(text, className) {
         li.innerHTML = `<button class="${className}">${text}</button>`;
         li.addEventListener('click', async () => {
             if (li.classList.contains(`prev-button`)) {
-                --rentPage;
-                if (rentPage <= 0) {
-                    rentPage = totalPages;
+                --page;
+                if (page <= 0) {
+                    page = totalPages;
                 }
             } else {
-                ++rentPage;
-                if (rentPage > totalPages) {
-                    rentPage = 1;
+                ++page;
+                if (page > totalPages) {
+                    page = 1;
                 }
             }
-            console.log(`Current page: ${rentPage}`);
+            console.log(`Current page: ${page}`);
             await fetchRentDataPagingAsync();
         });
     } else {
         li.innerHTML = `<button class="${className}" page="${text}">${text}</button>`;
         li.addEventListener('click', async () => {
             const newPage = Number(li.getAttribute("page"));
-            rentPage = newPage;
+            page = newPage;
             await fetchRentDataPagingAsync();
         });
     }
@@ -268,7 +224,7 @@ function renderRentPagingBar() {
     rentPagingContent.innerHTML = '';
     createRentPageItemElement(`&lt;`, `prev-button`);
     for (var pageCount = 1; pageCount <= totalPages; ++pageCount) {
-        if (pageCount === rentPage) {
+        if (pageCount === page) {
             createRentPageItemElement(pageCount.toString(), `is-active-page`);
         } else {
             createRentPageItemElement(pageCount.toString(), `page`);
@@ -277,68 +233,8 @@ function renderRentPagingBar() {
     createRentPageItemElement(`&gt;`, `next-button`);
 }
 
-function fetchRentData() {
-    const fetchUrl = `https://localhost:7235/api/rent/filter/${UserId}`;
-    const sendData = {
-        keyword: keyword,
-        dayRangeValue: dayRangeValue
-    };
-    console.log(`Send data: ${sendData}`);
-    fetch(fetchUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(sendData)
-    }).then(repsonse => {
-        if (!repsonse.ok) {
-            throw new Error(`Network error!Status code: ${repsonse.status}`);
-        }
-        return repsonse.json();
-    })
-        .then(data => {
-            console.log(data);
-            const rentDataList = data;
-            renderRentData(rentDataList);
-        })
-        .catch(error => {
-            console.error(`Error: ${error}`);
-        })
-}
-
-function fetchRentDataPaging() {
-    const fetchUrl = `https://localhost:7235/api/rent/filter/page/${UserId}?page=${rentPage}`;
-    const sendData = {
-        keyword: keyword,
-        dayRangeValue: dayRangeValue
-    };
-    console.log(`Send data: ${sendData}`);
-    fetch(fetchUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(sendData)
-    }).then(repsonse => {
-        if (!repsonse.ok) {
-            throw new Error(`Network error!Status code: ${repsonse.status}`);
-        }
-        return repsonse.json();
-    })
-        .then(data => {
-            console.log(data);
-            const rentDataList = data.rentData;
-            renderRentData(rentDataList);
-            totalPages = Number(data.totalPages);
-            console.log(`Total pages: ${totalPages}`);
-            renderRentPagingBar();
-        })
-        .catch(error => {
-            console.error(`Error: ${error}`);
-        })
-}
 async function fetchRentDataPagingAsync() {
-    const fetchUrl = `https://localhost:7235/api/rent/filter/page/${UserId}?page=${rentPage}`;
+    const fetchUrl = `https://localhost:7235/api/rent/filter/page/${UserId}?page=${page}`;
     const sendData = {
         keyword: keyword,
         dayRangeValue: dayRangeValue
@@ -379,8 +275,7 @@ async function fetchRentDataForEditModal() {
             throw new Error(`Http Error! Status code: ${response.status}`);
         }
         const data = await response.json();
-        const rent = data;
-        renderRentDataForEditModal(rent);
+        renderRentDataForEditModal(data);
     } catch (error) {
         console.error(`Error: ${error}`);
     }
@@ -410,10 +305,10 @@ function renderRentDataForEditModal(data) {
     phoneNumberElememnt.textContent = data.vehicle.contactNumber;
 
     const startDateElement = document.getElementById('startdate');
-    startDateElement.value = data.startDate.toString();
+    startDateElement.value = data.startDate;
 
     const endDateElement = document.getElementById('enddate');
-    endDateElement.value = data.endDate.toString();
+    endDateElement.value = data.endDate;
 
     const minuteDifferences = new Date(data.endDate).getTime() - new Date(data.startDate).getTime();
     const hourDifferences = minuteDifferences / (1000 * 60 * 60);
@@ -424,7 +319,7 @@ function renderRentDataForEditModal(data) {
     totalPriceElement.textContent = GetFormattedPrice(data.totalRentPrice) + " VNĐ";
 }
 
-function GetFormattedPrice(pric) {
+function GetFormattedPrice(price) {
     return price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".").toString();
 }
 
@@ -589,35 +484,32 @@ avatarInputElement.addEventListener('change', (event) => {
     reader.readAsDataURL(file);
 });
 
-userInfoForm.addEventListener('submit', (e) => {
-    const password = (document.getElementById('password')).value;
-    const repass = (document.getElementById('repass')).value;
-    if (password !== repass) {
-        e.preventDefault();
-        alert('Xác nhận mật khẩu và mật khẩu không giống nhau');
-        return;
-    }
-});
+
 
 tabLinkList[0].click();
 
 //For quiz section
 
-class QuestionData {
-    questionText;
-    userAnswer;
-    correctAnswer;
-    isCorrect;
-}
-
 const questionDataTableBody = document.getElementById('questionDataContent');
 const quizAttemptHistoryTableBody = document.getElementById('quizAttemptHistoryTableBody');
 const detailsModal = document.getElementById('statModal');
 var openedDetailsModal = false;
-const correctPercentElement = document.getElementById('correctPercent');
-const incorrectPercentElement = document.getElementById('incorrectPercent');
-const unfinishPercentElement = document.getElementById('unfinishedPercent');
+
 var attemptDataList = [];
+
+let quizAttemptPage = 1, totalQuizAttemptPage = 1, quizAttemptPageSize = 5;
+
+function paginateArray(array, pageSize, pageNumber) {
+    // calculate the start index
+    let startIndex = (pageNumber - 1) * pageSize;
+    startItemCnt = startIndex + 1;
+    // return a slice of the array
+    return array.slice(startIndex, startIndex + pageSize);
+}
+
+function calculateTotalPage(array, pageSize) {
+    return Math.ceil(array.length / pageSize);
+}
 
 async function fetchUserAttemptHistory() {
     const fetchUrl = `https://localhost:7235/api/user/profile/quizattempt/${UserId}`;
@@ -634,11 +526,64 @@ async function fetchUserAttemptHistory() {
         const data = await response.json();
         console.log(data);
         attemptDataList = data;
-        renderUserAttemptTable(data);
+        totalQuizAttemptPage = calculateTotalPage(attemptDataList, quizAttemptPageSize);
+        renderUserAttemptTable(paginateArray(attemptDataList, quizAttemptPageSize, quizAttemptPage));
+        renderQuizAttemptPagingBar();
     } catch (error) {
         console.error(`Error: ${error}`);
     }
 }
+
+function renderQuizAttemptPagingBar() {
+    let quizAttemptPagingContent = document.getElementById('quizAttemptPagingContent');
+    quizAttemptPagingContent.innerHTML = ``;
+    let quizAttemptPageItemTemplate = document.getElementById('quizAttemptPageItemTemplate');
+    for (var cnt = 1;cnt <= totalQuizAttemptPage;++cnt) {
+        let clone = document.importNode(quizAttemptPageItemTemplate.content, true);
+        let pageItem = clone.querySelector('li a');
+        pageItem.setAttribute('page', cnt.toString());
+        if (parseInt(cnt) === parseInt(quizAttemptPage)) {
+            pageItem.classList.add('active-page');
+        }
+        pageItem.textContent = cnt.toString();
+        pageItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            let newPage = parseInt(pageItem.getAttribute('page'));
+            quizAttemptPage = newPage;
+            goToQuizAttemptPage();
+        });
+
+        quizAttemptPagingContent.appendChild(clone);
+    }
+}
+
+function goToQuizAttemptPage() {
+    // totalQuizAttemptPage = calculateTotalPage(attemptDataList, quizAttemptPageSize);
+    renderUserAttemptTable(paginateArray(attemptDataList, quizAttemptPageSize, quizAttemptPage));
+    renderQuizAttemptPagingBar();
+}
+
+let prevQuizAttemptBtn = document.querySelector('.prevQuizAttemptBtn');
+let nextQuizAttemptBtn = document.querySelector('.nextQuizAttemptBtn');
+
+prevQuizAttemptBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    --quizAttemptPage;
+    if (quizAttemptPage <= 0) {
+        quizAttemptPage = totalQuizAttemptPage;
+    }
+    goToQuizAttemptPage();
+})
+
+nextQuizAttemptBtn.addEventListener('click', (e) =>{
+    e.preventDefault();
+    ++quizAttemptPage;
+    if (quizAttemptPage > totalQuizAttemptPage) {
+        quizAttemptPage = 1;
+    }
+    goToQuizAttemptPage();
+});
+
 
 function openDetailsModal() {
     if (!openedDetailsModal) {
@@ -647,13 +592,6 @@ function openDetailsModal() {
         detailsModal.style.alignItems = 'center';
         detailsModal.style.backdropFilter = 'blur(2px)';
         openedDetailsModal = true;
-    }
-}
-
-function closeStatDetailsModal() {
-    if (openedDetailsModal) {
-        detailsModal.style.display = 'none';
-        openedDetailsModal = false;
     }
 }
 
@@ -764,16 +702,16 @@ function renderUserAttemptTable(attemptList) {
 }
 
 
-class Schedule {
-    scheduleId;
-    hireId;
-    licenseId;
-    startTime;
-    endTime;
-    date;
-    address;
-    status;
-}
+// class Schedule {
+//     scheduleId;
+//     hireId;
+//     licenseId;
+//     startTime;
+//     endTime;
+//     date;
+//     address;
+//     status;
+// }
 
 function getCalendarDays(month, year) {
     const date = new Date(year, month - 1, 1);
@@ -893,8 +831,7 @@ async function fetchUserScheduleDataForDay(day, month) {
         }
         const data = await response.json();
         console.log(data);
-        var scheduleList = data;
-        renderUserSchedulesForDay(scheduleList);
+        renderUserSchedulesForDay(data);
     } catch (error) {
         console.error(error);
     }
@@ -938,7 +875,9 @@ function renderUserSchedulesForDay(scheduleList) {
         let courseStatusElement = scheduleDetailsElementClone.querySelector('.courseStatus');
         let courseDateElement = scheduleDetailsElementClone.querySelector('.courseDate');
         let courseTimeElement = scheduleDetailsElementClone.querySelector('.courseTime');
-
+        let courseTeacherNameElement = scheduleDetailsElementClone.querySelector('.courseTeacherName');
+        let courseAddressElement = scheduleDetailsElementClone.querySelector('.courseAddress');
+        let courseTeacherPhoneElement = scheduleDetailsElementClone.querySelector('.courseTeacherphone');
         courseNameElement.textContent = `Khóa ${schedule.licenseId}`;
 
         const doneStatusClassName = `bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 ml-3`;
@@ -952,6 +891,10 @@ function renderUserSchedulesForDay(scheduleList) {
 
         courseDateElement.textContent = ``;
 
+        courseTeacherNameElement.textContent = schedule.hire.teacher.fullName;
+        courseAddressElement.textContent = schedule.address;
+        let teacherPhone = schedule.hire.teacher.contactNumber;
+        courseTeacherPhoneElement.textContent = (teacherPhone !== null && teacherPhone !== ``) ? teacherPhone : 'Chưa cập nhật';
         courseTimeElement.textContent = `${getFormattedTime(schedule.startTime)}~${getFormattedTime(schedule.endTime)}`;
         scheduleDetailsModalContent.appendChild(scheduleDetailsElementClone);
 
@@ -1046,6 +989,40 @@ function renderUserInfo(user) {
     repassElement.value = user.password;
 }
 
+userInfoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Xác nhận lưu thông tin?',
+        confirmButtonColor: "#d90429",
+        showCancelButton: true,
+        cancelButtonText: 'Hủy',
+        confirmButtonText: 'Lưu'
+    });
+
+    if (!result.isConfirmed) {
+        return;
+    }
+
+    const password = document.getElementById('password').value;
+    const repass = document.getElementById('repass').value;
+    console.log(`Password: ${password}\nRepass: ${repass}`);
+    if (password !== repass) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Thông tin không chính xác!',
+            confirmButtonColor: "#d90429",
+        });
+        return;
+    }
+    await saveUserInfo();
+    Swal.fire({
+        icon: 'success',
+        title: 'Lưu thông tin thành công!',
+        confirmButtonColor: "#d90429",
+    });
+});
+
 async function saveUserInfo() {
     try {
         const url = `https://localhost:7235/api/user/info/update/${UserId}`;
@@ -1062,27 +1039,6 @@ async function saveUserInfo() {
     }
 }
 
-userInfoForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const result = await Swal.fire({
-        icon: 'question',
-        title: 'Xác nhận lưu thông tin?',
-        showCancelButton: true,
-        confirmButtonText: 'Lưu',
-        confirmButtonColor: '#d90429',
-        cancelButtonText: 'Hủy',
-    });
-    
-    if (result.isConfirmed) {
-        await saveUserInfo();
-        Swal.fire({
-            icon: 'success',
-            title: 'Lưu thông tin thành công!',
-            confirmButtonColor: '#d90429'
-        });
-    }
-});
-
 //For closing buttons
 const closeRentEditModalButton = document.querySelector('.closeRentEditModalButton');
 closeRentEditModalButton.addEventListener('click', closeEditModal);
@@ -1092,10 +1048,6 @@ scheduleDetailsCloseButtons.forEach(btn => {
     btn.addEventListener('click', toggleScheduleDetailsModal);
 });
 
-const statDetailsModalCloseButtons = document.querySelectorAll('.statDetailsModalCloseButton');
-statDetailsModalCloseButtons.forEach(btn => {
-    btn.addEventListener('click', closeStatDetailsModal);
-});
 
 window.addEventListener('DOMContentLoaded', async () => {
     await fetchUserInfo();
