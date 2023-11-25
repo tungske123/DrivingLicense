@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--flowbite css-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.css" rel="stylesheet" />
-    <!--font css files-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.1.1/flowbite.min.css" rel="stylesheet" />
+    <!--Be Vietnam Pro font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300&display=swap" rel="stylesheet">
@@ -18,10 +18,13 @@
             /* Black with 60% opacity */
         }
     </style>
+    <!--sweetalert2-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>L2D - Giảng viên</title>
 </head>
 
 <body>
+    <div hidden id="TeacherId">F265F3B6-B472-4C2E-8B51-058BE476B4AA</div>
     <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
         type="button"
         class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -70,18 +73,6 @@
                     </a>
                 </li>
                 <li class="dashboard-item">
-                    <a href="#quizAttemptInfo"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                            viewBox="0 0 18 18">
-                            <path
-                                d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
-                        </svg>
-                        <span class="flex-1 ml-3 whitespace-nowrap">Lịch sử thi lý thuyết thử</span>
-                    </a>
-                </li>
-                <li class="dashboard-item">
                     <a href="#registerOrders"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -104,6 +95,19 @@
                         <span class="flex-1 ml-3 whitespace-nowrap">Về trang chủ</span>
                     </a>
                 </li>
+                <li class="dashboard-item">
+                    <a href="/Login/logout"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#6B7280"
+                            class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
+                            <path fill-rule="evenodd"
+                                d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
+                        </svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Đăng xuất</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </aside>
@@ -118,6 +122,7 @@
 
         </div>
         <form action="" id="teacherInfoForm" method="post" enctype="multipart/form-data">
+            <div hidden id="TeacherId">@ViewBag.TeacherId</div>
             <div class="flex items-center justify-center w-full mb-5">
                 <label for="dropzone-file"
                     class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -203,6 +208,14 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Nhập mật khẩu của bạn" required>
             </div>
+            <div class="mb-6" style="width: 20%;">
+                <select id="licenseId" name="LicenseId"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    <option selected>Hạng bằng giảng dạy</option>
+                    <option value="A1">Bằng A1</option>
+                    <option value="A2">Bằng A2</option>
+                </select>
+            </div>
             <div class="mb-6">
                 <label for="repass" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Xác
                     nhận mật khẩu</label>
@@ -234,11 +247,9 @@
                 <span class="courseDate">28/10/2023</span> vào lúc <span
                     class="courseTime text-red-700">16:00~18:00</span>
             </time>
-            <p class="courseDescription mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Lorem ipsum dolor
-                sit
-                amet consectetur, adipisicing elit. Tenetur dolor maxime, laudantium quaerat dolore
-                soluta, sit neque molestias ea, laboriosam labore! Quis aspernatur, saepe laudantium
-                quos tenetur sint rem officiis?</p>
+            <p class="courseDescription mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+
+            </p>
         </li>
     </template>
     <!--Event modal-->
@@ -836,7 +847,8 @@
                 </thead>
                 <template id="hire-row-template">
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="HireUsername px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <th scope="row"
+                            class="HireUsername px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Học viên A
                         </th>
                         <td class="HireDate px-6 py-4">
@@ -846,7 +858,7 @@
                             A1
                         </td>
                         <td class="px-6 py-4">
-                            <select id="status" 
+                            <select id="status"
                                 class="HireStatus bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-50 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option selected>Trạng thái</option>
                                 <option value="Chờ duyệt" class="text-red-700">Chờ duyệt</option>
@@ -867,7 +879,7 @@
                             A1
                         </td>
                         <td class="px-6 py-4">
-                            <select id="status" 
+                            <select id="status"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-50 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option selected>Trạng thái</option>
                                 <option value="Chờ duyệt" class="text-red-700">Chờ duyệt</option>
@@ -879,13 +891,8 @@
             </table>
         </div>
     </section>
-    <script src="/Demo2/ts/Teacher.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
-    <!--datepicker flowbite library-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/datepicker.min.js"></script>
-    <!--chart flowbite library-->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.1.1/flowbite.min.js"></script>
+    <script src="JS/Teacher.js"></script>
 </body>
 
 </html>
