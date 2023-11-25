@@ -2,15 +2,22 @@
 using L2D_DataAccess.Utils;
 using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using L2D_WebApp.Utils;
 
 namespace L2D_WebApp.Controllers
 {
     public class QuestionController : Controller
     {
         private readonly DrivingLicenseContext _context;
-        public QuestionController(DrivingLicenseContext context) => _context = context;
+        private readonly ImageUtils _imageUtils;
+        public QuestionController(DrivingLicenseContext context, ImageUtils imageUtils)
+        {
+            _context = context;
+            _imageUtils = imageUtils;
+        }
 
         public record QuestionFilterData
         {
@@ -117,11 +124,11 @@ namespace L2D_WebApp.Controllers
         //===================================================================
         [HttpGet]
         [Route("api/question/search")]
-        public async Task<ActionResult> SearchQuestion([FromBody] QuestionFilterData data)
+        public async Task<ActionResult> SearchQuestion(string keyword, string licenseId)
         {
             var questionList = await _context.Questions.Where(
-                    quest => quest.LicenseId.Equals(data.LicenseID)
-                    && quest.QuestionText.ToLower().Contains(data.Keyword.ToLower())
+                    quest => quest.LicenseId.Equals(licenseId)
+                    && quest.QuestionText.ToLower().Contains(keyword.ToLower())
                 ).ToListAsync();
             if (questionList == null)
             {
@@ -133,71 +140,120 @@ namespace L2D_WebApp.Controllers
         //===================================================================
         [HttpPost]
         [Route("api/question/add")]
-        public async Task<IActionResult> Create([FromBody] Question new_question)
+        public async Task<IActionResult> Create([FromForm] IFormCollection formData)
         {
-            if (new_question.LicenseId.IsNullOrEmpty())
-            {
-                return BadRequest("Không được để trống loại bằng của câu hỏi!");
-            }
-            if (new_question.QuestionText.IsNullOrEmpty())
-            {
-                return BadRequest("Không được tạo câu hỏi trống!");
-            }
+            //Declare formData as variable
+            string licenseId = formData["licenseId"];
+            string questionText = formData["questionText"];
+            string questionImage = "none";
+            string pictureName = "";
+            var pictureFile = formData.Files["picture"];
+            bool isCritical = Convert.ToBoolean(formData["isCritical"]);
 
-            var existQuestion = _context.Questions.Any(que => que.LicenseId.Equals(new_question.LicenseId) && que.QuestionText.Equals(new_question.QuestionText));
-            if (existQuestion)
-            {
-                return BadRequest("Câu hỏi đã tồn tại!");
-            }
-            if (new_question.QuestionImage.IsNullOrEmpty())
-            {
-                new_question.QuestionImage = "none";
-            }
+            //Other declare
+            bool existPicture = true;
 
-            _context.Questions.Add(new_question);
-            await _context.SaveChangesAsync();
-            return Ok("Thêm thành công!");
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                if (licenseId.IsNullOrEmpty())
+                {
+                    return BadRequest("Không được để trống loại bằng của câu hỏi!");
+                }
+                if (questionText.IsNullOrEmpty())
+                {
+                    return BadRequest("Không được tạo câu hỏi trống!");
+                }
+
+                var existQuestion = _context.Questions.Any(que =>
+                que.LicenseId.Equals(licenseId) &&
+                que.QuestionText.Equals(questionText)
+                );
+                if (existQuestion)
+                {
+                    return BadRequest("Câu hỏi đã tồn tại!");
+                }
+
+                if (pictureFile is not null)
+                {
+                    while (existPicture == true)
+                    {
+                        pictureName = Guid.NewGuid().ToString();        //Reroll other id
+                        existPicture = _context.Questions.Any(que => que.QuestionImage.Equals(pictureName));//Check exist
+                    }
+                    questionImage = pictureName;
+                    var path = $@"img/question/{licenseId}/{pictureName}.png";
+                    await _imageUtils.CreateImageAsync(pictureFile, path);
+                }
+                Question new_question = new Question
+                {
+                    LicenseId = licenseId,
+                    QuestionText = questionText,
+                    QuestionImage = questionImage,
+                    IsCritical = isCritical
+                };
+                _context.Questions.Add(new_question);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok("Thêm thành công!");
+            }
+            catch (System.Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"Đã có lỗi xảy ra khi thêm câu hỏi: {ex.Message}");
+            }
         }
 
         //===================================================================
         [HttpPatch]
         [Route("api/question/edit/{questid}")]
-        public async Task<IActionResult> Edit([FromRoute] int questid, [FromBody] Question edited_question)
+        public async Task<IActionResult> Edit([FromRoute] int questid, [FromForm] IFormCollection formData)
         {
+            //Edited Question
+            string licenseId = formData["licenseId"];
+            string questionText = formData["questionText"];
+            string questionImage = "none";
+            var pictureFile = formData.Files["picture"];
+            bool isCritical = Convert.ToBoolean(formData["isCritical"]);
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 //Compare edited_Question with old_Question
-                if (edited_question == null || edited_question.LicenseId.IsNullOrEmpty())
+                if (licenseId.IsNullOrEmpty())
                 {
-                    return BadRequest("Không có câu hỏi với tham số hợp lệ truyền vào server");
+                    return BadRequest("Chưa chọn loại bằng cho câu hỏi");
                 }
 
                 var old_question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
-                if (old_question == null)
+                if (old_question is null)
                 {
                     return NotFound("Mã câu hỏi này không khớp câu hỏi nào!");
                 }
+                var old_path = $@"img/question/{old_question.LicenseId}/{old_question.QuestionImage}.png";
+                
+                //Update variables
+                old_question.LicenseId = licenseId;
+                old_question.QuestionText = questionText;
+                old_question.IsCritical = isCritical;
+                if (pictureFile is not null)
+                {
+                    questionImage = old_question.QuestionImage;   //Get old picture name
+                    var new_path = $@"img/question/{licenseId}/{questionImage}.png";
+                    await _imageUtils.DeleteImageAsync(old_path);
+                    await _imageUtils.CreateImageAsync(pictureFile, new_path);
+                }
+                old_question.QuestionImage = questionImage;
 
-                if (!edited_question.LicenseId.Equals(old_question.LicenseId))
-                {
-                    old_question.LicenseId = edited_question.LicenseId;
-                }
-                if (!edited_question.QuestionText.ToLower().Equals(old_question.QuestionText.ToLower()))
-                {
-                    old_question.QuestionText = edited_question.QuestionText;
-                }
-                if (!edited_question.QuestionImage.ToLower().Equals(old_question.QuestionImage.ToLower()))
-                {
-                    old_question.QuestionImage = edited_question.QuestionImage;
-                }
-                old_question.IsCritical = edited_question.IsCritical;
-
+                _context.Questions.Update(old_question);
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
                 return Ok(old_question);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                await transaction.RollbackAsync();
+                return BadRequest($"Đã có lỗi xảy ra khi cập nhật câu hỏi: {ex.Message}");
             }
         }
 
@@ -216,7 +272,9 @@ namespace L2D_WebApp.Controllers
                 var question = await _context.Questions.FirstOrDefaultAsync(quest => quest.QuestionId == questid);
                 if (question != null)
                 {
+                    var path = $@"img/question/{question.LicenseId}/{question.QuestionImage}.png";
                     await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_DeleteQuestion @questID = @p0", questid);
+                    await _imageUtils.DeleteImageAsync(path);
                     await _context.SaveChangesAsync();
                     return Ok("Đã xóa!");
                 }
