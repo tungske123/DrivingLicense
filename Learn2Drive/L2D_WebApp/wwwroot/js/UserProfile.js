@@ -1,5 +1,4 @@
 ﻿//Definitions
-/*import ApexCharts from "apexcharts";*/
 const userInfoForm = document.getElementById('userInfoForm');
 const deleteModal = document.getElementById('delete-modal');
 const deleteModalButtons = document.querySelectorAll('.deleteModalButton');
@@ -85,7 +84,7 @@ function renderRentDataRow(data) {
 
     const statusCell = document.createElement('td');
     statusCell.className = 'normal-cell'
-    statusCell.innerHTML = data.status === `true` ? `<div style="color: green;">Còn hạn</div>` : `<div style="color: red;">Hết hạn</div>`;
+    statusCell.textContent = data.status;
     newRow.appendChild(statusCell);
 
     const buttonsCell = document.createElement('td');
@@ -490,21 +489,26 @@ tabLinkList[0].click();
 
 //For quiz section
 
-class QuestionData {
-    questionText;
-    userAnswer;
-    correctAnswer;
-    isCorrect;
-}
-
 const questionDataTableBody = document.getElementById('questionDataContent');
 const quizAttemptHistoryTableBody = document.getElementById('quizAttemptHistoryTableBody');
 const detailsModal = document.getElementById('statModal');
 var openedDetailsModal = false;
-const correctPercentElement = document.getElementById('correctPercent');
-const incorrectPercentElement = document.getElementById('incorrectPercent');
-const unfinishPercentElement = document.getElementById('unfinishedPercent');
+
 var attemptDataList = [];
+
+let quizAttemptPage = 1, totalQuizAttemptPage = 1, quizAttemptPageSize = 5;
+
+function paginateArray(array, pageSize, pageNumber) {
+    // calculate the start index
+    let startIndex = (pageNumber - 1) * pageSize;
+    startItemCnt = startIndex + 1;
+    // return a slice of the array
+    return array.slice(startIndex, startIndex + pageSize);
+}
+
+function calculateTotalPage(array, pageSize) {
+    return Math.ceil(array.length / pageSize);
+}
 
 async function fetchUserAttemptHistory() {
     const fetchUrl = `https://localhost:7235/api/user/profile/quizattempt/${UserId}`;
@@ -521,11 +525,64 @@ async function fetchUserAttemptHistory() {
         const data = await response.json();
         console.log(data);
         attemptDataList = data;
-        renderUserAttemptTable(data);
+        totalQuizAttemptPage = calculateTotalPage(attemptDataList, quizAttemptPageSize);
+        renderUserAttemptTable(paginateArray(attemptDataList, quizAttemptPageSize, quizAttemptPage));
+        renderQuizAttemptPagingBar();
     } catch (error) {
         console.error(`Error: ${error}`);
     }
 }
+
+function renderQuizAttemptPagingBar() {
+    let quizAttemptPagingContent = document.getElementById('quizAttemptPagingContent');
+    quizAttemptPagingContent.innerHTML = ``;
+    let quizAttemptPageItemTemplate = document.getElementById('quizAttemptPageItemTemplate');
+    for (var cnt = 1; cnt <= totalQuizAttemptPage; ++cnt) {
+        let clone = document.importNode(quizAttemptPageItemTemplate.content, true);
+        let pageItem = clone.querySelector('li a');
+        pageItem.setAttribute('page', cnt.toString());
+        if (parseInt(cnt) === parseInt(quizAttemptPage)) {
+            pageItem.classList.add('active-page');
+        }
+        pageItem.textContent = cnt.toString();
+        pageItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            let newPage = parseInt(pageItem.getAttribute('page'));
+            quizAttemptPage = newPage;
+            goToQuizAttemptPage();
+        });
+
+        quizAttemptPagingContent.appendChild(clone);
+    }
+}
+
+function goToQuizAttemptPage() {
+    // totalQuizAttemptPage = calculateTotalPage(attemptDataList, quizAttemptPageSize);
+    renderUserAttemptTable(paginateArray(attemptDataList, quizAttemptPageSize, quizAttemptPage));
+    renderQuizAttemptPagingBar();
+}
+
+let prevQuizAttemptBtn = document.querySelector('.prevQuizAttemptBtn');
+let nextQuizAttemptBtn = document.querySelector('.nextQuizAttemptBtn');
+
+prevQuizAttemptBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    --quizAttemptPage;
+    if (quizAttemptPage <= 0) {
+        quizAttemptPage = totalQuizAttemptPage;
+    }
+    goToQuizAttemptPage();
+})
+
+nextQuizAttemptBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    ++quizAttemptPage;
+    if (quizAttemptPage > totalQuizAttemptPage) {
+        quizAttemptPage = 1;
+    }
+    goToQuizAttemptPage();
+});
+
 
 function openDetailsModal() {
     if (!openedDetailsModal) {
@@ -534,13 +591,6 @@ function openDetailsModal() {
         detailsModal.style.alignItems = 'center';
         detailsModal.style.backdropFilter = 'blur(2px)';
         openedDetailsModal = true;
-    }
-}
-
-function closeStatDetailsModal() {
-    if (openedDetailsModal) {
-        detailsModal.style.display = 'none';
-        openedDetailsModal = false;
     }
 }
 
@@ -651,16 +701,16 @@ function renderUserAttemptTable(attemptList) {
 }
 
 
-class Schedule {
-    scheduleId;
-    hireId;
-    licenseId;
-    startTime;
-    endTime;
-    date;
-    address;
-    status;
-}
+// class Schedule {
+//     scheduleId;
+//     hireId;
+//     licenseId;
+//     startTime;
+//     endTime;
+//     date;
+//     address;
+//     status;
+// }
 
 function getCalendarDays(month, year) {
     const date = new Date(year, month - 1, 1);
@@ -780,8 +830,7 @@ async function fetchUserScheduleDataForDay(day, month) {
         }
         const data = await response.json();
         console.log(data);
-        var scheduleList = data;
-        renderUserSchedulesForDay(scheduleList);
+        renderUserSchedulesForDay(data);
     } catch (error) {
         console.error(error);
     }
@@ -825,7 +874,9 @@ function renderUserSchedulesForDay(scheduleList) {
         let courseStatusElement = scheduleDetailsElementClone.querySelector('.courseStatus');
         let courseDateElement = scheduleDetailsElementClone.querySelector('.courseDate');
         let courseTimeElement = scheduleDetailsElementClone.querySelector('.courseTime');
-
+        let courseTeacherNameElement = scheduleDetailsElementClone.querySelector('.courseTeacherName');
+        let courseAddressElement = scheduleDetailsElementClone.querySelector('.courseAddress');
+        let courseTeacherPhoneElement = scheduleDetailsElementClone.querySelector('.courseTeacherphone');
         courseNameElement.textContent = `Khóa ${schedule.licenseId}`;
 
         const doneStatusClassName = `bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 ml-3`;
@@ -839,6 +890,10 @@ function renderUserSchedulesForDay(scheduleList) {
 
         courseDateElement.textContent = ``;
 
+        courseTeacherNameElement.textContent = schedule.hire.teacher.fullName;
+        courseAddressElement.textContent = schedule.address;
+        let teacherPhone = schedule.hire.teacher.contactNumber;
+        courseTeacherPhoneElement.textContent = (teacherPhone !== null && teacherPhone !== ``) ? teacherPhone : 'Chưa cập nhật';
         courseTimeElement.textContent = `${getFormattedTime(schedule.startTime)}~${getFormattedTime(schedule.endTime)}`;
         scheduleDetailsModalContent.appendChild(scheduleDetailsElementClone);
 
@@ -947,6 +1002,7 @@ userInfoForm.addEventListener('submit', async (e) => {
     if (!result.isConfirmed) {
         return;
     }
+
     const password = document.getElementById('password').value;
     const repass = document.getElementById('repass').value;
     console.log(`Password: ${password}\nRepass: ${repass}`);
@@ -991,10 +1047,6 @@ scheduleDetailsCloseButtons.forEach(btn => {
     btn.addEventListener('click', toggleScheduleDetailsModal);
 });
 
-const statDetailsModalCloseButtons = document.querySelectorAll('.statDetailsModalCloseButton');
-statDetailsModalCloseButtons.forEach(btn => {
-    btn.addEventListener('click', closeStatDetailsModal);
-});
 
 window.addEventListener('DOMContentLoaded', async () => {
     await fetchUserInfo();

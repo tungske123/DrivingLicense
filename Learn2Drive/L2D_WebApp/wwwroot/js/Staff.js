@@ -1,9 +1,10 @@
-﻿const staffTabLinkList: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('.dashboard-item');
+const staffId = document.getElementById('StaffId').textContent;
+const staffTabLinkList = document.querySelectorAll('.dashboard-item');
 staffTabLinkList.forEach(tabLink => {
     tabLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const tabList = document.querySelectorAll('.staff-tab') as NodeListOf<HTMLElement>;
+        const tabList = document.querySelectorAll('.staff-tab');
         tabList.forEach(tab => {
             tab.style.display = 'none';
         });
@@ -18,22 +19,18 @@ staffTabLinkList.forEach(tabLink => {
         tabLink.classList.add('is-active');
 
         //Get id target for each link
-        const linkAnchor: HTMLAnchorElement | null = tabLink.querySelector('a');
+        const linkAnchor = tabLink.querySelector('a');
         if (!linkAnchor) {
             return;
         }
-        const target: string | null = linkAnchor.getAttribute('href');
+        const target = linkAnchor.getAttribute('href');
         if (target === `/Home`) {
             window.location.href = `/Home`;
             return;
         }
-        if (target === `/Login/logout`) {
-            window.location.href = target;
-            return;
-        }
         //Show the tab
         if (target) {
-            const tab: HTMLElement | null = document.querySelector(target);
+            const tab = document.querySelector(target);
             if (tab) {
                 tab.style.display = 'block';
             }
@@ -42,24 +39,17 @@ staffTabLinkList.forEach(tabLink => {
 });
 
 staffTabLinkList[0].click();
-const staffId: string = (document.getElementById('StaffId') as HTMLDivElement).textContent;
-class Staff {
-    staffId: string;
-    fullName: string;
-    email: string;
-    contactNumber: string;
-    password: string;
-}
-function renderStaffInfo(staff: Staff) {
-    const FullNameInput = document.getElementById('fullname') as HTMLInputElement;
-    const EmailElement = document.getElementById('email') as HTMLInputElement;
-    const PhoneElement = document.getElementById('phone') as HTMLInputElement;
-    const PasswordElement = document.getElementById('password') as HTMLInputElement;
-    const RepassElement = document.getElementById('repass') as HTMLInputElement;
+
+function renderStaffInfo(staff) {
+    const FullNameInput = document.getElementById('fullname');
+    const EmailElement = document.getElementById('email');
+    const PhoneElement = document.getElementById('phone');
+    const PasswordElement = document.getElementById('password');
+    const RepassElement = document.getElementById('repass');
 
     FullNameInput.value = staff.fullName;
     EmailElement.value = staff.email;
-    PhoneElement.value = staff.email;
+    PhoneElement.value = staff.contactNumber;
     PasswordElement.value = staff.password;
     RepassElement.value = staff.password;
 }
@@ -78,7 +68,7 @@ async function fetchStaffInfoData() {
         const data = await response.json();
         console.log(data);
         //renderInfoHere
-        const staff: Staff = data;
+        const staff = data;
         renderStaffInfo(staff);
     } catch (error) {
         console.error(`Error: ${error}`);
@@ -86,7 +76,7 @@ async function fetchStaffInfoData() {
 }
 
 async function updateStaffInfo() {
-    const staffInfoForm = document.getElementById('staffInfoForm') as HTMLFormElement;
+    const staffInfoForm = document.getElementById('staffInfoForm');
     const url = `https://localhost:7235/api/staff/info/update/${staffId}`;
     const formData = new FormData(staffInfoForm);
     try {
@@ -97,17 +87,42 @@ async function updateStaffInfo() {
         if (response.status !== 204) {
             throw new Error(`HTTP Error! Status code: ${response.status}`);
         }
-        alert('Lưu thông tin thành công');
+
         await fetchStaffInfoData();
     } catch (error) {
         console.error(error);
     }
 }
 
-const staffInfoForm = document.getElementById('staffInfoForm') as HTMLFormElement;
+const staffInfoForm = document.getElementById('staffInfoForm');
 staffInfoForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Xác nhận lưu thông tin?',
+        confirmButtonColor: '#d90429',
+        showCancelButton: true,
+        confirmButtonText: 'Lưu',
+        cancelButtonText: 'Hủy'
+    });
+    if (!result.isConfirmed) {
+        return;
+    }
+    const Password = document.getElementById('password').value;
+    const Repass = document.getElementById('repass').value;
+    if (Password !== Repass) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Vui lòng xác nhận mật khẩu chính xác!',
+            confirmButtonColor: '#d90429',
+        });
+    }
     await updateStaffInfo();
+    Swal.fire({
+        icon: 'success',
+        title: 'Lưu thông tin thành công!',
+        confirmButtonColor: '#d90429',
+    });
 });
 
 document.addEventListener('DOMContentLoaded', async () => {

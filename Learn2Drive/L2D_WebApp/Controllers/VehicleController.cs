@@ -40,7 +40,7 @@ namespace L2D_WebApp.Controllers
             _imageUtils = imageUtils;
         }
 
-            public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
+        public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
         {
             //Get total number of rows in table
             int totalCount = await query.CountAsync();

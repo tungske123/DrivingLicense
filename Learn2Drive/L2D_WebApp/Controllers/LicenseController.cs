@@ -130,7 +130,7 @@ namespace L2D_WebApp.Controllers
 
         [HttpDelete]
         [Route("api/license/delete/{lid}")]
-        public async Task<IActionResult> DeleteRent([FromRoute] string lid)
+        public async Task<IActionResult> DeleteLicense([FromRoute] string lid)
         {
             License findlicense = await _context.Licenses.SingleOrDefaultAsync(license => license.LicenseId.Equals(lid));
 

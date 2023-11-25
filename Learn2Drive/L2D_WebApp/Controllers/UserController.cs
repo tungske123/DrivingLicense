@@ -381,7 +381,8 @@ namespace L2D_WebApp.Controllers
             QuestionImage = ad.Question.QuestionImage,
             SelectedAnswer = (ad.SelectedAnswerId == null) ? string.Empty : ad.SelectedAnswer.AnswerText,
             CorrectAnswer = ad.Question.Answers.SingleOrDefault(ans => ans.IsCorrect == true).AnswerText,
-            Status = ad.Status
+            Status = ad.Status,
+            IsCritical = ad.Question.IsCritical
         }).ToList()
         })
         .AsNoTracking().AsSplitQuery().SingleOrDefaultAsync(att => att.AttemptId.Equals(aid));
@@ -570,7 +571,7 @@ namespace L2D_WebApp.Controllers
             //    .ToListAsync();
             var scheduleList = await _context.Schedules
                 .Include(schedule => schedule.Hire)
-                .Where(schedule => schedule.Hire.UserId.Equals(uid) && !schedule.Hire.Status.Equals("Chờ duyệt"))
+                .Where(schedule => schedule.Hire.UserId.Equals(uid) && !schedule.Hire.Status.Equals("Chờ duyệt") && schedule.Date.Month == month)
                 .OrderBy(schedule => schedule.Date)
                 .AsNoTracking()
                 .ToListAsync();
@@ -594,16 +595,24 @@ namespace L2D_WebApp.Controllers
             {
                 return NotFound($"Can't find any users with id {uid}");
             }
-            var hireList = await _context.Hires
-               .Include(hire => hire.Schedules)
-               .Where(hire => hire.UserId.Equals(uid) && !hire.Status.Equals("Chờ duyệt"))
-               .SelectMany(hire => hire.Schedules)
-               .Where(schedule => schedule.Date == date)
-               .OrderBy(schedule => schedule.Date)
-               .AsNoTracking()
-               .AsSplitQuery()
-               .ToListAsync();
-            return Ok(hireList);
+
+            //var hireList = await _context.Hires
+            //   .Include(hire => hire.Schedules)
+            //   .Where(hire => hire.UserId.Equals(uid) && !hire.Status.Equals("Chờ duyệt"))
+            //   .SelectMany(hire => hire.Schedules)
+            //   .Where(schedule => schedule.Date == date)
+            //   .OrderBy(schedule => schedule.Date)
+            //   .AsNoTracking()
+            //   .AsSplitQuery()
+            //   .ToListAsync();
+            var scheduleList = await _context.Schedules
+                .Include(schedule => schedule.Hire)
+                .ThenInclude(hire => hire.Teacher)
+                .Where(schedule => schedule.Hire.UserId.Equals(uid) && !schedule.Hire.Status.Equals("Chờ duyệt") && schedule.Date.Equals(date))
+                .OrderBy(schedule => schedule.Date)
+                .AsNoTracking()
+                .ToListAsync();
+            return Ok(scheduleList);
         }
 
         [HttpPost]

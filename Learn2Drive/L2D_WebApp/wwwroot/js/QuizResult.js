@@ -145,7 +145,7 @@ function renderAttemptData(attempt) {
     cells[6].textContent = attempt.incorrectQuestionCnt;
     let remainingQuestion = parseInt(attempt.totalQuestion) - parseInt(attempt.correctQuestionCnt) - parseInt(attempt.incorrectQuestionCnt);
     cells[7].textContent = remainingQuestion.toString();
-    cells[8].textContent = (attempt.result === true) ? `Đậu` : `Rớt`;
+    cells[8].innerHTML = (attempt.result === true) ? `<span class='text-success'>Đậu</span>` : `<span class='text-danger'>Rớt</span>`;
     attemptTableBody.appendChild(clone);
 }
 
@@ -189,7 +189,7 @@ function renderQuestionTable(attemptDetailsList) {
                 default:
                     break;
             }
-
+            cells[5].innerHTML = (attemptData.isCritical === true) ? `<span class='text-danger'>Có</span>` : `<span class='text-success'>Không</span>`;
             questionTableBody.appendChild(clone);
             ++startItemCnt;
         });

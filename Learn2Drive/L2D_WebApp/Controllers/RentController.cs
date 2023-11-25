@@ -311,6 +311,7 @@ namespace L2D_WebApp.Controllers
                 {
                     RentId = rent.RentId,
                     UserId = rent.UserId,
+                    UserPhoneNumber = rent.User.PhoneNumber,
                     UserFullName = rent.User.FullName,
                     VehicleName = rent.Vehicle.Name,
                     VehicleImage = rent.Vehicle.Image,

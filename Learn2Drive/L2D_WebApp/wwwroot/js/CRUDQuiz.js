@@ -1,7 +1,7 @@
-﻿const checkAllCheckBox = document.getElementById('checkbox-all-search') as HTMLInputElement;
+const checkAllCheckBox = document.getElementById('checkbox-all-search');
 checkAllCheckBox.addEventListener('input', () => {
-    const checkStatus: boolean = checkAllCheckBox.checked;
-    const questionCheckBoxes = document.querySelectorAll('.questionCheck') as NodeListOf<HTMLInputElement>;
+    const checkStatus = checkAllCheckBox.checked;
+    const questionCheckBoxes = document.querySelectorAll('.questionCheck');
     if (checkStatus) {
         selectAllQuestions();
     } else {
@@ -14,7 +14,7 @@ checkAllCheckBox.addEventListener('input', () => {
 
 function selectAllQuestions() {
     removeAllQuestions();
-    const questionCheckBoxes = document.querySelectorAll('.questionCheck') as NodeListOf<HTMLInputElement>;
+    const questionCheckBoxes = document.querySelectorAll('.questionCheck');
     questionCheckBoxes.forEach(questionCheck => {
         const questionId = Number(questionCheck.getAttribute('value'));
         QuestionIDList.push(questionId);
@@ -25,8 +25,8 @@ function removeAllQuestions() {
     QuestionIDList.splice(0, QuestionIDList.length);
 }
 
-const randomCheckBox = document.getElementById('randomCheckBox') as HTMLInputElement;
-const questionSelectionSection = document.getElementById('questionSelectionSection') as HTMLHeadingElement;
+const randomCheckBox = document.getElementById('randomCheckBox');
+const questionSelectionSection = document.getElementById('questionSelectionSection');
 randomCheckBox.addEventListener('input', () => {
     if (randomCheckBox.checked) {
         questionSelectionSection.style.display = 'none';
@@ -35,14 +35,9 @@ randomCheckBox.addEventListener('input', () => {
     }
 });
 
-class Quiz {
-    quizId: number;
-    licenseId: string;
-    name: string;
-    description: string;
-}
-var quizPage: number = 1;
-var totalQuizPage: number = 1;
+
+var quizPage = 1;
+var totalQuizPage = 1;
 var sendQuizData = {
     keyword: ``,
     licenseID: ``
@@ -72,11 +67,11 @@ async function fetchQuizData() {
 }
 
 async function addQuiz() {
-    const quizNameElement = document.querySelector('.quizName') as HTMLInputElement;
-    const quizQuestionCntElememnt = document.querySelector('.quizQuestionCnt') as HTMLInputElement;
-    const quizLicenseElement = document.querySelector('.quizLicense') as HTMLInputElement;
-    const quizDescriptionElement = document.querySelector('.quizDescription') as HTMLInputElement;
-    const randomCheckBox = document.getElementById('randomCheckBox') as HTMLInputElement;
+    const quizNameElement = document.querySelector('.quizName');
+    const quizQuestionCntElememnt = document.querySelector('.quizQuestionCnt');
+    const quizLicenseElement = document.querySelector('.quizLicense');
+    const quizDescriptionElement = document.querySelector('.quizDescription');
+    const randomCheckBox = document.getElementById('randomCheckBox');
     const data = {
         quizName: quizNameElement.value,
         licenseID: String(quizLicenseElement.value),
@@ -97,38 +92,31 @@ async function addQuiz() {
     if (response.status !== 204) {
         throw new Error(`Http Error! Status code: ${response.status}`);
     }
-    alert('Thêm bộ đề thành công');
+    Swal.fire({
+        icon: 'success',
+        title: 'Thêm bộ đề thành công!',
+        confirmButtonColor: '#d90429'
+    });
 }
 
 const quizTableBody = document.getElementById('quizTableBody');
 
-function toggleQuizDetailsModal() {
 
-}
-
-function toogleQuizUpdateModal() {
-
-}
-
-function toggleQuizDeleteModal() {
-
-}
-
-function renderQuizTable(quizList: Quiz[]) {
+function renderQuizTable(quizList) {
     quizTableBody.innerHTML = '';
     if (quizList === null || quizList.length === 0) {
         return;
     }
-    let template = document.getElementById('quiz-row-template') as HTMLTemplateElement;
+    let template = document.getElementById('quiz-row-template');
     quizList.forEach(quiz => {
         let clone = document.importNode(template.content, true);
-        let cells = clone.querySelectorAll('td') as NodeListOf<HTMLTableCellElement>;
+        let cells = clone.querySelectorAll('td');
         cells[0].textContent = quiz.name;
         cells[1].textContent = quiz.licenseId;
         cells[2].textContent = quiz.description;
-        let quizDropdownButton = cells[3].querySelector('.quizDropDownButton') as HTMLButtonElement;
+        let quizDropdownButton = cells[3].querySelector('.quizDropDownButton');
         quizDropdownButton.addEventListener('click', () => {
-            let quizDropDownContent = cells[3].querySelector('.quizDropDownContent') as HTMLDivElement;
+            let quizDropDownContent = cells[3].querySelector('.quizDropDownContent');
             if (!quizDropDownContent.classList.contains('open-dropdown')) {
                 quizDropDownContent.classList.add('open-dropdown');
             } else {
@@ -139,14 +127,14 @@ function renderQuizTable(quizList: Quiz[]) {
     });
 }
 
-const prevQuizButton = document.getElementById('prevQuizPageBtn') as HTMLButtonElement;
-const nextQuizButton = document.getElementById('nextQuizPageBtn') as HTMLButtonElement;
+const prevQuizButton = document.getElementById('prevQuizPageBtn');
+const nextQuizButton = document.getElementById('nextQuizPageBtn');
 
 function renderQuizPagingBar() {
-    const pageBarBody = document.querySelector('.pageBarBody') as HTMLSpanElement;
+    const pageBarBody = document.querySelector('.pageBarBody');
     pageBarBody.innerHTML = '';
-    const pageClassName: string = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`;
-    const activePageClassName: string = `text-red-700 flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white`;
+    const pageClassName = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`;
+    const activePageClassName = `text-red-700 flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white`;
     for (var pageCnt = 1; pageCnt <= totalQuizPage; ++pageCnt) {
         const li = document.createElement('li');
         const pageLink = document.createElement('a');
@@ -182,7 +170,7 @@ nextQuizButton.addEventListener('click', async () => {
     await fetchQuizData();
 });
 
-const quizSearchBar = document.getElementById('quizSearchBar') as HTMLInputElement;
+const quizSearchBar = document.getElementById('quizSearchBar');
 quizSearchBar.addEventListener('input', async () => {
     const newKeyword = String(quizSearchBar.value);
     sendQuizData.keyword = newKeyword;
@@ -190,46 +178,10 @@ quizSearchBar.addEventListener('input', async () => {
     await fetchQuizData();
 })
 
-const quizLicenseChecks = document.querySelectorAll('.quizLicenseCheck') as NodeListOf<HTMLInputElement>;
-const clearQuizFilterLink = document.getElementById('clearQuizFilter') as HTMLAnchorElement;
-quizLicenseChecks.forEach(quizCheck => {
-    quizCheck.addEventListener('input', async () => {
-        if (quizCheck.checked) {
-            const newLicenseID: string = String(quizCheck.getAttribute('value'));
-            sendQuizData.licenseID = newLicenseID;
-            quizPage = 1;
-            await fetchQuizData();
-        }
-    });
-});
-
-clearQuizFilterLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-    quizLicenseChecks.forEach(quizCheck => {
-        quizCheck.checked = false;
-    });
-    sendQuizData.licenseID = ``;
-    await fetchQuizData();
-});
+const quizLicenseChecks = document.querySelectorAll('.quizLicenseCheck');
 
 
 
-//For questions
-class Answer {
-    answerId: number;
-    questionId: number;
-    isCorrect: boolean;
-    answerText: string;
-    answerImage: string;
-}
-class Question {
-    questionId: number;
-    licenseId: string;
-    questionText: string;
-    questionImage: string;
-    isCritical: boolean;
-    answers: Answer[];
-}
 
 var questionPagingData = {
     questionPage: 1,
@@ -239,7 +191,7 @@ var sendQuestionData = {
     keyword: ``,
     licenseid: ``
 };
-var QuestionIDList: number[] = [];
+var QuestionIDList = [];
 async function fetchQuestionsDataPaging() {
     const url = `https://localhost:7235/api/questions/${questionPagingData.questionPage}`;
     console.log(`Question fetch URL: ${url}`);
@@ -264,18 +216,18 @@ async function fetchQuestionsDataPaging() {
     }
 }
 
-const questionTableBody = document.getElementById('questionTableBody') as HTMLTableSectionElement;
+const questionTableBody = document.getElementById('questionTableBody');
 
-function renderQuestionTableData(questionList: Question[]) {
+function renderQuestionTableData(questionList) {
     questionTableBody.innerHTML = ``;
     if (questionList === null || questionList.length === 0) {
         return;
     }
-    let template = document.getElementById('question-row-template') as HTMLTemplateElement;
+    let template = document.getElementById('question-row-template');
     questionList.forEach(question => {
         let clone = document.importNode(template.content, true);
-        let cells = clone.querySelectorAll('td') as NodeListOf<HTMLTableCellElement>;
-        const questionCheckBox = cells[0].querySelector(`input[type="checkbox"]`) as HTMLInputElement;
+        let cells = clone.querySelectorAll('td');
+        const questionCheckBox = cells[0].querySelector(`input[type="checkbox"]`);
         questionCheckBox.setAttribute('value', question.questionId.toString());
         if (QuestionIDList.indexOf(question.questionId) >= 0) {
             questionCheckBox.checked = true;
@@ -300,7 +252,7 @@ function renderQuestionTableData(questionList: Question[]) {
         cells[1].textContent = question.questionText;
         cells[2].textContent = question.licenseId;
         cells[3].textContent = question.isCritical ? `Có` : `Không`;
-        const detailsButton = cells[4].querySelector('.detailsButton') as HTMLButtonElement;
+        const detailsButton = cells[4].querySelector('.detailsButton');
         detailsButton.setAttribute('quesid', question.questionId.toString());
         detailsButton.addEventListener('click', async () => {
             const questionID = Number(detailsButton.getAttribute('quesid'));
@@ -311,7 +263,7 @@ function renderQuestionTableData(questionList: Question[]) {
     });
 }
 
-async function fetchSingleQuestion(questionId: number): Promise<Question> {
+async function fetchSingleQuestion(questionId) {
     const url = `https://localhost:7235/api/questions/${questionId}`;
     const response = await fetch(url, {
         method: 'GET',
@@ -323,24 +275,24 @@ async function fetchSingleQuestion(questionId: number): Promise<Question> {
         throw new Error(`Http Error! Status code: ${response.status}`);
     }
     const data = await response.json();
-    const question: Question = data;
+    const question = data;
     return question;
 }
 
-async function loadQuestionDetailsModal(questionId: number) {
+async function loadQuestionDetailsModal(questionId) {
     var question = await fetchSingleQuestion(questionId);
-    const questionTextElement = document.getElementById('questionText') as HTMLInputElement;
-    const questionImageElement = document.getElementById('questionImage') as HTMLImageElement;
-    const questionModalAnswersSection = document.getElementById('questionModalAnswersSection') as HTMLDivElement;
+    const questionTextElement = document.getElementById('questionText');
+    const questionImageElement = document.getElementById('questionImage');
+    const questionModalAnswersSection = document.getElementById('questionModalAnswersSection');
     questionModalAnswersSection.innerHTML = ``;
     questionTextElement.textContent = question.questionText;
-    const hasImage: boolean = (question.questionImage !== null && question.questionImage !== "" && question.questionImage !== "none");
+    const hasImage = (question.questionImage !== null && question.questionImage !== "" && question.questionImage !== "none");
     questionImageElement.setAttribute('srcset', (hasImage) ? `/img/${question.questionImage}` : `https://flowbite.com/docs/images/examples/image-1@2x.jpg`);
-    const answerTemplate = document.getElementById('answer-template') as HTMLTemplateElement;
+    const answerTemplate = document.getElementById('answer-template');
     question.answers.forEach(answer => {
         let clone = document.importNode(answerTemplate.content, true);
-        const answerCheck = clone.querySelector('.answerCheck') as HTMLInputElement;
-        const answerLabel = clone.querySelector('.answerLabel') as HTMLLabelElement;
+        const answerCheck = clone.querySelector('.answerCheck');
+        const answerLabel = clone.querySelector('.answerLabel');
         if (answer.isCorrect) {
             answerCheck.checked = true;
         }
@@ -351,7 +303,7 @@ async function loadQuestionDetailsModal(questionId: number) {
 }
 
 function toggleQuestionDetailsModal() {
-    const questionDetailsModal = document.getElementById('questionDetailsModal') as HTMLDivElement;
+    const questionDetailsModal = document.getElementById('questionDetailsModal');
     const opened = (!questionDetailsModal.classList.contains('hidden') && questionDetailsModal.classList.contains('flex') && questionDetailsModal.classList.contains('blur-background'));
     if (!opened) {
         questionDetailsModal.classList.remove('hidden');
@@ -368,8 +320,8 @@ function toggleQuestionDetailsModal() {
     }
 }
 
-const prevQuestionButton = document.getElementById('prevQuestionButton') as HTMLButtonElement;
-const nextQuestionButton = document.getElementById('nextQuestionButton') as HTMLButtonElement;
+const prevQuestionButton = document.getElementById('prevQuestionButton');
+const nextQuestionButton = document.getElementById('nextQuestionButton');
 prevQuestionButton.addEventListener('click', async () => {
     --questionPagingData.questionPage;
     if (questionPagingData.questionPage <= 0) {
@@ -386,9 +338,9 @@ nextQuestionButton.addEventListener('click', async () => {
 });
 
 function renderQuestionPagingBar() {
-    const questionPageBar = document.getElementById('questionPageBar') as HTMLSpanElement;
-    const pageClassName: string = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`;
-    const activePageClassName: string = `flex items-center text-red-700 justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white`;
+    const questionPageBar = document.getElementById('questionPageBar');
+    const pageClassName = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`;
+    const activePageClassName = `flex items-center text-red-700 justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white`;
     questionPageBar.innerHTML = ``;
     for (var pageCnt = 1; pageCnt <= questionPagingData.totalQuestionPages; ++pageCnt) {
         const li = document.createElement('li');
@@ -412,7 +364,7 @@ function renderQuestionPagingBar() {
     }
 }
 
-const questionSearchBar = document.getElementById('questionSearchBar') as HTMLInputElement;
+const questionSearchBar = document.getElementById('questionSearchBar');
 questionSearchBar.addEventListener('input', async () => {
     const newKeyword = String(questionSearchBar.value);
     sendQuestionData.keyword = newKeyword;
@@ -420,7 +372,7 @@ questionSearchBar.addEventListener('input', async () => {
     await fetchQuestionsDataPaging();
 });
 
-const questionLicenseCheckBoxes = document.querySelectorAll('.licenseCheck') as NodeListOf<HTMLInputElement>;
+const questionLicenseCheckBoxes = document.querySelectorAll('.licenseCheck');
 questionLicenseCheckBoxes.forEach(checkBox => {
     checkBox.addEventListener('input', async () => {
         if (checkBox.checked) {
@@ -433,16 +385,74 @@ questionLicenseCheckBoxes.forEach(checkBox => {
 
 function updateQuestionCount() {
     const numOfQuestion = QuestionIDList.length;
-    const chosenQuestionCount = document.getElementById('chosenQuestionCount') as HTMLSpanElement;
+    const chosenQuestionCount = document.getElementById('chosenQuestionCount');
     chosenQuestionCount.textContent = numOfQuestion.toString() + ` Câu`;
     console.log(QuestionIDList);
 }
 
-const quizAddButton = document.getElementById('quizAddButton') as HTMLButtonElement;
+const quizAddButton = document.getElementById('quizAddButton');
 quizAddButton.addEventListener('click', async () => {
     await addQuiz();
 });
+
+
+async function fetchLicenseFilterData() {
+    try {
+        const url = `https://localhost:7235/api/licenses`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        let licenseList = data.map(l => l.licenseId);
+        loadQuizFilterData(licenseList);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function loadQuizFilterData(licenseList) {
+    let quizFilterContent = document.querySelector('.quizFilterContent');
+    quizFilterContent.innerHTML = ``;
+    if (licenseList === null || licenseList.length === 0) {
+        return;
+    }
+    let quizFilterItemTemplate = document.getElementById('quizFilterItemTemplate');
+    licenseList.forEach(licenseId => {
+        let clone = document.importNode(quizFilterItemTemplate.content, true);
+        let checkInput = clone.querySelector('input');
+        let label = clone.querySelector('label');
+        checkInput.value = licenseId;
+        checkInput.setAttribute('id', licenseId);
+        checkInput.addEventListener('input', async () => {
+            let newLicenseID = checkInput.value;
+            sendQuizData.licenseID = newLicenseID;
+            quizPage = 1;
+            await fetchQuizData();
+        });
+        label.textContent = `Bằng ${licenseId}`;
+        label.setAttribute('for', licenseId);
+
+        quizFilterContent.appendChild(clone);
+    });
+}
+
+
 window.addEventListener('DOMContentLoaded', async () => {
+    await fetchLicenseFilterData();
+    const clearQuizFilterLink = document.getElementById('clearQuizFilter');
+    clearQuizFilterLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        quizLicenseChecks.forEach(quizCheck => {
+            if (quizCheck.checked === true) {
+                quizCheck.checked = false;
+            }
+        });
+        sendQuizData.licenseID = ``;
+        await fetchQuizData();
+    });
     await fetchQuizData();
     await fetchQuestionsDataPaging();
 });

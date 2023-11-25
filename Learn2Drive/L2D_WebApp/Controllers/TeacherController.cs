@@ -1,6 +1,7 @@
 ﻿using L2D_DataAccess.Models;
 using L2D_DataAccess.Utils;
 using L2D_WebApp.Filters;
+using L2D_WebApp.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -10,9 +11,11 @@ namespace L2D_WebApp.Controllers
     public class TeacherController : Controller
     {
         private readonly DrivingLicenseContext _context;
-        public TeacherController(DrivingLicenseContext context)
+        private readonly ImageUtils _imageUtils;
+        public TeacherController(DrivingLicenseContext context, ImageUtils imageUtils)
         {
             _context = context;
+            _imageUtils = imageUtils;
         }
         
         [LoginFilter]
@@ -83,6 +86,7 @@ namespace L2D_WebApp.Controllers
                 .Select(t => new
                 {
                     TeacherId = t.TeacherId,
+                    LicenseId = t.LicenseId,
                     Avatar = t.Avatar,
                     FullName = t.FullName,
                     Information = t.Information,
@@ -125,10 +129,12 @@ namespace L2D_WebApp.Controllers
                 string Email = FormData["Email"];
                 string Description = FormData["Description"];
                 string Password = FormData["Password"];
+                string LicenseId = FormData["LicenseId"];
 
                 if (Avatar is not null)
                 {
-                    string AvatarImagePath = await SaveTeacherImage(FullName, Avatar);
+                    string AvatarImagePath = teacher.TeacherId + Path.GetExtension(Avatar.FileName);
+                    await _imageUtils.UpdateImageAsync(Avatar, $@"img/Avatar/{AvatarImagePath}");
                     teacher.Avatar = AvatarImagePath;
                 }
 
@@ -136,16 +142,17 @@ namespace L2D_WebApp.Controllers
                 teacher.ContactNumber = PhoneNumber;
                 teacher.Email = Email;
                 teacher.Information = Description;
+                teacher.LicenseId = LicenseId;
                 teacher.Account.Password = Password;
 
                 _context.Update(teacher);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return BadRequest("An error occurred when updating teacher profile");
+                return BadRequest($"An error occurred when updating teacher profile: {ex.Message}");
             }
             return NoContent();
         }
@@ -196,6 +203,7 @@ namespace L2D_WebApp.Controllers
             {
                 return NotFound($"Can't find any teachers with id {tid}");
             }
+
             var hireList = await _context.Hires
                .Include(hire => hire.Schedules)
                .Where(hire => hire.TeacherId.Equals(tid) && !hire.Status.Equals("Chờ duyệt"))

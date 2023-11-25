@@ -1,10 +1,10 @@
 ﻿//Switching tabs
-const teacherTabLinkList: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('#sidebar-content .dashboard-item');
+const teacherTabLinkList = document.querySelectorAll('#sidebar-content .dashboard-item');
 teacherTabLinkList.forEach(tabLink => {
     tabLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const tabList = document.querySelectorAll('.teacher-tab') as NodeListOf<HTMLElement>;
+        const tabList = document.querySelectorAll('.teacher-tab');
         tabList.forEach(tab => {
             tab.style.display = 'none';
         });
@@ -12,18 +12,18 @@ teacherTabLinkList.forEach(tabLink => {
 
         // Remove is-active from all tab links
         teacherTabLinkList.forEach(link => {
-            link.classList.remove('is-active'); 
+            link.classList.remove('is-active');
         });
 
         // Add is-active to this current tab link
         tabLink.classList.add('is-active');
 
         //Get id target for each link
-        const linkAnchor: HTMLAnchorElement | null = tabLink.querySelector('a');
+        const linkAnchor = tabLink.querySelector('a');
         if (!linkAnchor) {
             return;
         }
-        const target: string | null = linkAnchor.getAttribute('href');
+        const target = linkAnchor.getAttribute('href');
         if (target === `/Home`) {
             window.location.href = `/Home`;
             return;
@@ -34,7 +34,7 @@ teacherTabLinkList.forEach(tabLink => {
         }
         //Show the tab
         if (target) {
-            const tab: HTMLElement | null = document.querySelector(target);
+            const tab = document.querySelector(target);
             if (tab) {
                 tab.style.display = 'block';
             }
@@ -44,11 +44,29 @@ teacherTabLinkList.forEach(tabLink => {
 
 teacherTabLinkList[0].click();
 
+function alertError(title = '', message = '') {
+    Swal.fire({
+        icon: 'error',
+        title: title,
+        text: message,
+        confirmButtonColor: '#d90429'
+    });
+}
+
+function alertSuccess(title = '', message = '') {
+    Swal.fire({
+        icon: 'success',
+        title: title,
+        text: message,
+        confirmButtonColor: '#d90429'
+    });
+}
+
 //Teacher info form
-const teacherAvatarElement = document.querySelector('.teacherAvatar') as HTMLInputElement;
-const PreviewImageElement = document.getElementById('previewImage') as HTMLImageElement;
-teacherAvatarElement.addEventListener('change', (event: Event) => {
-    const files = (<HTMLInputElement>event.target).files;
+const teacherAvatarElement = document.querySelector('.teacherAvatar');
+const PreviewImageElement = document.getElementById('previewImage');
+teacherAvatarElement.addEventListener('change', (event) => {
+    const files = (event.target).files;
     if (!files) {
         console.log('No file selected');
         return;
@@ -58,46 +76,58 @@ teacherAvatarElement.addEventListener('change', (event: Event) => {
     // Set the onload function, which will be called after the file has been read
     reader.onload = (e) => {
         // The result attribute contains the data as a data: URL representing the file's data as a base64 encoded string.
-        PreviewImageElement.src = <string>reader.result;
+        PreviewImageElement.src = reader.result;
     };
     // Read the image file as a data URL
     reader.readAsDataURL(file);
 });
 
 
-class Teacher {
-    teacherId: string;
-    accountId: string;
-    avatar: string;
-    fullName: string;
-    information: string;
-    contactNumber: string;
-    email: string;
-    password: string;
-}
-var teacherId: string = (document.getElementById('TeacherId') as HTMLDivElement).textContent;
-const teacherInfoForm = document.getElementById('teacherInfoForm') as HTMLFormElement;
-teacherInfoForm.addEventListener('submit', async (e: Event) => {
+var teacherId = (document.getElementById('TeacherId')).textContent;
+const teacherInfoForm = document.getElementById('teacherInfoForm');
+teacherInfoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const passwordElement = document.getElementById('password') as HTMLInputElement;
-    const repassElement = document.getElementById('repass') as HTMLInputElement;
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Xác nhận lưu thông tin?',
+        showCancelButton: true,
+        cancelButtonText: 'Hủy',
+        confirmButtonText: 'Cập nhật',
+        confirmButtonColor: '#d90429'
+    });
+    if (!result.isConfirmed) {
+        return;
+    }
+
+    const passwordElement = document.getElementById('password');
+    const repassElement = document.getElementById('repass');
     if (passwordElement.value !== repassElement.value) {
-        alert('Vui lòng xác nhận mật khẩu chính xác');
+        alertError('Vui lòng xác nhận mật khẩu chính xác');
+        return;
+    }
+
+    if (document.getElementById('licenseId').value === ``) {
+        alertError('Vui lòng chọn hạng bằng lái đào tạo!');
         return;
     }
     await saveTeacherInfo();
 });
+
 async function saveTeacherInfo() {
-    const url = `https://localhost:7235/api/teacher/update/${teacherId}`;
-    const formData = new FormData(teacherInfoForm);
-    const response = await fetch(url, {
-        method: 'PUT',
-        body: formData
-    });
-    if (response.status !== 204) {
-        throw new Error(`Http Error! Status code: ${response.status}`);
+    try {
+        const url = `https://localhost:7235/api/teacher/update/${teacherId}`;
+        const formData = new FormData(teacherInfoForm);
+        const response = await fetch(url, {
+            method: 'PUT',
+            body: formData
+        });
+        if (response.status !== 204) {
+            throw new Error(`Http Error! Status code: ${response.status}`);
+        }
+        alertSuccess('Lưu thông tin thành công!');
+    } catch (error) {
+        alertError(error);
     }
-    alert('Lưu thông tin thành công');
 }
 
 async function fetchTeacherInfoData() {
@@ -114,21 +144,22 @@ async function fetchTeacherInfoData() {
         }
         const data = await response.json();
         console.log(data);
-        const teacher: Teacher = data;
+        const teacher = data;
         loadTeacherData(teacher);
     } catch (error) {
         console.error(error);
     }
 }
 
-function loadTeacherData(teacher: Teacher) {
-    const fullNameElement = document.getElementById('fullname') as HTMLInputElement;
-    const PreviewImageElement = document.getElementById('previewImage') as HTMLImageElement;
-    const phoneNumberElement = document.getElementById('phone') as HTMLInputElement;
-    const emailElement = document.getElementById('email') as HTMLInputElement;
-    const descriptionElement = document.getElementById('description') as HTMLTextAreaElement;
-    const passwordElement = document.getElementById('password') as HTMLInputElement;
-    const repassElement = document.getElementById('repass') as HTMLInputElement;
+function loadTeacherData(teacher) {
+    let fullNameElement = document.getElementById('fullname');
+    let PreviewImageElement = document.getElementById('previewImage');
+    let phoneNumberElement = document.getElementById('phone');
+    let emailElement = document.getElementById('email');
+    let descriptionElement = document.getElementById('description');
+    let passwordElement = document.getElementById('password');
+    let repassElement = document.getElementById('repass');
+    let licenseSelect = document.getElementById('licenseId');
     fullNameElement.value = teacher.fullName;
     PreviewImageElement.src = `/img/Avatar/${teacher.avatar}`;
     phoneNumberElement.value = teacher.contactNumber;
@@ -136,11 +167,12 @@ function loadTeacherData(teacher: Teacher) {
     descriptionElement.textContent = teacher.information;
     passwordElement.value = teacher.password;
     repassElement.value = teacher.password;
+    licenseSelect.value = teacher.licenseId;
 }
 
-function GetCalendarDays(month: number, TeacherYear: number): (Date | null)[] {
+function GetCalendarDays(month, TeacherYear) {
     const date = new Date(TeacherYear, month - 1, 1);
-    const days: (Date | null)[] = [];
+    const days = [];
 
     // Find the first Sunday before the month starts
     while (date.getDay() !== 0) {
@@ -167,11 +199,11 @@ function GetCalendarDays(month: number, TeacherYear: number): (Date | null)[] {
 }
 
 
-function displayTeacherCalendar(month: number, TeacherYear: number): void {
-    let timeTableBody = document.getElementById('teacherTimetable') as HTMLTableSectionElement;
+function displayTeacherCalendar(month, TeacherYear) {
+    let timeTableBody = document.getElementById('teacherTimetable');
     timeTableBody.innerHTML = '';
     let days = GetCalendarDays(month, TeacherYear);
-    let tr: HTMLTableRowElement | null = null;
+    let tr = null;
 
     for (let i = 0; i < days.length; i++) {
         if (i % 7 === 0) { // start a new row every week
@@ -181,15 +213,15 @@ function displayTeacherCalendar(month: number, TeacherYear: number): void {
 
         if (tr !== null) {
             if (days[i] !== null) {
-                let normalCellTemplate = document.getElementById('normalDayCellTemplate') as HTMLTemplateElement;
+                let normalCellTemplate = document.getElementById('normalDayCellTemplate');
                 let normalCellClone = document.importNode(normalCellTemplate.content, true);
-                let dayText = normalCellClone.querySelector('.dayText') as HTMLSpanElement;
+                let dayText = normalCellClone.querySelector('.dayText');
                 if (dayText) {
                     dayText.textContent = days[i]?.getDate().toString() || '';
                 }
                 tr.appendChild(normalCellClone);
             } else {
-                let missingCellTemplate = document.getElementById('missingDayCellTemplate') as HTMLTemplateElement;
+                let missingCellTemplate = document.getElementById('missingDayCellTemplate');
                 let missingCellClone = document.importNode(missingCellTemplate.content, true);
                 if (timeTableBody) {
                     tr.appendChild(missingCellClone);
@@ -205,19 +237,9 @@ function displayTeacherCalendar(month: number, TeacherYear: number): void {
     }
 }
 
-class TeacherSchedule {
-    scheduleId: string;
-    hireId: string;
-    licenseId: string;
-    startTime: string;
-    endTime: string;
-    date: Date;
-    address: string;
-    status: string;
-}
-const TeacherYear: number = 2023;
-async function fetchTeacherScheduleData(month: number) {
-    const url: string = `https://localhost:7235/api/teacher/schedules/${teacherId}?month=${month}`;
+const TeacherYear = 2023;
+async function fetchTeacherScheduleData(month) {
+    const url = `https://localhost:7235/api/teacher/schedules/${teacherId}?month=${month}`;
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -230,17 +252,17 @@ async function fetchTeacherScheduleData(month: number) {
         }
         const data = await response.json();
         console.log(data);
-        var scheduleList: TeacherSchedule[] = data;
+        var scheduleList = data;
         displayTeacherCalendar(month, TeacherYear);
         renderScheduleData(scheduleList, month);
-        const normalDayCells = document.querySelectorAll('td') as NodeListOf<HTMLTableCellElement>;
+        const normalDayCells = document.querySelectorAll('td');
         normalDayCells.forEach(normalDayCell => {
             normalDayCell.addEventListener('click', async () => {
                 console.log('Click event triggered');
-                const dayTextElement = normalDayCell.querySelector('span') as HTMLSpanElement;
+                const dayTextElement = normalDayCell.querySelector('span');
                 if (dayTextElement.textContent.trim() !== ``) {
                     const day = Number(dayTextElement.textContent);
-                    const month: number = Number(monthSelect.value);
+                    const month = Number(monthSelect.value);
                     console.log(`${day}-${month}`);
                     await fetchScheduleDataForDay(day, month);
                 }
@@ -252,9 +274,9 @@ async function fetchTeacherScheduleData(month: number) {
     }
 }
 
-async function fetchScheduleDataForDay(day: number, month: number) {
+async function fetchScheduleDataForDay(day, month) {
     const dateParam = `${TeacherYear}-${month}-${day}`;
-    const url: string = `https://localhost:7235/api/teacher/schedules/date/${teacherId}?date=${dateParam}`;
+    const url = `https://localhost:7235/api/teacher/schedules/date/${teacherId}?date=${dateParam}`;
     console.log('Date to fetch: ' + dateParam);
     console.log(url);
     try {
@@ -269,7 +291,7 @@ async function fetchScheduleDataForDay(day: number, month: number) {
         }
         const data = await response.json();
         console.log(data);
-        var scheduleList: TeacherSchedule[] = data;
+        var scheduleList = data;
         renderSchedulesForDay(scheduleList);
     } catch (error) {
         console.error(error);
@@ -277,7 +299,7 @@ async function fetchScheduleDataForDay(day: number, month: number) {
 }
 
 function toggleTeacherScheduleDetailsModal() {
-    const modal = document.getElementById('detailsScheduleModal') as HTMLDivElement;
+    const modal = document.getElementById('detailsScheduleModal');
     const opened = (!modal.classList.contains('hidden') && modal.classList.contains('flex') && modal.classList.contains('blur-background'));
     if (!opened) {
         modal.classList.remove('hidden');
@@ -292,21 +314,21 @@ function toggleTeacherScheduleDetailsModal() {
     }
 }
 
-function GetFormattedTime(timeString: string) {
+function GetFormattedTime(timeString) {
     let formattedTime = timeString.substring(0, 5);
     return formattedTime;
 }
 
-function renderSchedulesForDay(scheduleList: TeacherSchedule[]) {
-    const scheduleDetailsModalContent = document.getElementById('scheduleDetailsModalContent') as HTMLOListElement;
+function renderSchedulesForDay(scheduleList) {
+    const scheduleDetailsModalContent = document.getElementById('scheduleDetailsModalContent');
     scheduleDetailsModalContent.innerHTML = ``;
     scheduleList.forEach(TeacherSchedule => {
-        const scheduleDetailsTemplate = document.getElementById('scheduleDetailsTemplate') as HTMLTemplateElement;
+        const scheduleDetailsTemplate = document.getElementById('scheduleDetailsTemplate');
         let scheduleDetailsElementClone = document.importNode(scheduleDetailsTemplate.content, true);
-        let courseNameElement = scheduleDetailsElementClone.querySelector('.courseName') as HTMLSpanElement;
-        let courseStatusElement = scheduleDetailsElementClone.querySelector('.courseStatus') as HTMLSpanElement;
-        let courseDateElement = scheduleDetailsElementClone.querySelector('.courseDate') as HTMLSpanElement;
-        let courseTimeElement = scheduleDetailsElementClone.querySelector('.courseTime') as HTMLSpanElement;
+        let courseNameElement = scheduleDetailsElementClone.querySelector('.courseName');
+        let courseStatusElement = scheduleDetailsElementClone.querySelector('.courseStatus');
+        let courseDateElement = scheduleDetailsElementClone.querySelector('.courseDate');
+        let courseTimeElement = scheduleDetailsElementClone.querySelector('.courseTime');
 
         courseNameElement.textContent = `Khóa ${TeacherSchedule.licenseId}`;
 
@@ -327,24 +349,24 @@ function renderSchedulesForDay(scheduleList: TeacherSchedule[]) {
     });
 }
 
-function renderScheduleData(scheduleList: TeacherSchedule[], month: number) {
+function renderScheduleData(scheduleList, month) {
     if (scheduleList === null || scheduleList.length === 0) {
         console.log('No schedules data');
         return;
     }
-    const normalDayElements = document.querySelectorAll('.normalDay') as NodeListOf<HTMLTableCellElement>;
+    const normalDayElements = document.querySelectorAll('.normalDay');
     scheduleList.forEach(TeacherSchedule => {
-        const scheduleDate: Date = new Date(TeacherSchedule.date);
+        const scheduleDate = new Date(TeacherSchedule.date);
         const index = scheduleDate.getDate() - 1;
         const normalDayCell = normalDayElements[index];
-        const eventsContainer = normalDayCell.querySelector('.eventsContainer') as HTMLDivElement;
-        let eventTemplate = document.getElementById('event-template') as HTMLTemplateElement;
+        const eventsContainer = normalDayCell.querySelector('.eventsContainer');
+        let eventTemplate = document.getElementById('event-template');
         let eventElementClone = document.importNode(eventTemplate.content, true);
 
-        var eventNameElement = eventElementClone.querySelector('.event-name') as HTMLSpanElement;
+        var eventNameElement = eventElementClone.querySelector('.event-name');
         eventNameElement.textContent = `Khóa ${TeacherSchedule.licenseId}`;
 
-        var timeElement = eventElementClone.querySelector('time') as HTMLTimeElement;
+        var timeElement = eventElementClone.querySelector('time');
         // timeElement.textContent = `${TeacherSchedule.startTime}~${TeacherSchedule.endTime}`;
         timeElement.textContent = `${GetFormattedTime(TeacherSchedule.startTime)}~${GetFormattedTime(TeacherSchedule.endTime)}`;
 
@@ -354,25 +376,16 @@ function renderScheduleData(scheduleList: TeacherSchedule[], month: number) {
 
 
 
-const teacherMonthSelect = document.getElementById('monthSelect') as HTMLSelectElement;
+const teacherMonthSelect = document.getElementById('monthSelect');
 teacherMonthSelect.addEventListener('input', () => {
     if (teacherMonthSelect.value === "") {
         alert('Vui lòng chọn tháng phù hợp');
         return;
     }
-    const month: number = Number(teacherMonthSelect.value);
+    const month = Number(teacherMonthSelect.value);
     fetchTeacherScheduleData(month);
 });
 
-class HireInfo {
-    hireId: string;
-    teacherId: string;
-    licenseId: string;
-    userId: string;
-    userName: string;
-    hireDate: Date;
-    status: string;
-}
 
 async function fetchHireData() {
     try {
@@ -388,14 +401,14 @@ async function fetchHireData() {
         }
         const data = await response.json();
         console.log(data);
-        var hireInfoList: HireInfo[] = data;
+        var hireInfoList = data;
         renderHireTable(hireInfoList);
     } catch (error) {
         console.error(error);
     }
 }
 
-async function updateHireRequestStatus(hireId: string, status: string) {
+async function updateHireRequestStatus(hireId, status) {
     try {
         const url = `https://localhost:7235/api/teacher/hirerequest/update/${hireId}?status=${status}`;
         const response = await fetch(url, {
@@ -417,26 +430,26 @@ async function updateHireRequestStatus(hireId: string, status: string) {
     }
 }
 
-function renderHireTable(hireInfoList: HireInfo[]) {
-    const hireTableBody = document.getElementById('hireTableBody') as HTMLTableSectionElement;
+function renderHireTable(hireInfoList) {
+    const hireTableBody = document.getElementById('hireTableBody');
     hireTableBody.innerHTML = ``;
     if (hireInfoList === null || hireInfoList.length === 0) {
         console.log('No hire data');
         return;
     }
     hireInfoList.forEach(hireInfo => {
-        let template = document.getElementById('hire-row-template') as HTMLTemplateElement;
+        let template = document.getElementById('hire-row-template');
         let clone = document.importNode(template.content, true);
-        let NameElement = clone.querySelector('.HireUsername') as HTMLTableCellElement;
+        let NameElement = clone.querySelector('.HireUsername');
         NameElement.textContent = hireInfo.userName;
 
-        let HireDateElement = clone.querySelector('.HireDate') as HTMLTableCellElement;
+        let HireDateElement = clone.querySelector('.HireDate');
         HireDateElement.textContent = new Date(hireInfo.hireDate).toLocaleString();
 
-        let LicenseElement = clone.querySelector('.HireLicense') as HTMLTableCellElement;
+        let LicenseElement = clone.querySelector('.HireLicense');
         LicenseElement.textContent = hireInfo.licenseId;
 
-        let StatusElement = clone.querySelector('.HireStatus') as HTMLSelectElement;
+        let StatusElement = clone.querySelector('.HireStatus');
         StatusElement.setAttribute('hid', hireInfo.hireId);
         StatusElement.value = hireInfo.status;
 
@@ -453,10 +466,45 @@ function renderHireTable(hireInfoList: HireInfo[]) {
     });
 }
 
+async function fetchLicenseSelectData() {
+    try {
+        const url = `https://localhost:7235/api/licenses`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        const licenseIdList = data.map(l => l.licenseId);
+        loadLicenseSelectData(licenseIdList);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function loadLicenseSelectData(licenseList) {
+    if (licenseList === null || licenseList.length === 0) {
+        return;
+    }
+    let licenseSelect = document.getElementById('licenseId');
+    licenseSelect.innerHTML = ``;
+    let defaultOption = document.createElement('option');
+    defaultOption.text = `Hạng bằng lái đào tạo`;
+    defaultOption.value = ``;
+    licenseList.forEach(licenseId => {
+        let option = document.createElement('option');
+        option.text = `Bằng ${licenseId}`;
+        option.value = licenseId;
+        licenseSelect.add(option);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1;
     monthSelect.selectedIndex = currentMonth;
+    await fetchLicenseSelectData();
     await fetchTeacherInfoData();
     await fetchTeacherScheduleData(currentMonth);
     await fetchHireData();
