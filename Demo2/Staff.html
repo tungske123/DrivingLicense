@@ -25,7 +25,7 @@
                 // plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
                 // toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
             });
-        });
+        }); 
     </script>
     <style>
         .inline-center {
@@ -841,7 +841,7 @@
         <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
             <div class="mx-auto max-w-screen-xl px-4">
                 <!-- Start coding here -->
-                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                <div class="bg-white dark:bg-gray-800 shadow-md sm:rounded-lg overflow-hidden">
                     <div
                         class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                         <div class="w-full md:w-1/2">
@@ -898,7 +898,15 @@
                                         lọc</a>
                                     <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Hạng bằng lái
                                     </h6>
-                                    <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
+                                    <template id="quizFilterItemTemplate">
+                                        <li class="flex items-center">
+                                            <input id="A1" type="radio" value="A1" name="quizLicense"
+                                                class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                            <label for="A1"
+                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">A1</label>
+                                        </li>
+                                    </template>
+                                    <ul class="space-y-2 text-sm quizFilterContent"  aria-labelledby="filterDropdownButton">
                                         <li class="flex items-center">
                                             <input id="A1" type="radio" value="A1" name="quizLicense"
                                                 class="quizLicenseCheck w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
@@ -2164,6 +2172,9 @@
                             Người thuê
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Số điện thoại người thuê
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Tên xe thuê
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -2187,7 +2198,7 @@
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="px-6 py-4">Nguyễn Văn A</td>
-
+                        <td class="px-6 py-4">1234567890</td>
                         <td scope="row" class="px-6 py-4">
                             Toyota Vios
                         </td>
@@ -2224,9 +2235,7 @@
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="px-6 py-4">Nguyễn Văn A</td>
                         <td class="px-6 py-4 w-32 p-4">
-                            <img class="rounded-lg"
-                                src="https://i2-vnexpress.vnecdn.net/2023/05/10/Vios-2023-10_1683690128.jpg?w=2400&h=0&q=100&dpr=1&fit=crop&s=LPsTjgivZ2T5xKJYQiVjHg&t=image"
-                                alt="">
+                           1234567890
                         </td>
                         <td scope="row" class="px-6 py-4">
                             Toyota Vios

@@ -296,11 +296,12 @@ function renderRentTable(rentList) {
         let clone = document.importNode(rentRowTemplate.content, true);
         let cells = clone.querySelectorAll('tr td');
         cells[0].textContent = rent.userFullName;
-        cells[1].textContent = rent.vehicleName;
-        cells[2].textContent = getVietnamDateTime(rent.startDate);
-        cells[3].textContent = getVietnamDateTime(rent.endDate);
-        cells[4].textContent = formatMoney(rent.price);
-        let statusSelect = cells[5].querySelector('.statusSelect');
+        cells[1].textContent = rent.userPhoneNumber;
+        cells[2].textContent = rent.vehicleName;
+        cells[3].textContent = getVietnamDateTime(rent.startDate);
+        cells[4].textContent = getVietnamDateTime(rent.endDate);
+        cells[5].textContent = formatMoney(rent.price);
+        let statusSelect = cells[6].querySelector('.statusSelect');
         statusSelect.setAttribute('rid', rent.rentId);
         statusSelect.value = rent.status;
 
@@ -330,8 +331,8 @@ function renderRentTable(rentList) {
         });
 
 
-        let editBtn = cells[6].querySelector('.editBtn');
-        let deleteBtn = cells[6].querySelector('.deleteBtn');
+        let editBtn = cells[7].querySelector('.editBtn');
+        let deleteBtn = cells[7].querySelector('.deleteBtn');
 
         editBtn.setAttribute('rid', rent.rentId);
         editBtn.addEventListener('click', async () => {

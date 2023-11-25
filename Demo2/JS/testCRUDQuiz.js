@@ -179,27 +179,6 @@ quizSearchBar.addEventListener('input', async () => {
 })
 
 const quizLicenseChecks = document.querySelectorAll('.quizLicenseCheck');
-const clearQuizFilterLink = document.getElementById('clearQuizFilter');
-quizLicenseChecks.forEach(quizCheck => {
-    quizCheck.addEventListener('input', async () => {
-        if (quizCheck.checked) {
-            const newLicenseID = String(quizCheck.getAttribute('value'));
-            sendQuizData.licenseID = newLicenseID;
-            quizPage = 1;
-            await fetchQuizData();
-        }
-    });
-});
-
-clearQuizFilterLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-    quizLicenseChecks.forEach(quizCheck => {
-        quizCheck.checked = false;
-    });
-    sendQuizData.licenseID = ``;
-    await fetchQuizData();
-});
-
 
 
 
@@ -415,7 +394,65 @@ const quizAddButton = document.getElementById('quizAddButton');
 quizAddButton.addEventListener('click', async () => {
     await addQuiz();
 });
+
+
+async function fetchLicenseFilterData() {
+    try {
+        const url = `https://localhost:7235/api/licenses`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        let licenseList = data.map(l => l.licenseId);
+        loadQuizFilterData(licenseList);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function loadQuizFilterData(licenseList) {
+    let quizFilterContent = document.querySelector('.quizFilterContent');
+    quizFilterContent.innerHTML = ``;
+    if (licenseList === null || licenseList.length === 0) {
+        return;
+    }
+    let quizFilterItemTemplate = document.getElementById('quizFilterItemTemplate');
+    licenseList.forEach(licenseId => {
+        let clone = document.importNode(quizFilterItemTemplate.content, true);
+        let checkInput = clone.querySelector('input');
+        let label = clone.querySelector('label');
+        checkInput.value = licenseId;
+        checkInput.setAttribute('id', licenseId);
+        checkInput.addEventListener('input', async () => {
+            let newLicenseID = checkInput.value;
+            sendQuizData.licenseID = newLicenseID;
+            quizPage = 1;
+            await fetchQuizData();
+        });
+        label.textContent = `Bằng ${licenseId}`;
+        label.setAttribute('for', licenseId);
+
+        quizFilterContent.appendChild(clone);
+    });
+}
+
+
 window.addEventListener('DOMContentLoaded', async () => {
+    await fetchLicenseFilterData();
+    const clearQuizFilterLink = document.getElementById('clearQuizFilter');
+    clearQuizFilterLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        quizLicenseChecks.forEach(quizCheck => {
+            if (quizCheck.checked === true) {
+                quizCheck.checked = false;
+            }
+        });
+        sendQuizData.licenseID = ``;
+        await fetchQuizData();
+    });
     await fetchQuizData();
     await fetchQuestionsDataPaging();
 });
