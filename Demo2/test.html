@@ -31,8 +31,8 @@
                 <input id="default-radio-1" type="radio" value="" name="rightAnswer"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                 <label for="rightAnswer-1"
-                    class="answerLabel ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Câu
-                    1</label>
+                    class="answerLabel ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    A</label>
             </div>
             <div class="answer_div" style="width: 40%;display: flex;column-gap: 10px;">
                 <!-- <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label> -->
@@ -60,8 +60,8 @@
             <div class="checkbox_div" style="display: flex;align-items: center;column-gap: 10px;">
                 <input id="rightAnswer1" type="radio" value="" name="rightAnswer"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="rightAnswer1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Câu
-                    1</label>
+                <label for="rightAnswer1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    A</label>
             </div>
             <div class="answer_div" style="width: 40%;display: flex;column-gap: 10px;">
                 <!-- <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label> -->
@@ -82,26 +82,108 @@
         </div>
     </div>
 
+
+    <section>
+        <template id="editAnswerTemplate">
+            <div class="wrapper2" style="width: 50%;display: flex;column-gap: 10px;margin-bottom: 10px;">
+                <div class="checkbox_div2" style="display: flex;align-items: center;column-gap: 10px;">
+                    <input id="default-radio-1" type="radio" value="" name="rightAnswer2"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="rightAnswer2-1"
+                        class="answerLabel2 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        A</label>
+                </div>
+                <div class="answer_div2" style="width: 40%;display: flex;column-gap: 10px;">
+                    <!-- <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label> -->
+                    <input type="text" id="first_name"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Câu trả lời..." required>
+                </div>
+                <div class="delete_div2" style="display: flex;align-items: center;">
+                    <button type="button"
+                        class="deleteBtn2 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                        <svg class=" w-4 h-4 text-white dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </template>
+        <button type="button" id="editAnwserBtn"
+            class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Thêm
+            câu trả lời</button>
+        <div class="answer_container2">
+            <div class="wrapper2" style="width: 50%;display: flex;column-gap: 10px;margin-bottom: 10px;">
+                <div class="checkbox_div2" style="display: flex;align-items: center;column-gap: 10px;">
+                    <input id="rightAnswer1" type="radio" value="" name="rightAnswer2"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="rightAnswer_2_1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        A
+                    </label>
+                </div>
+                <div class="answer_div2" style="width: 40%;display: flex;column-gap: 10px;">
+                    <!-- <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label> -->
+                    <input type="text" id="first_name"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Câu trả lời..." required>
+                </div>
+                <div class="delete_div2" style="display: flex;align-items: center;">
+                    <button type="button"
+                        class="deleteBtn2 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                        <svg class=" w-4 h-4 text-white dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
     <script>
-        // let rightAnswerCheckBoxList = document.querySelectorAll('.checkbox_div input');
-        // let addAnswerButton = document.getElementById('addAnswerBtn');
-        // let answerInputTemplate = document.getElementById('answerInputTemplate');
-        // let answerContainer = document.querySelector('.answer_container');
-        // let answerCnt = 1;
-        // addAnswerButton.addEventListener('click', () => {
-        //     ++answerCnt;
-        //     let clone = document.importNode(answerInputTemplate.content, true);
-        //     let answerLabel = clone.querySelector('.answerLabel');
-        //     answerLabel.textContent = `Câu ${answerCnt.toString()}`;
-        //     let deleteBtn = clone.querySelector('.delete_div .deleteBtn');
-        //     deleteBtn.addEventListener('click', (event) => {
-        //         let wrapper = deleteBtn.closest('.wrapper');
-        //         wrapper.remove();
-        //         --answerCnt;
-        //     });
-        //     answerContainer.appendChild(clone);
-        // });
-        
+        let rightAnswerCheckBoxList = document.querySelectorAll('.checkbox_div input');
+        let rightAnswerCheckBoxList2 = document.querySelectorAll('.checkbox_div2 input');
+        let addAnswerButton = document.getElementById('addAnswerBtn');
+        let editAnwserBtn = document.getElementById('editAnwserBtn');
+        let answerInputTemplate = document.getElementById('answerInputTemplate');
+        let editAnswerTemplate = document.getElementById('editAnswerTemplate');
+        let answerContainer = document.querySelector('.answer_container');
+        let answer_container2 = document.querySelector('.answer_container2');
+        let answerCnt = 1;
+        let answerCnt2 = 1;
+        let alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        let alphabets2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+
+        addAnswerButton.addEventListener('click', () => {
+            let clone = document.importNode(answerInputTemplate.content, true);
+            let answerLabel = clone.querySelector('.answerLabel');
+            answerLabel.textContent = ` ${alphabets[answerCnt]}`;
+            let deleteBtn = clone.querySelector('.delete_div .deleteBtn');
+            deleteBtn.addEventListener('click', (event) => {
+                let wrapper = deleteBtn.closest('.wrapper');
+                wrapper.remove();
+            });
+            answerContainer.appendChild(clone);
+            answerCnt++;
+        });
+
+
+        editAnwserBtn.addEventListener('click', () => {
+            let clone = document.importNode(editAnswerTemplate.content, true);
+            let answerLabel2 = clone.querySelector('.answerLabel2');
+            answerLabel2.textContent = ` ${alphabets2[answerCnt2]}`;
+            let deleteBtn2 = clone.querySelector('.delete_div2 .deleteBtn2');
+            deleteBtn2.addEventListener('click', (event) => {
+                let wrapper2 = deleteBtn2.closest('.wrapper2');
+                wrapper2.remove();
+            });
+            answer_container2.appendChild(clone);
+            answerCnt2++;
+        });
+
     </script>
 </body>
 
