@@ -39,13 +39,6 @@ staffTabLinkList.forEach(tabLink => {
 
 staffTabLinkList[0].click();
 const staffId = `2AF899DA-324B-4FF0-BE6F-23A119C045E7`;
-class Staff {
-    staffId;
-    fullName;
-    email;
-    contactNumber;
-    password;
-}
 function renderStaffInfo(staff) {
     const FullNameInput = document.getElementById('fullname');
     const EmailElement = document.getElementById('email');
