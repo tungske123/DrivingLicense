@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="~/css/stylePagination.css">
     <!--icon file-->
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4832/4832401.png">
+
     <script>
         var currentPage = @Model.PageNumber;
         var totalPage = @Model.TotalPages;
@@ -33,7 +34,7 @@
         <section class="filter-section hidden-load">
             <form action="/Quiz" id="filterForm">
                 <div class="input-group mb-3 hidden-load">
-                    <select class="form-select" name="licenseid" id="license_option">
+                    <select class="form-select licenseSelect" name="licenseid" id="license_option">
                         <option selected value="none">Chọn hạng bằng lái</option>
                         <option value="A1">A1</option>
                         <option value="A2">A2</option>
@@ -71,7 +72,7 @@
                             <h5 class="card-title">@quiz.Name</h5>
                             <h6 class="card-subtitle mb-2 status"></h6>
                             <button type="button" class="btn btn-primary">Bằng @quiz.LicenseId</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="location.href='/Quiz/StartQuiz?quizid=@quiz.QuizId';">Làm</button>
+                            <button type="button" qid="@quiz.QuizId" class="quizAttemptBtn btn btn-outline-primary">Làm</button>
                         </div>
                     </div>
                 }

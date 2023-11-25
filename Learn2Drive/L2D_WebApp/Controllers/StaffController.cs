@@ -10,7 +10,11 @@ namespace L2D_WebApp.Controllers
     public class StaffController : Controller
     {
         private readonly DrivingLicenseContext _context;
-        public StaffController(DrivingLicenseContext context) => _context = context;
+        public StaffController(DrivingLicenseContext context)
+        {
+            _context = context;
+           
+        }
 
         [LoginFilter]
         public async Task<IActionResult> Index()
@@ -114,5 +118,7 @@ namespace L2D_WebApp.Controllers
 
             return NoContent();
         }
+
+        
     }
 }

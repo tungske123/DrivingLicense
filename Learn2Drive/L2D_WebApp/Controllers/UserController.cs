@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 using System;
+using L2D_WebApp.Utils;
 
 namespace L2D_WebApp.Controllers
 {
@@ -56,7 +57,7 @@ namespace L2D_WebApp.Controllers
             if (uid == Guid.Empty)
             {
                 return BadRequest("Invalid user id");
-                
+
             }
 
             //var user = await _context.Users
@@ -347,12 +348,73 @@ namespace L2D_WebApp.Controllers
             {
                 return NotFound("Can't find any users");
             }
-            var QuizAttemptData = await QuizRepository.Instance.GetQuizAttemptDataFromUser(uid);
+            //var QuizAttemptData = await QuizRepository.Instance.GetQuizAttemptDataFromUser(uid);
+            //if (aid == Guid.Empty)
+            //{
+            //    return Ok(QuizAttemptData.OrderByDescending(att => att.AttemptDate));
+            //}
+            //return Ok(QuizAttemptData.SingleOrDefault(q => q.AttemptID.Equals(aid)));
             if (aid == Guid.Empty)
             {
-                return Ok(QuizAttemptData.OrderByDescending(att => att.AttemptDate));
+                return BadRequest("Invalid attempt id");
             }
-            return Ok(QuizAttemptData.SingleOrDefault(q => q.AttemptID.Equals(aid)));
+            var attempt = await _context.Attempts
+        .Select(att => new
+        {
+            AttemptId = att.AttemptId,
+            QuizId = att.QuizId,
+            LicenseId = att.Quiz.LicenseId,
+            QuizName = att.Quiz.Name,
+            AttemptTime = att.AttemptTime,
+            AttemptDate = att.AttemptDate,
+
+            TotalQuestion = att.TotalQuestion,
+            CorrectQuestionCnt = att.AttemptDetails.Count(ad => ad.Status.Equals("correct")),
+            IncorrectQuestionCnt = att.AttemptDetails.Count(ad => ad.Status.Equals("incorrect")),
+            Result = att.Result,
+            AttemptDetails = att.AttemptDetails
+        .Select(ad => new
+        {
+            AttemptDetailId = ad.AttemptDetailId,
+            AttemptId = ad.AttemptId,
+            QuestionText = ad.Question.QuestionText,
+            QuestionImage = ad.Question.QuestionImage,
+            SelectedAnswer = (ad.SelectedAnswerId == null) ? string.Empty : ad.SelectedAnswer.AnswerText,
+            CorrectAnswer = ad.Question.Answers.SingleOrDefault(ans => ans.IsCorrect == true).AnswerText,
+            Status = ad.Status
+        }).ToList()
+        })
+        .AsNoTracking().AsSplitQuery().SingleOrDefaultAsync(att => att.AttemptId.Equals(aid));
+
+            return (attempt is not null) ? Ok(attempt) : NotFound($"Can't find any attempts with id {aid}");
+        }
+
+        [HttpGet]
+        [Route("api/user/profile/quizattempt/{uid:guid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetAllQuizAttemptsOfUser([FromRoute] Guid uid)
+        {
+            if (uid == Guid.Empty)
+            {
+                return BadRequest("Invalid user id");
+            }
+            if (await _context.Users.AnyAsync(user => user.UserId.Equals(uid)) == false)
+            {
+                return NotFound("Can't find any users");
+            }
+            var attemptList = await _context.Attempts.Where(att => att.UserId.Equals(uid))
+                .Select(att => new
+                {
+                    AttemptId = att.AttemptId,
+                    QuizId = att.QuizId,
+                    LicenseId = att.Quiz.LicenseId,
+                    QuizName = att.Quiz.Name,
+                    AttemptTime = att.AttemptTime,
+                    AttemptDate = att.AttemptDate,
+                    Result = att.Result
+                })
+                .ToListAsync();
+            return Ok(attemptList);
         }
 
         [HttpGet]
@@ -486,24 +548,33 @@ namespace L2D_WebApp.Controllers
             {
                 return BadRequest("Invalid month");
             }
+
             if (uid == Guid.Empty)
             {
                 return BadRequest("Invalid user id");
             }
+
             if (await _context.Users.AnyAsync(user => user.UserId.Equals(uid)) == false)
             {
                 return NotFound($"Can't find any users with id {uid}");
             }
-            var hireList = await _context.Hires
-                .Include(hire => hire.Schedules)
-                .Where(hire => hire.UserId.Equals(uid) && !hire.Status.Equals("Chờ duyệt"))
-                .SelectMany(hire => hire.Schedules)
-                .Where(schedule => schedule.Date.Month == month)
+
+            //var scheduleList = await _context.Hires
+            //    .Include(hire => hire.Schedules)
+            //    .Where(hire => hire.UserId.Equals(uid) && !hire.Status.Equals("Chờ duyệt"))
+            //    .SelectMany(hire => hire.Schedules)
+            //    .Where(schedule => schedule.Date.Month == month)
+            //    .OrderBy(schedule => schedule.Date)
+            //    .AsNoTracking()
+            //    .AsSplitQuery()
+            //    .ToListAsync();
+            var scheduleList = await _context.Schedules
+                .Include(schedule => schedule.Hire)
+                .Where(schedule => schedule.Hire.UserId.Equals(uid) && !schedule.Hire.Status.Equals("Chờ duyệt"))
                 .OrderBy(schedule => schedule.Date)
                 .AsNoTracking()
-                .AsSplitQuery()
                 .ToListAsync();
-            return Ok(hireList);
+            return Ok(scheduleList);
         }
 
         [HttpGet]
@@ -581,6 +652,69 @@ namespace L2D_WebApp.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("api/user/examprofile/{uid:guid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetUserSingleExamProfile([FromRoute] Guid uid, Guid? examid = null)
+        {
+            if (uid == Guid.Empty)
+            {
+                return BadRequest("Invalid user id");
+            }
+
+            bool IsValidExamId = (examid is null || examid == Guid.Empty);
+            if (!IsValidExamId)
+            {
+                return BadRequest("Invalid exam profile id");
+            }
+
+            if (!await _context.Users.AnyAsync(u => u.UserId.Equals(uid)))
+            {
+                return NotFound($"Can't find any users with id {uid}");
+            }
+
+            try
+            {
+                var userData = await _context.Users
+                    .Select(user => new
+                    {
+                        UserId = user.UserId,
+                        Avatar = user.Avatar,
+                        FullName = user.FullName,
+                        Nationality = user.Nationality,
+                        Cccd = user.Cccd,
+                        PhoneNumber = user.PhoneNumber,
+                        BirthDate = (user.BirthDate != null) ? user.BirthDate : null,
+                        Address = user.Address,
+                    })
+                    .AsNoTracking().SingleOrDefaultAsync(u => u.UserId.Equals(uid));
+
+                var examProfileData = await _context.ExamProfiles
+                    .Select(e => new
+                    {
+                        UserId = e.UserId,
+                        ExamProfileId = e.ExamProfileId,
+                        LicenseId = e.LicenseId,
+                        ExamDate = e.ExamDate,
+                        ExamResult = e.ExamResult,
+                        HealthCondition = e.HealthCondition,
+                        Status = e.Status
+                    })
+                    .AsNoTracking().SingleOrDefaultAsync(e => e.UserId.Equals(uid) && e.ExamProfileId.Equals(examid));
+
+                return Ok(new
+                {
+                    userData = userData,
+                    examProfileData = examProfileData
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred during the request process: {ex.Message}");
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 //using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using L2D_WebApp.Utils;
+//using L2D_WebApp.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -14,14 +15,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers(options =>
 {
     options.RespectBrowserAcceptHeader = true;
-    options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
+    //options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
 });
+
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
-// builder.Services.AddControllers().AddJsonOptions(x =>
-//                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddTransient<ImageUtils>();
 
 //Add connection to EntityFrameworkCore
 

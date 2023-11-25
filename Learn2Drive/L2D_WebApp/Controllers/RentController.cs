@@ -41,6 +41,7 @@ namespace L2D_WebApp.Controllers
         public async Task<IActionResult> RentDetail(Guid vid)
         {
             var vehicle = await _context.Vehicles.AsNoTracking().SingleOrDefaultAsync(v => v.VehicleId.Equals(vid));
+            ViewBag.VehicleId = vid;
             return View("~/Views/RentDetail.cshtml", vehicle);
         }
 
@@ -54,14 +55,14 @@ namespace L2D_WebApp.Controllers
         }
 
 
-        [LoginFilter]
+        //[LoginFilter]
         [HttpPost]
         [Route("api/rent/insert/{id:guid}")]
         public async Task<IActionResult> AddRentAPI([FromRoute] Guid id, [FromBody] Rent rent)
         {
             var UserIDString = await getUserIDFromSession();
             rent.UserId = Guid.Parse(UserIDString);
-            rent.Status = "true";
+            rent.Status = "Chờ duyệt";
             await _context.AddAsync(rent);
             await _context.SaveChangesAsync();
             return Ok();
@@ -209,18 +210,28 @@ namespace L2D_WebApp.Controllers
             return Ok(finalRentHistoryData);
         }
 
-        [LoginFilter]
+
         [HttpDelete]
-        [Route("api/rent/delete/{uid:guid}")]
-        public async Task<IActionResult> DeleteRent([FromRoute] Guid uid, Guid rid)
+        [Route("api/rent/delete/{rid:guid}")]
+        public async Task<IActionResult> DeleteUserRent([FromRoute] Guid rid)
         {
-            var userRent = await _context.Rents.SingleOrDefaultAsync(rent => rent.UserId.Equals(uid) && rent.RentId.Equals(rid));
-            if (userRent is null)
+            if (!await _context.Rents.AnyAsync(rent => rent.RentId.Equals(rid)))
             {
-                return NotFound();
+                return NotFound($"Can't find any rents with id {rid}");
             }
-            _context.Rents.Remove(userRent);
-            await _context.SaveChangesAsync();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.Rents.Where(r => r.RentId.Equals(rid)).ExecuteDeleteAsync();
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
             return NoContent();
         }
 
@@ -239,7 +250,7 @@ namespace L2D_WebApp.Controllers
         }
 
 
-        [LoginFilter]
+
         [HttpPatch]
         [Route("api/rent/update/{rid:guid}")]
         public async Task<IActionResult> UpdateRent([FromRoute] Guid rid, [FromBody] JsonPatchDocument<Rent> patchDoc)
@@ -253,13 +264,63 @@ namespace L2D_WebApp.Controllers
             {
                 return NotFound("Can't find any rent");
             }
-            patchDoc.ApplyTo(rent, ModelState);
-            if (!ModelState.IsValid)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                return BadRequest();
+                patchDoc.ApplyTo(rent, ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
-            await _context.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred during the request: {ex.Message}");
+            }
             return NoContent();
+        }
+
+        [HttpPost]
+        [Route("api/rents")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetAllRentData([FromBody] RentHistoryData data)
+        {
+            var query = _context.Rents
+                .Include(rent => rent.Vehicle)
+                .Include(rent => rent.User)
+                .AsQueryable();
+            if (data is not null)
+            {
+                if (!string.IsNullOrEmpty(data.Keyword))
+                {
+                    query = query.Where(rent => rent.Vehicle.Name.ToLower().Contains(data.Keyword.ToLower()));
+                }
+                if (data.DayRangeValue != -1)
+                {
+                    DateTime Today = DateTime.Today;
+                    DateTime MarkDay = Today.AddDays((-1) * data.DayRangeValue);
+                    query = query.Where(rent => rent.StartDate >= MarkDay && rent.StartDate <= Today);
+                }
+            }
+            query = query.OrderByDescending(rent => rent.StartDate);
+            var rentList = await query
+                .Select(rent => new
+                {
+                    RentId = rent.RentId,
+                    UserId = rent.UserId,
+                    UserFullName = rent.User.FullName,
+                    VehicleName = rent.Vehicle.Name,
+                    VehicleImage = rent.Vehicle.Image,
+                    StartDate = rent.StartDate,
+                    EndDate = rent.EndDate,
+                    Price = rent.TotalRentPrice,
+                    Status = rent.Status
+                })
+                .ToListAsync();
+            return Ok(rentList);
         }
     }
 }

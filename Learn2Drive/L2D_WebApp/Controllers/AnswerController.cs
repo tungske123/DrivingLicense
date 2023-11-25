@@ -4,7 +4,6 @@ using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using static L2D_WebApp.Controllers.QuestionController;
 
 namespace L2D_WebApp.Controllers
 {
@@ -41,7 +40,7 @@ namespace L2D_WebApp.Controllers
         public async Task<ActionResult> GetAnswerList([FromRoute] int questid)
         {
             var answerList = await _context.Answers
-                .Where(ans => ans.QuestionId==questid)
+                .Where(ans => ans.QuestionId == questid)
                 .ToListAsync();
             if (answerList == null)
             {
@@ -56,7 +55,7 @@ namespace L2D_WebApp.Controllers
         public async Task<ActionResult> SearchAnswer([FromBody] AnswerFilterData data)
         {
             var answerList = await _context.Answers.Where(
-                    ans => ans.AnswerText.ToLower().Contains(data.Keyword.ToLower())||
+                    ans => ans.AnswerText.ToLower().Contains(data.Keyword.ToLower()) ||
                     (ans.Question.LicenseId.Equals(data.LicenseID) &&
                     ans.Question.QuestionText.ToLower().Contains(data.QuestionKeyword.ToLower()))
                 ).ToListAsync();

@@ -81,7 +81,66 @@ async function fetchUserQuizStatus() {
         console.log('Error: ' + error);
     }
 }
-window.addEventListener('DOMContentLoaded', async function () {
+
+let quizAttemptBtnList = document.querySelectorAll('.quizAttemptBtn');
+quizAttemptBtnList.forEach(quizAttemptBtn => {
+    quizAttemptBtn.addEventListener('click', () => {
+        var quizId = parseInt(quizAttemptBtn.getAttribute('qid'));
+        Swal.fire({
+            icon: 'question',
+            title: "Xác nhận vào làm lại đề này?",
+            showCancelButton: true,
+            confirmButtonText: `Làm`,
+            confirmButtonColor: `#d90429`,
+            cancelButtonText: `Hủy`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/Quiz/StartQuiz?qid=${parseInt(quizId)}`;
+            }
+        });
+    });
+});
+
+async function fetchLicenseData() {
+    try {
+        const url = `https://localhost:7235/api/licenses`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            console.error(`Error! ${response.status} - ${response.statusText}`);
+            return;
+        }
+        const data = await response.json();
+        const licenseIdList = data.map(l => l.licenseId);
+        
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function renderLicenseSelectData(licenseIdList) {
+    if (licenseIdList === null || licenseIdList.length === 0) {
+        console.log('No license data');
+        return;
+    }
+    let licenseSelect = document.querySelector('.licenseSelect');
+    while (licenseSelect.options.length > 0) {
+        licenseSelect.remove(0);
+    }
+
+    licenseIdList.forEach(licenseid => {
+        let option = document.createElement('option');
+        option.value = licenseid;
+        option.text = `Bằng ${licenseid}`;
+        licenseSelect.add(option);
+    });
+}
+
+async function fetchQuizStatus() {
     var quizData;
     try {
         quizData = await fetchUserQuizStatus();
@@ -114,4 +173,9 @@ window.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
         console.error('Error fetching quiz data:', error);
     }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    await fetchLicenseData();
+    await fetchQuizStatus();
 });

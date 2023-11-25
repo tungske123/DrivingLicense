@@ -194,14 +194,14 @@ header.shadow #search-icon {
     margin: 0.5rem 0 1.2rem;
 }
 
-.btn:not(.btn-primary,.btn-outline-primary,.btn-outline-success,.btn-danger,.btn-outline-danger,.btn-success) {
+.btn:not(.btn-primary,.btn-outline-primary,.btn-outline-success,.btn-danger,.btn-outline-danger,.btn-success,.btn-outline-dark,.btn-secondary) {
     padding: 10px 22px;
     background: var(--main-color);
     color: var(--bg-color);
     font-weight: 400;
 }
 
-.btn:not(.btn-primary,.btn-outline-primary,.btn-outline-success,.btn-danger,.btn-outline-danger,.btn-success):hover {
+.btn:not(.btn-primary,.btn-outline-primary,.btn-outline-success,.btn-danger,.btn-outline-danger,.btn-success,.btn-outline-dark,.btn-secondary):hover {
     background: #fd052f;
 }
 

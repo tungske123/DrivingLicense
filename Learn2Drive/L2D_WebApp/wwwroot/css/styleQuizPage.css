@@ -19,9 +19,9 @@
     transition: 0.25s ease-in-out;
 }
 
-.time-bar:hover {
-    transform: scale(1.02);
-}
+    .time-bar:hover {
+        transform: scale(1.02);
+    }
 
 .time {
     font-weight: bold;
@@ -91,10 +91,8 @@
         /* margin-top: 20px; */
         padding-block: 0;
     }
+
     h4.info {
-        display: none;
-    }
-    #viewQuestionButton {
         display: none;
     }
 }
@@ -117,6 +115,7 @@
     .desktop {
         display: none;
     }
+
     .quiz-select-section {
         margin-bottom: 20px;
     }

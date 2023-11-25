@@ -159,18 +159,18 @@ namespace L2D_WebApp.Controllers
             var account = await _context.Accounts.AsNoTracking().FirstOrDefaultAsync(acc => acc.Username.Equals(username));
             if (!password.Equals(repass))
             {
-                TempData["Message"] = "Mật khẩu nhập lại không khớp";
+                TempData["Message"] = "repasword doesn't match";
                 return RedirectToAction("Index", "Login");
             }
             if (account is not null)
             {
-                TempData["Message"] = "Tài khoản đã tồn tại !";
+                TempData["Message"] = "Username already exist !";
                 return RedirectToAction("Index", "Login");
             }
             password = await Fakepassword(password);
             //await AccountDAO.Instance.SignUp(username, password, email);
             var result = await _context.Database.ExecuteSqlRawAsync("EXEC dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", username, password, email);
-            TempData["Message"] = "Đăng kí tài khoản thành công !";
+            TempData["Message"] = "??ng kí tài kho?n thành công !";
             return RedirectToAction("Index", "Login");
         }
 

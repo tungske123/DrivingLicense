@@ -27,6 +27,7 @@
 </head>
 
 <body>
+    <div hidden id="vehicleId">@ViewBag.VehicleId</div>
     <div class="modal">
         <article class="modal-container">
             <div class="modal-container-header">
@@ -120,6 +121,18 @@
                                 <label><i class="fa-solid fa-location-dot"></i> Địa điểm thanh toán và giao nhận xe</label>
                                 <div class="wrap-form has-arrow"><span class="value">@Model.Address</span></div>
                             </div>
+                            <div class="dropdown-form">
+                                <label><i class="fa-regular fa-clock"></i> Tổng số giờ thuê</label>
+                                <div class="wrap-form has-arrow" id="rentHours" style="font-weight: bold;">1 giờ</div>
+                            </div>
+                            <div class="form-floating">
+                                <select class="form-select" aria-label="" id="rentOptionSelect" required>
+                                    <option selected>Chọn Phương thức thuê</option>
+                                    <option value="date">Thuê theo ngày</option>
+                                    <option value="hour">Thuê theo giờ</option>
+                                </select>
+                                <label class="form-label">Phương thức thuê</label>
+                            </div>
                             <div class="line-page"></div>
                             <div class="price-container">
                                 <div class="line-page"></div>
@@ -194,7 +207,7 @@
                         <div class="info-car-desc">
                             <h6 style="color: red;">Mô tả</h6>
                             <p class="info-text shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-                                @Model.Description
+                                
                             </p>
                         </div>
                     </div>
@@ -202,6 +215,9 @@
             </div>
         </div>
     </div>
-    <script src="~/js/RentDetailFunctions.js"></script>
+    <script>
+        document.querySelector('.rentLink').classList.add('active');
+    </script>
+    <script src="~/js/RentDetails.js"></script>
 </body>
 </html>

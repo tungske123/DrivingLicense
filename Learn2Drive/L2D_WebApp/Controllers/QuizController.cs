@@ -125,109 +125,28 @@ namespace L2D_WebApp.Controllers
         }
 
         [LoginFilter]
-        public async Task<IActionResult> StartQuiz(int quizid)
+        public async Task<IActionResult> StartQuiz(int qid)
         {
-            var attempSessionID = HttpContext.Session.GetString("quizsession");
-            //Clean session if exist
-            if (!string.IsNullOrEmpty(attempSessionID))
-            {
-                HttpContext.Session.Remove("quizsession");
-            }
-            var UserIDString = await getUserIDFromSession();
-            var attemptSession = new Attempt()
-            {
-                AttemptId = Guid.NewGuid(),
-                UserId = Guid.Parse(UserIDString),
-                QuizId = quizid,
-                AttemptDate = DateTime.Now,
-                AttemptDetails = new List<AttemptDetail>()
-            };
-            await _context.Attempts.AddAsync(attemptSession);
-            await _context.SaveChangesAsync();
-
-            var insertedAtttempt = await _context.Attempts
-                                                .Include(att => att.AttemptDetails)
-                                                .AsSplitQuery()
-                                                .AsNoTracking()
-                                                .SingleOrDefaultAsync(att => att.AttemptId.Equals(attemptSession.AttemptId));
-
-            var quiz = await _context.Quizzes.Include(quiz => quiz.Questions)
-                                             .ThenInclude(question => question.Answers)
-                                             .AsSplitQuery()
-                                             .AsNoTracking()
-                                             .SingleOrDefaultAsync(quiz => quiz.QuizId == quizid);
-
-            var viewModel = new QuizViewModels()
-            {
-                CurrentQuiz = quiz,
-                CurrentQuestion = quiz.Questions.FirstOrDefault(),
-                AnsweredQuestionCount = 0
-            };
-
-
-            //Initialize quizsession
-            HttpContext.Session.SetString("quizsession", insertedAtttempt.AttemptId.ToString());
-            //Ensure session is saved
-            await HttpContext.Session.CommitAsync();
-            return View("~/Views/Quiz.cshtml", viewModel);
+            ViewBag.icon_link = "https://cdn-icons-png.flaticon.com/512/4832/4832401.png";
+            ViewBag.QuizId = qid;
+            var accountSession = HttpContext.Session.GetString("usersession");
+            var account = JsonSerializer.Deserialize<Account>(accountSession);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.AccountId.Equals(account.AccountId));
+            ViewBag.UserId = user.UserId;
+            return View("~/Views/Quiz.cshtml");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SaveQuestionToSession([FromBody] QuizRequestData data)
+        public IActionResult ViewQuizResult(Guid uid, Guid aid, int qid = -1)
         {
-            if (data is null)
+            ViewBag.icon_link = "https://cdn-icons-png.flaticon.com/512/4832/4832401.png";
+            ViewBag.UserId = uid;
+            ViewBag.AttemptId = aid;
+            if (qid != -1)
             {
-                return BadRequest("Invalid quiz data");
+                ViewBag.QuizId = qid;
             }
-            var AttemptSessionID = HttpContext.Session.GetString("quizsession");
-            var ChosenAnswer = await _context.Answers.AsNoTracking().SingleOrDefaultAsync(ans => ans.AnswerId == data.AnswerId);
-            var attemptDetail = await _context.AttemptDetails.AsNoTracking().FirstOrDefaultAsync(att =>
-    att.QuestionId == data.CurrentQuestionID && att.AttemptId == Guid.Parse(AttemptSessionID));
-            if (attemptDetail is null) //not answered
-            {
-                await _context.AttemptDetails.AddAsync(new AttemptDetail
-                {
-                    AttemptId = Guid.Parse(AttemptSessionID),
-                    QuestionId = data.CurrentQuestionID,
-                    SelectedAnswerId = data.AnswerId,
-                    //IsCorrect = ChosenAnswer.IsCorrect
-                });
-            }
-            else
-            {
-                attemptDetail.SelectedAnswerId = data.AnswerId;
-                _context.AttemptDetails.Update(attemptDetail);
-            }
-            await _context.SaveChangesAsync();
-            return Ok("Quiz Data saved successfully"); //200
+            return View("~/Views/QuizResult.cshtml");
         }
-
-        public async Task<IActionResult> LoadQuestion(int questionid)
-        {
-            var attemptSession = await GetAttemptFromSession();
-
-            var quiz = await _context.Quizzes
-                                            .Include(quiz => quiz.Questions)
-                                            .ThenInclude(question => question.Answers)
-                                            .AsSplitQuery()
-                                            .AsNoTracking()
-                                            .SingleOrDefaultAsync(q => q.QuizId == attemptSession.QuizId);
-
-            var question = quiz.Questions.FirstOrDefault(q => q.QuestionId == questionid);
-            var viewModel = new QuizViewModels()
-            {
-                CurrentQuiz = quiz,
-                CurrentQuestion = question,
-                AnsweredQuestionCount = await _context.AttemptDetails.CountAsync(att => att.AttemptId.Equals(attemptSession.AttemptId))
-            };
-            var attemptDetails = await _context.AttemptDetails.AsNoTracking().FirstOrDefaultAsync(att => att.QuestionId == questionid && att.AttemptId.Equals(attemptSession.AttemptId));
-            if (attemptDetails is not null)
-            {
-                viewModel.AnswerIDString = attemptDetails.SelectedAnswerId.ToString();
-            }
-            return View("~/Views/Quiz.cshtml", viewModel);
-        }
-
 
         public async Task<IActionResult> FinishQuiz()
         {
@@ -445,7 +364,8 @@ namespace L2D_WebApp.Controllers
                 return BadRequest($"Invalid quiz id: {qid}");
             }
 
-            if (!await _context.Quizzes.AnyAsync(quiz => quiz.QuizId == qid))
+            var quiz = await _context.Quizzes.SingleOrDefaultAsync(quiz => quiz.QuizId == qid);
+            if (quiz is null)
             {
                 return BadRequest($"Can't find any quiz with id = {qid}");
             }
@@ -458,6 +378,8 @@ namespace L2D_WebApp.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var totalQuizDoneCnt = (quiz.TotalDid is null) ? 0 : quiz.TotalDid;
+                await _context.Quizzes.Where(quiz => quiz.QuizId == qid).ExecuteUpdateAsync(setters => setters.SetProperty(q => q.TotalDid, totalQuizDoneCnt + 1));
                 await _context.Attempts.AddAsync(attempt);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -510,13 +432,5 @@ namespace L2D_WebApp.Controllers
             }
             return NoContent();
         }
-
-        //[HttpPost]
-        //[Route("api/quiz/submit/{qid:guid}")]
-        //public async Task<IActionResult> SubmitQuiz([FromRoute] Guid qid)
-        //{
-
-        //    return View("");
-        //}
     }
 }

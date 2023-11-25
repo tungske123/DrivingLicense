@@ -4,6 +4,7 @@ using L2D_DataAccess.Utils;
 using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using L2D_WebApp.Utils;
 
 namespace L2D_WebApp.Controllers
 {
@@ -32,9 +33,14 @@ namespace L2D_WebApp.Controllers
     public class VehicleController : Controller
     {
         private readonly DrivingLicenseContext _context;
-        public VehicleController(DrivingLicenseContext context) => _context = context;
+        private readonly ImageUtils _imageUtils;
+        public VehicleController(DrivingLicenseContext context, ImageUtils imageUtils)
+        {
+            _context = context;
+            _imageUtils = imageUtils;
+        }
 
-        public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
+            public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
         {
             //Get total number of rows in table
             int totalCount = await query.CountAsync();
@@ -185,28 +191,43 @@ namespace L2D_WebApp.Controllers
             {
                 return BadRequest();
             }
-            var vehicle = new Vehicle
-            {
-                Name = data.Name,
-                Brand = data.Brand,
-                Type = data.Type,
-                Years = data.Years,
-                ContactNumber = data.ContactNumber,
-                Address = data.Address,
-                RentPrice = data.RentPrice,
-                Description = data.Description
-            };
-            if (data.Image is not null)
-            {
-                var vehicleImagePath = await HandleVehicleImage(data);
-                if (!string.IsNullOrEmpty(vehicleImagePath))
-                {
-                    vehicle.Image = vehicleImagePath;
-                }
-            }
 
-            await _context.Vehicles.AddAsync(vehicle);
-            await _context.SaveChangesAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var vehicle = new Vehicle
+                {
+                    Name = data.Name,
+                    Brand = data.Brand,
+                    Type = data.Type,
+                    Years = data.Years,
+                    ContactNumber = data.ContactNumber,
+                    Address = data.Address,
+                    RentPrice = data.RentPrice,
+                    Description = data.Description
+                };
+
+                if (data.Image is not null)
+                {
+                    //var vehicleImagePath = await HandleVehicleImage(data);
+                    //if (!string.IsNullOrEmpty(vehicleImagePath))
+                    //{
+                    //    vehicle.Image = vehicleImagePath;
+                    //}
+                    var imagePath = data.Name.Replace(" ", "") + Path.GetExtension(data.Image.FileName);
+                    await _imageUtils.UpdateImageAsync(data.Image, $"img/vehicle/{imagePath}");
+                    vehicle.Image = imagePath;
+                }
+
+                await _context.Vehicles.AddAsync(vehicle);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occurred: {ex.Message}");
+            }
             return NoContent();
         }
 
@@ -231,18 +252,23 @@ namespace L2D_WebApp.Controllers
             {
                 return BadRequest();
             }
-            if (!await _context.Vehicles.AnyAsync(vehicle => vehicle.VehicleId.Equals(vid)))
+            var vehicle = await _context.Vehicles.SingleOrDefaultAsync(v => v.VehicleId.Equals(vid));
+            if (vehicle is null)
             {
                 return NotFound($"Can't find any vehicle with id {vid}");
             }
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+
                 if (await _context.Rents.CountAsync(r => r.VehicleId.Equals(vid)) > 0)
                 {
                     await _context.Rents.Where(rent => rent.VehicleId.Equals(vid))
                         .ExecuteDeleteAsync();
                 }
+
+                //Delete vehicle image 
+                await _imageUtils.DeleteImageAsync($"img/vehicle/{vehicle.Image}");
 
                 await _context.Vehicles.Where(vehicle => vehicle.VehicleId.Equals(vid))
                     .ExecuteDeleteAsync();
@@ -257,7 +283,7 @@ namespace L2D_WebApp.Controllers
             return NoContent();
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("api/vehicles/update/{vid:guid}")]
         public async Task<IActionResult> UpdateVehicle([FromRoute] Guid vid, [FromForm] VehicleFormData data)
         {
@@ -273,33 +299,24 @@ namespace L2D_WebApp.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                vehicle.Name = data.Name;
                 if (data.Image is not null)
                 {
                     var vehicleImagePath = await HandleVehicleImage(data);
                     if (!string.IsNullOrEmpty(vehicleImagePath))
                     {
-                        vehicle.Image = vehicleImagePath;
+                        await _context.Vehicles.Where(v => v.VehicleId.Equals(vid))
+                            .ExecuteUpdateAsync(setters => setters.SetProperty(v => v.Image, vehicleImagePath));
                     }
                 }
-                //vehicle.Brand = data.Brand switch
-                //{
-                //    "A1" => "Xe máy 50cc - 175cc (Hạng A1)",
-                //    "A2" => "Xe máy > 175cc (Hạng A2)",
-                //    "A3" => "Xe 3 bánh (Hạng A3)",
-                //    "A4" => "Xe máy kéo nhỏ (dưới 1000kg) (Hạng A4)",
-                //    "B1-B2" => "Ô tô 9 chỗ, tải, bán tải (dưới 3500kg) (Hạng B1, B2)",
-                //    "C-D-E" => "Ô tô > 10 chỗ, tải, bán tải (trên 3500kg) (Hạng C, D, E)",
-                //    _ => null
-                //};
-                vehicle.Brand = data.Brand;
-                vehicle.Type = data.Type;
-                vehicle.Years = data.Years;
-                vehicle.Address = data.Address;
-                vehicle.RentPrice = data.RentPrice;
-                vehicle.Description = data.Description;
-                //Update vehicle here
-                _context.Vehicles.Update(vehicle);
+
+                await _context.Vehicles.Where(v => v.VehicleId.Equals(vid))
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(v => v.Name, data.Name)
+                    .SetProperty(v => v.Brand, data.Brand)
+                    .SetProperty(v => v.Type, data.Type)
+                    .SetProperty(v => v.Years, data.Years)
+                    .SetProperty(v => v.Address, data.Address)
+                    .SetProperty(v => v.RentPrice, data.RentPrice)
+                    .SetProperty(v => v.Description, data.Description));
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }

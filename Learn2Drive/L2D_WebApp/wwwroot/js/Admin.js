@@ -1,27 +1,23 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 const adminId = document.getElementById('adminId').textContent;
 const adminTabLinkList = document.querySelectorAll('.dashboard-item');
 adminTabLinkList.forEach(tabLink => {
     tabLink.addEventListener('click', (e) => {
         e.preventDefault();
+
         const tabList = document.querySelectorAll('.admin-tab');
         tabList.forEach(tab => {
             tab.style.display = 'none';
         });
+
+
         // Remove is-active from all tab links
         adminTabLinkList.forEach(link => {
             link.classList.remove('is-active');
         });
+
         // Add is-active to this current tab link
         tabLink.classList.add('is-active');
+
         //Get id target for each link
         const linkAnchor = tabLink.querySelector('a');
         if (!linkAnchor) {
@@ -45,9 +41,9 @@ adminTabLinkList.forEach(tabLink => {
         }
     });
 });
+
 adminTabLinkList[0].click();
-class RentChartData {
-}
+
 function fetchRentChartData() {
     const url = `https://localhost:7235/api/admin/rent/data`;
     fetch(url, {
@@ -67,6 +63,7 @@ function fetchRentChartData() {
         console.error(error);
     });
 }
+
 function getChartDateData(date) {
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -90,64 +87,101 @@ function renderRentChartData(dataList) {
         li.className = 'chartdata';
         li.textContent = data.total.toString();
         chartDataList.appendChild(li);
+
         const dateLi = document.createElement('li');
         dateLi.setAttribute('hiden', 'true');
         dateLi.className = `chartdate`;
         dateLi.textContent = getChartDateData(new Date(data.date));
         chartDateList.appendChild(dateLi);
+
         sum += data.total;
     });
+
     totalMoneyElement.textContent = sum.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".").toString() + " VNĐ";
 }
+
 fetchRentChartData();
-function fetchAdminInfo() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const url = `https://localhost:7235/api/admin/info/${adminId}`;
-            const response = yield fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP Error! Status code: ${response.status}`);
-            }
-            const data = yield response.json();
-            console.log(data);
-        }
-        catch (error) {
-            console.error(error);
-        }
-    });
-}
-const adminInfoForm = document.getElementById('adminInfoForm');
-adminInfoForm.addEventListener('submit', (e) => __awaiter(this, void 0, void 0, function* () {
-    e.preventDefault();
-    const password = document.getElementById('password').value;
-    const repass = document.getElementById('repass').value;
-    if (password !== repass) {
-        alert('Vui lòng xác nhận mật khẩu chính xác');
-        return;
-    }
+
+
+async function fetchAdminInfo() {
     try {
-        const url = `https://localhost:7235/api/admin/info/update/${adminId}`;
-        const formData = new FormData(adminInfoForm);
-        const response = yield fetch(url, {
-            method: 'PUT',
-            body: formData
+        const url = `https://localhost:7235/api/admin/info/${adminId}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
-        if (response.status !== 204) {
+        if (!response.ok) {
             throw new Error(`HTTP Error! Status code: ${response.status}`);
         }
-        alert('Lưu thành công');
-        fetchAdminInfo();
-    }
-    catch (error) {
+        const data = await response.json();
+        console.log(data);
+        loadAdminInfo(data);
+    } catch (error) {
         console.error(error);
     }
-}));
-window.addEventListener('DOMContentLoaded', () => __awaiter(this, void 0, void 0, function* () {
-    yield fetchAdminInfo();
-}));
-//# sourceMappingURL=Admin.js.map
+}
+
+function loadAdminInfo(admin) {
+    let fullNameInput = document.getElementById('fullname');
+    let emailInput = document.getElementById('email');
+    let phoneInput = document.getElementById('phone');
+    let passwordInput = document.getElementById('password');
+    let repassInput = document.getElementById('repass');
+
+    fullNameInput.value = admin.fullName;
+    emailInput.value = admin.email;
+    phoneInput.value = admin.contactNumber;
+    passwordInput.value = admin.account.password;
+    repassInput.value = admin.account.password;
+}
+
+const adminInfoForm = document.getElementById('adminInfoForm');
+
+adminInfoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Xác nhận lưu thông tin?',
+        showCancelButton: true,
+        confirmButtonText: 'Lưu',
+        confirmButtonColor: '#d90429',
+        cancelButtonText: 'Hủy',
+    });
+    if (result.isConfirmed) {
+        const password = (document.getElementById('password')).value;
+        const repass = (document.getElementById('repass')).value;
+        if (password !== repass) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Vui lòng xác nhận mật khẩu chính xác',
+                confirmButtonColor: '#d90429'
+            });
+            return;
+        }
+        try {
+            const url = `https://localhost:7235/api/admin/info/update/${adminId}`;
+            const formData = new FormData(adminInfoForm);
+            const response = await fetch(url, {
+                method: 'PUT',
+                body: formData
+            });
+            if (response.status !== 204) {
+                throw new Error(`HTTP Error! Status code: ${response.status}`);
+            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Lưu thông tin thành công!',
+                confirmButtonColor: '#d90429'
+            });
+            fetchAdminInfo();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+});
+
+window.addEventListener('DOMContentLoaded', async () => {
+    await fetchAdminInfo();
+})

@@ -90,7 +90,7 @@
                             </li>
                         </ul>
                         <div class="form-floating mb-3">
-                            <select name="Licenseid" id="licenseid" class="form-select" required>
+                            <select name="Licenseid" id="licenseid" class="licenseSelect form-select" required>
                                 <option value="" selected>Chọn loại bằng lái</option>
                                 <option value="A1">A1</option>
                                 <option value="A2">A2</option>
@@ -350,89 +350,9 @@
     <script>
         document.querySelector('.home-link').classList.add('active');
         document.querySelector('.home').style.backgroundImage = "url('/img/Background-home.png')";
-        async function checkLogin() {
-            try {
-                const response = await fetch('https://localhost:7235/api/login/check', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    return false;
-                }
-                const data = await response.json();
-                return (data.role === 'user');
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        var registerButton = document.getElementById('registerButton');
-        registerButton.addEventListener('click', async (e) => {
-            var loggedIn = await checkLogin();
-            if (loggedIn === false) {
-                e.preventDefault();
-                window.location = '/Login';
-                return;
-            }
-        });
-        var registerForm = document.getElementById('RegisterForm');
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            var UserId = document.getElementById('UserId').textContent;
-            var formData = new FormData(registerForm);
-            var url = `https://localhost:7235/api/hire/register/${UserId}`;
-            var response = await fetch(url, {
-                method: 'POST',
-                body: formData
-            });
-            if (response.status !== 204) {
-                throw new Error(`HTTP Error! Status code: ${response.status}`);
-            }
-            alert(`Đăng kí học thành công!`);
-        });
-
-        class Teacher {
-            teacherId;
-            fullName;
-        }
-        async function fetchTeacherData() {
-            try {
-                var url = `https://localhost:7235/api/teacherdata`;
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`Error! status code: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log(data);
-                loadTeacherDataToRegisterForm(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        function loadTeacherDataToRegisterForm(teacherList) {
-            let teacherSelect = document.getElementById('teacherid');
-            //Clear all options
-            while (teacherSelect.options.length > 0){
-                teacherSelect.remove(0);
-            }
-            
-            teacherList.forEach(teacher => {
-                var option = document.createElement('option');
-                option.value = teacher.teacherId;
-                option.text = teacher.fullName;
-                teacherSelect.add(option);
-            });
-        }
-        document.addEventListener('DOMContentLoaded', async () => {
-            await fetchTeacherData();
-        });
     </script>
+
+    <script src="~/js/RegisterSchedule.js"></script>
 </body>
 
 </html>

@@ -133,8 +133,6 @@ function renderQuizTable(attempts) {
     quizTableBody.innerHTML = '';
     let quizTableRowTemplate = document.getElementById('quizTableRowTemplate');
     attempts.forEach(quizStat => {
-        // console.log(totaldidquiz.name);
-
         let clone = document.importNode(quizTableRowTemplate.content, true);
         let cells = clone.querySelectorAll('td');
         cells[0].textContent = quizStat.quizName;
@@ -145,7 +143,7 @@ function renderQuizTable(attempts) {
         let passAttemptCnt = quizStat.attempts.filter(att => att.result === true).length;
         console.log(`Total pass attempt cnt: ${passAttemptCnt}`);
         let passRate = (parseInt(totalAttemptCnt) !== 0) ? (parseInt(passAttemptCnt) * 100 / parseInt(totalAttemptCnt)).toFixed(2) : 0;
-        cells[3].textContent = `${passRate}%`; 
+        cells[3].textContent = `${passRate}%`;
         quizTableBody.appendChild(clone);
     });
 }

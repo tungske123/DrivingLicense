@@ -83,52 +83,6 @@ namespace L2D_WebApp.Controllers
             }
             return Ok(question);
         }
-        //=========================================================[ CRUD ]========================================================
-
-        [HttpGet]
-        [Route("api/question/get/{questid}")]
-        public async Task<ActionResult> GetQuestion([FromRoute] int questid)
-        {
-            var question = await _context.Questions
-                .Include(quest => quest.Answers)
-                .FirstOrDefaultAsync(quest => quest.QuestionId == questid);
-            if (question == null)
-            {
-                return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này!");
-            }
-            return Ok(question);
-        }
-
-        //===================================================================
-        [HttpGet]
-        [Route("api/question/list/{licenseid}")]
-        public async Task<ActionResult> GetQuestionList([FromRoute] string licenseid)
-        {
-            var questionList = await _context.Questions
-                .Where(quest => quest.LicenseId.Equals(licenseid))
-                .ToListAsync();
-            if (questionList == null)
-            {
-                return BadRequest($"Mã bằng lái sai hoặc bằng lái này không có câu hỏi nào!");
-            }
-            return Ok(questionList);
-        }
-
-        //===================================================================
-        [HttpGet]
-        [Route("api/question/search")]
-        public async Task<ActionResult> SearchQuestion([FromBody] QuestionFilterData data)
-        {
-            var questionList = await _context.Questions.Where(
-                    quest => quest.LicenseId.Equals(data.LicenseID)
-                    && quest.QuestionText.ToLower().Contains(data.Keyword.ToLower())
-                ).ToListAsync();
-            if (questionList == null)
-            {
-                return BadRequest($"Không tìm thấy câu hỏi nào khớp với bộ lọc!");
-            }
-            return Ok(questionList);
-        }
 
         //===================================================================
         [HttpPost]
@@ -149,14 +103,26 @@ namespace L2D_WebApp.Controllers
             {
                 return BadRequest("Câu hỏi đã tồn tại!");
             }
-            if (new_question.QuestionImage.IsNullOrEmpty())
-            {
-                new_question.QuestionImage = "none";
-            }
 
-            _context.Questions.Add(new_question);
-            await _context.SaveChangesAsync();
-            return Ok("Thêm thành công!");
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                if (new_question.QuestionImage.IsNullOrEmpty())
+                {
+                    new_question.QuestionImage = "none";
+                }
+
+                await _context.Questions.AddAsync(new_question);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok("Thêm thành công!");
+
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest($"An error occcured during the request: {ex.Message}");
+            }
         }
 
         //===================================================================
@@ -177,23 +143,34 @@ namespace L2D_WebApp.Controllers
                 {
                     return BadRequest($"Mã câu hỏi sai hoặc không có câu hỏi nào với mã này");
                 }
+                using var transaction = await _context.Database.BeginTransactionAsync();
+                try
+                {
+                    if (!edited_question.LicenseId.IsNullOrEmpty())
+                    {
+                        old_question.LicenseId = edited_question.LicenseId;
+                    }
+                    if (!edited_question.QuestionText.IsNullOrEmpty())
+                    {
+                        old_question.QuestionText = edited_question.QuestionText;
+                    }
+                    if (!edited_question.QuestionImage.IsNullOrEmpty())
+                    {
+                        old_question.QuestionImage = edited_question.QuestionImage;
+                    }
+                    old_question.IsCritical = edited_question.IsCritical;
 
-                if (!edited_question.LicenseId.IsNullOrEmpty())
-                {
-                    old_question.LicenseId = edited_question.LicenseId;
-                }
-                if (!edited_question.QuestionText.IsNullOrEmpty())
-                {
-                    old_question.QuestionText = edited_question.QuestionText;
-                }
-                if (!edited_question.QuestionImage.IsNullOrEmpty())
-                {
-                    old_question.QuestionImage = edited_question.QuestionImage;
-                }
-                old_question.IsCritical = edited_question.IsCritical;
 
-                await _context.SaveChangesAsync();
-                return Ok(old_question);
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return Ok(old_question);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest($"An error occurred during the request: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {

@@ -4,7 +4,6 @@ using L2D_DataAccess.ViewModels;
 using L2D_WebApp.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace L2D_WebApp.Controllers
@@ -154,7 +153,7 @@ namespace L2D_WebApp.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
                 await transaction.RollbackAsync();
                 throw new Exception(ex.Message);
@@ -220,12 +219,14 @@ namespace L2D_WebApp.Controllers
 
             return Ok(pageResult);
         }
+
+
         //===================================================================
         [HttpGet]
         [Route("api/dashboard")]
         public async Task<ActionResult> ViewStatistic()
         {
-            int user, teacher, staff, examProfile, passExam, quiz, passAttempt, Passrate;
+            int user, teacher, staff, examProfile, passExam, quiz, passAttempt;
 
             user = await _context.Users.CountAsync();
             teacher = await _context.Teachers.CountAsync();
@@ -268,6 +269,7 @@ namespace L2D_WebApp.Controllers
 
             }
         }
+
 
     }
 }
