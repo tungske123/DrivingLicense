@@ -427,16 +427,7 @@ questionSearchBar.addEventListener('input', async () => {
     await fetchQuestionsDataPaging();
 });
 
-const questionLicenseCheckBoxes = document.querySelectorAll('.licenseCheck');
-questionLicenseCheckBoxes.forEach(checkBox => {
-    checkBox.addEventListener('input', async () => {
-        if (checkBox.checked) {
-            sendQuestionData.licenseid = String(checkBox.getAttribute('value'));
-            questionPagingData.questionPage = 1;
-            await fetchQuestionsDataPaging();
-        }
-    });
-});
+
 
 function updateQuestionCount() {
     const numOfQuestion = QuestionIDList.length;
@@ -494,6 +485,48 @@ function loadQuizFilterData(licenseList) {
     });
 }
 
+async function fetchQuizLicenseSelectData() {
+    try {
+        const url = `https://localhost:7235/api/licenses`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            console.error(`Error!${response.status} - ${response.statusText}`);
+            return;
+        }
+        const data = await response.json();
+        let licenseList = data.map(l => l.licenseId);
+
+        let quizLicenseSelect = document.querySelector('.quizLicenseSelect');
+        quizLicenseSelect.innerHTML = ``;
+        let licenseDropdownItemTemplate = document.getElementById('licenseDropdownItemTemplate');
+        let quizLicenseDropdownContent = document.querySelector('.quizLicenseDropdownContent');
+        quizLicenseDropdownContent.innerHTML = ``;
+        licenseList.forEach(license => {
+            let option = document.createElement('option');
+            option.text = `Bằng ${license}`;
+            option.value = license;
+            quizLicenseSelect.add(option);
+
+            let clone = document.importNode(licenseDropdownItemTemplate.content, true);
+            let input = clone.querySelector('input');
+            let label = clone.querySelector('label');
+            input.value = license;
+            label.setAttribute('for', license);
+            label.textContent = `Bằng ${license}`;
+            quizLicenseDropdownContent.appendChild(clone);
+        });
+
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 window.addEventListener('DOMContentLoaded', async () => {
     await fetchLicenseFilterData();
@@ -508,8 +541,19 @@ window.addEventListener('DOMContentLoaded', async () => {
         sendQuizData.licenseID = ``;
         await fetchQuizData();
     });
+    await fetchQuizLicenseSelectData();
     await fetchQuizData();
     await fetchQuestionsDataPaging();
+    const questionLicenseCheckBoxes = document.querySelectorAll('.licenseCheck');
+    questionLicenseCheckBoxes.forEach(checkBox => {
+        checkBox.addEventListener('input', async () => {
+            if (checkBox.checked) {
+                sendQuestionData.licenseid = String(checkBox.getAttribute('value'));
+                questionPagingData.questionPage = 1;
+                await fetchQuestionsDataPaging();
+            }
+        });
+    });
 });
 
 
