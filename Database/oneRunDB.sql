@@ -265,11 +265,22 @@ create table Response(
 );
 go
 
+--RESET Auto Answer ID:
+dbcc checkident ('Answer', reseed, 1);
+
+--RESET Auto Question ID:
+dbcc checkident ('Question', reseed, 1);
+
+--RESET Auto Quiz ID:
+dbcc checkident ('Quiz', reseed, 1);
 
 
 
 
---======================================[ PROCEDURES ]=====================================================
+
+
+use DrivingLicense;
+go
 -----------------------------------[ CREATE ACCOUNT USER ]-------------------------------
 create or alter procedure proc_signUpAccount(
 	@username nvarchar(100),
@@ -317,7 +328,7 @@ from dbo.Teacher;
 go
 
 -----------------------------------[ GENERATE QUIZ ]-------------------------------
-CREATE OR ALTER     procedure [dbo].[proc_CreateQuiz] (
+create or alter procedure proc_CreateQuiz (
 	@Name nvarchar(100),
 	@LicenseID nvarchar(10),
 	@Description nvarchar(max),
@@ -326,10 +337,8 @@ CREATE OR ALTER     procedure [dbo].[proc_CreateQuiz] (
 )
 as
 begin
-
-
 	--Create a quiz
-	insert into Quiz(LicenseID, [Name], [Description], Timer, TotalDid) values (@LicenseID, @Name, @Description, @Timer ,0);
+	insert into Quiz(LicenseID, [Name], [Description], Timer, TotalDid) values (@LicenseID, @Name, @Description,@Timer ,0);
 	declare @QuizID int;
 	set @QuizID = SCOPE_IDENTITY();
 
@@ -387,7 +396,7 @@ begin
 end;
 go
 
---exec proc_ChangeQuestion 1, 2; (QuizID, QuestionID) in database
+--exec proc_RollQuestion 1, 2;		(QuizID, QuestionID) in database
 
 --|================================|============|=============================|--
 --|================================|============|=============================|--
@@ -400,29 +409,29 @@ create or alter procedure proc_DeleteHire(
 as
 begin
 	--Declare
-	declare @Tempt table (hireId uniqueidentifier);
+	declare @Temp table (hireId uniqueidentifier);
 
 	--Case 1:
-	if (@HireID is not null) delete from dbo.Schedule where HireID = @HireID;	--Remove constain
+	if (@HireID is not null) delete from dbo.Schedule where HireID = @HireID;	--Remove constaint
 
 	--Case 2:
-	if @TeacherID is not null
+	if (@TeacherID is not null)
 	begin
-		insert into @Tempt select HireID from Hire where TeacherID = @TeacherID;--Query all hire of teacher
+		insert into @Temp select HireID from Hire where TeacherID = @TeacherID;--Query all hire of teacher
 
-		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+		delete from dbo.Schedule where HireID in (select hireId from @Temp);	--Remove constaint
 	end
 
 	--Case 3:
 	if (@UserID is not null)
 	begin
-		delete from @Tempt;														--Reset Tempt Table
-		insert into @Tempt select HireID from Hire where UserID = @UserID;		--Query all hire of user
+		delete from @Temp;														--Reset Tempt Table
+		insert into @Temp select HireID from Hire where UserID = @UserID;		--Query all hire of user
 
-		delete from dbo.Schedule where HireID in (select hireId from @Tempt);	--Remove constain
+		delete from dbo.Schedule where HireID in (select hireId from @Temp);	--Remove constaint
 	end
 
-	--Delete after remove constrain
+	--Delete after remove constraint
 	delete from Hire where HireID = @HireID;
 	delete from Hire where TeacherID = @TeacherID
 	delete from Hire where UserID = @UserID;
@@ -437,39 +446,77 @@ create or alter procedure proc_DeleteAttempt(
 )
 as
 begin
-	--Declare tempt table
-	declare @Tempt table (attemptId uniqueidentifier);
+	--Declare temp table
+	declare @Temp table (attemptId uniqueidentifier);
 	
 	--Case 1:
-	if (@AttemptID is not null) delete from AttemptDetail where AttemptID = @AttemptID;--Remove constrain
+	if (@AttemptID is not null) delete from AttemptDetail where AttemptID = @AttemptID;--Remove constraint
 
 	--Case 2:
 	if (@UserID is not null)
 	begin
 		--Query all attempt of user
-		insert into @Tempt select AttemptID from Attempt where UserID = @UserID;
+		insert into @Temp select AttemptID from Attempt where UserID = @UserID;
 
-		--Remove all constrain of user's attempts
-		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
+		--Remove all constraint of user's attempts
+		delete from AttemptDetail where AttemptID in (select attemptId from @Temp);
 	end
 
 	--Case 3:
 	if (@QuizID is not null)
 	begin
-		--Reset Tempt Table
-		delete from @Tempt;
+		--Reset Temp Table
+		delete from @Temp;
 
-		--Query all attempt of user
-		insert into @Tempt select AttemptID from Attempt where QuizID = @QuizID;
+		--Query all attempt of quiz
+		insert into @Temp select AttemptID from Attempt where QuizID = @QuizID;
 
-		--Remove all constrain of quiz's attempts
-		delete from AttemptDetail where AttemptID in (select attemptId from @Tempt);
+		--Remove all constraint of quiz's attempts
+		delete from AttemptDetail where AttemptID in (select attemptId from @Temp);
 	end
 
-	--Delete after remove constrain
+	--Delete after remove constraints
 	delete from Attempt where AttemptID = @AttemptID;
 	delete from Attempt where UserID = @UserID;
     delete from Attempt where QuizID = @QuizID;
+end;
+go
+
+-----------------------------------[ DELETE QUESTION ]-------------------------------
+create or alter procedure proc_DeleteQuestion(
+	@questID int,
+	@licenseID varchar(10)
+)
+as 
+begin
+	--Declare temp table
+	declare @AllQuestion table(questionid int);
+	declare @AllAnswer table(answerid int);
+	
+	--Case 1:
+	if(@questID is not null)
+	begin
+		--Remove constaints
+		delete from Have where QuestionID = @questID;
+		delete from AttemptDetail where QuestionID = @questID;
+		delete from Answer where QuestionID = @questID;
+	end
+
+	--Case 2:
+	if(@licenseID is not null)
+	begin
+		--Query all answers of
+		insert into @AllQuestion select QuestionID from Question where LicenseID = @licenseID;
+
+		--Remove constraint
+		delete from Have where QuestionID in (select questionid from @AllQuestion);
+		delete from AttemptDetail where QuestionID in (select questionid from @AllQuestion);
+		delete from Answer where QuestionID in (select questionid from @AllQuestion);
+	end
+
+	--Then delete question
+	delete from Question where QuestionID = @questID;
+	delete from Question where LicenseID = @licenseID;
 end;
 go
 
@@ -480,27 +527,61 @@ create or alter procedure proc_DeleteQuiz(
 )
 as 
 begin
-	--Remove constain
-	exec proc_DeleteAttempt null,null,@quizID;
-	delete from Have where QuizID = @quizID;
+	--Declare temp table for storing id
+	declare @AllQuiz table (quizid int);
+	declare @AllAttempt table (attemptid uniqueidentifier);
+
+	--Case 1:
+	if(@quizID is not null)
+	begin
+		--Remove constaints
+		exec proc_DeleteAttempt null,null,@quizID;
+		delete from Have where QuizID = @quizID;
+	end
+
+	--Case 2:
+	if(@LicenseID is not null)
+	begin
+		--Query all quizzes of license
+		insert into @AllQuiz select QuizID from Quiz where LicenseID = @LicenseID;
+
+		--Query all Attempts of quizzes
+		insert into @AllAttempt select AttemptID from Attempt where QuizID in (select quizid from @AllQuiz);
+		
+		--Remove constaints
+		delete from AttemptDetail where AttemptID in (select attemptid from @AllAttempt)
+		delete from Attempt where QuizID in (select quizid from @AllQuiz);
+		delete from Have WHERE QuizID in (select quizid from @AllQuiz);
+	end
+	
 
 	--Then delete
 	delete from Quiz where QuizID = @quizID;
 	delete from Quiz where LicenseID= @LicenseID;
 end;
 go
-/*
------------------------------------[ Delete Quiz Question]-------------------------------
-create or alter procedure proc_DeleteQuizQuest(
-	@quizID int,
-	@questID int
+
+-----------------------------------[ DELETE LICENSE ]-------------------------------
+create or alter procedure proc_DeleteLicense(
+	@licenseID varchar(10)
 )
 as 
 begin
-	delete from Have where QuizID = @quizID and QuestionID = @questID;
+	--Declare temp table for storing ids
+	declare @AllTeacher table (teacherid uniqueidentifier);
+	insert into @AllTeacher select TeacherID from Teacher where LicenseID = @licenseID;
+
+	--Remove constaints
+	delete from ExamProfile where LicenseID = @licenseID;
+	exec proc_DeleteQuiz null, @licenseID;
+	exec proc_DeleteQuestion null, @licenseID;
+	delete from Schedule where LicenseID = @licenseID;
+	delete from Teacher where TeacherID in (select teacherid from @AllTeacher);
+
+	--Then delete question
+	delete from License where LicenseID = @licenseID;
 end;
 go
-*/
 
 -----------------------------------[ DELETE FEEDBACK ]-------------------------------
 create or alter procedure proc_DeleteFeedback(
@@ -509,13 +590,13 @@ create or alter procedure proc_DeleteFeedback(
 )
 as 
 begin
-	--Case 1:--Remove constrain
+	--Case 1:--Remove constraint
 	if (@FeedbackID is not null) delete from dbo.Response where FeedbackID = @FeedbackID;
 
-	--Case 2:--Remove constrain
+	--Case 2:--Remove constraint
 	if (@UserID is not null)delete from dbo.Response where UserID = @UserID;			
 
-	--Delete after remove constrain
+	--Delete after remove constraint
 	delete from Feedback where FeedbackID = @FeedbackID;
 	delete from Feedback where userID = @userID;
 end;
@@ -531,7 +612,7 @@ as
 begin
 	if (@UserID is null) set @UserID = (select UserID from Users where AccountID = @AccountID);
 	
-	--Remove constains
+	--Remove constaints
 	delete from dbo.Rent where UserID = @UserID;
 	delete from dbo.ExamProfile where UserID = @UserID;
 	exec proc_DeleteHire null,null,@UserID;
@@ -558,7 +639,7 @@ create or alter procedure proc_DeleteLecturer(
 as 
 begin
 	if(@TeacherID is null) set @TeacherID = (select TeacherID from Teacher where AccountID = @AccountID);
-	exec proc_DeleteHire null,@TeacherID,null;				--Remove constain
+	exec proc_DeleteHire null,@TeacherID,null;				--Remove constaint
 
 	delete from Teacher where TeacherID = @TeacherID;		--Then delete
 
@@ -579,7 +660,7 @@ create or alter procedure proc_DeleteStaff(
 as 
 begin
 	if(@StaffID is null) set @StaffID = (select StaffID from Staff where AccountID = @AccountID);
-	delete from dbo.Response where StaffID = @StaffID;		--Remove constain
+	delete from dbo.Response where StaffID = @StaffID;		--Remove constaint
 
 	delete from Staff where StaffID = @StaffID;				--Then delete
 
@@ -610,21 +691,6 @@ begin
 end;
 go
 
-/*
-delete from Teacher
-delete from Users
-delete from Account
-
-select * from Account
-select * from Users
-select * from Teacher
-
-insert into Account(Username,[Password],[Role]) values ('ok123','123','user');
-insert into Users(AccountID,FullName) values ('6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'test role');
-exec proc_changeRole '6B31B60C-9CD5-458F-9848-BA1105C7CAF9', 'lecturer';
-go
-
-*/
 -------------------------------------------[ CHANGE ROLE ]----------------------------------------------
 create or alter procedure proc_changeRole(
 	@accountID uniqueidentifier,
@@ -633,6 +699,7 @@ create or alter procedure proc_changeRole(
 )
 as
 begin
+	begin transaction;
 	--Declare
 	declare @roleOld as nvarchar(50);
 	declare @avatar nvarchar(max);
@@ -646,8 +713,6 @@ begin
 		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, PhoneNumber from dbo.Users where AccountID = @accountID;
-
-		exec proc_DeleteUser @accountID,null,'no';--Delete old record
 	end;
 
 	--Case 2:
@@ -656,8 +721,6 @@ begin
 		set @avatar = (select Avatar from dbo.Users where AccountID = @accountID);
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, ContactNumber from dbo.Teacher where AccountID = @accountID;
-
-		exec proc_DeleteLecturer @accountID,null,'no';--Delete old record
 	end;
 
 	--Case 3:
@@ -665,8 +728,6 @@ begin
 	begin
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, ContactNumber from dbo.Staff where AccountID = @accountID;
-
-		exec proc_DeleteStaff @accountID,null,'no';--Delete old record
 	end;
 
 	--Case 4:
@@ -674,19 +735,19 @@ begin
 	begin
 		insert into @Tempt(email, fullname, telephone)
 		select Email, FullName, ContactNumber from dbo.[Admin] where AccountID = @accountID;
-		
-		exec proc_DeleteAdmin @accountID,null,'no';--Delete old record
 	end;
-
-	--//--//--//--//--//--
-	if(@roleOld!=@roleNew)
-	begin
-		--______________________ Update Role______________________
+	
+		--______________________ Update Role______________________--
 		if (@roleNew = 'lecturer') 
 		begin
-			insert into dbo.Teacher(AccountID, Fullname, Email, ContactNumber)	--insert new teacher
-			select @accountID, fullname, email, telephone from @Tempt;
+			insert into dbo.Teacher(AccountID, LicenseID ,Fullname, Email, ContactNumber)	--insert new teacher
+			select @accountID, @LicenseSet, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		
+			--Delete old record
+			exec proc_DeleteUser @accountID,null,'no';
+			exec proc_DeleteStaff @accountID,null,'no';
+			exec proc_DeleteAdmin @accountID,null,'no';
 		end
 
 		else if (@roleNew = 'staff')
@@ -694,6 +755,11 @@ begin
 			insert into dbo.Staff(AccountID, Fullname ,Email, ContactNumber)	--insert new teacher
 			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		
+			--Delete old record
+			exec proc_DeleteUser @accountID,null,'no';
+			exec proc_DeleteLecturer @accountID,null,'no';
+			exec proc_DeleteAdmin @accountID,null,'no';
 		end
 
 		else if (@roleNew = 'admin')
@@ -701,6 +767,11 @@ begin
 			insert into dbo.[Admin](AccountID, Fullname ,Email, ContactNumber)--insert new admin
 			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
+		
+			--Delete old record
+			exec proc_DeleteUser @accountID,null,'no';
+			exec proc_DeleteLecturer @accountID,null,'no';
+			exec proc_DeleteStaff @accountID,null,'no';
 		end
 
 		else if(@roleNew = 'user')
@@ -708,8 +779,16 @@ begin
 			insert into dbo.Users(AccountID, Fullname, Email, PhoneNumber)		--insert new user
 			select @accountID, fullname, email, telephone from @Tempt;
 			update Account set [Role] = @roleNew where AccountID = @accountID;		--update role of account
-		end
-	end
+			
+			--Delete old record
+			exec proc_DeleteLecturer @accountID,null,'no';
+			exec proc_DeleteStaff @accountID,null,'no';
+			exec proc_DeleteAdmin @accountID,null,'no';
+		end;
+	if @@error = 0
+		commit;
+	else
+		rollback;
 end;
 go
 
@@ -930,18 +1009,29 @@ end;
 go
 */
 
+
+
+
+
+
+
+
 -----------------------------------------[ INSERT VALUES ]-----------------------------------------------------
 /*[QUICK FIND] - Press: Ctrl + G
-License_____45
-User________62
+License________45
+User___________62
 Other Role_____110
-Quiz________181
-Question____201
-Have________2841
-Answer______2858
-Vehicle_____11451
+Quiz___________181
+Question_______201
+Have___________2841
+Answer_________2858
+Vehicle________11451
+Attempt________11490
+AttemptDetail__11502
 */
 
+use DrivingLicense;
+go
 --=============[RESET DATA]=============--
 delete from Response;
 delete from Feedback;
@@ -962,15 +1052,6 @@ delete from Users;
 delete from Staff;
 delete from [Admin];
 delete from Account;
-
---RESET Auto Answer ID:
-dbcc checkident ('Answer', reseed, 0);
-
---RESET Auto Question ID:
-dbcc checkident ('Question', reseed, 0);
-
---RESET Auto Quiz ID:
-dbcc checkident ('Quiz', reseed, 0);
 
 --=================
 insert into License(LicenseID, LicenseName, Describe ,Condition,Cost,[Time],ExamContent,Tips) values
@@ -1034,6 +1115,15 @@ set FullName = case
 	when Email = 'duyen12345@gmail.com' then N'Lê Thị Mỹ Duyên'
 
 	else FullName	--Default = null
+end,
+UserID = case
+	when Email = 'thanhncse172947@fpt.edu.vn' then '957478E8-B839-4D95-AB1D-9CA5DD316E91'
+	when Email = 'minhttse172842@fpt.edu.vn' then 'C1913960-FC9B-43FA-B5DA-2286B28B749D'
+	when Email = 'phuclnhse172886@fpt.edu.vn' then '55F9746B-8F11-4C52-93DD-3BC03120445A'
+	when Email = 'tungtsse172875@fpt.edu.vn' then 'EA6DB2F4-3365-4939-8235-D41DC147083B'
+	when Email = 'hoangphse172789@fpt.edu.vn' then '711F20F9-1557-4CA3-9D3F-119771E78B18'
+
+	else UserID
 end;
 go
 
@@ -12405,11 +12495,288 @@ insert into Vehicle([Name], [Image], Brand, [Type], Years, ContactNumber, [Addre
 ('ISUZU VM' , 'IsuzuVM.png' , 'Isuzu' ,N'Xe tải 3.5 tấn thùng 4.4m' , 2018 , '0770333922' , N'TP.HCM' , 300000 , 1);
 go
 
---Tạo bộ đề của loại bằng nào với random câu hỏi trong loại bằng đó. Hàm này dành cho staff
-/*
->>>proc_CreateQuiz (Tên bộ đề, LicenseID, số lượng câu muốn bốc ra). Ví dụ bên dưới
-exec proc_CreateQuiz N'Đề số 2 của hạng A1','A1', N'Mô tả', 25;
-*/
+--=================
+insert into Attempt(AttemptID, UserID, QuizID, AttemptTime,AttemptDate ,TotalQuestion,TotalAnswered ,Result) values
+('00000000-0000-0000-0000-000000000001','957478E8-B839-4D95-AB1D-9CA5DD316E91', 1, '00:00', '2023-11-27', 25, 25, 1),
+('00000000-0000-0000-0000-000000000002','957478E8-B839-4D95-AB1D-9CA5DD316E91', 1, '9:00', '2023-11-28', 25, 20, 0),
+('00000000-0000-0000-0000-000000000003','C1913960-FC9B-43FA-B5DA-2286B28B749D', 1, '00:00', '2023-11-27', 25, 25, 1),
+('00000000-0000-0000-0000-000000000004','C1913960-FC9B-43FA-B5DA-2286B28B749D', 1, '9:00', '2023-11-28', 25, 20, 0),
+('00000000-0000-0000-0000-000000000005','55F9746B-8F11-4C52-93DD-3BC03120445A', 1, '00:00', '2023-11-27', 25, 25, 1),
+('00000000-0000-0000-0000-000000000006','55F9746B-8F11-4C52-93DD-3BC03120445A', 1, '9:00', '2023-11-28', 25, 20, 0),
+('00000000-0000-0000-0000-000000000007','EA6DB2F4-3365-4939-8235-D41DC147083B', 1, '00:00', '2023-11-27', 25, 25, 1),
+('00000000-0000-0000-0000-000000000008','EA6DB2F4-3365-4939-8235-D41DC147083B', 1, '9:00', '2023-11-28', 25, 20, 0),
+('00000000-0000-0000-0000-000000000009','711F20F9-1557-4CA3-9D3F-119771E78B18', 1,'00:00', '2023-11-27', 25, 25, 1),
+('00000000-0000-0000-0000-000000000010','711F20F9-1557-4CA3-9D3F-119771E78B18', 1, '9:00', '2023-11-28', 25, 20, 0);
+go
+
+--=================
+insert into AttemptDetail(AttemptID,QuestionID,SelectedAnswerID,[Status]) values
+	('00000000-0000-0000-0000-000000000001',2,5,'correct'),
+	('00000000-0000-0000-0000-000000000001',5,13,'correct'),
+	('00000000-0000-0000-0000-000000000001',6,19,'correct'),
+	('00000000-0000-0000-0000-000000000001',9,27,'correct'),
+	('00000000-0000-0000-0000-000000000001',13,38,'correct'),
+	('00000000-0000-0000-0000-000000000001',19,57,'correct'),
+	('00000000-0000-0000-0000-000000000001',32,103,'correct'),
+	('00000000-0000-0000-0000-000000000001',41,135,'correct'),
+	('00000000-0000-0000-0000-000000000001',43,143,'correct'),
+	('00000000-0000-0000-0000-000000000001',53,176,'correct'),
+	('00000000-0000-0000-0000-000000000001',54,180,'correct'),
+	('00000000-0000-0000-0000-000000000001',56,184,'correct'),
+	('00000000-0000-0000-0000-000000000001',66,216,'correct'),
+	('00000000-0000-0000-0000-000000000001',91,300,'correct'),
+	('00000000-0000-0000-0000-000000000001',101,333,'correct'),
+	('00000000-0000-0000-0000-000000000001',103,339,'correct'),
+	('00000000-0000-0000-0000-000000000001',109,360,'correct'),
+	('00000000-0000-0000-0000-000000000001',113,373,'correct'),
+	('00000000-0000-0000-0000-000000000001',118,387,'correct'),
+	('00000000-0000-0000-0000-000000000001',135,444,'correct'),
+	('00000000-0000-0000-0000-000000000001',137,452,'correct'),
+	('00000000-0000-0000-0000-000000000001',144,474,'correct'),
+	('00000000-0000-0000-0000-000000000001',185,608,'correct'),
+	('00000000-0000-0000-0000-000000000001',190,626,'correct'),
+	('00000000-0000-0000-0000-000000000001',199,654,'correct'),
+
+	('00000000-0000-0000-0000-000000000003',2,5,'correct'),
+	('00000000-0000-0000-0000-000000000003',5,13,'correct'),
+	('00000000-0000-0000-0000-000000000003',6,19,'correct'),
+	('00000000-0000-0000-0000-000000000003',9,27,'correct'),
+	('00000000-0000-0000-0000-000000000003',13,38,'correct'),
+	('00000000-0000-0000-0000-000000000003',19,57,'correct'),
+	('00000000-0000-0000-0000-000000000003',32,103,'correct'),
+	('00000000-0000-0000-0000-000000000003',41,135,'correct'),
+	('00000000-0000-0000-0000-000000000003',43,143,'correct'),
+	('00000000-0000-0000-0000-000000000003',53,176,'correct'),
+	('00000000-0000-0000-0000-000000000003',54,180,'correct'),
+	('00000000-0000-0000-0000-000000000003',56,184,'correct'),
+	('00000000-0000-0000-0000-000000000003',66,216,'correct'),
+	('00000000-0000-0000-0000-000000000003',91,300,'correct'),
+	('00000000-0000-0000-0000-000000000003',101,333,'correct'),
+	('00000000-0000-0000-0000-000000000003',103,339,'correct'),
+	('00000000-0000-0000-0000-000000000003',109,360,'correct'),
+	('00000000-0000-0000-0000-000000000003',113,373,'correct'),
+	('00000000-0000-0000-0000-000000000003',118,387,'correct'),
+	('00000000-0000-0000-0000-000000000003',135,444,'correct'),
+	('00000000-0000-0000-0000-000000000003',137,452,'correct'),
+	('00000000-0000-0000-0000-000000000003',144,474,'correct'),
+	('00000000-0000-0000-0000-000000000003',185,608,'correct'),
+	('00000000-0000-0000-0000-000000000003',190,626,'correct'),
+	('00000000-0000-0000-0000-000000000003',199,654,'correct'),
+
+	('00000000-0000-0000-0000-000000000005',2,5,'correct'),
+	('00000000-0000-0000-0000-000000000005',5,13,'correct'),
+	('00000000-0000-0000-0000-000000000005',6,19,'correct'),
+	('00000000-0000-0000-0000-000000000005',9,27,'correct'),
+	('00000000-0000-0000-0000-000000000005',13,38,'correct'),
+	('00000000-0000-0000-0000-000000000005',19,57,'correct'),
+	('00000000-0000-0000-0000-000000000005',32,103,'correct'),
+	('00000000-0000-0000-0000-000000000005',41,135,'correct'),
+	('00000000-0000-0000-0000-000000000005',43,143,'correct'),
+	('00000000-0000-0000-0000-000000000005',53,176,'correct'),
+	('00000000-0000-0000-0000-000000000005',54,180,'correct'),
+	('00000000-0000-0000-0000-000000000005',56,184,'correct'),
+	('00000000-0000-0000-0000-000000000005',66,216,'correct'),
+	('00000000-0000-0000-0000-000000000005',91,300,'correct'),
+	('00000000-0000-0000-0000-000000000005',101,333,'correct'),
+	('00000000-0000-0000-0000-000000000005',103,339,'correct'),
+	('00000000-0000-0000-0000-000000000005',109,360,'correct'),
+	('00000000-0000-0000-0000-000000000005',113,373,'correct'),
+	('00000000-0000-0000-0000-000000000005',118,387,'correct'),
+	('00000000-0000-0000-0000-000000000005',135,444,'correct'),
+	('00000000-0000-0000-0000-000000000005',137,452,'correct'),
+	('00000000-0000-0000-0000-000000000005',144,474,'correct'),
+	('00000000-0000-0000-0000-000000000005',185,608,'correct'),
+	('00000000-0000-0000-0000-000000000005',190,626,'correct'),
+	('00000000-0000-0000-0000-000000000005',199,654,'correct'),
+
+	('00000000-0000-0000-0000-000000000007',2,5,'correct'),
+	('00000000-0000-0000-0000-000000000007',5,13,'correct'),
+	('00000000-0000-0000-0000-000000000007',6,19,'correct'),
+	('00000000-0000-0000-0000-000000000007',9,27,'correct'),
+	('00000000-0000-0000-0000-000000000007',13,38,'correct'),
+	('00000000-0000-0000-0000-000000000007',19,57,'correct'),
+	('00000000-0000-0000-0000-000000000007',32,103,'correct'),
+	('00000000-0000-0000-0000-000000000007',41,135,'correct'),
+	('00000000-0000-0000-0000-000000000007',43,143,'correct'),
+	('00000000-0000-0000-0000-000000000007',53,176,'correct'),
+	('00000000-0000-0000-0000-000000000007',54,180,'correct'),
+	('00000000-0000-0000-0000-000000000007',56,184,'correct'),
+	('00000000-0000-0000-0000-000000000007',66,216,'correct'),
+	('00000000-0000-0000-0000-000000000007',91,300,'correct'),
+	('00000000-0000-0000-0000-000000000007',101,333,'correct'),
+	('00000000-0000-0000-0000-000000000007',103,339,'correct'),
+	('00000000-0000-0000-0000-000000000007',109,360,'correct'),
+	('00000000-0000-0000-0000-000000000007',113,373,'correct'),
+	('00000000-0000-0000-0000-000000000007',118,387,'correct'),
+	('00000000-0000-0000-0000-000000000007',135,444,'correct'),
+	('00000000-0000-0000-0000-000000000007',137,452,'correct'),
+	('00000000-0000-0000-0000-000000000007',144,474,'correct'),
+	('00000000-0000-0000-0000-000000000007',185,608,'correct'),
+	('00000000-0000-0000-0000-000000000007',190,626,'correct'),
+	('00000000-0000-0000-0000-000000000007',199,654,'correct'),
+
+	('00000000-0000-0000-0000-000000000009',2,5,'correct'),
+	('00000000-0000-0000-0000-000000000009',5,13,'correct'),
+	('00000000-0000-0000-0000-000000000009',6,19,'correct'),
+	('00000000-0000-0000-0000-000000000009',9,27,'correct'),
+	('00000000-0000-0000-0000-000000000009',13,38,'correct'),
+	('00000000-0000-0000-0000-000000000009',19,57,'correct'),
+	('00000000-0000-0000-0000-000000000009',32,103,'correct'),
+	('00000000-0000-0000-0000-000000000009',41,135,'correct'),
+	('00000000-0000-0000-0000-000000000009',43,143,'correct'),
+	('00000000-0000-0000-0000-000000000009',53,176,'correct'),
+	('00000000-0000-0000-0000-000000000009',54,180,'correct'),
+	('00000000-0000-0000-0000-000000000009',56,184,'correct'),
+	('00000000-0000-0000-0000-000000000009',66,216,'correct'),
+	('00000000-0000-0000-0000-000000000009',91,300,'correct'),
+	('00000000-0000-0000-0000-000000000009',101,333,'correct'),
+	('00000000-0000-0000-0000-000000000009',103,339,'correct'),
+	('00000000-0000-0000-0000-000000000009',109,360,'correct'),
+	('00000000-0000-0000-0000-000000000009',113,373,'correct'),
+	('00000000-0000-0000-0000-000000000009',118,387,'correct'),
+	('00000000-0000-0000-0000-000000000009',135,444,'correct'),
+	('00000000-0000-0000-0000-000000000009',137,452,'correct'),
+	('00000000-0000-0000-0000-000000000009',144,474,'correct'),
+	('00000000-0000-0000-0000-000000000009',185,608,'correct'),
+	('00000000-0000-0000-0000-000000000009',190,626,'correct'),
+	('00000000-0000-0000-0000-000000000009',199,654,'correct'),
+
+	('00000000-0000-0000-0000-000000000002',2,null,'notdone'),
+	('00000000-0000-0000-0000-000000000002',5,null,'notdone'),
+	('00000000-0000-0000-0000-000000000002',6,null,'notdone'),
+	('00000000-0000-0000-0000-000000000002',9,null,'notdone'),
+	('00000000-0000-0000-0000-000000000002',13,null,'notdone'),
+	('00000000-0000-0000-0000-000000000002',19,57,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',32,103,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',41,135,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',43,143,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',53,176,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',54,180,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',56,184,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',66,216,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',91,300,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',101,333,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',103,339,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',109,360,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',113,373,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',118,387,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',135,444,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',137,452,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',144,474,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',185,608,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',190,626,'incorrect'),
+	('00000000-0000-0000-0000-000000000002',199,654,'incorrect'),
+
+	('00000000-0000-0000-0000-000000000004',2,null,'notdone'),
+	('00000000-0000-0000-0000-000000000004',5,null,'notdone'),
+	('00000000-0000-0000-0000-000000000004',6,null,'notdone'),
+	('00000000-0000-0000-0000-000000000004',9,null,'notdone'),
+	('00000000-0000-0000-0000-000000000004',13,null,'notdone'),
+	('00000000-0000-0000-0000-000000000004',19,57,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',32,103,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',41,135,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',43,143,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',53,176,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',54,180,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',56,184,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',66,216,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',91,300,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',101,333,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',103,339,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',109,360,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',113,373,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',118,387,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',135,444,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',137,452,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',144,474,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',185,608,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',190,626,'incorrect'),
+	('00000000-0000-0000-0000-000000000004',199,654,'incorrect'),
+
+	('00000000-0000-0000-0000-000000000006',2,null,'notdone'),
+	('00000000-0000-0000-0000-000000000006',5,null,'notdone'),
+	('00000000-0000-0000-0000-000000000006',6,null,'notdone'),
+	('00000000-0000-0000-0000-000000000006',9,null,'notdone'),
+	('00000000-0000-0000-0000-000000000006',13,null,'notdone'),
+	('00000000-0000-0000-0000-000000000006',19,57,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',32,103,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',41,135,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',43,143,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',53,176,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',54,180,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',56,184,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',66,216,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',91,300,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',101,333,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',103,339,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',109,360,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',113,373,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',118,387,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',135,444,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',137,452,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',144,474,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',185,608,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',190,626,'incorrect'),
+	('00000000-0000-0000-0000-000000000006',199,654,'incorrect'),
+
+	('00000000-0000-0000-0000-000000000008',2,null,'notdone'),
+	('00000000-0000-0000-0000-000000000008',5,null,'notdone'),
+	('00000000-0000-0000-0000-000000000008',6,null,'notdone'),
+	('00000000-0000-0000-0000-000000000008',9,null,'notdone'),
+	('00000000-0000-0000-0000-000000000008',13,null,'notdone'),
+	('00000000-0000-0000-0000-000000000008',19,57,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',32,103,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',41,135,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',43,143,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',53,176,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',54,180,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',56,184,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',66,216,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',91,300,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',101,333,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',103,339,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',109,360,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',113,373,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',118,387,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',135,444,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',137,452,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',144,474,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',185,608,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',190,626,'incorrect'),
+	('00000000-0000-0000-0000-000000000008',199,654,'incorrect'),
+
+	('00000000-0000-0000-0000-000000000010',2,null,'notdone'),
+	('00000000-0000-0000-0000-000000000010',5,null,'notdone'),
+	('00000000-0000-0000-0000-000000000010',6,null,'notdone'),
+	('00000000-0000-0000-0000-000000000010',9,null,'notdone'),
+	('00000000-0000-0000-0000-000000000010',13,null,'notdone'),
+	('00000000-0000-0000-0000-000000000010',19,57,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',32,103,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',41,135,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',43,143,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',53,176,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',54,180,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',56,184,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',66,216,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',91,300,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',101,333,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',103,339,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',109,360,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',113,373,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',118,387,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',135,444,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',137,452,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',144,474,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',185,608,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',190,626,'incorrect'),
+	('00000000-0000-0000-0000-000000000010',199,654,'incorrect');
+go
+
+--=================
+update Quiz set TotalDid = (select count(*) from Attempt where QuizID = 1) where QuizID = 1
+go
+
+use master;
 
 -----------------------------------------[ QUERY TEST ]-----------------------------------------------------
 /*
@@ -12428,8 +12795,10 @@ select * from Quiz;
 select * from Question   order by QuestionID asc;
 select * from Answer     order by QuestionID asc;
 select * from Have;
+select * from Have where QuizID = 1;
 select count(*) from Have where QuizID = 1;
 select * from Attempt;
+select * from AttemptDetail;
 
 ------------------------------------------
 */
