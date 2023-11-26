@@ -317,7 +317,7 @@ function updateAccount(accountId) {
         Swal.fire({
           icon: "error",
           title: "Lỗi khi cập nhật tài khoản",
-          text: `${response.status} - ${response.statusText}`,
+          text: `${res.status} - ${res.statusText}`,
           confirmButtonColor: `#FF0000`,
         });
         return;
