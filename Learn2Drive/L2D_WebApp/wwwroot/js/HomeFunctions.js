@@ -1,4 +1,4 @@
-let search = document.querySelector('.search-box');
+﻿let search = document.querySelector('.search-box');
 
 document.querySelector('#search-icon').onclick = ()  => {
     search.classList.toggle('active');
@@ -25,11 +25,41 @@ window.addEventListener('scroll', () => {
 
 });
 
+async function fetchLicensesData() {
+    const fetchAPI = `https://localhost:7235/api/licenses`;
 
+    try {
+        const response = await fetch(fetchAPI, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
+        if (!response.ok) {
+            throw new Error("Error fetching data");
+        }
 
+        const data = await response.json();
+        console.log(data);
+        var licenses = data;
+        renderNavbarData(licenses);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
+async function renderNavbarData(licenses) {
+    const dataListElement = document.getElementById('datalist');
+    dataListElement.innerHTML = '';
 
+    for (const item of licenses) {
+        const liElement = document.createElement('span');
+        liElement.innerHTML = `<li class="dropdown - item" onclick="location.href = '/Home/License?licenseid=${item.licenseId}';">Bằng ${item.licenseId}</li>`;
+        dataListElement.appendChild(liElement);
+    }
+}
 
-
-
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchLicensesData();
+});
