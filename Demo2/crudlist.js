@@ -94,9 +94,16 @@ function testRenderAccounts(data) {
       console.error(".pass_cell not found");
     }
 
-    if (account.user !== null) {
+    if(account.user !== null){
       cells[2].textContent = account.user.email;
     }
+     if(account.teacher !== null){
+      cells[2].textContent = account.teacher.email;
+    }
+     if(account.staff !== null){
+      cells[2].textContent = account.staff.email;
+    }
+    
     cells[3].textContent = account.role;
     let deleteBtn = cells[4].querySelector(".deleteBtn");
 
@@ -132,12 +139,12 @@ function testRenderAccounts(data) {
     tableBody.appendChild(clone);
   });
 }
-let closeUpdateModalBtn = document.getElementById('closeUpdateModalBtn');
-closeUpdateModalBtn.addEventListener('click', toggleDetailsModal);
+let closeUpdateModalBtn = document.getElementById("closeUpdateModalBtn");
+closeUpdateModalBtn.addEventListener("click", toggleDetailsModal);
 function loadUpdateFormData(accountData) {
   if (accountData === null || accountData === undefined) {
     console.log(`No account data`);
-     return;
+    return;
   }
   let usernameInput = document.querySelector(".updateUsername");
   let emailInput = document.querySelector(".updateEmail");
@@ -156,7 +163,7 @@ function loadUpdateFormData(accountData) {
   //     emailInput.value = account.staff.email;
   //     break;
   //   case 'admin':
-  //     emailInput.value = (account.admin != null) ?  account.admin.email : ''; 
+  //     emailInput.value = (account.admin != null) ?  account.admin.email : '';
   //     break;
   //   default:
   //     break;
@@ -168,7 +175,7 @@ function loadUpdateFormData(accountData) {
 
 function toggleDetailsModal() {
   let updateModal = document.getElementById("updateProductModal");
-  let isOpened = (!updateModal.classList.contains("hidden"));
+  let isOpened = !updateModal.classList.contains("hidden");
   if (!isOpened) {
     console.log(`Modal not opened -> opened`);
     updateModal.classList.remove(`hidden`);
@@ -179,7 +186,7 @@ function toggleDetailsModal() {
   } else {
     console.log(`Modal opened -> close`);
     updateModal.classList.add("hidden");
-    updateModal.classList.remove('blur-background');
+    updateModal.classList.remove("blur-background");
     updateModal.style.display = `none`;
   }
 }
@@ -205,18 +212,18 @@ userRoleRadios.forEach((radioBtn) => {
 function addNewAccount() {
   const url = "https://localhost:7235/api/account/add";
   let addAccountForm = document.getElementById("addAccountForm");
-  const account ={
-      Account: {
-          Username: addAccountForm.querySelector(".addFormUsername").value,
-          Password: addAccountForm.querySelector(".addFormPassword").value,
-          Role: addAccountForm.querySelector(".addFormRole").value
-      },
-      Email:addAccountForm.querySelector(".addFormEmail").value
-  } 
+  const account = {
+    Account: {
+      Username: addAccountForm.querySelector(".addFormUsername").value,
+      Password: addAccountForm.querySelector(".addFormPassword").value,
+      Role: addAccountForm.querySelector(".addFormRole").value,
+    },
+    Email: addAccountForm.querySelector(".addFormEmail").value,
+  };
   fetch(url, {
     method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(account),
   })
@@ -294,40 +301,39 @@ function deleteAccount(accountId) {
 
 function updateAccount(accountId) {
   try {
-    
     let url = `https://localhost:7235/api/account/update/${accountId}`;
-    let form = document.getElementById("updateAccountform");
+
+    const formData = new FormData();
+    formData.append('username', document.querySelector('.updateUsername').value);
+    formData.append('password', document.querySelector('.updatePassword').value);
+    formData.append('role', document.querySelector('.updateRole').value);
+    formData.append('email', document.querySelector('.updateEmail').value);
+    formData.append('licenseId', '');
     
-    const account = {
-      EditedAccount: {
-        Username: form.querySelector(".updateUsername").value,
-        Password: form.querySelector('.updatePassword').value,
-        Role: form.querySelector('.updateRole').value
-      },
-      LicenseID:""
-    }
     fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(account),
+      method: 'PATCH',
+      // headers: {
+      //   'Content-Type': 'application/json',
+      // },
+      body: formData,
     }).then((res) => {
       if (!res.ok) {
         Swal.fire({
-          icon: "error",
-          title: "Lỗi khi cập nhật tài khoản",
+          icon: 'error',
+          title: 'Lỗi khi cập nhật tài khoản',
           text: `${res.status} - ${res.statusText}`,
-          confirmButtonColor: `#FF0000`,
+          confirmButtonColor: '#FF0000',
         });
         return;
       }
+
       Swal.fire({
-        icon: `success`,
-        title: `Cập nhật tài khoản thành công!`,
-        confirmButtonColor: `#FF0000`,
+        icon: 'success',
+        title: 'Cập nhật tài khoản thành công!',
+        confirmButtonColor: '#FF0000',
       });
-      return;
+
+      fetchData();
     });
   } catch (error) {
     console.log(error);
@@ -345,12 +351,29 @@ async function getAccountById(accountId) {
   var url = `https://localhost:7235/api/account/detail/${accountId}`;
   try {
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
     const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(`Error! ${error}`);
+  }
+}
+
+function getAccountByIdget(accountId) {
+  var url = `https://localhost:7235/api/account/get/${accountId}`;
+  try {
+    const response = fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = response.json();
     console.log(data);
     return data;
   } catch (error) {
