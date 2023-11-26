@@ -67,16 +67,19 @@ async function fetchQuizData() {
 }
 
 async function addQuiz() {
-    const quizNameElement = document.querySelector('.quizName');
-    const quizQuestionCntElememnt = document.querySelector('.quizQuestionCnt');
-    const quizLicenseElement = document.querySelector('.quizLicense');
-    const quizDescriptionElement = document.querySelector('.quizDescription');
-    const randomCheckBox = document.getElementById('randomCheckBox');
-    const data = {
+    let quizNameElement = document.querySelector('.quizName');
+    let quizQuestionCntElememnt = document.querySelector('.quizQuestionCnt');
+    let quizLicenseElement = document.querySelector('.quizLicense');
+    let quizDescriptionElement = tinymce.get('quizDescription');
+    let randomCheckBox = document.getElementById('randomCheckBox');
+    let quizTimerInput = document.querySelector('.quizTimer');
+
+    let data = {
         quizName: quizNameElement.value,
-        licenseID: String(quizLicenseElement.value),
-        quantity: Number(quizQuestionCntElememnt.value),
-        description: String(quizDescriptionElement.value),
+        licenseID: quizLicenseElement.value,
+        quantity: quizQuestionCntElememnt.value,
+        timer: quizTimerInput.value,
+        description: quizDescriptionElement.getContent(),
         hasRandomQuestions: randomCheckBox.checked,
         questionIDList: QuestionIDList
     };
@@ -114,17 +117,69 @@ function renderQuizTable(quizList) {
         cells[0].textContent = quiz.name;
         cells[1].textContent = quiz.licenseId;
         cells[2].textContent = quiz.description;
-        let quizDropdownButton = cells[3].querySelector('.quizDropDownButton');
-        quizDropdownButton.addEventListener('click', () => {
-            let quizDropDownContent = cells[3].querySelector('.quizDropDownContent');
-            if (!quizDropDownContent.classList.contains('open-dropdown')) {
-                quizDropDownContent.classList.add('open-dropdown');
-            } else {
-                quizDropDownContent.classList.remove('open-dropdown');
+        // let quizDropdownButton = cells[3].querySelector('.quizDropDownButton');
+        // quizDropdownButton.addEventListener('click', () => {
+        //     let quizDropDownContent = cells[3].querySelector('.quizDropDownContent');
+        //     if (!quizDropDownContent.classList.contains('open-dropdown')) {
+        //         quizDropDownContent.classList.add('open-dropdown');
+        //     } else {
+        //         quizDropDownContent.classList.remove('open-dropdown');
+        //     }
+        // });
+        let deleteBtn = cells[3].querySelector('.deleteBtn');
+        deleteBtn.setAttribute('qid', quiz.quizId.toString());
+        deleteBtn.addEventListener('click', async () => {
+            const result = await Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa bộ đề này?',
+                showCancelButton: true,
+                cancelButtonText: 'Hủy',
+                confirmButtonText: 'Xóa',
+                confirmButtonColor: '#d90429'
+            });
+            if (!result.isConfirmed) {
+                return;
             }
+            let quizId = parseInt(deleteBtn.getAttribute('qid'));
+            await deleteQuiz(quizId);
         });
         quizTableBody.appendChild(clone);
     });
+}
+
+async function deleteQuiz(quizId) {
+    try {
+        const url = `https://localhost:7235/api/quizzes/delete/${quizId}`;
+        console.log(`Delete quiz id: ` + quizId);
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.status !== 204) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi xóa đề',
+                text: `${response.status} - ${response.statusText}`,
+                confirmButtonColor: '#d90429'
+            });
+            return;
+        }
+        Swal.fire({
+            icon: 'success',
+            title: 'Xóa đề thành công!',
+            confirmButtonColor: '#d90429'
+        });
+        await fetchQuizData();
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi xóa đề',
+            text: `${error}`,
+            confirmButtonColor: '#d90429'
+        });
+    }
 }
 
 const prevQuizButton = document.getElementById('prevQuizPageBtn');
