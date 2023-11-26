@@ -317,23 +317,19 @@ from dbo.Teacher;
 go
 
 -----------------------------------[ GENERATE QUIZ ]-------------------------------
-create or alter procedure proc_CreateQuiz (
+CREATE OR ALTER     procedure [dbo].[proc_CreateQuiz] (
 	@Name nvarchar(100),
 	@LicenseID nvarchar(10),
 	@Description nvarchar(max),
-	@QuestQuantity int
+	@QuestQuantity int,
+	@Timer int
 )
 as
 begin
-	--QUERY LICENSE FOR TIMER
-	declare @duration int;
-	if (@LicenseID in ('A1', 'A2', 'A3', 'A4', 'B1')) set @duration = 1201;--20 minutes
-	else if (@LicenseID = 'B2') set @duration = 1321;--22 minutes
-	else if (@LicenseID = 'C') set @duration = 1441;--24 minutes
-	else set @duration = 1561;--26 minutes
+
 
 	--Create a quiz
-	insert into Quiz(LicenseID, [Name], [Description], Timer, TotalDid) values (@LicenseID, @Name, @Description,@duration ,0);
+	insert into Quiz(LicenseID, [Name], [Description], Timer, TotalDid) values (@LicenseID, @Name, @Description, @Timer ,0);
 	declare @QuizID int;
 	set @QuizID = SCOPE_IDENTITY();
 

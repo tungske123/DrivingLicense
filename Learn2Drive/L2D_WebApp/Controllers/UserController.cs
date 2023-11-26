@@ -461,15 +461,25 @@ namespace L2D_WebApp.Controllers
             {
                 return BadRequest("Invalid attempt id");
             }
-            if (!await _context.Attempts.AnyAsync(attempt => attempt.AttemptId.Equals(aid)))
+
+            var attempt = await _context.Attempts.SingleOrDefaultAsync(att => att.AttemptId.Equals(aid));
+            if (attempt is null)
             {
                 return NotFound($"Can't find any attempt with id {aid}");
             }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var quiz = await _context.Quizzes.SingleOrDefaultAsync(q => q.QuizId.Equals(attempt.QuizId));
+                var totalQuizDoneCnt = (quiz.TotalDid is null) ? 0 : (quiz.TotalDid - 1);
+
+                quiz.TotalDid = (totalQuizDoneCnt < 0) ? 0 : totalQuizDoneCnt;
+
+
                 await _context.AttemptDetails.Where(attempt => attempt.AttemptId.Equals(aid)).ExecuteDeleteAsync();
                 await _context.Attempts.Where(attempt => attempt.AttemptId.Equals(aid)).ExecuteDeleteAsync();
+
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

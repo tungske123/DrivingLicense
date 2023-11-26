@@ -231,6 +231,7 @@ namespace L2D_WebApp.Controllers
             public string QuizName { get; set; }
             public string LicenseID { get; set; }
             public int Quantity { get; set; }
+            public int Timer { get; set; }
             public string Description { get; set; }
             public bool HasRandomQuestions { get; set; }
             public List<int> QuestionIDList { get; set; }
@@ -246,18 +247,21 @@ namespace L2D_WebApp.Controllers
             }
             if (data.HasRandomQuestions)
             {
-                await QuizRepository.Instance.GenerateQuizQuestions(data.QuizName, data.LicenseID, data.Description, data.Quantity);
+                await QuizRepository.Instance.GenerateQuizQuestions(data.QuizName, data.LicenseID, data.Description, data.Quantity, data.Timer);
                 return NoContent();
             }
+
             if (data.QuestionIDList is null || data.QuestionIDList.Count == 0)
             {
                 return BadRequest();
             }
+
             var quiz = new Quiz
             {
                 Name = data.QuizName,
                 LicenseId = data.LicenseID,
-                Description = data.Description
+                Description = data.Description,
+                Timer = data.Timer
             };
 
             var questionList = await _context.Questions
@@ -325,22 +329,8 @@ namespace L2D_WebApp.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var quizAttemptList = await _context
-                    .Attempts.Where(attempt => attempt.QuizId == qid)
-                    .ToListAsync();
-                foreach (var attempt in quizAttemptList)
-                {
-                    await _context.AttemptDetails.Where(at => at.AttemptId.Equals(attempt.AttemptId)).ExecuteDeleteAsync();
-                }
-
-                await _context.Attempts.Where(a => a.QuizId == qid).ExecuteDeleteAsync();
-
-                foreach (var question in quiz.Questions)
-                {
-                    quiz.Questions.Remove(question);
-                }
-
-                await _context.Quizzes.Where(quiz => quiz.QuizId == qid).ExecuteDeleteAsync();
+                
+                await _context.Database.ExecuteSqlRawAsync("EXEC dbo.proc_DeleteQuiz @quizID = @p0, @LicenseID = @p1", qid, null);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

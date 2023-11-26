@@ -121,7 +121,7 @@ namespace L2D_DataAccess.Repositories
             return quizResultList;
         }
 
-        public async Task GenerateQuizQuestions(string QuizName, string LicenseID, string Description, int Quantity = 25)
+        public async Task GenerateQuizQuestions(string QuizName, string LicenseID, string Description, int Quantity = 25, int Timer = 20)
         {
             using var connection = new SqlConnection(DBUtils.getConnectionString());
             try
@@ -132,7 +132,8 @@ namespace L2D_DataAccess.Repositories
                 command.Parameters.AddWithValue("@Name", QuizName);
                 command.Parameters.AddWithValue("@LicenseID", LicenseID);
                 command.Parameters.AddWithValue("@Description", Description);
-                command.Parameters.AddWithValue("@Quantity", Quantity);
+                command.Parameters.AddWithValue("@QuestQuantity", Quantity);
+                command.Parameters.AddWithValue("@Timer", Timer);
                 await command.ExecuteNonQueryAsync();
             }
             catch (SqlException ex)
