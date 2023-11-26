@@ -85,7 +85,7 @@ function renderRentDataRow(data) {
 
     const statusCell = document.createElement('td');
     statusCell.className = 'normal-cell'
-    statusCell.innerHTML = data.status === `true` ? `<div style="color: green;">Còn hạn</div>` : `<div style="color: red;">Hết hạn</div>`;
+    statusCell.textContent = data.status;
     newRow.appendChild(statusCell);
 
     const buttonsCell = document.createElement('td');

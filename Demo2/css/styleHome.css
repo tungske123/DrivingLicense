@@ -13,9 +13,11 @@
     box-sizing: border-box;
     text-decoration: none;
 }
+
 a {
     text-decoration: none;
 }
+
 /*Variables*/
 
 :root {
@@ -102,7 +104,7 @@ header.shadow #search-icon {
 .navbar {
     display: flex;
     column-gap: 2rem;
-    flex-direction: row ;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 0px;
     padding-top: 15px;
@@ -203,7 +205,6 @@ header.shadow #search-icon {
 
 .btn:hover {
     background: #fd052f;
-
 }
 
 .btn2 {
@@ -253,6 +254,17 @@ header.shadow #search-icon {
     box-shadow: 0 118px deeppink;
 }
 
+.btn3 {
+    background: none;
+    color: black;
+    border: none;
+}
+
+.dropdown-item-content button:hover {
+    background-color: #d90429;
+    color: white;
+}
+
 .heading {
     text-align: center;
 }
@@ -275,9 +287,11 @@ header.shadow #search-icon {
     margin-top: 2rem;
 
 }
+
 .info-container a {
     color: black;
 }
+
 .info-container .box {
     flex: 1 1 17rem;
     position: relative;
@@ -579,15 +593,18 @@ header.shadow #search-icon {
     .search-box input {
         padding: 15px;
     }
+
     .navbar li a {
         border-radius: 10px;
     }
+
     /* .nav {
         padding: 10px 0;
     } */
     .search-bar {
         width: 100vw;
     }
+
     #menu-icon {
         display: initial;
     }
@@ -680,12 +697,14 @@ header.shadow #search-icon {
         margin-inline: 200px;
     }
 }
+
 @media (max-width: 768px) {
     .home {
         background-size: contain;
     }
 
 }
+
 @keyframes growDown {
     0% {
         transform: scaleY(0)
@@ -741,6 +760,7 @@ header.shadow #search-icon {
     }
 }
 
+
 /*ANIMATION FUCK YEAH */
 .dropdown-toggle:hover .dropdown_menu--animated {
     display: block;
@@ -765,6 +785,7 @@ header.shadow #search-icon {
     background-color: rgb(246, 246, 246);
     transition: 0.25s ease-in-out;
 }
+
 .box:hover {
     transform: scale(1.04);
 }
