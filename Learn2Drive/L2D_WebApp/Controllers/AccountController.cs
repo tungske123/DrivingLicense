@@ -140,6 +140,7 @@ namespace Driving_License.Controllers
             public Account EditedAccount { get; set; }
             public string LicenseID { get; set; }
         }
+
         [HttpPatch]
         [Route("api/account/update/{accountid}")]
         public async Task<IActionResult> Edit([FromRoute] Guid accountid, [FromBody] AccountInfo info)
@@ -204,7 +205,7 @@ namespace Driving_License.Controllers
             if (acc == null)
             {
                 return NotFound("Mã tài khoản này không khớp với tài khoản nào!");
-            }
+            }            
             switch (acc.Role)
             {
                 case "user":
