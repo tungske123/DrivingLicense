@@ -84,54 +84,54 @@ adminTabLinkList.forEach(tabLink => {
     });
 });
 
-//Switching tabs for CRUD
-const teacherTabLinkList = document.querySelectorAll('#logo-sidebar .dashboard-item');
-teacherTabLinkList.forEach(tabLink => {
-    tabLink.addEventListener('click', (e) => {
-        e.preventDefault();
+// //Switching tabs for CRUD
+// const teacherTabLinkList = document.querySelectorAll('#logo-sidebar .dashboard-item');
+// teacherTabLinkList.forEach(tabLink => {
+//     tabLink.addEventListener('click', (e) => {
+//         e.preventDefault();
 
-        const tabList = document.querySelectorAll('.admin-tab');
-        tabList.forEach(tab => {
-            tab.style.display = 'none';
-        });
+//         const tabList = document.querySelectorAll('.admin-tab');
+//         tabList.forEach(tab => {
+//             tab.style.display = 'none';
+//         });
 
-        // Remove is-active from all tab links
-        teacherTabLinkList.forEach(link => {
-            link.classList.remove('is-active'); 
-        });
+//         // Remove is-active from all tab links
+//         teacherTabLinkList.forEach(link => {
+//             link.classList.remove('is-active'); 
+//         });
 
-        // Add is-active to this current tab link
-        tabLink.classList.add('is-active');
+//         // Add is-active to this current tab link
+//         tabLink.classList.add('is-active');
 
-        //Get id target for each link
-        const linkAnchor= tabLink.querySelector('a');
-        if (!linkAnchor) {
-            const dropdown = tabLink.querySelector('ul');
-            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-                dropdown.style.display = 'block';
-            } else {
-                dropdown.style.display = 'none';
-            }
-            return;
-        }
-        const target = linkAnchor.getAttribute('href');
-        if (target === `/Home`) {
-            window.location.href = `/Home`;
-            return;
-        }
-        if (target === `/Login/logout`) {
-            window.location.href = target;
-            return;
-        }
-        //Show the tab
-        if (target) {
-            const tab = document.querySelector(target);
-            if (tab) {
-                tab.style.display = 'block';
-            }
-        }
-    });
-});
+//         //Get id target for each link
+//         const linkAnchor= tabLink.querySelector('a');
+//         if (!linkAnchor) {
+//             const dropdown = tabLink.querySelector('ul');
+//             if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+//                 dropdown.style.display = 'block';
+//             } else {
+//                 dropdown.style.display = 'none';
+//             }
+//             return;
+//         }
+//         const target = linkAnchor.getAttribute('href');
+//         if (target === `/Home`) {
+//             window.location.href = `/Home`;
+//             return;
+//         }
+//         if (target === `/Login/logout`) {
+//             window.location.href = target;
+//             return;
+//         }
+//         //Show the tab
+//         if (target) {
+//             const tab = document.querySelector(target);
+//             if (tab) {
+//                 tab.style.display = 'block';
+//             }
+//         }
+//     });
+// });
 
 
 

@@ -134,8 +134,8 @@ function testRenderAccounts(data) {
 }
 let closeUpdateModalBtn = document.getElementById('closeUpdateModalBtn');
 closeUpdateModalBtn.addEventListener('click', toggleDetailsModal);
-function loadUpdateFormData(account) {
-  if (account === null || account === undefined) {
+function loadUpdateFormData(accountData) {
+  if (accountData === null || accountData === undefined) {
     console.log(`No account data`);
      return;
   }
@@ -144,10 +144,26 @@ function loadUpdateFormData(account) {
   let passwordInput = document.querySelector(".updatePassword");
   let roleInput = document.querySelector(".updateRole");
 
-  usernameInput.value = account.username;
-  emailInput.value = account.user.email;
-  passwordInput.value = account.password;
-  roleInput.value = account.role;
+  usernameInput.value = accountData.account.username;
+  // switch (account.role) {
+  //   case 'user':
+  //     emailInput.value = account.user.email;
+  //     break;
+  //   case 'teacher':
+  //     emailInput.value = account.teacher.email;
+  //     break;
+  //   case 'staff':
+  //     emailInput.value = account.staff.email;
+  //     break;
+  //   case 'admin':
+  //     emailInput.value = (account.admin != null) ?  account.admin.email : ''; 
+  //     break;
+  //   default:
+  //     break;
+  // }
+  emailInput.value = accountData.email;
+  passwordInput.value = accountData.account.password;
+  roleInput.value = accountData.account.role;
 }
 
 function toggleDetailsModal() {
@@ -246,7 +262,7 @@ addAccountForm.addEventListener("submit", (e) => {
 });
 
 function deleteAccount(accountId) {
-  let url = `https://localhost:7235/api/account/delete/${accountId.toUpperCase()}`;
+  let url = `https://localhost:7235/api/account/delete/${accountId}`;
   console.log(`Delete url: ${url}`);
   fetch(url, {
     method: "DELETE",
@@ -326,7 +342,7 @@ document.getElementById("updateAccountform").addEventListener("submit", (e) => {
 });
 
 async function getAccountById(accountId) {
-  var url = `https://localhost:7235/api/account/get/${accountId}`;
+  var url = `https://localhost:7235/api/account/detail/${accountId}`;
   try {
     const response = await fetch(url, {
       method: 'GET',
