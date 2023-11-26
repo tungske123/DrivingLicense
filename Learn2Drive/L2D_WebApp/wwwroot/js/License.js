@@ -1,4 +1,5 @@
 const LicenseId = document.getElementById('licenseid').textContent;
+console.log(LicenseId);
 class License {
     constructor() {
         this.licenseId = ``;
@@ -11,8 +12,7 @@ class License {
         this.tips = ``;
     }
 }
-
-function fetchSingleLicenseData() {
+function fetchData() {
     const fetchAPI = `https://localhost:7235/api/license/${LicenseId}`;
     fetch(fetchAPI, {
         method: 'GET',
@@ -48,10 +48,7 @@ function renderData(license) {
     const Tips = document.getElementById('Tips');
     Tips.innerHTML = license.tips;
 }
-
 document.addEventListener('DOMContentLoaded', () => {
-    fetchSingleLicenseData();
+    fetchData();
 });
-
-
 //# sourceMappingURL=License.js.map

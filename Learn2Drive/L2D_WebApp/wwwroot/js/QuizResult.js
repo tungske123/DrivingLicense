@@ -162,7 +162,7 @@ function renderQuestionTable(attemptDetailsList) {
             let clone = document.importNode(questionRowTemplate.content, true);
             let cells = clone.querySelectorAll('tr td');
             cells[0].textContent = startItemCnt.toString();
-            cells[1].textContent = attemptData.questionText;
+            cells[1].innerHTML = attemptData.questionText;
             let questionImage = attemptData.questionImage;
             let questionImageElement = document.createElement('img');
             if (questionImage !== null && questionImage !== `` && questionImage !== `none`) {
@@ -170,8 +170,8 @@ function renderQuestionTable(attemptDetailsList) {
                 questionImageElement.src = `/img/question/A1/${questionImage}`;
                 cells[1].appendChild(questionImageElement);
             }
-            cells[2].textContent = attemptData.selectedAnswer;
-            cells[3].textContent = attemptData.correctAnswer;
+            cells[2].innerHTML = attemptData.selectedAnswer;
+            cells[3].innerHTML = attemptData.correctAnswer;
 
             switch (attemptData.status) {
                 case `correct`:

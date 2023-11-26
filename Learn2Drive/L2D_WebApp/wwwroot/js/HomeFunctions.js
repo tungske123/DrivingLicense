@@ -1,13 +1,13 @@
 ﻿let search = document.querySelector('.search-box');
 
-document.querySelector('#search-icon').onclick = ()  => {
+document.querySelector('#search-icon').onclick = () => {
     search.classList.toggle('active');
     menu.classList.remove('active');
 }
 
 let menu = document.querySelector('.navbar');
 
-document.querySelector('#menu-icon').onclick = ()  => {
+document.querySelector('#menu-icon').onclick = () => {
     menu.classList.toggle('active');
     search.classList.remove('active');
 }
@@ -50,7 +50,7 @@ async function fetchLicensesData() {
 }
 
 async function renderNavbarData(licenses) {
-    const dataListElement = document.getElementById('datalist');
+    const dataListElement = document.getElementById('navLicenseSelect');
     dataListElement.innerHTML = '';
 
     for (const item of licenses) {

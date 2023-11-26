@@ -47,7 +47,7 @@ namespace L2D_WebApp.Controllers
         [HttpPost]
         [Route("api/questions/{page}")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetQuestionsPaging([FromBody] QuestionFilterData data, [FromRoute] int page = 1)
+        public async Task<IActionResult> GetQuestionsPaging([FromBody] QuestionFilterData data, [FromRoute] int page = 1, int pageSize = 30)
         {
             var query = _context.Questions.AsQueryable();
             if (!string.IsNullOrEmpty(data.Keyword))
@@ -60,7 +60,6 @@ namespace L2D_WebApp.Controllers
             }
             query = query.OrderBy(question => question.QuestionText);
 
-            const int pageSize = 20;
             var pageResult = await GetPagedDataAsync<Question>(query, page, pageSize);
             return Ok(pageResult);
         }

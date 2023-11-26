@@ -8,7 +8,6 @@ using L2D_DataAccess.Utils;
 using Microsoft.IdentityModel.Tokens;
 using L2D_DataAccess.ViewModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Microsoft.Identity.Client;
 
 namespace Driving_License.Controllers
 {
@@ -30,7 +29,7 @@ namespace Driving_License.Controllers
         public async Task<ActionResult> GetAccountList(string keyword = "", string role = "", int page = 1)
         {
 
-            var accounts = _context.Accounts.Include(x => x.User).AsQueryable();
+            var accounts = _context.Accounts.Include(x => x.User).Where(acc => !acc.Role.Equals("admin")).AsQueryable();
             if (!string.IsNullOrEmpty(keyword))
             {
                 accounts = accounts.Where(acc => acc.Username.ToLower().Contains(keyword.ToLower()));
@@ -136,57 +135,59 @@ namespace Driving_License.Controllers
         }
 
         //==========================================================================================================
+        public record AccountInfo
+        {
+            public Account EditedAccount { get; set; }
+            public string LicenseID { get; set; }
+        }
+
         [HttpPatch]
         [Route("api/account/update/{accountid}")]
-        public async Task<IActionResult> Edit([FromRoute] Guid accountid, [FromForm] IFormCollection formData)
+        public async Task<IActionResult> Edit([FromRoute] Guid accountid, [FromBody] AccountInfo info)
         {
             try
             {
-                //Declare formData as variables
-                string username = formData["username"];
-                string password = formData["password"];
-                string role = formData["role"];
-                string email = formData["email"];
-                string licenseId = formData["licenseId"];
+                //Declare
+                Account edited_account = info.EditedAccount;
+                string licenseID = info.LicenseID;
 
-                Account old_account = await _context.Accounts.SingleOrDefaultAsync(acc => acc.AccountId.Equals(accountid));
+                Account old_account = await _context.Accounts.SingleOrDefaultAsync(a => a.AccountId.Equals(accountid));
                 if (old_account == null)
                 {
-                    return NotFound("không tìm thấy tài khoản với mã tài khoản này!");
+                    return NotFound("Mã tài khoản này không khớp với tài khoản nào!");
                 }
 
-                if (await IsChange(old_account, username, password, role, email, licenseId) == false)
+                edited_account.AccountId = accountid;
+                if (await _context.Accounts.AnyAsync(acc => acc.Username.ToLower().Equals(edited_account.Username.ToLower())))
                 {
-                    return NoContent();
+                    return BadRequest("Tên tài khoản đã tồn tại!");
                 }
 
-                if (!username.ToLower().Equals(old_account.Username.ToLower()))
+                if (!edited_account.Username.ToLower().Equals(old_account.Username.ToLower()))
                 {
-                    if (await _context.Accounts.AnyAsync(acc => acc.Username.ToLower().Equals(username.ToLower())))
-                    {
-                        return BadRequest("Tên tài khoản đã tồn tại!");
-                    }
-                    old_account.Username = username;
+                    old_account.Username = edited_account.Username;
                 }
-
-                old_account.Password = password;
-                if (!role.Equals(old_account.Role))
+                if (!edited_account.Password.ToLower().Equals(old_account.Password.ToLower()))
                 {
-                    if (licenseId.IsNullOrEmpty())
+                    old_account.Password = edited_account.Password;
+                }
+                if (!edited_account.Role.Equals(old_account.Role))
+                {
+                    if (licenseID.IsNullOrEmpty())
                     {
                         await _context.Database.ExecuteSqlRawAsync(
                             "exec dbo.proc_changeRole @accountID= @p0, @roleNew = @p1",
-                            accountid, role);
+                            accountid, edited_account.Role);
                     }
                     else
                     {
                         await _context.Database.ExecuteSqlRawAsync(
                             "exec dbo.proc_changeRole @accountID= @p0, @roleNew = @p1, @LicenseSet = @p2",
-                            accountid, role, licenseId);
+                            accountid, edited_account.Role, licenseID);
                     }
                 }
                 await _context.SaveChangesAsync();
-                return Ok("Đã cập nhật thành công");
+                return Ok(edited_account);
 
             }
             catch (Exception ex)
@@ -204,7 +205,7 @@ namespace Driving_License.Controllers
             if (acc == null)
             {
                 return NotFound("Mã tài khoản này không khớp với tài khoản nào!");
-            }
+            }            
             switch (acc.Role)
             {
                 case "user":
@@ -221,7 +222,6 @@ namespace Driving_License.Controllers
             }
         }
 
-        //==========================================================================================================
         public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
         {
             //Get total number of rows in table
@@ -246,68 +246,6 @@ namespace Driving_License.Controllers
                 PageSize = pageSize,
                 Items = items
             };
-        }
-
-        //==========================================================================================================
-        private async Task<bool> IsChange(Account old_account,
-            string userName,
-            string password,
-            string role,
-            string email,
-            string licenseId)
-        {
-            //Declare 
-            bool changedFlag1 = true, changedFlag2 = false;
-            if (old_account.Username.Equals(userName) &&
-                old_account.Password.Equals(password) &&
-                old_account.Role.Equals(role)
-                )
-            { changedFlag1 = false; }
-
-            switch (old_account.Role)
-            {
-                case "user":
-                    User user = await _context.Users.SingleOrDefaultAsync(usr => usr.AccountId.Equals(old_account.AccountId));
-                    if (!user.Email.Equals(email))
-                    {
-                        user.Email = email;
-                        await _context.SaveChangesAsync();
-                        changedFlag2 = true;
-                    }
-                    break;
-                case "lecturer":
-                    Teacher lecturer = await _context.Teachers.SingleOrDefaultAsync(tch => tch.AccountId.Equals(old_account.AccountId));
-                    if (!lecturer.Email.Equals(email) && lecturer.LicenseId.Equals(licenseId))
-                    {
-                        lecturer.Email = email;
-                        await _context.SaveChangesAsync();
-                        changedFlag2 = true;
-                    }
-                    break;
-                case "staff":
-                    Staff staff = await _context.Staff.SingleOrDefaultAsync(stf => stf.AccountId.Equals(old_account.AccountId));
-                    if (!staff.Email.Equals(email))
-                    {
-                        staff.Email = email;
-                        await _context.SaveChangesAsync();
-                        changedFlag2 = true;
-                    }
-                    break;
-                case "admin":
-                    Admin admin = await _context.Admins.SingleOrDefaultAsync(adm => adm.AccountId.Equals(old_account.AccountId));
-                    if (!admin.Email.Equals(email))
-                    {
-                        admin.Email = email;
-                        await _context.SaveChangesAsync();
-                        changedFlag2 = true;
-                    }
-                    break;
-            }
-            if (changedFlag1 || changedFlag2)
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

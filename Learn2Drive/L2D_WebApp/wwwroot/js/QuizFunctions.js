@@ -258,7 +258,7 @@ function renderQuestion(question, cnt = 1) {
     }
 
     var questionTextElement = document.querySelector('.question-description');
-    questionTextElement.textContent = `Câu ${cnt}: ${question.questionText}`;
+    questionTextElement.innerHTML = `Câu ${cnt}: ${question.questionText}`;
     var questionImageElement = document.querySelector('.question-image img');
     if (question.questionImage !== null && question.questionImage != `` && question.questionImage != `none`) {
         questionImageElement.classList.remove('d-none');
@@ -275,7 +275,7 @@ function renderQuestion(question, cnt = 1) {
         let clone = document.importNode(answerTemplate.content, true);
         let answerInput = clone.querySelector('.form-check-input');
         let answerLabel = clone.querySelector('.form-check-label');
-        answerLabel.textContent = answer.answerText;
+        answerLabel.innerHTML = answer.answerText;
         answerInput.setAttribute('value', answer.answerId);
         answerInput.setAttribute('id', answer.answerId);
         answerLabel.setAttribute('for', answer.answerId);
