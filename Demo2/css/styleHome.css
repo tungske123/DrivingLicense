@@ -257,12 +257,12 @@ header.shadow #search-icon {
 .btn3 {
     background: none;
     color: black;
-    font-weight: 400;
     border: none;
 }
 
-.btn3 :hover{
-    background: #fd052f;
+.dropdown-item-content button:hover {
+    background-color: #d90429;
+    color: white;
 }
 
 .heading {
