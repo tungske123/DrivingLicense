@@ -1,4 +1,3 @@
-var totalPages = 0;
 var page = 1;
 var pageSize = 20;
 let licenseId = "";
@@ -218,11 +217,11 @@ function getquestionbyId(qid) {
 }
 
 
-let criticalCheckBox = document.getElementById('criticalCheckBox');
-criticalCheckBox.addEventListener('input', () => {
-  bodydata.isCritical = criticalCheckBox.checked;
-  fetchdata();
-});
+// let criticalCheckBox = document.getElementById('criticalCheckBox');
+// criticalCheckBox.addEventListener('input', () => {
+//   bodydata.isCritical = criticalCheckBox.checked;
+//   fetchdata();
+// });
 
 let searchQuestionInput = document.getElementById('searchQuestion');
 searchQuestionInput.addEventListener('input', () => {
