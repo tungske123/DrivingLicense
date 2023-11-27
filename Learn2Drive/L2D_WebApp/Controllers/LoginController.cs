@@ -104,7 +104,7 @@ namespace L2D_WebApp.Controllers
             // Extract the email from the payload
             var email = payload.Email;
 
-            string password="";
+            string username="", password="";
             bool needSignup = true, existEmail = false;
             User user;
             Teacher teacher;
@@ -119,13 +119,15 @@ namespace L2D_WebApp.Controllers
                         .Include(u => u.Account)
                         .SingleOrDefaultAsync(usr => usr.Email.Equals(email));
                         existEmail = (user is not null);
+                        username = (user is not null) ? user.Account.Username : string.Empty;
                         password = (user is not null) ? user.Account.Password : string.Empty;
                         break;
                     case 2:
                         teacher = await _context.Teachers
-                        .Include(u => u.Account)
+                        .Include(tch => tch.Account)
                         .SingleOrDefaultAsync(tch => tch.Email.Equals(email));
                         existEmail = (teacher is not null);
+                        username = (teacher is not null) ? teacher.Account.Username : string.Empty;
                         password = (teacher is not null) ? teacher.Account.Password : string.Empty;
                         break;
                     case 3:
@@ -133,6 +135,7 @@ namespace L2D_WebApp.Controllers
                         .Include(stf => stf.Account)
                         .SingleOrDefaultAsync(stf => stf.Email.Equals(email));
                         existEmail = (staff is not null);
+                        username = (staff is not null) ? staff.Account.Username : string.Empty;
                         password = (staff is not null) ? staff.Account.Password : string.Empty;
                         break;
                     case 4:
@@ -140,6 +143,7 @@ namespace L2D_WebApp.Controllers
                         .Include(adm => adm.Account)
                         .SingleOrDefaultAsync(adm => adm.Email.Equals(email));
                         existEmail = (admin is not null);
+                        username = (admin is not null) ? admin.Account.Username : string.Empty;
                         password = (admin is not null) ? admin.Account.Password : string.Empty;
                         break;
                 }
@@ -154,6 +158,7 @@ namespace L2D_WebApp.Controllers
             //If not exist then create account
             if (needSignup)
             {
+                username = email;
                 password = Guid.NewGuid().ToString();
                 await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", email, password, email);
             }
@@ -161,7 +166,7 @@ namespace L2D_WebApp.Controllers
             //Then login
             var account = await _context.Accounts
                 .AsNoTracking()
-                .SingleOrDefaultAsync(acc => acc.Username.Equals(email) && acc.Password.Equals(password));
+                .SingleOrDefaultAsync(acc => acc.Username.Equals(username) && acc.Password.Equals(password));
 
             HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
             await HttpContext.Session.CommitAsync();
