@@ -43,7 +43,7 @@ async function fetchLicensesData() {
         const data = await response.json();
         console.log(data);
         var licenses = data;
-        renderNavbarData(licenses);
+        await renderNavbarData(licenses);
     } catch (error) {
         console.error(error);
     }

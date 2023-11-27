@@ -10,7 +10,7 @@ let vehicleFilterData = {
     endPrice: -1
 };
 
-function toggleDetailsModal() {
+function toggleVehicleDetailsModal() {
     detailsModal.toggle();
 }
 function alertError(title = ``, message = ``) {
@@ -181,6 +181,8 @@ function loadVehicleDetailsToModal(vehicle) {
     console.log(`Description: ${vehicle.description}`);
     if (vehicle.image !== `` && vehicle.image !== null && vehicle.image !== 'none') {
         vehicleImage.src = `/img/vehicle/${vehicle.image}`;
+    } else {
+        vehicleImage.src = ``;
     }
 
     nameInput.value = vehicle.name;
@@ -310,7 +312,7 @@ function renderVehicleTable(vehicleList) {
             vehicleForm.setAttribute('action', 'update');
             let vehicleId = editBtn.getAttribute('vid');
             await fetchVehicleDetailsData(vehicleId);
-            toggleDetailsModal();
+            toggleVehicleDetailsModal();
         });
 
         deleteBtn.setAttribute('vid', vehicle.vehicleId);
@@ -360,7 +362,7 @@ let createVehicleBtn = document.getElementById('createVehicleBtn');
 createVehicleBtn.addEventListener('click', () => {
     vehicleForm.setAttribute('action', 'add');
     clearModalData();
-    toggleDetailsModal();
+    toggleVehicleDetailsModal();
 });
 
 
@@ -466,7 +468,7 @@ vehicleForm.addEventListener('submit', async (e) => {
 
 
         vehiclePage = 1;
-        toggleDetailsModal();
+        toggleVehicleDetailsModal();
         clearModalData();
         await fetchFormData();
         await fetchVehiclesData();
@@ -501,7 +503,7 @@ vehicleImageFileInput.addEventListener('change', (event) => {
 
 let closeVehicleModalBtn = document.querySelector('.closeVehicleModalBtn');
 closeVehicleModalBtn.addEventListener('click', () => {
-    toggleDetailsModal();
+    toggleVehicleDetailsModal();
 });
 
 

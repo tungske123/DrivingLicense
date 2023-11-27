@@ -157,7 +157,7 @@ function renderRentDetailsData(rent) {
     // let rentHoursElement = document.querySelector('.rentHours');
 
     if (rent.vehicle.image !== null && rent.vehicle.image !== `` && rent.vehicle.image !== `none`) {
-        image.src = `/img/rent/${rent.vehicle.image}`;
+        image.src = `/img/vehicle/${rent.vehicle.image}`;
     }
     
     nameElement.textContent = rent.vehicle.name;

@@ -330,6 +330,9 @@ function GetFinalCalculatedPrice() {
     const minuteDifferences = endDate.getTime() - startDate.getTime();
     const hourDifferences = minuteDifferences / (1000 * 60 * 60);
     const totalPrice = vehiclePrice * hourDifferences;
+    if (hourDifferences > 0) {
+        document.getElementById('rentHours').textContent = `${hourDifferences.toFixed(1)} Giờ`;
+    }
     return totalPrice;
 }
 function CheckValidRentDate() {
@@ -794,7 +797,7 @@ async function fetchScheduleData(month) {
         var scheduleList = data;
         displayCalendar(month, year);
         renderUserScheduleData(scheduleList, month);
-        const normalDayCells = document.querySelectorAll('td');
+        const normalDayCells = document.querySelectorAll('#userTimetable td');
         normalDayCells.forEach(normalDayCell => {
             normalDayCell.addEventListener('click', async () => {
                 console.log('Click event triggered');

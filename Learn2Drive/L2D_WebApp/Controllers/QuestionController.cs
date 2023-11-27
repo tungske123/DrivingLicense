@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using L2D_DataAccess.Models;
+﻿using L2D_DataAccess.Models;
 using L2D_DataAccess.Utils;
 using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +16,6 @@ namespace L2D_WebApp.Controllers
         {
             public string Keyword { get; set; }
             public string LicenseID { get; set; }
-        }
-
-        public async Task<IActionResult> QuestionDetail(int questionID)
-        {
-            ViewBag.questionId = questionID.ToString();
-            return View("~/Views/CRUDAnswer.cshtml");
         }
 
         public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
@@ -210,5 +203,28 @@ namespace L2D_WebApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("api/questions/filterQuestions")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetQuestionsFilterdData()
+        {
+            var questionList = await _context.Questions.AsNoTracking().ToListAsync();
+            var licenseIdList = questionList.Select(pro => pro.LicenseId).Distinct().ToList();
+            var isCriticalList = questionList.Select(pro => pro.IsCritical).Distinct().ToList();
+            return Ok(new
+            {
+                //brandList = brandList,
+                isCriticalList = isCriticalList,
+                licenseIdList = licenseIdList
+            });
+        }
+
+        public IActionResult QuestionDetail(int questionID)
+        {
+            ViewBag.questionId = questionID.ToString();
+            return View("~/Views/CRUDAnswer.cshtml");
+        }
+
     }
 }

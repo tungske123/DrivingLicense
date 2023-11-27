@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function fetchQuestionDetaildata() {
     try {
-        const questionid = document.getElementById('questionid').textContent;
+        const questionid = document.getElementById('questionId').textContent;
         const url = `https://localhost:7235/api/questions/${questionid}`;
 
         const response = await fetch(url, {
@@ -88,12 +88,12 @@ async function fetchQuestionDetaildata() {
 
 async function LoadQuestionData(question) {
     console.log(question.questionText);
-    
+
     // if (question.questionText === null) {
     //     tinymce.get('questionTextMCE').setContent('');
     // } else {
     // }
-    
+
     document.getElementById('questionTextMCE').value = question.questionText;
     let template = document.getElementById('templateAnswerBody');
     let answerTableBody = document.getElementById('answerTableBody');
@@ -107,10 +107,10 @@ async function LoadQuestionData(question) {
         clone.querySelector('.answerInputTemplate').value = answer.answerText;
         answerTableBody.appendChild(clone);
     }
-    if(question.questionImage !== null){
+    if (question.questionImage !== null) {
         document.getElementById('questionImage').innerHTML = `<img src="/img/question/A1/${question.questionImage}">`;
     }
-    
+
 
     if (question.isCritical === false) {
         document.getElementById('isCritical').value = 'No';
@@ -121,3 +121,28 @@ async function LoadQuestionData(question) {
 document.addEventListener('DOMContentLoaded', async () => {
     await fetchQuestionDetaildata();
 });
+
+document.getElementById('updateBtnAnswer').addEventListener('click', () => {
+
+})
+
+function updateAnswer(qid) {
+    const url = `api/question/edit/${qid}`;
+    const body = {
+        questionId: qid,
+        licenseId: "",
+        questionText: document.getElementById('questionTextMCE').textContent,
+        questionImage: document.getElementById('file_inputQuestionImage').files[0],
+        isCritical: document.getElementById('isCritical').value,
+    };
+    fetch(url, {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+    }).then(res => res.json())
+        .then(data => {
+            console.log(data);
+        })
+}

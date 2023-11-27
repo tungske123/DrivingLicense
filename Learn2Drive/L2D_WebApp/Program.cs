@@ -6,22 +6,24 @@ using Microsoft.EntityFrameworkCore;
 //using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using L2D_WebApp.Utils;
+//using L2D_WebApp.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<ImageUtils>();
 builder.Services.AddControllers(options =>
 {
     options.RespectBrowserAcceptHeader = true;
+    //options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
 });
+
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
-// builder.Services.AddControllers().AddJsonOptions(x =>
-//                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddTransient<ImageUtils>();
 
 //Add connection to EntityFrameworkCore
 
@@ -46,9 +48,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-//============================================================================================
-//                  Google login
-//
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+//builder.Services.AddAuthentication("Cookies").AddCookie();
+////Add google authentication
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -62,7 +65,6 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     });
 
-//============================================================================================
 
 var app = builder.Build();
 app.UseCors("AllowMyOrigin"); // use the CORS policy
