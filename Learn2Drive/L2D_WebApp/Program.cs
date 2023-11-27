@@ -6,24 +6,22 @@ using Microsoft.EntityFrameworkCore;
 //using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using L2D_WebApp.Utils;
-//using L2D_WebApp.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<ImageUtils>();
 builder.Services.AddControllers(options =>
 {
     options.RespectBrowserAcceptHeader = true;
-    //options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
 });
-
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
-
-builder.Services.AddTransient<ImageUtils>();
+// builder.Services.AddControllers().AddJsonOptions(x =>
+//                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 //Add connection to EntityFrameworkCore
 
@@ -48,24 +46,23 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
-builder.Services.AddAuthentication("Cookies").AddCookie();
-////Add google authentication
-//builder.Services.AddAuthentication().AddGoogle(googleOptions =>
-//{
-//    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-//    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-//});
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//})
-//.AddGoogle(options =>
-//{
-//    options.ClientId = configuration["Authentication:Google:ClientId"];
-//    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-//    options.Scope.Add("email"); // Ensure the "email" scope is requested
-//});
+//============================================================================================
+//                  Google login
+//
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+    .AddCookie()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    });
+
+//============================================================================================
 
 var app = builder.Build();
 app.UseCors("AllowMyOrigin"); // use the CORS policy

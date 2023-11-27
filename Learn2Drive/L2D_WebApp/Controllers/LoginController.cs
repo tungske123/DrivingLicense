@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using L2D_DataAccess.Models;
+using Google.Apis.Auth;
 //using System.Net.NetworkInformation;
 //using System.Threading.Tasks;
 //using Microsoft.AspNetCore.Authorization;
@@ -93,61 +94,79 @@ namespace L2D_WebApp.Controllers
             }
         }
 
-        //[AllowAnonymous]
-        //public IActionResult GoogleLogin(string returnUrl = null)
-        //{
-        //    //Request a redirect to google
-        //    var redirectUrl = Url.Action(nameof(GoogleLoginCallback), "Login", new
-        //    {
-        //        returnUrl
-        //    });
-        //    var properties = new AuthenticationProperties
-        //    {
-        //        RedirectUri = redirectUrl
-        //    };
-        //    return Challenge(properties, "Google");
-        //}
-        //private async Task handleUserEmail(string email)
-        //{
-        //    var userDAO = await UsersDAO.AsyncInstance();
-        //    var username = email.Split('@')[0];
-        //    string query = "insert into dbo.Users(Username, Email)" +
-        //        "\nvalues(@Username, @Email)";
-        //    SqlParameter[] parameters = new SqlParameter[]
-        //    {
-        //        DBUtils.CreateParameter("@Username", 100, username, DbType.String),
-        //        DBUtils.CreateParameter("@Email", 100, email, DbType.String)
-        //    };
-        //    await userDAO.AddNewUser(query, parameters);
-        //}
-        //[AllowAnonymous]
-        //public async Task<IActionResult> GoogleLoginCallback(string returnUrl = null, string remoteError = null)
-        //{
-        //    if (remoteError is not null)
-        //    {
-        //        TempData["Message"] = "Login with Google Error";
-        //        return RedirectToAction("Index", "Login");
-        //    }
-        //    //get user information from google
-        //    var info = await HttpContext.AuthenticateAsync();
-        //    if (info is null)
-        //    {
-        //        TempData["Message"] = "No login info";
-        //        return RedirectToAction("Index", "Login");
-        //    }
-        //    var emailClaim = info.Principal.FindFirstValue(ClaimTypes.Email);
-        //    var userDAO = await UsersDAO.AsyncInstance();
-        //    if (await userDAO.loadFromUserEmail(emailClaim) is null)
-        //    {
-        //        await handleUserEmail(emailClaim);
-        //    }
-        //    var user = await userDAO.loadFromUserEmail(emailClaim);
-        //    if (user is not null)
-        //    {
-        //        HttpContext.Session.SetString("usersession", user.UserID.ToString());
-        //    }
-        //    return RedirectToAction("Index", "Home");
-        //}
+        [HttpPost]
+        [Route("api/login/google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
+        {
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken,
+        new GoogleJsonWebSignature.ValidationSettings());
+
+            // Extract the email from the payload
+            var email = payload.Email;
+
+            string password="";
+            bool needSignup = true, existEmail = false;
+            User user;
+            Teacher teacher;
+            Staff staff;
+            Admin admin;
+            for (int role = 1; role <= 4; role++)
+            {
+                switch (role)
+                {
+                    case 1:
+                        user = await _context.Users
+                        .Include(u => u.Account)
+                        .SingleOrDefaultAsync(usr => usr.Email.Equals(email));
+                        existEmail = (user is not null);
+                        password = (user is not null) ? user.Account.Password : string.Empty;
+                        break;
+                    case 2:
+                        teacher = await _context.Teachers
+                        .Include(u => u.Account)
+                        .SingleOrDefaultAsync(tch => tch.Email.Equals(email));
+                        existEmail = (teacher is not null);
+                        password = (teacher is not null) ? teacher.Account.Password : string.Empty;
+                        break;
+                    case 3:
+                        staff = await _context.Staff
+                        .Include(stf => stf.Account)
+                        .SingleOrDefaultAsync(stf => stf.Email.Equals(email));
+                        existEmail = (staff is not null);
+                        password = (staff is not null) ? staff.Account.Password : string.Empty;
+                        break;
+                    case 4:
+                        admin = await _context.Admins
+                        .Include(adm => adm.Account)
+                        .SingleOrDefaultAsync(adm => adm.Email.Equals(email));
+                        existEmail = (admin is not null);
+                        password = (admin is not null) ? admin.Account.Password : string.Empty;
+                        break;
+                }
+                //If exist then stop checking
+                if (existEmail){
+                    needSignup = false;
+                    break;
+                }
+
+            }//End loop
+
+            //If not exist then create account
+            if (needSignup)
+            {
+                password = Guid.NewGuid().ToString();
+                await _context.Database.ExecuteSqlRawAsync("exec dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", email, password, email);
+            }
+
+            //Then login
+            var account = await _context.Accounts
+                .AsNoTracking()
+                .SingleOrDefaultAsync(acc => acc.Username.Equals(email) && acc.Password.Equals(password));
+
+            HttpContext.Session.SetString("usersession", JsonSerializer.Serialize(account));
+            await HttpContext.Session.CommitAsync();
+            return RedirectToAction("Index", "Home");
+        }
 
         [HttpPost]
         public async Task<IActionResult> signup(IFormCollection form)
@@ -159,18 +178,18 @@ namespace L2D_WebApp.Controllers
             var account = await _context.Accounts.AsNoTracking().FirstOrDefaultAsync(acc => acc.Username.Equals(username));
             if (!password.Equals(repass))
             {
-                TempData["Message"] = "repasword doesn't match";
+                TempData["Message"] = "Mật khẩu nhập lại không khớp";
                 return RedirectToAction("Index", "Login");
             }
-            if (account is not null)
+            if (account.Username is not null)
             {
-                TempData["Message"] = "Username already exist !";
+                TempData["Message"] = "Tài khoản đã tồn tại !";
                 return RedirectToAction("Index", "Login");
             }
             password = await Fakepassword(password);
             //await AccountDAO.Instance.SignUp(username, password, email);
             var result = await _context.Database.ExecuteSqlRawAsync("EXEC dbo.proc_signUpAccount @username = @p0, @password = @p1, @email = @p2", username, password, email);
-            TempData["Message"] = "??ng kí tài kho?n thành công !";
+            TempData["Message"] = "Đăng kí tài khoản thành công !";
             return RedirectToAction("Index", "Login");
         }
 
