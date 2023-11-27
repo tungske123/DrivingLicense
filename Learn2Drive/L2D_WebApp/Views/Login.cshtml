@@ -25,13 +25,19 @@
             <form action="/Login/signup" class="needs-validation" method="post" novalidate>
                 <h1>Đăng kí</h1>
                 <!--Icon social-->
+                @* <div class="social-container">
+                <a href="" class="social-icon bg3">
+                <i class="fa fa-google"></i>
+                </a
+                </div>*@
+
+                <!--Google Login-->
                 <div class="social-container">
-                    @* <a href="" class="social-icon bg3">
-                    <i class="fa fa-google"></i>
-                    </a> *@
-                    <a href="/Login/GoogleLogin" class="social-icon bg3">
-                        <i class="fa fa-google"></i>
-                    </a>
+                    <div id="g_id_onload"
+                         data-client_id="440308111376-ko6ebr0ke6ikk5edk2eljlnda5jqnf4o.apps.googleusercontent.com"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin"></div>
                 </div>
 
                 <span>Tạo tài khoản</span>
@@ -64,6 +70,7 @@
                 <button class="primary mt-3" type="submit">Đăng kí</button>
             </form>
         </div>
+
         <div class="form-container sign-in-container hidden-load">
             <form action="/Login/login" method="post" novalidate>
                 <h1>Đăng nhập</h1>
@@ -72,17 +79,20 @@
                 <p style="color:green">@TempData["Message2"]</p>
 
                 <!--Icon social-->
-                <div class="social-container">
-                    <a href="/Login/GoogleLogin" class="social-icon bg3" data-onsuccess="onSignIn" style="font-size: 15px;">
-                        <i class="fa fa-google"></i>
-                    </a>
-                </div>
+                @*<div class="social-container">
+                <a href="/Login/GoogleLogin" class="social-icon bg3" data-onsuccess="onSignIn" style="font-size: 15px;">
+                <i class="fa fa-google"></i>
+                </a>
+                </div>*@
 
-                <div id="g_id_onload"
-                     data-client_id="440308111376-ko6ebr0ke6ikk5edk2eljlnda5jqnf4o.apps.googleusercontent.com"
-                     data-callback="handleCredentialResponse">
+                <!--Google Login-->
+                <div class="social-container">
+                    <div id="g_id_onload"
+                         data-client_id="440308111376-ko6ebr0ke6ikk5edk2eljlnda5jqnf4o.apps.googleusercontent.com"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin"></div>
                 </div>
-                <div class="g_id_signin"></div>
 
                 <!-- <span>Or If you have an account, please Login </span> -->
                 <div class="input-group">
