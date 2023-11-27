@@ -6,13 +6,14 @@ class Question {
   questionText;
   keyword = '';
   licenseId;
-  isCritical = false;
+  isCritical;
 };
 
 
 var sendQuestionData = {
   keyword: ``,
-  licenseID: ``
+  licenseID: ``,
+
 };
 
 const questionLicenseChecks = document.querySelectorAll('.questionLicenseCheck');
@@ -65,6 +66,7 @@ function renderDataTableBody(questionList) {
   questionBankTableBody.innerHTML = ``;
   let template = document.getElementById('templatequestionbody');
 
+  console.log('Question List:' + questionList);
   if (questionList !== null && questionList.length > 0) {
     questionList.forEach(question => {
       let clone = document.importNode(template.content, true);
@@ -74,21 +76,75 @@ function renderDataTableBody(questionList) {
       cells[1].textContent = question.questionText;
       cells[2].textContent = question.licenseId;
       if (question.isCritical == true) {
-        cells[3].innerHTML = `<div class="flex items-center">
+        cells[3].innerHTML =
+          `<div class="flex items-center">
             <div class="h-2.5 w-2.5 rounded-full bg-red-500 me-2 mr-1"></div>
             Có
         </div> `;
       } else {
-        cells[3].innerHTML = `<div class="flex items-center">
+        cells[3].innerHTML =
+          `<div class="flex items-center">
             <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2 mr-1"></div>
             Không
         </div>`;
       }
-      questionBankTableBody.appendChild(clone)
+      let deleteQuestionBtn = cells[4].querySelector('.deleteQuestionBtn');
+      deleteQuestionBtn.setAttribute('qid', question.questionId.toString());
+      deleteQuestionBtn.addEventListener('click', async () => {
+        const result = await Swal.fire({
+          icon: 'question',
+          title: 'Xác nhận xóa câu hỏi?',
+          showCancelButton: true,
+          cancelButtonText: 'Hủy',
+          confirmButtonText: 'Xóa',
+          confirmButtonColor: '#d90429'
+        });
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        let questionId = deleteQuestionBtn.getAttribute('qid');
+        await deleteQuestion(questionId);
+        await fetchQuestionData();
+      });
+      questionBankTableBody.appendChild(clone);
     })
   }
 }
 
+async function deleteQuestion(questionId) {
+  try {
+    const url = `https://localhost:7235/api/question/delete/${questionId}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!response.ok) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi xóa câu hỏi',
+        text: `${response.status} - ${response.statusText}`,
+        confirmButtonColor: '#d90429'
+      });
+      return;
+    }
+    Swal.fire({
+      icon: 'success',
+      title: 'Xóa câu hỏi thành công!',
+      confirmButtonColor: '#d90429'
+    });
+
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Lỗi xóa câu hỏi',
+      text: `${error}`,
+      confirmButtonColor: '#d90429'
+    });
+  }
+}
 
 function renderQuestionBankPagingBar() {
   const pageQuestionBank = document.querySelector('.pageQuestionBank');
@@ -159,13 +215,14 @@ function loadLiencseIDListFilter(lienseIDList) {
   if (lienseIDList === null || lienseIDList.length === 0) {
     return;
   }
+  console.log('License id list: ' + lienseIDList);
   let templateFilterData = document.getElementById('questionBankFilterTemplate');
   lienseIDList.forEach(licenseId => {
     let clone = document.importNode(templateFilterData.content, true);
     let checkInput = clone.querySelector('input');
     let label = clone.querySelector('label');
     checkInput.value = licenseId;
-    checkInput.setAttribute('id', licenseId);
+    checkInput.setAttribute('id', licenseId);;
     checkInput.addEventListener('input', async () => {
       let newLicenseID = checkInput.value;
       sendQuestionData.licenseID = newLicenseID;
@@ -174,7 +231,6 @@ function loadLiencseIDListFilter(lienseIDList) {
     });
     label.textContent = `Bằng ${licenseId}`;
     label.setAttribute('for', licenseId);
-
     QBFilterContent.appendChild(clone);
   });
 }
