@@ -1,4 +1,5 @@
-﻿using L2D_DataAccess.Models;
+﻿using JetBrains.Annotations;
+using L2D_DataAccess.Models;
 using L2D_DataAccess.Utils;
 using L2D_DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,12 @@ namespace L2D_WebApp.Controllers
         {
             public string Keyword { get; set; }
             public string LicenseID { get; set; }
+        }
+
+        public async Task<IActionResult> QuestionDetail(int questionID)
+        {
+            ViewBag.questionId = questionID.ToString();
+            return View("~/Views/CRUDAnswer.cshtml");
         }
 
         public async Task<PageResult<T>> GetPagedDataAsync<T>(IQueryable<T> query, int page, int pageSize)
