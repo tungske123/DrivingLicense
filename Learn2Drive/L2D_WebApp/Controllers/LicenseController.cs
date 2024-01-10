@@ -94,6 +94,7 @@ namespace L2D_WebApp.Controllers
             if (findlicense is null)
             {
                 return NotFound("Can't find any license");
+                // cant find
             }
 
             if (!lid.Equals(license.LicenseId))
